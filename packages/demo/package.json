@@ -1,6 +1,6 @@
 {
   "name": "@data-ui/demo",
-  "version": "0.0.0",
+  "version": "0.0.2",
   "description": "data-ui demo",
   "scripts": {
     "storybook": "start-storybook -p 9001 -c ./storybook-config"
@@ -18,7 +18,7 @@
     "@kadira/storybook": "^2.35.3"
   },
   "dependencies": {
-    "@data-ui/data-table": "^0.0.1",
+    "@data-ui/data-table": "^0.0.2",
     "babel-preset-airbnb": "^2.2.3"
   },
   "peerDependencies": {
