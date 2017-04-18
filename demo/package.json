@@ -1,0 +1,27 @@
+{
+  "name": "@data-ui/demo",
+  "version": "0.0.0",
+  "description": "data-ui demo",
+  "scripts": {
+    "storybook": "start-storybook -p 9001 -c ./storybook-config"
+  },
+  "repository": "https://github.com/williaster/data-ui.git",
+  "keywords": [
+    "demo",
+    "examples",
+    "storybook"
+  ],
+  "author": "Chris Williams <chris.williams@airbnb.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/williaster/data-ui#readme",
+  "devDependencies": {
+    "@kadira/storybook": "^2.35.3"
+  },
+  "dependencies": {
+    "babel-preset-airbnb": "^2.2.3"
+  },
+  "peerDependencies": {
+    "react": "~15.4.2",
+    "react-dom": "~15.4.2"
+  }
+}

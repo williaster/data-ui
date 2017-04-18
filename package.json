@@ -1,0 +1,37 @@
+{
+  "name": "@data-ui/data-ui",
+  "version": "0.0.0",
+  "description": "A collection of components for data-rich user interfaces",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint --ignore-path=.eslintignore --ext .js,.jsx ./dataportal/static/",
+    "test": "npm run mocha ./dataportal/static/test/"
+  },
+  "repository": "https://github.com/williaster/data-ui.git",
+  "keywords": [
+    "data",
+    "visualization",
+    "react",
+    "d3",
+    "chart",
+    "data-ui"
+  ],
+  "author": "Chris Williams <chris.williams@airbnb.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "chai-enzyme": "^0.5.2",
+    "enzyme": "^2.7.0",
+    "eslint": "^3.19.0",
+    "eslint-config-airbnb": "^14.1.0",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^4.0.0",
+    "eslint-plugin-react": "^6.10.3",
+    "lerna": "^2.0.0-rc.2",
+    "mocha": "^3.2.0"
+  },
+  "peerDependencies": {
+    "react": "~15.4.2",
+    "react-dom": "~15.4.2"
+  }
+}
