@@ -5,19 +5,11 @@ export default function Table() {
     <table>
       <thead>
         <tr>
-          <td>Hello</td>
-          <td>World</td>
+          <th>Hello</th>
+          <th>World</th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>Hello</td>
-          <td>World</td>
-        </tr>
-        <tr>
-          <td>Hello</td>
-          <td>World</td>
-        </tr>
         <tr>
           <td>Hello</td>
           <td>World</td>

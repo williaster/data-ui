@@ -1,9 +1,11 @@
 # data-ui
-A collection of components for data-rich (desktop) UIs. Super beta.
+A collection of custom + wrapped components for data-rich (desktop) UIs. Super beta :baby:
 
 ## Packages
+- [@data-ui/data-table](https://github.com/williaster/data-ui/tree/master/packages/data-table)
+- [@data-ui/demo](https://github.com/williaster/data-ui/tree/master/packages/demo)
 
-### data-table
+Lots more coming.
 
 ## Development
 [lerna](https://github.com/lerna/lerna/) is used to manage versions and dependencies between
@@ -14,8 +16,13 @@ data-ui/
   lerna.json
   package.json
   packages/
-    data-ui-package1/
+    package1/
       src/
       test/
+      build/
       package.json
+      ...
+    ...
 ```
+
+[MIT](./LICENSE)

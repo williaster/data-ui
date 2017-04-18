@@ -4,18 +4,17 @@ const dist = path.resolve(__dirname, './build');
 const src = path.resolve(__dirname, './src');
 
 const config = {
-  entry: {
-    index: `${src}/index`,
-  },
+  entry: `${src}/index`,
   output: {
     path: `${dist}`,
     filename: 'index.js',
+    libraryTarget: 'commonjs2',
   },
   resolve: {
     extensions: ['.js', '.jsx'],
   },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.jsx?$/,
         include: src,
