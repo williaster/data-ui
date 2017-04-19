@@ -19,13 +19,16 @@
   "homepage": "https://github.com/williaster/data-ui#readme",
   "dependencies": {
     "immutable": "^3.8.1",
-    "react-virtualized": "^9.7.3"
+    "react-virtualized": "^9.7.3",
+    "recompose": "^0.23.1"
   },
   "devDependencies": {
     "babel-core": "^6.24.1",
     "babel-loader": "^6.4.1",
     "babel-plugin-syntax-jsx": "^6.18.0",
     "babel-preset-airbnb": "^2.2.3",
+    "css-loader": "^0.28.0",
+    "style-loader": "^0.16.1",
     "webpack": "^2.4.1"
   },
   "peerDependencies": {

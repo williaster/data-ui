@@ -19,7 +19,9 @@
   },
   "dependencies": {
     "@data-ui/data-table": "^0.0.2",
-    "babel-preset-airbnb": "^2.2.3"
+    "@vx/mock-data": "0.0.95",
+    "babel-preset-airbnb": "^2.2.3",
+    "immutable": "^3.8.1"
   },
   "peerDependencies": {
     "react": "~15.4.2",
