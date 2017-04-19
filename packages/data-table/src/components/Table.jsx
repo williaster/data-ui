@@ -1,4 +1,3 @@
-import { List } from 'immutable';
 import React, { PropTypes } from 'react';
 import {
   Column,
@@ -7,10 +6,11 @@ import {
 } from 'react-virtualized';
 
 import '../../node_modules/react-virtualized/styles.css';
+import dataListPropType from '../propTypes/dataList';
 
 const propTypes = {
   // required
-  dataList: PropTypes.instanceOf(List).isRequired,
+  dataList: dataListPropType.isRequired,
   height: PropTypes.number.isRequired,
   orderedColumnKeys: PropTypes.arrayOf(
     PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
@@ -42,8 +42,8 @@ const propTypes = {
 const defaultProps = {
   cellRenderer: undefined,
   columnFlexGrow: undefined,
-  columnFlexShrink: undefined,
-  columnWidth: 40,
+  columnFlexShrink: 1,
+  columnWidth: 50,
   disableHeader: false,
   disableSort: undefined,
   flexLastColumn: true,
@@ -95,7 +95,7 @@ function BasicTable({
         if (typeof columnFlexGrow !== 'undefined') {
           flexGrow = typeof columnFlexGrow === 'function' ? columnFlexGrow(columnKey) : columnFlexGrow;
         } else {
-          flexGrow = flexLastColumn && idx === orderedColumnKeys.length - 1 ? 1 : 0;
+          flexGrow = flexLastColumn && idx === orderedColumnKeys.length - 1 ? 1 : undefined;
         }
         return (
           <Column
@@ -103,7 +103,10 @@ function BasicTable({
             cellRenderer={cellRenderer}
             dataKey={columnKey}
             disableSort={typeof disableSort === 'function' ? disableSort(columnKey) : disableSort}
-            flexShrink={typeof columnFlexShrink === 'function' ? columnFlexShrink(columnKey) : columnFlexShrink}
+            flexShrink={
+              typeof columnFlexShrink === 'function' ?
+              columnFlexShrink(columnKey) : columnFlexShrink
+            }
             flexGrow={flexGrow}
             headerRenderer={headerRenderer}
             label={columnKey}
