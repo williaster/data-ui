@@ -6,8 +6,10 @@ import mockData from '@vx/mock-data';
 import {
   Table,
   FilterableTable,
+  withDynamicCellHeights,
   withSorting,
   withTableAutoSizer,
+
 } from '@data-ui/data-table';
 
 const dataList = List(mockData.browserUsage);
@@ -58,6 +60,18 @@ storiesOf('data-table', module)
       />
     );
   })
+  .add('withDynamicCellHeights', () => {
+    const DynamicCellHeight = withTableAutoSizer(withDynamicCellHeights(Table));
+    return (
+      <DynamicCellHeight
+        dataList={dataList}
+        orderedColumnKeys={someColumns}
+        dynamicHeightColumnKeys={someColumns.slice(0, 1)}
+        height={600}
+        columnFlexGrow={1}
+      />
+    );
+  })
   .add('Table with horizontal scroll', () => (
     <div style={{ width: 700, overflow: 'auto' }}>
       <Table
@@ -92,12 +106,11 @@ storiesOf('data-table', module)
     />
   ))
   .add('FilterableSortableTable', () => {
-    const SortableFilterableTable = withSorting(FilterableTable);
+    const SortableFilterableTable = withTableAutoSizer(withSorting(FilterableTable));
     return (
       <SortableFilterableTable
         dataList={dataList}
         orderedColumnKeys={someColumns}
-        width={700}
         height={400}
         columnFlexGrow={1}
       />

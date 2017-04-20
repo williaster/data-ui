@@ -1,12 +1,15 @@
 import React, { PropTypes } from 'react';
-import {
-  Column,
-  Table,
-  SortDirection,
-} from 'react-virtualized';
+import { Column, SortDirection, Table } from 'react-virtualized';
 
 import '../../node_modules/react-virtualized/styles.css';
 import dataListPropType from '../propTypes/dataList';
+
+function typeOrColumnKeyToType(PropType) {
+  return PropTypes.oneOfType([
+    PropType,
+    PropTypes.objectOf(PropType),
+  ]);
+}
 
 const propTypes = {
   // required
@@ -18,17 +21,18 @@ const propTypes = {
   width: PropTypes.number.isRequired,
 
   // optional
-  cellRenderer: PropTypes.func,
-  columnFlexGrow: PropTypes.oneOfType([PropTypes.number, PropTypes.func]),
-  columnFlexShrink: PropTypes.oneOfType([PropTypes.number, PropTypes.func]),
-  columnWidth: PropTypes.oneOfType([PropTypes.number, PropTypes.func]),
+  cellRendererByColumnKey: PropTypes.objectOf(PropTypes.func), // { [column]: func() => any }
+  columnFlexGrow: typeOrColumnKeyToType(PropTypes.number),
+  columnFlexShrink: typeOrColumnKeyToType(PropTypes.number),
+  columnWidth: typeOrColumnKeyToType(PropTypes.number),
+  deferredMeasurementCache: PropTypes.object,
   disableHeader: PropTypes.bool,
-  disableSort: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
+  disableSort: typeOrColumnKeyToType(PropTypes.bool),
   flexLastColumn: PropTypes.bool,
   headerHeight: PropTypes.number,
-  headerRenderer: PropTypes.func,
+  headerRendererByColumnKey: PropTypes.objectOf(PropTypes.func),
   overscanRowCount: PropTypes.number,
-  rowHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.func]),
+  rowHeight: typeOrColumnKeyToType(PropTypes.number),
   sort: PropTypes.func,
   sortBy: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   sortDirection: PropTypes.oneOf([SortDirection.ASC, SortDirection.DESC]),
@@ -40,15 +44,16 @@ const propTypes = {
 };
 
 const defaultProps = {
-  cellRenderer: undefined,
+  cellRendererByColumnKey: undefined,
   columnFlexGrow: undefined,
   columnFlexShrink: 1,
   columnWidth: 50,
+  deferredMeasurementCache: undefined,
   disableHeader: false,
   disableSort: undefined,
   flexLastColumn: true,
   headerHeight: 40,
-  headerRenderer: undefined,
+  headerRendererByColumnKey: undefined,
   overscanRowCount: 10,
   rowHeight: 32,
   sort: undefined,
@@ -57,17 +62,18 @@ const defaultProps = {
 };
 
 function BasicTable({
-  cellRenderer,
+  cellRendererByColumnKey,
   columnFlexGrow,
   columnFlexShrink,
   columnWidth,
   dataList,
+  deferredMeasurementCache,
   disableHeader,
   disableSort,
   flexLastColumn,
   height,
   headerHeight,
-  headerRenderer,
+  headerRendererByColumnKey,
   overscanRowCount,
   orderedColumnKeys,
   rowHeight,
@@ -78,11 +84,12 @@ function BasicTable({
 }) {
   return (
     <Table
+      deferredMeasurementCache={deferredMeasurementCache}
       disableHeader={disableHeader}
       headerHeight={disableHeader ? undefined : headerHeight}
       height={height}
       overscanRowCount={overscanRowCount}
-      rowHeight={rowHeight}
+      rowHeight={(deferredMeasurementCache && deferredMeasurementCache.rowHeight) || rowHeight}
       rowGetter={({ index }) => dataList.get(index % dataList.size)}
       rowCount={dataList.size}
       sort={sort}
@@ -93,24 +100,35 @@ function BasicTable({
       {orderedColumnKeys.map((columnKey, idx) => {
         let flexGrow;
         if (typeof columnFlexGrow !== 'undefined') {
-          flexGrow = typeof columnFlexGrow === 'function' ? columnFlexGrow(columnKey) : columnFlexGrow;
+          flexGrow = typeof columnFlexGrow === 'object' ?
+            columnFlexGrow[columnKey] : columnFlexGrow;
         } else {
           flexGrow = flexLastColumn && idx === orderedColumnKeys.length - 1 ? 1 : undefined;
         }
         return (
           <Column
             key={columnKey}
-            cellRenderer={cellRenderer}
+            cellRenderer={
+              cellRendererByColumnKey &&
+              cellRendererByColumnKey[columnKey]
+            }
             dataKey={columnKey}
-            disableSort={typeof disableSort === 'function' ? disableSort(columnKey) : disableSort}
+            disableSort={
+              typeof disableSort === 'object' ?
+              disableSort[columnKey] : disableSort}
             flexShrink={
-              typeof columnFlexShrink === 'function' ?
-              columnFlexShrink(columnKey) : columnFlexShrink
+              typeof columnFlexShrink === 'object' ?
+              columnFlexShrink[columnKey] : columnFlexShrink
             }
             flexGrow={flexGrow}
-            headerRenderer={headerRenderer}
+            headerRendererByColumnKey={
+              headerRendererByColumnKey &&
+              headerRendererByColumnKey[columnKey]
+            }
             label={columnKey}
-            width={typeof columnWidth === 'function' ? columnWidth(columnKey) : columnWidth}
+            width={typeof columnWidth === 'object' ?
+              columnWidth(columnKey) : columnWidth
+            }
           />
         );
       })}
