@@ -7,6 +7,7 @@ import {
   Table,
   FilterableTable,
   withSorting,
+  withTableAutoSizer,
 } from '@data-ui/data-table';
 
 const dataList = List(mockData.browserUsage);
@@ -33,6 +34,30 @@ storiesOf('data-table', module)
       flexLastColumn
     />
   ))
+  .add('withTableAutoSizer', () => {
+    const AutoSizedTable = withTableAutoSizer(Table);
+    return ( // storybook container doesn't set an explicit size
+      <div style={{ height: 550, background: 'pink' }}>
+        <AutoSizedTable
+          dataList={dataList}
+          orderedColumnKeys={someColumns}
+          columnFlexGrow={1}
+        />
+      </div>
+    );
+  })
+  .add('withTableAutoSizer, width only', () => {
+    const AutoSizedTable = withTableAutoSizer(Table);
+    return (
+      <AutoSizedTable
+        dataList={dataList}
+        orderedColumnKeys={someColumns}
+        height={300}
+        disableHeight
+        columnFlexGrow={1}
+      />
+    );
+  })
   .add('Table with horizontal scroll', () => (
     <div style={{ width: 700, overflow: 'auto' }}>
       <Table

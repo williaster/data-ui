@@ -35,7 +35,6 @@ function withFiltering(WrappedComponent) {
     }
 
     onChangeFilterText(filterText, props) {
-      console.log('filtering', filterText);
       const { dataList: originalData, filterRow } = props || this.props;
       const nextState = { filterText, filteredDataList: originalData };
       if (filterText) {
@@ -65,37 +64,3 @@ function withFiltering(WrappedComponent) {
 }
 
 export default withFiltering;
-
-// const withFiltering = compose(
-//   withState(
-//     'filterState',
-//     'updateFilterState',
-//     ({ dataList, initialFilterText = '', filterRow = defaultFilterRow }) => ({
-//       originalData: dataList,
-//       dataList: initialFilterText ?
-//         dataList.filter(row => filterRow(row, initialFilterText)) :
-//         dataList,
-//       filterRow,
-//     }),
-//   ),
-
-//   withHandlers({
-//     onChangeFilterText: ({ updateFilterState }) => (filterText) => {
-//       updateFilterState(({ originalData, filterRow }) => {
-//         const nextState = { filterRow, originalData, filterText, dataList: originalData };
-//         if (filterText) {
-//           nextState.dataList = originalData.filter(row => filterRow(row, filterText));
-//         }
-//         return nextState;
-//       });
-//     },
-//   }),
-
-//   mapProps(({ filterState, ...rest }) => ({
-//     ...rest,
-//     filterText: filterState.filterText,
-//     dataList: filterState.dataList,
-//   })),
-// );
-
-// export default withFiltering;

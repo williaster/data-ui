@@ -19,7 +19,7 @@
   "homepage": "https://github.com/williaster/data-ui#readme",
   "dependencies": {
     "immutable": "^3.8.1",
-    "react-virtualized": "^9.7.3",
+    "react-virtualized": "^9.7.3"
   },
   "devDependencies": {
     "babel-core": "^6.24.1",
