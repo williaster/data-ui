@@ -1,5 +1,6 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PropTypes } from 'react';
 
+import { baseHOC, updateDisplayName } from './hocUtils';
 import dataListPropType from '../propTypes/dataList';
 
 const propTypes = {
@@ -17,8 +18,10 @@ const defaultProps = {
   initialFilterText: '',
 };
 
-function withFiltering(WrappedComponent) {
-  class WithFilteringComponent extends Component {
+function withFiltering(WrappedComponent, pureComponent = true) {
+  const BaseClass = baseHOC(pureComponent);
+
+  class EnhancedComponent extends BaseClass {
     constructor(props) {
       super(props);
       this.state = {
@@ -29,6 +32,7 @@ function withFiltering(WrappedComponent) {
     }
 
     componentWillReceiveProps(nextProps) {
+      // eslint-disable-next-line react/prop-types
       if (nextProps.dataList !== this.props.dataList) {
         this.onChangeFilterText(this.state.filterText, nextProps);
       }
@@ -57,10 +61,11 @@ function withFiltering(WrappedComponent) {
     }
   }
 
-  WithFilteringComponent.propTypes = propTypes;
-  WithFilteringComponent.defaultProps = defaultProps;
+  EnhancedComponent.propTypes = propTypes;
+  EnhancedComponent.defaultProps = defaultProps;
+  updateDisplayName(WrappedComponent, EnhancedComponent, 'withFiltering');
 
-  return WithFilteringComponent;
+  return EnhancedComponent;
 }
 
 export default withFiltering;

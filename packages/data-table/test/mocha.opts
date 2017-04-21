@@ -1,0 +1,3 @@
+--require babel-polyfill
+--compilers js:babel-register,jsx:babel-register
+--recursive

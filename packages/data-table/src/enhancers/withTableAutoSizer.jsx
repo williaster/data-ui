@@ -1,6 +1,8 @@
 import React, { PropTypes } from 'react';
 import { AutoSizer } from 'react-virtualized';
 
+import { baseHOC, updateDisplayName } from './hocUtils';
+
 const propTypes = {
   width: PropTypes.number,
   height: PropTypes.number,
@@ -13,34 +15,40 @@ const defaultProps = {
   onResize: undefined,
 };
 
-function withTableAutoSizer(WrappedComponent) {
-  function WithAutoSizerComponent({
-    width: overrideWidth,
-    height: overrideHeight,
-    onResize,
-    ...props
-  }) {
-    return (
-      <AutoSizer
-        disableHeight={overrideHeight !== null}
-        disableWidth={overrideWidth !== null}
-        onResize={onResize}
-      >
-        {({ width, height }) => (
-          <WrappedComponent
-            width={overrideWidth !== null ? overrideWidth : width}
-            height={overrideHeight !== null ? overrideHeight : height}
-            {...props}
-          />
-        )}
-      </AutoSizer>
-    );
+function withTableAutoSizer(WrappedComponent, pureComponent = true) {
+  const BaseClass = baseHOC(pureComponent);
+
+  class EnhancedComponent extends BaseClass {
+    render() {
+      const {
+        width: overrideWidth,
+        height: overrideHeight,
+        onResize,
+        ...rest
+      } = this.props;
+      return (
+        <AutoSizer
+          disableHeight={overrideHeight !== null}
+          disableWidth={overrideWidth !== null}
+          onResize={onResize}
+        >
+          {({ width, height }) => (
+            <WrappedComponent
+              width={overrideWidth !== null ? overrideWidth : width}
+              height={overrideHeight !== null ? overrideHeight : height}
+              {...rest}
+            />
+          )}
+        </AutoSizer>
+      );
+    }
   }
 
-  WithAutoSizerComponent.propTypes = propTypes;
-  WithAutoSizerComponent.defaultProps = defaultProps;
+  EnhancedComponent.propTypes = propTypes;
+  EnhancedComponent.defaultProps = defaultProps;
+  updateDisplayName(WrappedComponent, EnhancedComponent, 'withTableAutoSizer');
 
-  return WithAutoSizerComponent;
+  return EnhancedComponent;
 }
 
 export default withTableAutoSizer;

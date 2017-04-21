@@ -5,9 +5,10 @@
   "main": "build/index.js",
   "scripts": {
     "build": "webpack --env build && npm run copy-styles",
-    "dev": "webpack --progress --colors --watch --env dev",
     "copy-styles": "cp ./node_modules/react-virtualized/styles.css ./build/styles.css",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "webpack --progress --colors --watch --env dev",
+    "mocha": "mocha --opts ./test/mocha.opts",
+    "test": "npm run mocha ./test"
   },
   "repository": "https://github.com/williaster/data-ui",
   "keywords": [
