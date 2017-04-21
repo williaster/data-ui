@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint --ignore-path=.eslintignore --ext .js,.jsx ./packages/",
-    "publish": "npm run lint && lerna publish && lerna run gh-pages",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "publish": "lerna run lint && lerna run test && lerna publish && lerna run gh-pages",
+    "test": "lerna run test"
   },
   "repository": "https://github.com/williaster/data-ui.git",
   "keywords": [
@@ -20,6 +20,8 @@
   "author": "Chris Williams <chris.williams@airbnb.com>",
   "license": "MIT",
   "devDependencies": {
+    "babel-polyfill": "^6.23.0",
+    "babel-register": "^6.24.1",
     "chai": "^3.5.0",
     "chai-enzyme": "^0.5.2",
     "enzyme": "^2.7.0",
