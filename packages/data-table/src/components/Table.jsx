@@ -75,96 +75,101 @@ const defaultProps = {
   styles: {},
 };
 
-function BasicTable({
-  cellRendererByColumnKey,
-  classNames: {
-    table: className,
-    header: headerClassName,
-    row: rowClassName,
-  },
-  columnFlexGrow,
-  columnFlexShrink,
-  columnWidth,
-  dataList,
-  deferredMeasurementCache,
-  disableHeader,
-  disableSort,
-  flexLastColumn,
-  height,
-  headerHeight,
-  headerRendererByColumnKey,
-  overscanRowCount,
-  orderedColumnKeys,
-  rowHeight,
-  sort,
-  sortBy,
-  sortDirection,
-  styles: {
-    table: style,
-    header: headerStyle,
-    row: rowStyle,
-  },
-  width,
-}) {
-  return (
-    <Table
-      deferredMeasurementCache={deferredMeasurementCache}
-      disableHeader={disableHeader}
-      headerHeight={disableHeader ? undefined : headerHeight}
-      height={height}
-      overscanRowCount={overscanRowCount}
-      rowHeight={(deferredMeasurementCache && deferredMeasurementCache.rowHeight) || rowHeight}
-      rowGetter={({ index }) => dataList.get(index % dataList.size)}
-      rowCount={dataList.size}
-      sort={sort}
-      sortBy={sortBy}
-      sortDirection={sortDirection}
-      width={width}
-      className={className}
-      headerClassName={headerClassName}
-      rowClassName={rowClassName}
-      style={style}
-      headerStyle={headerStyle}
-      rowStyle={rowStyle}
-    >
-      {orderedColumnKeys.map((columnKey, idx) => {
-        let flexGrow;
-        if (typeof columnFlexGrow !== 'undefined') {
-          flexGrow = typeof columnFlexGrow === 'object' ?
-            columnFlexGrow[columnKey] : columnFlexGrow;
-        } else {
-          flexGrow = flexLastColumn && idx === orderedColumnKeys.length - 1 ? 1 : undefined;
-        }
-        return (
-          <Column
-            key={columnKey}
-            cellRenderer={
-              cellRendererByColumnKey &&
-              cellRendererByColumnKey[columnKey]
-            }
-            dataKey={columnKey}
-            disableSort={
-              typeof disableSort === 'object' ?
-              disableSort[columnKey] : disableSort}
-            flexShrink={
-              typeof columnFlexShrink === 'object' ?
-              columnFlexShrink[columnKey] : columnFlexShrink
-            }
-            flexGrow={flexGrow}
-            headerRendererByColumnKey={
-              headerRendererByColumnKey &&
-              headerRendererByColumnKey[columnKey]
-            }
-            label={columnKey}
-            width={typeof columnWidth === 'object' ?
-              columnWidth(columnKey) : columnWidth
-            }
+// eslint-disable-next-line react/prefer-stateless-function
+class BasicTable extends React.PureComponent {
+  render() {
+    const {
+      cellRendererByColumnKey,
+      classNames: {
+        table: className,
+        header: headerClassName,
+        row: rowClassName,
+      },
+      columnFlexGrow,
+      columnFlexShrink,
+      columnWidth,
+      dataList,
+      deferredMeasurementCache,
+      disableHeader,
+      disableSort,
+      flexLastColumn,
+      height,
+      headerHeight,
+      headerRendererByColumnKey,
+      overscanRowCount,
+      orderedColumnKeys,
+      rowHeight,
+      sort,
+      sortBy,
+      sortDirection,
+      styles: {
+        table: style,
+        header: headerStyle,
+        row: rowStyle,
+      },
+      width,
+    } = this.props;
 
-          />
-        );
-      })}
-    </Table>
-  );
+    return (
+      <Table
+        deferredMeasurementCache={deferredMeasurementCache}
+        disableHeader={disableHeader}
+        headerHeight={disableHeader ? undefined : headerHeight}
+        height={height}
+        overscanRowCount={overscanRowCount}
+        rowHeight={(deferredMeasurementCache && deferredMeasurementCache.rowHeight) || rowHeight}
+        rowGetter={({ index }) => dataList.get(index % dataList.size)}
+        rowCount={dataList.size}
+        sort={sort}
+        sortBy={sortBy}
+        sortDirection={sortDirection}
+        width={width}
+        className={className}
+        headerClassName={headerClassName}
+        rowClassName={rowClassName}
+        style={style}
+        headerStyle={headerStyle}
+        rowStyle={rowStyle}
+      >
+        {orderedColumnKeys.map((columnKey, idx) => {
+          let flexGrow;
+          if (typeof columnFlexGrow !== 'undefined') {
+            flexGrow = typeof columnFlexGrow === 'object' ?
+              columnFlexGrow[columnKey] : columnFlexGrow;
+          } else {
+            flexGrow = flexLastColumn && idx === orderedColumnKeys.length - 1 ? 1 : undefined;
+          }
+          return (
+            <Column
+              key={columnKey}
+              cellRenderer={
+                cellRendererByColumnKey &&
+                cellRendererByColumnKey[columnKey]
+              }
+              dataKey={columnKey}
+              disableSort={
+                typeof disableSort === 'object' ?
+                disableSort[columnKey] : disableSort}
+              flexShrink={
+                typeof columnFlexShrink === 'object' ?
+                columnFlexShrink[columnKey] : columnFlexShrink
+              }
+              flexGrow={flexGrow}
+              headerRendererByColumnKey={
+                headerRendererByColumnKey &&
+                headerRendererByColumnKey[columnKey]
+              }
+              label={columnKey}
+              width={typeof columnWidth === 'object' ?
+                columnWidth(columnKey) : columnWidth
+              }
+
+            />
+          );
+        })}
+      </Table>
+    );
+  }
 }
 
 BasicTable.propTypes = propTypes;

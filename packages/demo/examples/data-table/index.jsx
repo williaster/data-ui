@@ -6,6 +6,7 @@ import {
   withDynamicCellHeights,
   withSorting,
   withTableAutoSizer,
+  withWindowScroller,
 } from '@data-ui/data-table';
 
 import { tableStyles, sorableTableStyles } from './tableStyles';
@@ -44,11 +45,25 @@ export default [
     ),
   },
   {
+    description: 'with window scrolling + auto width HOCs',
+    example: () => {
+      const WindowScrollingTable = withWindowScroller(withTableAutoSizer(Table));
+      return ( // storybook container doesn't set an explicit size
+        <WindowScrollingTable
+          dataList={dataList}
+          orderedColumnKeys={someColumns}
+          columnFlexGrow={1}
+          styles={tableStyles}
+        />
+      );
+    },
+  },
+  {
     description: 'with auto width + height HOC',
     example: () => {
       const AutoSizedTable = withTableAutoSizer(Table);
       return ( // storybook container doesn't set an explicit size
-        <div style={{ height: 500, background: 'pink' }}>
+        <div style={{ height: 500, background: '#FFB400' }}>
           <AutoSizedTable
             dataList={dataList}
             orderedColumnKeys={someColumns}
@@ -76,16 +91,20 @@ export default [
     },
   },
   {
-    description: 'dynamic cell heights',
+    description: 'with dynamic cell height HOC',
     example: () => {
       const DynamicCellHeight = withTableAutoSizer(withDynamicCellHeights(Table));
       return (
         <DynamicCellHeight
-          dataList={dataList}
-          orderedColumnKeys={someColumns}
-          dynamicHeightColumnKeys={someColumns.slice(0, 1)}
+          dataList={dataList.map(d => ({
+            ...d,
+            'long column': Array(Math.random() > 0.5 ? 50 : 20).join('really long text '),
+          }))}
+          orderedColumnKeys={someColumns.slice(0, 2).concat(['long column'])}
+          dynamicHeightColumnKeys={['long column']}
           height={600}
-          columnFlexGrow={1}
+          columnWidth={150}
+          flexLastColumn
           styles={tableStyles}
         />
       );

@@ -1,9 +1,11 @@
-import React, { PropTypes, PureComponent } from 'react';
+import React, { PropTypes } from 'react';
 import { CellMeasurer, CellMeasurerCache } from 'react-virtualized';
+
+import { baseHOC, updateDisplayName } from './hocUtils';
 
 const propTypes = {
   // wrapped by CellMeasurer and returns the cell contents, one or one for each column
-  cellRenderer: PropTypes.oneOf([
+  cellRenderer: PropTypes.oneOfType([
     PropTypes.func,
     PropTypes.objectOf(PropTypes.func),
   ]),
@@ -18,19 +20,20 @@ const defaultProps = {
     <div
       style={{
         whiteSpace: 'normal',
-        background: '#eaeaea',
         wordBreak: 'break-word',
       }}
     >
-      {Array(10).join(cellData)}
+      {cellData}
     </div>
   ),
   defaultCellHeight: 32,
   minCellHeight: 32,
 };
 
-function withDynamicCellHeights(WrappedComponent) {
-  class EnhancedComponent extends PureComponent {
+function withDynamicCellHeights(WrappedComponent, pureComponent = true) {
+  const BaseClass = baseHOC(pureComponent);
+
+  class EnhancedComponent extends BaseClass {
     static getDynamicHeightCellCache({
       defaultCellHeight,
       minCellHeight,
@@ -89,6 +92,7 @@ function withDynamicCellHeights(WrappedComponent) {
 
   EnhancedComponent.propTypes = propTypes;
   EnhancedComponent.defaultProps = defaultProps;
+  updateDisplayName(WrappedComponent, EnhancedComponent, 'withDynamicCellHeights');
 
   return EnhancedComponent;
 }

@@ -1,14 +1,17 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { SortDirection } from 'react-virtualized';
 
 import dataListPropType from '../propTypes/dataList';
+import { baseHOC, updateDisplayName } from './hocUtils';
 
 const propTypes = {
   dataList: dataListPropType.isRequired,
 };
 
-function withSorting(WrappedComponent) {
-  class WithSortingComponent extends Component {
+function withSorting(WrappedComponent, pureComponent = true) {
+  const BaseClass = baseHOC(pureComponent);
+
+  class EnhancedComponent extends BaseClass {
     constructor(props) {
       super(props);
       this.state = {
@@ -20,6 +23,7 @@ function withSorting(WrappedComponent) {
     }
 
     componentWillReceiveProps(nextProps) {
+      // eslint-disable-next-line react/prop-types
       if (nextProps.dataList !== this.props.dataList) {
         this.onSort(this.state, nextProps);
       }
@@ -56,9 +60,10 @@ function withSorting(WrappedComponent) {
     }
   }
 
-  WithSortingComponent.propTypes = propTypes;
+  EnhancedComponent.propTypes = propTypes;
+  updateDisplayName(WrappedComponent, EnhancedComponent, 'withSorting');
 
-  return WithSortingComponent;
+  return EnhancedComponent;
 }
 
 export default withSorting;
