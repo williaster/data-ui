@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint --ignore-path=.eslintignore --ext .js,.jsx ./packages/",
-    "publish": "lerna run lint && lerna run test && lerna publish && lerna run gh-pages",
+    "publish": "npm run lint && lerna run test && lerna publish && lerna run gh-pages",
     "test": "lerna run test"
   },
   "repository": "https://github.com/williaster/data-ui.git",
