@@ -1,5 +1,13 @@
-import Table from './tables/Table';
+import Table from './components/Table';
+import withDynamicCellHeights from './enhancers/withDynamicCellHeights';
+import withFiltering from './enhancers/withFiltering';
+import withSorting from './enhancers/withSorting';
+import withTableAutoSizer from './enhancers/withTableAutoSizer';
 
-export default {
+export {
   Table,
+  withDynamicCellHeights,
+  withFiltering,
+  withSorting,
+  withTableAutoSizer,
 };

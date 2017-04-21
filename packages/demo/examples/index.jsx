@@ -1,9 +1,17 @@
-import React from 'react';
+import path from 'path';
 import { storiesOf } from '@kadira/storybook';
 
-import Table from '@data-ui/data-table';
+const requireContext = require.context('./', /* subdirs= */true, /index\.jsx/);
 
-storiesOf('data-table', module)
-  .add('Basic', () => (
-    <Table.Table />
-  ));
+requireContext.keys().forEach((packageName) => {
+  if (packageName !== 'shared') {
+    const examples = requireContext(packageName);
+    if (examples && examples.default) {
+      const name = path.dirname(packageName).slice(2);
+      const stories = storiesOf(name, module);
+      examples.default.forEach((example) => {
+        stories.add(example.description, example.example);
+      });
+    }
+  }
+});

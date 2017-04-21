@@ -4,8 +4,9 @@
   "description": "A collection of components for data-rich user interfaces",
   "main": "index.js",
   "scripts": {
-    "lint": "eslint --ignore-path=.eslintignore --ext .js,.jsx ./dataportal/static/",
-    "test": "npm run mocha ./dataportal/static/test/"
+    "lint": "eslint --ignore-path=.eslintignore --ext .js,.jsx ./packages/",
+    "publish": "npm run lint && lerna publish && lerna run gh-pages",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": "https://github.com/williaster/data-ui.git",
   "keywords": [
@@ -28,9 +29,12 @@
     "eslint-plugin-jsx-a11y": "^4.0.0",
     "eslint-plugin-react": "^6.10.3",
     "lerna": "2.0.0-rc.2",
-    "mocha": "^3.2.0"
+    "mocha": "^3.2.0",
+    "react": "~15.4.2",
+    "react-dom": "~15.4.2"
   },
   "peerDependencies": {
+    "lerna": "2.0.0-rc.2",
     "react": "~15.4.2",
     "react-dom": "~15.4.2"
   }

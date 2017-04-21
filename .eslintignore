@@ -1,3 +1,4 @@
-node_modules
+**/build/*
+**/node_modules/*
+**/_gh-pages/*
 npm-debug.log
-build

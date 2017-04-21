@@ -1,6 +1,7 @@
 build
 bundle.js
 .DS_Store
+_gh-pages
 node_modules
 *.log
 /.eslintcache
