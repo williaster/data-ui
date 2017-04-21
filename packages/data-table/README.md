@@ -11,13 +11,16 @@ which you can read more about
 
 For convenience the base `react-virtualized` stylesheet is coppied for import with the
 appropriate loader via
-* `import '@data-ui/data-table/styles.css';`
+`import '@data-ui/data-table/build/styles.css';`
 
 Alternatively you can pass table, header, row classNames or style objects to the wrapped <Table/> component.
+See the [@data-ui/demo](https://github.com/williaster/data-ui/tree/master/packages/demo) for examples of the latter.
 
 ## Development
-* `npm install`
-* `npm run dev|prod`
+```
+npm install
+npm run dev # or 'npm run prod'
+```
 
 ## @data-ui packages
 - --> @data-ui/data-table

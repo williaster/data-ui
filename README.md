@@ -14,11 +14,13 @@ For examples of the components in action, go to https://williaster.github.io/dat
 OR
 
 To run that demo on your own computer:
-* Clone this repository
-* cd demo
-* `npm install`
-* `npm run storybook`
-* Visit http://localhost:9001/
+```
+# clone this repository
+cd demo
+npm install
+npm run storybook
+# visit http://localhost:9001/
+```
 
 ## Development
 [lerna](https://github.com/lerna/lerna/) is used to manage versions and dependencies between
@@ -40,10 +42,12 @@ data-ui/
 
 For easiest development, clone this repo, install `lerna` globally and the root npm modules,
 then have lerna install package dependencies and manage the symlinking between packages for you
-* `git clone ...data-ui && cd data-ui`
-* `npm install --global lerna@^2.0.0-beta.0`
-* `npm install`
-* `lerna bootstrap`
+```
+git clone ...data-ui && cd data-ui
+npm install --global lerna@^2.0.0-beta.0
+npm install
+lerna bootstrap
+```
 
 ## License
 [MIT](./LICENSE)
