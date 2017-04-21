@@ -3,19 +3,22 @@ import React from 'react';
 import { storiesOf } from '@kadira/storybook';
 
 import mockData from '@vx/mock-data';
+
 import {
   Table,
-  FilterableTable,
   withDynamicCellHeights,
   withSorting,
   withTableAutoSizer,
-
 } from '@data-ui/data-table';
+
+import { tableStyles, sorableTableStyles } from './data-table/tableStyles';
+import FilterableTable from './data-table/FilterableTable';
 
 const dataList = List(mockData.browserUsage);
 const allColumns = Object.keys(mockData.browserUsage[0]);
 const someColumns = allColumns.slice(0, 4);
 
+// @TODO split examples into files by package (at least)
 storiesOf('data-table', module)
   .add('Default Table', () => (
     <Table
@@ -24,6 +27,7 @@ storiesOf('data-table', module)
       width={700}
       height={400}
       columnWidth={600}
+      styles={tableStyles}
     />
   ))
   .add('Flex last column', () => (
@@ -34,16 +38,18 @@ storiesOf('data-table', module)
       height={400}
       columnWidth={100}
       flexLastColumn
+      styles={tableStyles}
     />
   ))
   .add('withTableAutoSizer', () => {
     const AutoSizedTable = withTableAutoSizer(Table);
     return ( // storybook container doesn't set an explicit size
-      <div style={{ height: 550, background: 'pink' }}>
+      <div style={{ height: 500, background: 'pink' }}>
         <AutoSizedTable
           dataList={dataList}
           orderedColumnKeys={someColumns}
           columnFlexGrow={1}
+          styles={tableStyles}
         />
       </div>
     );
@@ -57,6 +63,7 @@ storiesOf('data-table', module)
         height={300}
         disableHeight
         columnFlexGrow={1}
+        styles={tableStyles}
       />
     );
   })
@@ -69,6 +76,7 @@ storiesOf('data-table', module)
         dynamicHeightColumnKeys={someColumns.slice(0, 1)}
         height={600}
         columnFlexGrow={1}
+        styles={tableStyles}
       />
     );
   })
@@ -81,6 +89,7 @@ storiesOf('data-table', module)
         height={400}
         columnWidth={200}
         columnFlexGrow={1}
+        styles={tableStyles}
       />
     </div>
   ))
@@ -93,6 +102,7 @@ storiesOf('data-table', module)
         width={700}
         height={400}
         columnFlexGrow={1}
+        styles={sorableTableStyles}
       />
     );
   })
@@ -103,6 +113,7 @@ storiesOf('data-table', module)
       width={700}
       height={400}
       columnFlexGrow={1}
+      styles={tableStyles}
     />
   ))
   .add('FilterableSortableTable', () => {
@@ -113,6 +124,7 @@ storiesOf('data-table', module)
         orderedColumnKeys={someColumns}
         height={400}
         columnFlexGrow={1}
+        styles={sorableTableStyles}
       />
     );
   });

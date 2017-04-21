@@ -38,4 +38,12 @@ data-ui/
     ...
 ```
 
+For easiest development, clone this repo, install `lerna` globally and the root npm modules,
+then have lerna install package dependencies and manage the symlinking between packages for you
+* `git clone ...data-ui && cd data-ui`
+* `npm install --global lerna@^2.0.0-beta.0`
+* `npm install`
+* `lerna bootstrap`
+
+## License
 [MIT](./LICENSE)

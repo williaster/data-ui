@@ -1,7 +1,6 @@
 import React, { PropTypes } from 'react';
 import { Column, SortDirection, Table } from 'react-virtualized';
 
-import '../../node_modules/react-virtualized/styles.css';
 import dataListPropType from '../propTypes/dataList';
 
 function typeOrColumnKeyToType(PropType) {
@@ -22,6 +21,15 @@ const propTypes = {
 
   // optional
   cellRendererByColumnKey: PropTypes.objectOf(PropTypes.func), // { [column]: func() => any }
+  classNames: PropTypes.shape({
+    table: PropTypes.string,
+    grid: PropTypes.string,
+    header: PropTypes.string,
+    row: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.func, // ({ index }) => string
+    ]),
+  }),
   columnFlexGrow: typeOrColumnKeyToType(PropTypes.number),
   columnFlexShrink: typeOrColumnKeyToType(PropTypes.number),
   columnWidth: typeOrColumnKeyToType(PropTypes.number),
@@ -36,15 +44,20 @@ const propTypes = {
   sort: PropTypes.func,
   sortBy: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   sortDirection: PropTypes.oneOf([SortDirection.ASC, SortDirection.DESC]),
-  // styles: PropTypes.shape({
-  //   table: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
-  //   grid: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
-  //   row: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
-  // }),
+  styles: PropTypes.shape({
+    table: PropTypes.object,
+    grid: PropTypes.object,
+    header: PropTypes.object,
+    row: PropTypes.oneOfType([
+      PropTypes.object,
+      PropTypes.func, // ({ index }) => object
+    ]),
+  }),
 };
 
 const defaultProps = {
   cellRendererByColumnKey: undefined,
+  classNames: {},
   columnFlexGrow: undefined,
   columnFlexShrink: 1,
   columnWidth: 50,
@@ -55,14 +68,20 @@ const defaultProps = {
   headerHeight: 40,
   headerRendererByColumnKey: undefined,
   overscanRowCount: 10,
-  rowHeight: 32,
+  rowHeight: 38,
   sort: undefined,
   sortBy: undefined,
   sortDirection: undefined,
+  styles: {},
 };
 
 function BasicTable({
   cellRendererByColumnKey,
+  classNames: {
+    table: className,
+    header: headerClassName,
+    row: rowClassName,
+  },
   columnFlexGrow,
   columnFlexShrink,
   columnWidth,
@@ -80,6 +99,11 @@ function BasicTable({
   sort,
   sortBy,
   sortDirection,
+  styles: {
+    table: style,
+    header: headerStyle,
+    row: rowStyle,
+  },
   width,
 }) {
   return (
@@ -96,6 +120,12 @@ function BasicTable({
       sortBy={sortBy}
       sortDirection={sortDirection}
       width={width}
+      className={className}
+      headerClassName={headerClassName}
+      rowClassName={rowClassName}
+      style={style}
+      headerStyle={headerStyle}
+      rowStyle={rowStyle}
     >
       {orderedColumnKeys.map((columnKey, idx) => {
         let flexGrow;
@@ -129,6 +159,7 @@ function BasicTable({
             width={typeof columnWidth === 'object' ?
               columnWidth(columnKey) : columnWidth
             }
+
           />
         );
       })}

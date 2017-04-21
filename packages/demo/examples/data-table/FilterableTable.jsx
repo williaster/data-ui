@@ -1,8 +1,11 @@
 import React, { PropTypes } from 'react';
 
-import LabeledInput from './LabeledInput';
-import Table from './Table';
-import withFiltering from '../enhancers/withFiltering';
+import {
+  Table,
+  withFiltering,
+} from '@data-ui/data-table';
+
+import LabeledInput from '../shared/LabeledInput';
 
 const propTypes = {
   onChangeFilterText: PropTypes.func.isRequired,

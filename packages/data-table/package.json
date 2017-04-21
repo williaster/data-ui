@@ -4,15 +4,17 @@
   "description": "Table components that can handle a lot of data",
   "main": "build/index.js",
   "scripts": {
-    "build": "webpack --env build",
+    "build": "webpack --env build && npm run copy-styles",
     "dev": "webpack --progress --colors --watch --env dev",
+    "copy-styles": "cp ./node_modules/react-virtualized/styles.css ./build/styles.css",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": "https://github.com/williaster/data-ui",
   "keywords": [
     "data",
     "table",
-    "react"
+    "react",
+    "react-virtualized"
   ],
   "author": "Chris Williams <chris.williams@airbnb.com>",
   "license": "MIT",
@@ -27,7 +29,8 @@
     "babel-plugin-syntax-jsx": "^6.18.0",
     "babel-preset-airbnb": "^2.2.3",
     "css-loader": "^0.28.0",
-    "style-loader": "^0.16.1",
+    "react": "~15.4.2",
+    "react-dom": "~15.4.2",
     "webpack": "^2.4.1"
   },
   "peerDependencies": {

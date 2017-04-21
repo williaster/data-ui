@@ -1,7 +1,9 @@
 /* Controlled, labeled input */
 import React, { PropTypes } from 'react';
+import { css, withStyles, withStylesProps } from '../../themes/withStyles';
 
 const propTypes = {
+  ...withStylesProps,
   disabled: PropTypes.bool,
   label: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
@@ -22,10 +24,11 @@ function LabeledInput({
   name,
   onChange,
   placeholder,
+  styles,
   value,
 }) {
   return (
-    <div>
+    <div {...(css(styles.container))}>
       <label
         title={label}
         htmlFor={name}
@@ -33,6 +36,7 @@ function LabeledInput({
         {label}
       </label>
       <input
+        {...(css(styles.input))}
         aria-label={label}
         name={name}
         placeholder={placeholder}
@@ -47,4 +51,22 @@ function LabeledInput({
 LabeledInput.propTypes = propTypes;
 LabeledInput.defaultProps = defaultProps;
 
-export default LabeledInput;
+export default withStyles(({ unit, font, color }) => ({
+  container: {
+    width: 300,
+    height: 3 * unit,
+    paddingBottom: 0.5 * unit,
+    paddingTop: 0.5 * unit,
+  },
+
+  input: {
+    border: `1px solid ${color.mediumGray}`,
+    width: '100%',
+    height: '100%',
+    textAlign: 'inherit',
+    ':focus': {
+      outline: 'none',
+    },
+    ...font.small,
+  },
+}))(LabeledInput);

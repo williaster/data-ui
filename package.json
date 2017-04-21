@@ -4,6 +4,7 @@
   "description": "A collection of components for data-rich user interfaces",
   "main": "index.js",
   "scripts": {
+    "lint": "eslint --ignore-path=.eslintignore --ext .js,.jsx ./packages/",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": "https://github.com/williaster/data-ui.git",
