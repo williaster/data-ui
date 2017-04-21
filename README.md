@@ -7,6 +7,19 @@ A collection of custom + wrapped components for data-rich (desktop) UIs. Super b
 
 Lots more coming.
 
+## Live Playground
+
+For examples of the components in action, go to https://williaster.github.io/data-ui.
+
+OR
+
+To run that demo on your own computer:
+* Clone this repository
+* cd demo
+* `npm install`
+* `npm run storybook`
+* Visit http://localhost:9001/
+
 ## Development
 [lerna](https://github.com/lerna/lerna/) is used to manage versions and dependencies between
 packages in this repo.
