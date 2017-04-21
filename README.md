@@ -49,5 +49,10 @@ npm install
 lerna bootstrap
 ```
 
+Each package defines its own tests which you can run from within a directory with
+`npm run test`
+
+To run tests in all packages run the same command from the root @data-ui directory.
+
 ## License
 [MIT](./LICENSE)
