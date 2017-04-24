@@ -45,6 +45,24 @@ export default [
     ),
   },
   {
+    description: 'custom column labels',
+    example: () => (
+      <Table
+        dataList={dataList}
+        orderedColumnKeys={someColumns.slice(0, 2)}
+        width={700}
+        height={400}
+        columnWidth={100}
+        flexLastColumn
+        styles={tableStyles}
+        columnLabelByColumnKey={{
+          [someColumns[0]]: 'Custom 1',
+          [someColumns[1]]: 'Custom 2',
+        }}
+      />
+    ),
+  },
+  {
     description: 'with window scrolling + auto width HOCs',
     example: () => {
       const WindowScrollingTable = withWindowScroller(withTableAutoSizer(Table));

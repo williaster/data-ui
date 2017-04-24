@@ -32,6 +32,7 @@ const propTypes = {
   }),
   columnFlexGrow: typeOrColumnKeyToType(PropTypes.number),
   columnFlexShrink: typeOrColumnKeyToType(PropTypes.number),
+  columnLabelByColumnKey: PropTypes.objectOf(PropTypes.string),
   columnWidth: typeOrColumnKeyToType(PropTypes.number),
   deferredMeasurementCache: PropTypes.object,
   disableHeader: PropTypes.bool,
@@ -60,6 +61,7 @@ const defaultProps = {
   classNames: {},
   columnFlexGrow: undefined,
   columnFlexShrink: 1,
+  columnLabelByColumnKey: undefined,
   columnWidth: 50,
   deferredMeasurementCache: undefined,
   disableHeader: false,
@@ -87,6 +89,7 @@ class BasicTable extends React.PureComponent {
       },
       columnFlexGrow,
       columnFlexShrink,
+      columnLabelByColumnKey,
       columnWidth,
       dataList,
       deferredMeasurementCache,
@@ -109,7 +112,6 @@ class BasicTable extends React.PureComponent {
       },
       width,
     } = this.props;
-
     return (
       <Table
         deferredMeasurementCache={deferredMeasurementCache}
@@ -159,7 +161,7 @@ class BasicTable extends React.PureComponent {
                 headerRendererByColumnKey &&
                 headerRendererByColumnKey[columnKey]
               }
-              label={columnKey}
+              label={(columnLabelByColumnKey && columnLabelByColumnKey[columnKey]) || columnKey}
               width={typeof columnWidth === 'object' ?
                 columnWidth(columnKey) : columnWidth
               }
