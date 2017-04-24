@@ -12,7 +12,7 @@ const propTypes = {
 const defaultProps = {
   filterRow: (row, filterText) => {
     const re = new RegExp(filterText, 'gi');
-    const values = Object.values(row).map(value => value.toString().toLowerCase());
+    const values = Object.values(row).map(value => (value || '').toString().toLowerCase());
     return values.some(value => re.test(value));
   },
   initialFilterText: '',
