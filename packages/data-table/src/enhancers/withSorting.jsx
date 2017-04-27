@@ -1,4 +1,6 @@
-import React from 'react';
+/* eslint react/prop-types: 0 */
+/* ^ there is a bug with how props are parsed with the enhanced component */
+import React, { PropTypes } from 'react';
 import { SortDirection } from 'react-virtualized';
 
 import dataListPropType from '../propTypes/dataList';
@@ -6,6 +8,13 @@ import { baseHOC, updateDisplayName } from './hocUtils';
 
 const propTypes = {
   dataList: dataListPropType.isRequired,
+  initialSortBy: PropTypes.string,
+  initialSortDirection: PropTypes.oneOf(Object.values(SortDirection)),
+};
+
+const defaultProps = {
+  initialSortBy: null,
+  initialSortDirection: null,
 };
 
 function withSorting(WrappedComponent, pureComponent = true) {
@@ -15,15 +24,14 @@ function withSorting(WrappedComponent, pureComponent = true) {
     constructor(props) {
       super(props);
       this.state = {
-        sortBy: null,
-        sortDirection: null,
+        sortBy: props.initialSortBy,
+        sortDirection: props.initialSortDirection,
         sortedDataList: this.props.dataList,
       };
       this.onSort = this.onSort.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
-      // eslint-disable-next-line react/prop-types
       if (nextProps.dataList !== this.props.dataList) {
         this.onSort(this.state, nextProps);
       }
@@ -47,7 +55,7 @@ function withSorting(WrappedComponent, pureComponent = true) {
 
     render() {
       const { sortedDataList, sortBy, sortDirection } = this.state;
-      const { dataList, ...rest } = this.props;
+      const { dataList, initialSortBy, initialSortDirection, ...rest } = this.props;
       return (
         <WrappedComponent
           {...rest}
@@ -61,6 +69,7 @@ function withSorting(WrappedComponent, pureComponent = true) {
   }
 
   EnhancedComponent.propTypes = propTypes;
+  EnhancedComponent.defaultProps = defaultProps;
   updateDisplayName(WrappedComponent, EnhancedComponent, 'withSorting');
 
   return EnhancedComponent;

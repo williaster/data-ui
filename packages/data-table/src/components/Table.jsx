@@ -39,7 +39,7 @@ const propTypes = {
   disableSort: typeOrColumnKeyToType(PropTypes.bool),
   flexLastColumn: PropTypes.bool,
   headerHeight: PropTypes.number,
-  headerRendererByColumnKey: PropTypes.objectOf(PropTypes.func),
+  headerRenderer: typeOrColumnKeyToType(PropTypes.func),
   overscanRowCount: PropTypes.number,
   rowHeight: typeOrColumnKeyToType(PropTypes.number),
   sort: PropTypes.func,
@@ -68,7 +68,7 @@ const defaultProps = {
   disableSort: undefined,
   flexLastColumn: true,
   headerHeight: 40,
-  headerRendererByColumnKey: undefined,
+  headerRenderer: undefined,
   overscanRowCount: 10,
   rowHeight: 38,
   sort: undefined,
@@ -98,7 +98,7 @@ class BasicTable extends React.PureComponent {
       flexLastColumn,
       height,
       headerHeight,
-      headerRendererByColumnKey,
+      headerRenderer,
       overscanRowCount,
       orderedColumnKeys,
       rowHeight,
@@ -157,9 +157,9 @@ class BasicTable extends React.PureComponent {
                 columnFlexShrink[columnKey] : columnFlexShrink
               }
               flexGrow={flexGrow}
-              headerRendererByColumnKey={
-                headerRendererByColumnKey &&
-                headerRendererByColumnKey[columnKey]
+              headerRenderer={
+                typeof headerRenderer === 'object' ?
+                headerRenderer[columnKey] : headerRenderer
               }
               label={(columnLabelByColumnKey && columnLabelByColumnKey[columnKey]) || columnKey}
               width={typeof columnWidth === 'object' ?
