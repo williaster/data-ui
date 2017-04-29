@@ -145,6 +145,49 @@ export default [
     },
   },
   {
+    description: 'custom header cells, disabled sort, initial sort',
+    example: () => {
+      const SortableTable = withSorting(Table);
+      return (
+        <SortableTable
+          dataList={dataList}
+          orderedColumnKeys={someColumns}
+          width={700}
+          height={400}
+          columnFlexGrow={1}
+          styles={tableStyles}
+          columnLabelByColumnKey={{
+            [someColumns[0]]: `${someColumns[0]} (no sort)`,
+          }}
+          headerRenderer={({
+            dataKey,
+            disableSort,
+            label,
+            sortBy,
+            sortDirection,
+          }) => (
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                cursor: disableSort ? 'default' : 'pointer',
+              }}
+            >
+              {label}
+              {dataKey === sortBy && sortDirection === 'ASC' && '👍'}
+              {dataKey === sortBy && sortDirection === 'DESC' && '👎'}
+            </div>
+          )}
+          disableSort={{
+            [someColumns[0]]: true,
+          }}
+          initialSortBy={someColumns[1]}
+          initialSortDirection="ASC"
+        />
+      );
+    },
+  },
+  {
     description: 'with filterable HOC',
     example: () => (
       <FilterableTable

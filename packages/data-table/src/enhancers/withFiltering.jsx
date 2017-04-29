@@ -1,3 +1,4 @@
+/* eslint react/prop-types: 1 */
 import React, { PropTypes } from 'react';
 
 import { baseHOC, updateDisplayName } from './hocUtils';
@@ -5,6 +6,8 @@ import dataListPropType from '../propTypes/dataList';
 
 const propTypes = {
   dataList: dataListPropType.isRequired,
+  debounceMs: PropTypes.number,
+  noDebounce: PropTypes.bool,
   filterRow: PropTypes.func,
   initialFilterText: PropTypes.string,
 };
@@ -16,6 +19,8 @@ const defaultProps = {
     return values.some(value => re.test(value));
   },
   initialFilterText: '',
+  debounceMs: 75,
+  noDebounce: false,
 };
 
 function withFiltering(WrappedComponent, pureComponent = true) {
@@ -27,24 +32,42 @@ function withFiltering(WrappedComponent, pureComponent = true) {
       this.state = {
         filterText: this.props.initialFilterText,
         filteredDataList: this.props.dataList,
+        debounce: null,
       };
       this.onChangeFilterText = this.onChangeFilterText.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
-      // eslint-disable-next-line react/prop-types
       if (nextProps.dataList !== this.props.dataList) {
         this.onChangeFilterText(this.state.filterText, nextProps);
       }
     }
 
     onChangeFilterText(filterText, props) {
-      const { dataList: originalData, filterRow } = props || this.props;
-      const nextState = { filterText, filteredDataList: originalData };
-      if (filterText) {
-        nextState.filteredDataList = originalData.filter(row => filterRow(row, filterText));
+      if (props.noDebounce || !this.state.debounce) {
+        const { dataList: originalData, filterRow } = props || this.props;
+        const { filteredDataList, filterText: prevFilterText } = this.state;
+
+        const newData = originalData !== this.props.dataList;
+        const userDeletedLetter = prevFilterText &&
+          filterText.length < prevFilterText.length &&
+          prevFilterText.indexOf(filterText) >= -1;
+
+        const nextState = {
+          filterText,
+          filteredDataList: newData || userDeletedLetter ? originalData : filteredDataList,
+          debounce: window.setTimeout(() => {
+            this.setState({ debounce: null });
+          }, props.debounceMs),
+        };
+
+        if (filterText) {
+          nextState.filteredDataList = nextState.filteredDataList
+            .filter(row => filterRow(row, filterText));
+        }
+        this.setState(nextState);
       }
-      this.setState(nextState);
+      this.setState({ filterText });
     }
 
     render() {
