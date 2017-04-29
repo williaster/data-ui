@@ -3,12 +3,21 @@ import { CellMeasurer, CellMeasurerCache } from 'react-virtualized';
 
 import { baseHOC, updateDisplayName } from './hocUtils';
 
+// eslint-disable-next-line react/prop-types
+const defaultCellRenderer = ({ cellData /* , dataKey, parent, rowData, rowIndex */ }) => (
+  <div
+    style={{
+      whiteSpace: 'normal',
+      wordBreak: 'break-word',
+    }}
+  >
+    {cellData}
+  </div>
+);
+
 const propTypes = {
   // wrapped by CellMeasurer and returns the cell contents, one or one for each column
-  cellRenderer: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.objectOf(PropTypes.func),
-  ]),
+  cellRendererByColumnKey: PropTypes.objectOf(PropTypes.func),
   defaultCellHeight: PropTypes.number,
   dynamicHeightColumnKeys: PropTypes.array.isRequired, // dynamic height is computed for these
   minCellHeight: PropTypes.number,
@@ -16,16 +25,7 @@ const propTypes = {
 
 const defaultProps = {
   // eslint-disable-next-line react/prop-types
-  cellRenderer: ({ cellData /* , dataKey, parent, rowData, rowIndex */ }) => (
-    <div
-      style={{
-        whiteSpace: 'normal',
-        wordBreak: 'break-word',
-      }}
-    >
-      {cellData}
-    </div>
-  ),
+  cellRendererByColumnKey: null,
   defaultCellHeight: 32,
   minCellHeight: 32,
 };
@@ -55,7 +55,11 @@ function withDynamicCellHeights(WrappedComponent, pureComponent = true) {
     }
 
     cellRenderer({ cellData, dataKey, parent, rowData, rowIndex }) {
-      const { cellRenderer } = this.props;
+      const { cellRendererByColumnKey } = this.props;
+      const cellRenderer =
+        (cellRendererByColumnKey && cellRendererByColumnKey[dataKey]) ||
+        defaultCellRenderer;
+
       return (
         <CellMeasurer
           cache={this.state.cache}
@@ -70,21 +74,25 @@ function withDynamicCellHeights(WrappedComponent, pureComponent = true) {
     }
     render() {
       const {
-        cellRenderer,
+        cellRendererByColumnKey,
         dynamicHeightColumnKeys,
         defaultCellHeight,
         minCellHeight,
         ...rest
       } = this.props;
+      const dynamicCellRenderers = Object.assign(
+        ...dynamicHeightColumnKeys.map(key => ({
+          [key]: this.cellRenderer,
+        })),
+      );
       return (
         <WrappedComponent
           {...rest}
           deferredMeasurementCache={this.state.cache}
-          cellRendererByColumnKey={Object.assign(
-            ...dynamicHeightColumnKeys.map(key => ({
-              [key]: this.cellRenderer,
-            }),
-          ))}
+          cellRendererByColumnKey={{
+            ...cellRendererByColumnKey,
+            ...dynamicCellRenderers,
+          }}
         />
       );
     }
