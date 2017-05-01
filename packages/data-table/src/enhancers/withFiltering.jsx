@@ -1,4 +1,4 @@
-/* eslint react/prop-types: 1 */
+/* eslint react/prop-types: 0 */
 import React, { PropTypes } from 'react';
 
 import { baseHOC, updateDisplayName } from './hocUtils';
@@ -44,11 +44,12 @@ function withFiltering(WrappedComponent, pureComponent = true) {
     }
 
     onChangeFilterText(filterText, props) {
-      if (props.noDebounce || !this.state.debounce) {
+      if (!window || props.noDebounce || !this.state.debounce) {
         const { dataList: originalData, filterRow } = props || this.props;
         const { filteredDataList, filterText: prevFilterText } = this.state;
 
         const newData = originalData !== this.props.dataList;
+
         const userDeletedLetter = prevFilterText &&
           filterText.length < prevFilterText.length &&
           prevFilterText.indexOf(filterText) >= -1;
@@ -56,15 +57,19 @@ function withFiltering(WrappedComponent, pureComponent = true) {
         const nextState = {
           filterText,
           filteredDataList: newData || userDeletedLetter ? originalData : filteredDataList,
-          debounce: window.setTimeout(() => {
-            this.setState({ debounce: null });
-          }, props.debounceMs),
         };
+
+        if (window) {
+          nextState.debounce = window.setTimeout(() => {
+            this.setState({ debounce: null });
+          }, props.debounceMs);
+        }
 
         if (filterText) {
           nextState.filteredDataList = nextState.filteredDataList
             .filter(row => filterRow(row, filterText));
         }
+
         this.setState(nextState);
       }
       this.setState({ filterText });
