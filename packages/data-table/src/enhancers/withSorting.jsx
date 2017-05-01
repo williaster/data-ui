@@ -15,8 +15,8 @@ export const defaultComparator = (A, B) => {
   if (A.toLowerCase && B.toLowerCase) {
     const a = A.toLowerCase();
     const b = B.toLowerCase();
-    if (a > b) return -1;
-    if (b > a) return 1;
+    if (a > b) return 1;
+    if (b > a) return -1;
   }
   return 0;
 };
