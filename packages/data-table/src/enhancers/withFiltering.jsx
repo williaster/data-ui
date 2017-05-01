@@ -44,7 +44,8 @@ function withFiltering(WrappedComponent, pureComponent = true) {
     }
 
     onChangeFilterText(filterText, props) {
-      if (!window || props.noDebounce || !this.state.debounce) {
+      const { noDebounce } = props || this.props;
+      if (!window || noDebounce || !this.state.debounce) {
         const { dataList: originalData, filterRow } = props || this.props;
         const { filteredDataList, filterText: prevFilterText } = this.state;
 
@@ -72,6 +73,7 @@ function withFiltering(WrappedComponent, pureComponent = true) {
 
         this.setState(nextState);
       }
+
       this.setState({ filterText });
     }
 
