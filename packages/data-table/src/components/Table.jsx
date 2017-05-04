@@ -163,7 +163,7 @@ class BasicTable extends React.PureComponent {
               }
               label={(columnLabelByColumnKey && columnLabelByColumnKey[columnKey]) || columnKey}
               width={typeof columnWidth === 'object' ?
-                columnWidth(columnKey) : columnWidth
+                columnWidth[columnKey] : columnWidth
               }
 
             />
