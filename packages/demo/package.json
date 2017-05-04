@@ -1,6 +1,6 @@
 {
   "name": "@data-ui/demo",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "data-ui demo",
   "scripts": {
     "gh-pages:clean": "rm -rf _gh-pages",
@@ -20,7 +20,7 @@
   "license": "MIT",
   "homepage": "https://github.com/williaster/data-ui#readme",
   "devDependencies": {
-    "@data-ui/data-table": "^0.0.10",
+    "@data-ui/data-table": "^0.0.11",
     "@kadira/storybook": "^2.35.3",
     "@vx/mock-data": "0.0.95",
     "aphrodite": "^1.2.0",
