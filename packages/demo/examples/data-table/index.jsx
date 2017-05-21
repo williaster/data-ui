@@ -1,5 +1,5 @@
 import { List } from 'immutable';
-import mockData from '@vx/mock-data';
+import * as mockData from '@vx/mock-data';
 import React from 'react';
 import {
   Table,
