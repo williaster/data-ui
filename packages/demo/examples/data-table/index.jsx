@@ -10,6 +10,7 @@ import {
 } from '@data-ui/data-table';
 
 import { tableStyles, sorableTableStyles } from './tableStyles';
+import ExpandableRowTable from './ExpandableRows';
 import FilterableTable from './FilterableTable';
 
 const dataList = List(mockData.browserUsage);
@@ -229,6 +230,18 @@ export default [
           styles={tableStyles}
         />
       </div>
+    ),
+  },
+  {
+    description: 'with expandable rows',
+    example: () => (
+      <ExpandableRowTable
+        dataList={dataList}
+        orderedColumnKeys={someColumns}
+        width={700}
+        height={400}
+        styles={tableStyles}
+      />
     ),
   },
 ];

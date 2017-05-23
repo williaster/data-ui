@@ -1,3 +1,4 @@
+import { defaultTableRowRenderer } from 'react-virtualized';
 import Table from './components/Table';
 import withDynamicCellHeights from './enhancers/withDynamicCellHeights';
 import withFiltering from './enhancers/withFiltering';
@@ -6,6 +7,7 @@ import withTableAutoSizer from './enhancers/withTableAutoSizer';
 import withWindowScroller from './enhancers/withWindowScroller';
 
 export {
+  defaultTableRowRenderer,
   Table,
   withDynamicCellHeights,
   withFiltering,

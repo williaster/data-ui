@@ -59,7 +59,7 @@ function withDynamicCellHeights(WrappedComponent, pureComponent = true) {
       const cellRenderer =
         (cellRendererByColumnKey && cellRendererByColumnKey[dataKey]) ||
         defaultCellRenderer;
-
+      console.log(cellRenderer({ cellData, dataKey, parent, rowData, rowIndex }));
       return (
         <CellMeasurer
           cache={this.state.cache}

@@ -41,7 +41,10 @@ const propTypes = {
   headerHeight: PropTypes.number,
   headerRenderer: typeOrColumnKeyToType(PropTypes.func),
   overscanRowCount: PropTypes.number,
-  rowHeight: typeOrColumnKeyToType(PropTypes.number),
+  rowHeight: typeOrColumnKeyToType(
+    PropTypes.oneOfType([PropTypes.func, PropTypes.number]), // ({ index }) => number
+  ),
+  rowRenderer: PropTypes.func,
   sort: PropTypes.func,
   sortBy: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   sortDirection: PropTypes.oneOf([SortDirection.ASC, SortDirection.DESC]),
@@ -54,6 +57,7 @@ const propTypes = {
       PropTypes.func, // ({ index }) => object
     ]),
   }),
+  tableRef: PropTypes.func, // passed to <Table ref={...} />
 };
 
 const defaultProps = {
@@ -67,14 +71,16 @@ const defaultProps = {
   disableHeader: false,
   disableSort: undefined,
   flexLastColumn: true,
-  headerHeight: 40,
+  headerHeight: 42,
   headerRenderer: undefined,
   overscanRowCount: 10,
   rowHeight: 38,
+  rowRenderer: undefined,
   sort: undefined,
   sortBy: undefined,
   sortDirection: undefined,
   styles: {},
+  tableRef: null,
 };
 
 // eslint-disable-next-line react/prefer-stateless-function
@@ -102,6 +108,7 @@ class BasicTable extends React.PureComponent {
       overscanRowCount,
       orderedColumnKeys,
       rowHeight,
+      rowRenderer,
       sort,
       sortBy,
       sortDirection,
@@ -110,6 +117,7 @@ class BasicTable extends React.PureComponent {
         header: headerStyle,
         row: rowStyle,
       },
+      tableRef,
       width,
     } = this.props;
     return (
@@ -119,6 +127,7 @@ class BasicTable extends React.PureComponent {
         headerHeight={disableHeader ? undefined : headerHeight}
         height={height}
         overscanRowCount={overscanRowCount}
+        ref={tableRef}
         rowHeight={(deferredMeasurementCache && deferredMeasurementCache.rowHeight) || rowHeight}
         rowGetter={({ index }) => dataList.get(index % dataList.size)}
         rowCount={dataList.size}
@@ -131,6 +140,7 @@ class BasicTable extends React.PureComponent {
         rowClassName={rowClassName}
         style={style}
         headerStyle={headerStyle}
+        rowRenderer={rowRenderer}
         rowStyle={rowStyle}
       >
         {orderedColumnKeys.map((columnKey, idx) => {
@@ -161,7 +171,11 @@ class BasicTable extends React.PureComponent {
                 typeof headerRenderer === 'object' ?
                 headerRenderer[columnKey] : headerRenderer
               }
-              label={(columnLabelByColumnKey && columnLabelByColumnKey[columnKey]) || columnKey}
+              label={
+                (columnLabelByColumnKey &&
+                 typeof columnLabelByColumnKey[columnKey] !== 'undefined') ?
+                columnLabelByColumnKey[columnKey] : columnKey
+              }
               width={typeof columnWidth === 'object' ?
                 columnWidth[columnKey] : columnWidth
               }
