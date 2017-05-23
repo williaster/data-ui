@@ -1,7 +1,7 @@
 import path from 'path';
 import { storiesOf } from '@kadira/storybook';
 
-const requireContext = require.context('./', /* subdirs= */true, /index\.jsx/);
+const requireContext = require.context('./', /* subdirs= */true, /index\.jsx?$/);
 
 requireContext.keys().forEach((packageName) => {
   if (packageName !== 'shared') {

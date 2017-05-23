@@ -21,6 +21,7 @@
   "homepage": "https://github.com/williaster/data-ui#readme",
   "devDependencies": {
     "@data-ui/data-table": "^0.0.12",
+    "@data-ui/xy-chart": "^0.0.1",
     "@kadira/storybook": "^2.35.3",
     "@vx/mock-data": "0.0.95",
     "aphrodite": "^1.2.0",

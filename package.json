@@ -15,7 +15,8 @@
     "react",
     "d3",
     "chart",
-    "data-ui"
+    "data-ui",
+    "vx"
   ],
   "author": "Chris Williams <chris.williams@airbnb.com>",
   "license": "MIT",
