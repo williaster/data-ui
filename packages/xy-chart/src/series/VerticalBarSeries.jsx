@@ -4,19 +4,13 @@ import { Group } from '@vx/group';
 import { Bar } from '@vx/shape';
 
 import { callOrValue } from '../utils/chartUtils';
-import { scaleShape } from '../utils/propShapes';
-
+import { barSeriesDataShape } from '../utils/propShapes';
 
 const propTypes = {
-  data: PropTypes.arrayOf(PropTypes.shape({
-    x: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-    y: PropTypes.number.isRequired,
-    fill: PropTypes.string,
-    stroke: PropTypes.string,
-    strokeWidth: PropTypes.number,
-    label: PropTypes.string,
-  })).isRequired,
+  data: barSeriesDataShape.isRequired,
   label: PropTypes.string.isRequired,
+
+  // overridden by data props
   fill: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   stroke: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   strokeWidth: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
@@ -24,8 +18,8 @@ const propTypes = {
   // these will likely be injected by the parent xychart
   barWidth: PropTypes.number.isRequired,
   scales: PropTypes.shape({
-    x: scaleShape.isRequired,
-    y: scaleShape.isRequired,
+    x: PropTypes.func.isRequired,
+    y: PropTypes.func.isRequired,
   }).isRequired,
 };
 
@@ -53,7 +47,7 @@ export default function VerticalBarSeries({
         return (
           <Bar
             key={`bar-${label}-${x(d.x)}`}
-            x={x(d.x) - (0.5 * barWidth)}
+            x={x(d.x) - (x.bandwidth ? 0 : (0.5 * barWidth))}
             y={maxHeight - barHeight}
             width={barWidth}
             height={barHeight}

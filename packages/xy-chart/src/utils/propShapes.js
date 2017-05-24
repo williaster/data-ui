@@ -6,6 +6,7 @@ export const scaleShape = PropTypes.shape({
     'time',
     'linear',
     'ordinal',
+    'band',
   ]).isRequired,
 
   includeZero: PropTypes.bool,
@@ -16,15 +17,49 @@ export const scaleShape = PropTypes.shape({
   domain: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.number, PropTypes.string])),
 });
 
-// export const axisShape = PropTypes.shape({
-//   orientation: PropTypes.oneOf(['top', 'right', 'bottom', 'left']),
-//   label: PropTypes.string,
-//   showGrid: PropTypes.bool,
-//   showTicks: PropTypes.bool,
-//   tickFormat: PropTypes.func,
-//   numTicks: PropTypes.number,
-//   tickValues: PropTypes.oneOfType([ // array of tick values or a function that returns one
-//     PropTypes.func,
-//     PropTypes.arrayOf(PropTypes.string),
-//   ]),
-// });
+export const lineSeriesDataShape = PropTypes.arrayOf(
+  PropTypes.shape({
+    x: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.number,
+      PropTypes.instanceOf(Date),
+    ]).isRequired,
+    y: PropTypes.number.isRequired,
+    label: PropTypes.string,
+  }),
+);
+
+export const barSeriesDataShape = PropTypes.arrayOf(PropTypes.shape({
+  x: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,
+    PropTypes.instanceOf(Date),
+  ]).isRequired,
+  y: PropTypes.number.isRequired,
+  fill: PropTypes.string,
+  stroke: PropTypes.string,
+  strokeWidth: PropTypes.number,
+  label: PropTypes.string,
+}));
+
+export const axisStylesShape = PropTypes.shape({
+  stroke: PropTypes.string,
+  strokeWidth: PropTypes.number,
+  label: PropTypes.shape({
+    left: PropTypes.object,
+    right: PropTypes.object,
+    bottom: PropTypes.object,
+    top: PropTypes.object,
+  }),
+});
+
+export const tickStylesShape = PropTypes.shape({
+  stroke: PropTypes.string,
+  tickLength: PropTypes.number,
+  label: PropTypes.shape({
+    left: PropTypes.object,
+    right: PropTypes.object,
+    bottom: PropTypes.object,
+    top: PropTypes.object,
+  }),
+});

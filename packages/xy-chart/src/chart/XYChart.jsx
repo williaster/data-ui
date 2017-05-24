@@ -1,11 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { componentWithName } from 'airbnb-prop-types';
 
 import { extent } from 'd3-array';
 import { Grid } from '@vx/grid';
 import { Group } from '@vx/group';
-import { scaleLinear, scaleTime, scaleOrdinal } from '@vx/scale';
+import { scaleLinear, scaleTime, scaleOrdinal, scaleBand } from '@vx/scale';
 
 import { componentName, getChildWithName } from '../utils/chartUtils';
 import { grid as defaultGridStyles } from '../theme';
@@ -13,7 +12,7 @@ import { scaleShape } from '../utils/propShapes';
 
 const propTypes = {
   ariaLabel: PropTypes.string.isRequired,
-  children: componentWithName(/(Series|Axis)$/),
+  children: PropTypes.node,
   width: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired,
   margin: PropTypes.shape({
@@ -47,9 +46,10 @@ const scaleTypeToScale = {
   time: scaleTime,
   linear: scaleLinear,
   ordinal: scaleOrdinal,
+  band: scaleBand,
 };
 
-class XYChart extends React.Component {
+class XYChart extends React.PureComponent {
 
   // @todo: refactor this, if axis is categorical can rely on range bands
   getBarWidth({ innerWidth }) {
@@ -90,20 +90,21 @@ class XYChart extends React.Component {
 
     const scales = {};
     Object.entries(scaleProp).forEach(([key, { accessor, type, includeZero, ...rest }]) => {
-      const [min, max] = extent(allData, d => (accessor ? accessor(d) : d[key]));
-
       let range;
       if (key === 'x') range = [0 + (barWidth / 2), innerWidth - (barWidth / 2)];
       if (key === 'y') range = [innerHeight, 0];
 
-      scales[key] = scaleTypeToScale[type]({
-        domain: [
+      let domain;
+      if (type === 'ordinal' || type === 'band') {
+        domain = allData.map(d => (accessor ? accessor(d) : d[key]));
+      } else {
+        const [min, max] = extent(allData, d => (accessor ? accessor(d) : d[key]));
+        domain = [
           type === 'linear' && includeZero ? Math.min(0, min) : min,
           type === 'linear' && includeZero ? Math.max(0, max) : max,
-        ],
-        range,
-        ...rest,
-      });
+        ];
+      }
+      scales[key] = scaleTypeToScale[type]({ domain, range, ...rest });
 
       scales[key].accessor = accessor;
     });
@@ -169,6 +170,7 @@ class XYChart extends React.Component {
                 labelOffset: name === 'YAxis' ? 0.6 * margin.right : 0,
                 numTicks: name === 'XAxis' ? numTicks.x : numTicks.y,
                 scale: name === 'XAxis' ? scales.x : scales.y,
+                rangePadding: barWidth / 2,
               });
             }
             return child;

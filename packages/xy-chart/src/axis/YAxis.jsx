@@ -2,34 +2,20 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { AxisLeft, AxisRight } from '@vx/axis';
 
+import { axisStylesShape, tickStylesShape } from '../utils/propShapes';
 import { yAxis as defaultAxisStyles, yTick as defaultTickStyles } from '../theme';
 
 const propTypes = {
-  axisPadding: PropTypes.number,
-  orientation: PropTypes.oneOf(['left', 'right']),
+  axisStyles: axisStylesShape,
   hideZero: PropTypes.bool,
   label: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
   labelOffset: PropTypes.number,
   numTicks: PropTypes.number,
-  axisStyles: PropTypes.shape({
-    stroke: PropTypes.string,
-    strokeWidth: PropTypes.number,
-    label: PropTypes.shape({
-      bottom: PropTypes.object,
-      top: PropTypes.object,
-    }),
-  }),
-  tickStyles: PropTypes.shape({
-    stroke: PropTypes.string,
-    tickLength: PropTypes.number,
-    label: PropTypes.shape({
-      bottom: PropTypes.object,
-      top: PropTypes.object,
-    }),
-  }),
+  orientation: PropTypes.oneOf(['left', 'right']),
+  rangePadding: PropTypes.number,
+  tickStyles: tickStylesShape,
   tickLabelComponent: PropTypes.element,
   tickFormat: PropTypes.func,
-  tickValues: PropTypes.arrayOf(PropTypes.string),
 
   // probably injected by parent
   innerWidth: PropTypes.number.isRequired,
@@ -37,21 +23,19 @@ const propTypes = {
 };
 
 const defaultProps = {
-  axisPadding: null,
   axisStyles: defaultAxisStyles,
   hideZero: false,
   label: null,
   labelOffset: 0,
   numTicks: null,
   orientation: 'right',
+  rangePadding: null,
   tickFormat: null,
   tickLabelComponent: null,
   tickStyles: defaultTickStyles,
-  tickValues: null,
 };
 
 export default function YAxis({
-  axisPadding,
   axisStyles,
   hideZero,
   innerWidth,
@@ -59,18 +43,18 @@ export default function YAxis({
   labelOffset,
   numTicks,
   orientation,
+  rangePadding,
   scale,
   tickFormat,
   tickLabelComponent,
   tickStyles,
-  tickValues,
 }) {
   const Axis = orientation === 'left' ? AxisLeft : AxisRight;
   return (
     <Axis
       top={0}
       left={orientation === 'right' ? innerWidth : 0}
-      axisPadding={axisPadding}
+      rangePadding={rangePadding}
       hideTicks={numTicks === 0}
       hideZero={hideZero}
       label={typeof label === 'string' ?
@@ -80,7 +64,7 @@ export default function YAxis({
         : label
       }
       labelOffset={labelOffset}
-      numTicks={typeof numTicks === 'number' ? numTicks : tickValues && tickValues.length}
+      numTicks={numTicks}
       scale={scale}
       stroke={axisStyles.stroke}
       strokeWidth={axisStyles.strokeWidth}

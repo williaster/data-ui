@@ -5,18 +5,15 @@ import { curveCardinal, curveLinear } from '@vx/curve';
 import { GlyphDot } from '@vx/glyph';
 import { LinePath } from '@vx/shape';
 
+import { lineSeriesDataShape } from '../utils/propShapes';
 import { callOrValue } from '../utils/chartUtils';
-import { scaleShape } from '../utils/propShapes';
 
 const propTypes = {
-  data: PropTypes.arrayOf(PropTypes.shape({
-    x: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-    y: PropTypes.number.isRequired,
-    label: PropTypes.string,
-  })).isRequired,
+  data: lineSeriesDataShape.isRequired,
   interpolation: PropTypes.oneOf(['linear', 'cardinal']), // @todo add more
   label: PropTypes.string.isRequired,
   showPoints: PropTypes.bool,
+
   stroke: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   strokeDasharray: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   strokeWidth: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
@@ -30,7 +27,7 @@ const propTypes = {
 
 const defaultProps = {
   interpolation: 'cardinal',
-  showPoints: true,
+  showPoints: false,
   stroke: '#00A699',
   strokeDasharray: null,
   strokeWidth: 3,
@@ -57,9 +54,9 @@ export default function LineSeries({
       yScale={y}
       x={xAccessor}
       y={yAccessor}
-      stroke={stroke}
-      strokeWidth={strokeWidth}
-      strokeDasharray={strokeDasharray}
+      stroke={callOrValue(stroke)}
+      strokeWidth={callOrValue(strokeWidth)}
+      strokeDasharray={callOrValue(strokeDasharray)}
       curve={interpolation === 'linear' ? curveLinear : curveCardinal}
       glyph={showPoints && ((d, i) => (
         <GlyphDot

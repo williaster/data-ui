@@ -1,34 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
 import { AxisBottom, AxisTop } from '@vx/axis';
+
+import { axisStylesShape, tickStylesShape } from '../utils/propShapes';
 import { xAxis as defaultAxisStyles, xTick as defaultTickStyles } from '../theme';
 
 const propTypes = {
-  axisPadding: PropTypes.number,
-  orientation: PropTypes.oneOf(['bottom', 'top']),
+  axisStyles: axisStylesShape,
   hideZero: PropTypes.bool,
   label: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
   numTicks: PropTypes.number,
-  axisStyles: PropTypes.shape({
-    stroke: PropTypes.string,
-    strokeWidth: PropTypes.number,
-    label: PropTypes.shape({
-      bottom: PropTypes.object,
-      top: PropTypes.object,
-    }),
-  }),
-  tickStyles: PropTypes.shape({
-    stroke: PropTypes.string,
-    tickLength: PropTypes.number,
-    label: PropTypes.shape({
-      bottom: PropTypes.object,
-      top: PropTypes.object,
-    }),
-  }),
+  orientation: PropTypes.oneOf(['bottom', 'top']),
+  rangePadding: PropTypes.number,
+  tickStyles: tickStylesShape,
   tickLabelComponent: PropTypes.element,
   tickFormat: PropTypes.func,
-  tickValues: PropTypes.arrayOf(PropTypes.string),
 
   // probably injected by parent
   innerHeight: PropTypes.number.isRequired,
@@ -36,38 +22,36 @@ const propTypes = {
 };
 
 const defaultProps = {
-  axisPadding: null,
   axisStyles: defaultAxisStyles,
   hideZero: false,
   label: null,
   numTicks: null,
   orientation: 'bottom',
+  rangePadding: null,
   tickFormat: null,
   tickLabelComponent: null,
   tickStyles: defaultTickStyles,
-  tickValues: null,
 };
 
 export default function XAxis({
-  axisPadding,
   axisStyles,
   innerHeight,
   hideZero,
   label,
   numTicks,
   orientation,
+  rangePadding,
   scale,
   tickFormat,
   tickLabelComponent,
   tickStyles,
-  tickValues,
 }) {
   const Axis = orientation === 'bottom' ? AxisBottom : AxisTop;
   return (
     <Axis
       top={orientation === 'bottom' ? innerHeight : 0}
       left={0}
-      axisPadding={axisPadding}
+      rangePadding={rangePadding}
       hideTicks={numTicks === 0}
       hideZero={hideZero}
       label={typeof label === 'string' ?
@@ -76,7 +60,7 @@ export default function XAxis({
         </text>
         : label
       }
-      numTicks={typeof numTicks === 'number' ? numTicks : tickValues && tickValues.length}
+      numTicks={numTicks}
       scale={scale}
       stroke={axisStyles.stroke}
       strokeWidth={axisStyles.strokeWidth}
