@@ -1,11 +1,9 @@
 import PropTypes from 'prop-types';
 
 export const scaleShape = PropTypes.shape({
-  accessor: PropTypes.func,
   type: PropTypes.oneOf([
     'time',
     'linear',
-    'ordinal',
     'band',
   ]).isRequired,
 
@@ -62,4 +60,9 @@ export const tickStylesShape = PropTypes.shape({
     bottom: PropTypes.object,
     top: PropTypes.object,
   }),
+});
+
+export const gridStylesShape = PropTypes.shape({
+  stroke: PropTypes.string,
+  strokeWidth: PropTypes.number,
 });

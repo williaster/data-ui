@@ -17,10 +17,8 @@ const propTypes = {
 
   // these will likely be injected by the parent xychart
   barWidth: PropTypes.number.isRequired,
-  scales: PropTypes.shape({
-    x: PropTypes.func.isRequired,
-    y: PropTypes.func.isRequired,
-  }).isRequired,
+  xScale: PropTypes.func.isRequired,
+  yScale: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -36,18 +34,20 @@ export default function VerticalBarSeries({
   stroke,
   strokeWidth,
   label,
-  scales,
+  xScale,
+  yScale,
 }) {
-  const { x, y } = scales;
-  const maxHeight = (y.range() || [0])[0];
+  const maxHeight = (yScale.range() || [0])[0];
+  const offset = xScale.bandwidth ? 0 : (xScale.range() || [0])[0];
+  debugger;
   return (
     <Group key={label}>
       {data.map((d, i) => {
-        const barHeight = maxHeight - y(d.y);
+        const barHeight = maxHeight - yScale(d.y);
         return (
           <Bar
-            key={`bar-${label}-${x(d.x)}`}
-            x={x(d.x) - (x.bandwidth ? 0 : (0.5 * barWidth))}
+            key={`bar-${label}-${xScale(d.x)}`}
+            x={xScale(d.x) - offset}
             y={maxHeight - barHeight}
             width={barWidth}
             height={barHeight}

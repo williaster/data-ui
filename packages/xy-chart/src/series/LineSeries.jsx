@@ -19,10 +19,8 @@ const propTypes = {
   strokeWidth: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
 
   // these will likely be injected by the parent chart
-  scales: PropTypes.shape({
-    x: PropTypes.func.isRequired,
-    y: PropTypes.func.isRequired,
-  }).isRequired,
+  xScale: PropTypes.func.isRequired,
+  yScale: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -38,31 +36,31 @@ export default function LineSeries({
   interpolation,
   label,
   showPoints,
-  scales,
   stroke,
   strokeDasharray,
   strokeWidth,
+  xScale,
+  yScale,
 }) {
-  const { x, y } = scales;
-  const xAccessor = x.accessor || (d => d.x);
-  const yAccessor = y.accessor || (d => d.y);
+  const x = d => d.x;
+  const y = d => d.y;
   return (
     <LinePath
       key={label}
       data={data}
-      xScale={x}
-      yScale={y}
-      x={xAccessor}
-      y={yAccessor}
+      xScale={xScale}
+      yScale={yScale}
+      x={x}
+      y={y}
       stroke={callOrValue(stroke)}
       strokeWidth={callOrValue(strokeWidth)}
       strokeDasharray={callOrValue(strokeDasharray)}
       curve={interpolation === 'linear' ? curveLinear : curveCardinal}
       glyph={showPoints && ((d, i) => (
         <GlyphDot
-          key={`${label}-${i}-${xAccessor(d)}`}
-          cx={x(d.x)}
-          cy={y(d.y)}
+          key={`${label}-${i}-${x(d)}`}
+          cx={xScale(x(d))}
+          cy={yScale(y(d))}
           r={4}
           fill={d.stroke || callOrValue(stroke, d, i)}
           stroke="#FFFFFF"
@@ -70,8 +68,8 @@ export default function LineSeries({
         >
           {d.label &&
             <text
-              x={xAccessor(d.x)}
-              y={yAccessor(d.y)}
+              x={xScale(x(d))}
+              y={yScale(y(d))}
               dx={10}
               fill={d.stroke || callOrValue(stroke, d, i)}
               stroke={'#fff'}

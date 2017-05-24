@@ -4,11 +4,11 @@ import PropTypes from 'prop-types';
 import { extent } from 'd3-array';
 import { Grid } from '@vx/grid';
 import { Group } from '@vx/group';
-import { scaleLinear, scaleTime, scaleOrdinal, scaleBand } from '@vx/scale';
+import { scaleLinear, scaleTime, scaleBand } from '@vx/scale';
 
-import { componentName, getChildWithName } from '../utils/chartUtils';
+import { componentName, getChildWithName, nonBandBarWidth, isBarSeries } from '../utils/chartUtils';
 import { grid as defaultGridStyles } from '../theme';
-import { scaleShape } from '../utils/propShapes';
+import { scaleShape, gridStylesShape } from '../utils/propShapes';
 
 const propTypes = {
   ariaLabel: PropTypes.string.isRequired,
@@ -25,10 +25,7 @@ const propTypes = {
     x: scaleShape.isRequired,
     y: scaleShape.isRequired,
   }).isRequired, // key matches data attribute
-  gridStyles: PropTypes.shape({
-    stroke: PropTypes.string,
-    strokeWidth: PropTypes.number,
-  }),
+  gridStyles: gridStylesShape,
 };
 
 const defaultProps = {
@@ -45,24 +42,10 @@ const defaultProps = {
 const scaleTypeToScale = {
   time: scaleTime,
   linear: scaleLinear,
-  ordinal: scaleOrdinal,
   band: scaleBand,
 };
 
 class XYChart extends React.PureComponent {
-
-  // @todo: refactor this, if axis is categorical can rely on range bands
-  getBarWidth({ innerWidth }) {
-    let barWidth = Infinity;
-    React.Children.forEach(this.props.children, (Child) => {
-      if (componentName(Child).match(/Bar/g)) {
-        const data = Child.props.data;
-        barWidth = Math.min(barWidth, (innerWidth / data.length) - 6);
-      }
-    });
-    return Math.max(0, barWidth === Infinity ? 0 : barWidth);
-  }
-
   getDimmensions() {
     const { margin, width, height } = this.props;
     const completeMargin = { ...defaultProps.margin, ...margin };
@@ -83,30 +66,40 @@ class XYChart extends React.PureComponent {
   }
 
   getScales() {
-    const { scales: scaleProp } = this.props;
+    const { scales: scaleProp, children } = this.props;
     const { innerWidth, innerHeight } = this.getDimmensions();
     const allData = this.collectDataFromChildSeries();
-    const barWidth = this.getBarWidth({ innerWidth });
-
     const scales = {};
-    Object.entries(scaleProp).forEach(([key, { accessor, type, includeZero, ...rest }]) => {
-      let range;
-      if (key === 'x') range = [0 + (barWidth / 2), innerWidth - (barWidth / 2)];
-      if (key === 'y') range = [innerHeight, 0];
 
+    Object.entries(scaleProp).forEach(([attr, { type, includeZero, ...rest }]) => {
+      let scale;
+      let barWidth;
+      let range;
       let domain;
-      if (type === 'ordinal' || type === 'band') {
-        domain = allData.map(d => (accessor ? accessor(d) : d[key]));
+      let offset = 0;
+
+      if (type === 'band') {
+        range = attr === 'x' ? [0, innerWidth] : [innerHeight, 0];
+        domain = allData.map(d => d[attr]);
+        scale = scaleTypeToScale[type]({ domain, range, ...rest });
+        barWidth = scale.bandwidth();
       } else {
-        const [min, max] = extent(allData, d => (accessor ? accessor(d) : d[key]));
+        const [min, max] = extent(allData, d => d[attr]);
         domain = [
           type === 'linear' && includeZero ? Math.min(0, min) : min,
           type === 'linear' && includeZero ? Math.max(0, max) : max,
         ];
-      }
-      scales[key] = scaleTypeToScale[type]({ domain, range, ...rest });
 
-      scales[key].accessor = accessor;
+        const totalWidth = attr === 'x' ? innerWidth : innerHeight;
+        barWidth = attr === 'x' ? nonBandBarWidth({ totalWidth, children }) : 0;
+        offset = barWidth / 2;
+        range = attr === 'x' ? [offset, innerWidth - offset] : [innerHeight - offset, 0];
+        scale = scaleTypeToScale[type]({ domain, range, ...rest });
+      }
+
+      scales[`${attr}Scale`] = scale;
+      scales[`${attr}BarWidth`] = barWidth;
+      scales[`${attr}Offset`] = offset;
     });
 
     return scales;
@@ -133,9 +126,9 @@ class XYChart extends React.PureComponent {
     } = this.props;
 
     const { margin, innerWidth, innerHeight } = this.getDimmensions();
-    const scales = this.getScales();
+    const { xScale, yScale, xBarWidth, xOffset } = this.getScales();
     const numTicks = this.getNumTicks();
-    const barWidth = this.getBarWidth({ innerWidth });
+
     return (
       <svg
         aria-label={ariaLabel}
@@ -146,8 +139,8 @@ class XYChart extends React.PureComponent {
         <Group left={margin.left} top={margin.top}>
           {(numTicks.x || numTicks.y) &&
             <Grid
-              xScale={scales.x}
-              yScale={scales.y}
+              xScale={xScale}
+              yScale={yScale}
               width={innerWidth}
               height={innerHeight}
               stroke={gridStyles.stroke}
@@ -155,25 +148,23 @@ class XYChart extends React.PureComponent {
               numTicksRows={numTicks.y}
               numTicksColumns={numTicks.x}
             />}
-          {React.Children.map(children, (child) => {
-            const name = componentName(child);
+          {React.Children.map(children, (Child) => {
+            const name = componentName(Child);
             if (name.match(/Series$/)) {
-              return React.cloneElement(child, {
-                scales,
-                barWidth: name.match(/Bar/g) && barWidth,
-              });
+              const barWidth = isBarSeries(name) && xBarWidth;
+              return React.cloneElement(Child, { xScale, yScale, barWidth });
             }
             if (name.match(/Axis$/)) {
-              return React.cloneElement(child, {
+              return React.cloneElement(Child, {
                 innerHeight,
                 innerWidth,
                 labelOffset: name === 'YAxis' ? 0.6 * margin.right : 0,
                 numTicks: name === 'XAxis' ? numTicks.x : numTicks.y,
-                scale: name === 'XAxis' ? scales.x : scales.y,
-                rangePadding: barWidth / 2,
+                scale: name === 'XAxis' ? xScale : yScale,
+                rangePadding: name === 'XAxis' ? xOffset : null,
               });
             }
-            return child;
+            return Child;
           })}
         </Group>
       </svg>

@@ -18,3 +18,18 @@ export function getChildWithName(name, children) {
   const ChildOfInterest = Children.toArray(children).filter(c => componentName(c) === name);
   return ChildOfInterest.length ? ChildOfInterest[0] : null;
 }
+
+export function nonBandBarWidth({ children, totalWidth }) {
+  let barWidth = Infinity;
+  Children.forEach(children, (Child) => {
+    if (componentName(Child).match(/Bar/g)) {
+      const data = Child.props.data;
+      barWidth = Math.min(barWidth, (totalWidth / data.length) - 6);
+    }
+  });
+  return barWidth === Infinity ? 0 : Math.max(0, barWidth);
+}
+
+export function isBarSeries(name) {
+  return name.match(/Bar/g);
+}
