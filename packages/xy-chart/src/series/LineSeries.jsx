@@ -5,8 +5,9 @@ import { curveCardinal, curveLinear } from '@vx/curve';
 import { GlyphDot } from '@vx/glyph';
 import { LinePath } from '@vx/shape';
 
-import { lineSeriesDataShape } from '../utils/propShapes';
 import { callOrValue } from '../utils/chartUtils';
+import { colors } from '../theme';
+import { lineSeriesDataShape } from '../utils/propShapes';
 
 const propTypes = {
   data: lineSeriesDataShape.isRequired,
@@ -26,7 +27,7 @@ const propTypes = {
 const defaultProps = {
   interpolation: 'cardinal',
   showPoints: false,
-  stroke: '#00A699',
+  stroke: colors.default,
   strokeDasharray: null,
   strokeWidth: 3,
 };

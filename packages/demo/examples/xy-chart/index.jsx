@@ -5,6 +5,7 @@ import {
   XYChart,
   LineSeries,
   LinearGradient,
+  theme,
   VerticalBarSeries,
   XAxis,
   YAxis,
@@ -13,6 +14,7 @@ import {
 
 const ResponsiveXYChart = withScreenSize(({ screenWidth, children, ...rest }) => (
   <XYChart
+    theme={theme}
     width={screenWidth / 1.5}
     height={screenWidth / 1.5 / 2}
     {...rest}
@@ -200,6 +202,27 @@ export default [
           fill="url(#aqua_lightaqua_gradient)"
         />
         <XAxis numTicks={0} />
+      </ResponsiveXYChart>
+    ),
+  },
+  {
+    description: 'no theme',
+    example: () => (
+      <ResponsiveXYChart
+        theme={{}}
+        ariaLabel="Required label"
+        scales={{
+          x: { type: 'time' },
+          y: { type: 'linear', includeZero: true },
+        }}
+      >
+        <YAxis label="Price ($)" numTicks={4} />
+        <VerticalBarSeries
+          data={data}
+          label="Apple Stock"
+          fill="#767676"
+        />
+        <XAxis label="Time" numTicks={5} />
       </ResponsiveXYChart>
     ),
   },

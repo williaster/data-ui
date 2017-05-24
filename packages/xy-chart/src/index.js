@@ -3,5 +3,6 @@ export { default as LineSeries } from './series/LineSeries';
 export { default as XAxis } from './axis/XAxis';
 export { default as YAxis } from './axis/YAxis';
 export { default as XYChart } from './chart/XYChart';
+export { default as theme } from './theme';
 export { LinearGradient } from '@vx/gradient';
 export { withScreenSize } from '@vx/responsive';

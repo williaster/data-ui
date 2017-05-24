@@ -3,8 +3,9 @@ import PropTypes from 'prop-types';
 import { Group } from '@vx/group';
 import { Bar } from '@vx/shape';
 
-import { callOrValue } from '../utils/chartUtils';
 import { barSeriesDataShape } from '../utils/propShapes';
+import { callOrValue } from '../utils/chartUtils';
+import { colors } from '../theme';
 
 const propTypes = {
   data: barSeriesDataShape.isRequired,
@@ -22,7 +23,7 @@ const propTypes = {
 };
 
 const defaultProps = {
-  fill: '#00A699',
+  fill: colors.default,
   stroke: '#FFFFFF',
   strokeWidth: 1,
 };
@@ -39,7 +40,6 @@ export default function VerticalBarSeries({
 }) {
   const maxHeight = (yScale.range() || [0])[0];
   const offset = xScale.bandwidth ? 0 : (xScale.range() || [0])[0];
-  debugger;
   return (
     <Group key={label}>
       {data.map((d, i) => {

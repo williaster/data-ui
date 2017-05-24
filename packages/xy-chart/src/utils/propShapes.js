@@ -66,3 +66,11 @@ export const gridStylesShape = PropTypes.shape({
   stroke: PropTypes.string,
   strokeWidth: PropTypes.number,
 });
+
+export const themeShape = PropTypes.shape({
+  gridStyles: gridStylesShape,
+  xAxisStyles: axisStylesShape,
+  xTickStyles: tickStylesShape,
+  yAxisStyles: axisStylesShape,
+  yTickStyles: tickStylesShape,
+});

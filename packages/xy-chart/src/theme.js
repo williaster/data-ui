@@ -23,7 +23,7 @@ export const colors = {
   ],
 };
 
-export const grid = {
+export const gridStyles = {
   stroke: colors.grid,
   strokeWidth: 1,
 };
@@ -38,7 +38,7 @@ const baseLabel = {
   textAnchor: 'middle',
 };
 
-export const xAxis = {
+export const xAxisStyles = {
   stroke: colors.gridDark,
   strokeWidth: 2,
   label: {
@@ -51,7 +51,7 @@ export const xAxis = {
   },
 };
 
-export const yAxis = {
+export const yAxisStyles = {
   stroke: colors.grid,
   strokeWidth: 1,
   label: {
@@ -71,7 +71,7 @@ const baseTickLabel = {
   fontWeight: 200,
 };
 
-export const xTick = {
+export const xTickStyles = {
   stroke: colors.grid,
   length: 1 * unit,
   label: {
@@ -88,7 +88,7 @@ export const xTick = {
   },
 };
 
-export const yTick = {
+export const yTickStyles = {
   stroke: colors.grid,
   length: 1 * unit,
   label: {
@@ -109,10 +109,10 @@ export const yTick = {
 
 export default {
   colors,
-  grid,
+  gridStyles,
   unit,
-  xAxis,
-  xTick,
-  yAxis,
-  yTick,
+  xAxisStyles,
+  xTickStyles,
+  yAxisStyles,
+  yTickStyles,
 };

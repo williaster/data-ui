@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { AxisLeft, AxisRight } from '@vx/axis';
 
 import { axisStylesShape, tickStylesShape } from '../utils/propShapes';
-import { yAxis as defaultAxisStyles, yTick as defaultTickStyles } from '../theme';
 
 const propTypes = {
   axisStyles: axisStylesShape,
@@ -23,7 +22,7 @@ const propTypes = {
 };
 
 const defaultProps = {
-  axisStyles: defaultAxisStyles,
+  axisStyles: {},
   hideZero: false,
   label: null,
   labelOffset: 0,
@@ -31,8 +30,8 @@ const defaultProps = {
   orientation: 'right',
   rangePadding: null,
   tickFormat: null,
-  tickLabelComponent: null,
-  tickStyles: defaultTickStyles,
+  tickLabelComponent: undefined,
+  tickStyles: {},
 };
 
 export default function YAxis({
@@ -57,7 +56,7 @@ export default function YAxis({
       rangePadding={rangePadding}
       hideTicks={numTicks === 0}
       hideZero={hideZero}
-      label={typeof label === 'string' ?
+      label={typeof label === 'string' && axisStyles.label ?
         <text {...(axisStyles.label || {})[orientation]}>
           {label}
         </text>
@@ -71,7 +70,9 @@ export default function YAxis({
       tickFormat={tickFormat}
       tickLength={tickStyles.tickLength}
       tickStroke={tickStyles.stroke}
-      tickLabelComponent={tickLabelComponent || <text {...(tickStyles.label || {})[orientation]} />}
+      tickLabelComponent={tickLabelComponent || (tickStyles.label &&
+        <text {...(tickStyles.label || {})[orientation]} />
+      )}
     />
   );
 }

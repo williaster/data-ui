@@ -22,7 +22,7 @@ const propTypes = {
 };
 
 const defaultProps = {
-  axisStyles: defaultAxisStyles,
+  axisStyles: {},
   hideZero: false,
   label: null,
   numTicks: null,
@@ -30,7 +30,7 @@ const defaultProps = {
   rangePadding: null,
   tickFormat: null,
   tickLabelComponent: null,
-  tickStyles: defaultTickStyles,
+  tickStyles: {},
 };
 
 export default function XAxis({
@@ -54,7 +54,7 @@ export default function XAxis({
       rangePadding={rangePadding}
       hideTicks={numTicks === 0}
       hideZero={hideZero}
-      label={typeof label === 'string' ?
+      label={typeof label === 'string' && axisStyles.label ?
         <text {...(axisStyles.label || {})[orientation]}>
           {label}
         </text>
@@ -67,7 +67,9 @@ export default function XAxis({
       tickFormat={tickFormat}
       tickLength={tickStyles.tickLength}
       tickStroke={tickStyles.stroke}
-      tickLabelComponent={tickLabelComponent || <text {...(tickStyles.label || {})[orientation]} />}
+      tickLabelComponent={tickLabelComponent || (tickStyles.label &&
+        <text {...(tickStyles.label || {})[orientation]} />
+      )}
     />
   );
 }

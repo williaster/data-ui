@@ -7,8 +7,7 @@ import { Group } from '@vx/group';
 import { scaleLinear, scaleTime, scaleBand } from '@vx/scale';
 
 import { componentName, getChildWithName, nonBandBarWidth, isBarSeries } from '../utils/chartUtils';
-import { grid as defaultGridStyles } from '../theme';
-import { scaleShape, gridStylesShape } from '../utils/propShapes';
+import { scaleShape, themeShape } from '../utils/propShapes';
 
 const propTypes = {
   ariaLabel: PropTypes.string.isRequired,
@@ -25,7 +24,7 @@ const propTypes = {
     x: scaleShape.isRequired,
     y: scaleShape.isRequired,
   }).isRequired, // key matches data attribute
-  gridStyles: gridStylesShape,
+  theme: themeShape,
 };
 
 const defaultProps = {
@@ -36,7 +35,7 @@ const defaultProps = {
     bottom: 64,
     left: 64,
   },
-  gridStyles: defaultGridStyles,
+  theme: {},
 };
 
 const scaleTypeToScale = {
@@ -120,7 +119,7 @@ class XYChart extends React.PureComponent {
     const {
       ariaLabel,
       children,
-      gridStyles,
+      theme,
       height,
       width,
     } = this.props;
@@ -143,8 +142,8 @@ class XYChart extends React.PureComponent {
               yScale={yScale}
               width={innerWidth}
               height={innerHeight}
-              stroke={gridStyles.stroke}
-              strokeWidth={gridStyles.strokeWidth}
+              stroke={theme.gridStyles && theme.gridStyles.stroke}
+              strokeWidth={theme.gridStyles && theme.gridStyles.strokeWidth}
               numTicksRows={numTicks.y}
               numTicksColumns={numTicks.x}
             />}
@@ -155,6 +154,7 @@ class XYChart extends React.PureComponent {
               return React.cloneElement(Child, { xScale, yScale, barWidth });
             }
             if (name.match(/Axis$/)) {
+              const styleKey = name[0].toLowerCase();
               return React.cloneElement(Child, {
                 innerHeight,
                 innerWidth,
@@ -162,6 +162,8 @@ class XYChart extends React.PureComponent {
                 numTicks: name === 'XAxis' ? numTicks.x : numTicks.y,
                 scale: name === 'XAxis' ? xScale : yScale,
                 rangePadding: name === 'XAxis' ? xOffset : null,
+                axisStyles: { ...theme[`${styleKey}AxisStyles`], ...Child.props.axisStyles },
+                tickStyles: { ...theme[`${styleKey}TickStyles`], ...Child.props.tickStyles },
               });
             }
             return Child;
