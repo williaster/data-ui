@@ -1,12 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { extent } from 'd3-array';
 import { Grid } from '@vx/grid';
 import { Group } from '@vx/group';
-import { scaleLinear, scaleTime, scaleBand } from '@vx/scale';
 
-import { componentName, getChildWithName, nonBandBarWidth, isBarSeries } from '../utils/chartUtils';
+import {
+  collectDataFromChildSeries,
+  componentName,
+  isAxis,
+  isSeries,
+  isBarSeries,
+  getChildWithName,
+  getScaleForAccessor,
+} from '../utils/chartUtils';
+
 import { scaleShape, themeShape } from '../utils/propShapes';
 
 const propTypes = {
@@ -20,10 +27,10 @@ const propTypes = {
     bottom: PropTypes.number,
     left: PropTypes.number,
   }),
-  scales: PropTypes.shape({
-    x: scaleShape.isRequired,
-    y: scaleShape.isRequired,
-  }).isRequired, // key matches data attribute
+  xScale: scaleShape.isRequired,
+  yScale: scaleShape.isRequired,
+  showXGrid: PropTypes.bool,
+  showYGrid: PropTypes.bool,
   theme: themeShape,
 };
 
@@ -35,14 +42,15 @@ const defaultProps = {
     bottom: 64,
     left: 64,
   },
+  showXGrid: true,
+  showYGrid: true,
   theme: {},
 };
 
-const scaleTypeToScale = {
-  time: scaleTime,
-  linear: scaleLinear,
-  band: scaleBand,
-};
+// accessors
+const x = d => d.x;
+const y = d => d.y;
+const xString = d => d.x.toString();
 
 class XYChart extends React.PureComponent {
   getDimmensions() {
@@ -59,75 +67,66 @@ class XYChart extends React.PureComponent {
     const xAxis = getChildWithName('XAxis', this.props.children);
     const yAxis = getChildWithName('YAxis', this.props.children);
     return {
-      x: (xAxis && xAxis.props.numTicks) || 0,
-      y: (yAxis && yAxis.props.numTicks) || 0,
+      numXTicks: (xAxis && xAxis.props.numTicks) || 0,
+      numYTicks: (yAxis && yAxis.props.numTicks) || 0,
     };
   }
 
-  getScales() {
-    const { scales: scaleProp, children } = this.props;
+  collectScalesFromProps() {
+    const { xScale, yScale, children } = this.props;
     const { innerWidth, innerHeight } = this.getDimmensions();
-    const allData = this.collectDataFromChildSeries();
+    const { allData, dataBySeriesType } = collectDataFromChildSeries(children);
     const scales = {};
 
-    Object.entries(scaleProp).forEach(([attr, { type, includeZero, ...rest }]) => {
-      let scale;
-      let barWidth;
-      let range;
-      let domain;
-      let offset = 0;
+    scales.xScale = getScaleForAccessor({
+      allData,
+      accessor: x,
+      range: [0, innerWidth],
+      ...xScale,
+    });
 
-      if (type === 'band') {
-        range = attr === 'x' ? [0, innerWidth] : [innerHeight, 0];
-        domain = allData.map(d => d[attr]);
-        scale = scaleTypeToScale[type]({ domain, range, ...rest });
-        barWidth = scale.bandwidth();
-      } else {
-        const [min, max] = extent(allData, d => d[attr]);
-        domain = [
-          type === 'linear' && includeZero ? Math.min(0, min) : min,
-          type === 'linear' && includeZero ? Math.max(0, max) : max,
-        ];
+    scales.yScale = getScaleForAccessor({
+      allData,
+      accessor: y,
+      range: [innerHeight, 0],
+      ...yScale,
+    });
 
-        const totalWidth = attr === 'x' ? innerWidth : innerHeight;
-        barWidth = attr === 'x' ? nonBandBarWidth({ totalWidth, children }) : 0;
-        offset = barWidth / 2;
-        range = attr === 'x' ? [offset, innerWidth - offset] : [innerHeight - offset, 0];
-        scale = scaleTypeToScale[type]({ domain, range, ...rest });
+    React.Children.forEach(children, (Child) => { // Child-specific scales or adjustments here
+      const name = componentName(Child);
+      if (isBarSeries(name) && xScale.type !== 'band') {
+        const dummyBand = getScaleForAccessor({
+          allData: dataBySeriesType[name],
+          accessor: xString,
+          type: 'band',
+          rangeRound: [0, innerWidth],
+          paddingOuter: 1,
+        });
+
+        const offset = dummyBand.bandwidth() / 2;
+        scales.xScale.range([offset, innerWidth - offset]);
+        scales.xScale.barWidth = dummyBand.bandwidth();
+        scales.xScale.offset = offset;
       }
-
-      scales[`${attr}Scale`] = scale;
-      scales[`${attr}BarWidth`] = barWidth;
-      scales[`${attr}Offset`] = offset;
     });
 
     return scales;
-  }
-
-  collectDataFromChildSeries() {
-    const { children } = this.props;
-    let data = [];
-    React.Children.forEach(children, (child) => {
-      if (child.props && child.props.data) {
-        data = data.concat(child.props.data);
-      }
-    });
-    return data;
   }
 
   render() {
     const {
       ariaLabel,
       children,
+      showXGrid,
+      showYGrid,
       theme,
       height,
       width,
     } = this.props;
 
     const { margin, innerWidth, innerHeight } = this.getDimmensions();
-    const { xScale, yScale, xBarWidth, xOffset } = this.getScales();
-    const numTicks = this.getNumTicks();
-
+    const { numXTicks, numYTicks } = this.getNumTicks(this.props);
+    const { xScale, yScale } = this.collectScalesFromProps();
     return (
       <svg
         aria-label={ariaLabel}
@@ -136,7 +135,7 @@ class XYChart extends React.PureComponent {
         height={height}
       >
         <Group left={margin.left} top={margin.top}>
-          {(numTicks.x || numTicks.y) &&
+          {(showXGrid || showYGrid) && (numXTicks || numYTicks) &&
             <Grid
               xScale={xScale}
               yScale={yScale}
@@ -144,27 +143,26 @@ class XYChart extends React.PureComponent {
               height={innerHeight}
               stroke={theme.gridStyles && theme.gridStyles.stroke}
               strokeWidth={theme.gridStyles && theme.gridStyles.strokeWidth}
-              numTicksRows={numTicks.y}
-              numTicksColumns={numTicks.x}
+              numTicksRows={showYGrid && numYTicks}
+              numTicksColumns={showXGrid && numXTicks}
             />}
           {React.Children.map(children, (Child) => {
             const name = componentName(Child);
-            if (name.match(/Series$/)) {
-              const barWidth = isBarSeries(name) && xBarWidth;
-              return React.cloneElement(Child, { xScale, yScale, barWidth });
-            }
-            if (name.match(/Axis$/)) {
+            if (isAxis(name)) {
               const styleKey = name[0].toLowerCase();
               return React.cloneElement(Child, {
                 innerHeight,
                 innerWidth,
                 labelOffset: name === 'YAxis' ? 0.6 * margin.right : 0,
-                numTicks: name === 'XAxis' ? numTicks.x : numTicks.y,
+                numTicks: name === 'XAxis' ? numXTicks : numYTicks,
                 scale: name === 'XAxis' ? xScale : yScale,
-                rangePadding: name === 'XAxis' ? xOffset : null,
+                rangePadding: name === 'XAxis' ? xScale.offset : null,
                 axisStyles: { ...theme[`${styleKey}AxisStyles`], ...Child.props.axisStyles },
                 tickStyles: { ...theme[`${styleKey}TickStyles`], ...Child.props.tickStyles },
               });
+            } else if (isSeries(name)) {
+              const barWidth = (isBarSeries(name) && (xScale.barWidth || xScale.bandwidth())) || 0;
+              return React.cloneElement(Child, { xScale, yScale, barWidth });
             }
             return Child;
           })}

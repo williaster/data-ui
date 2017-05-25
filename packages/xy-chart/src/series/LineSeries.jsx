@@ -32,6 +32,9 @@ const defaultProps = {
   strokeWidth: 3,
 };
 
+const x = d => d.x;
+const y = d => d.y;
+
 export default function LineSeries({
   data,
   interpolation,
@@ -43,8 +46,6 @@ export default function LineSeries({
   xScale,
   yScale,
 }) {
-  const x = d => d.x;
-  const y = d => d.y;
   return (
     <LinePath
       key={label}

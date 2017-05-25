@@ -1,31 +1,47 @@
 import React from 'react';
 
 import mockData from '@vx/mock-data';
+import { timeParse, timeFormat } from 'd3-time-format';
+
 import {
   XYChart,
   LineSeries,
-  LinearGradient,
-  theme,
   VerticalBarSeries,
   XAxis,
   YAxis,
+  LinearGradient,
   withScreenSize,
+  theme,
 } from '../../../xy-chart/build';
+
+
+const parseDate = timeParse('%Y%m%d');
+const formatDate = timeFormat('%b %d');
+const dateFormatter = date => formatDate(parseDate(date));
 
 const ResponsiveXYChart = withScreenSize(({ screenWidth, children, ...rest }) => (
   <XYChart
     theme={theme}
-    width={screenWidth / 1.5}
-    height={screenWidth / 1.5 / 2}
+    width={screenWidth / 1.1}
+    height={screenWidth / 1.1 / 2}
     {...rest}
   >
     {children}
   </XYChart>
 ));
 
-const data = mockData.appleStock.filter((d, i) => i % 120 === 0).map(d => ({
+const { cityTemperature, appleStock } = mockData;
+
+const data = appleStock.filter((d, i) => i % 120 === 0).map(d => ({
   x: new Date(d.date),
   y: d.close,
+}));
+
+const stackKeys = Object.keys(cityTemperature[0]).filter(attr => attr !== 'date');
+const stackedData = cityTemperature.slice(0, 12).map(d => ({
+  ...d,
+  x: d.date,
+  y: stackKeys.reduce((ret, curr) => ret + Number(d[curr]), 0),
 }));
 
 export default [
@@ -34,10 +50,8 @@ export default [
     example: () => (
       <ResponsiveXYChart
         ariaLabel="Required label"
-        scales={{
-          x: { type: 'time' },
-          y: { type: 'linear', includeZero: true },
-        }}
+        xScale={{ type: 'time' }}
+        yScale={{ type: 'linear' }}
       >
         <LinearGradient
           id="aqua_lightaqua_gradient"
@@ -57,10 +71,8 @@ export default [
     example: () => (
       <ResponsiveXYChart
         ariaLabel="Required label"
-        scales={{
-          x: { type: 'time' },
-          y: { type: 'linear', includeZero: true },
-        }}
+        xScale={{ type: 'time' }}
+        yScale={{ type: 'linear' }}
       >
         <LinearGradient
           id="aqua_lightaqua_gradient"
@@ -85,10 +97,8 @@ export default [
     example: () => (
       <ResponsiveXYChart
         ariaLabel="Required label"
-        scales={{
-          x: { type: 'time' },
-          y: { type: 'linear', includeZero: true },
-        }}
+        xScale={{ type: 'time' }}
+        yScale={{ type: 'linear' }}
       >
         <YAxis label="Price ($)" numTicks={4} />
         <LinearGradient
@@ -110,10 +120,8 @@ export default [
     example: () => (
       <ResponsiveXYChart
         ariaLabel="Required label"
-        scales={{
-          x: { type: 'time' },
-          y: { type: 'linear', includeZero: true },
-        }}
+        xScale={{ type: 'time' }}
+        yScale={{ type: 'linear' }}
       >
         <YAxis label="Price ($)" numTicks={4} orientation="left" />
         <LinearGradient
@@ -135,10 +143,8 @@ export default [
     example: () => (
       <ResponsiveXYChart
         ariaLabel="Required label"
-        scales={{
-          x: { type: 'time' },
-          y: { type: 'linear', includeZero: true },
-        }}
+        xScale={{ type: 'time' }}
+        yScale={{ type: 'linear' }}
       >
         <YAxis label="Price ($)" numTicks={4} />
         <LineSeries
@@ -161,10 +167,8 @@ export default [
     example: () => (
       <ResponsiveXYChart
         ariaLabel="Required label"
-        scales={{
-          x: { type: 'band' },
-          y: { type: 'linear', includeZero: true },
-        }}
+        xScale={{ type: 'band' }}
+        yScale={{ type: 'linear' }}
       >
         <LinearGradient
           id="aqua_lightaqua_gradient"
@@ -185,10 +189,8 @@ export default [
     example: () => (
       <ResponsiveXYChart
         ariaLabel="Required label"
-        scales={{
-          x: { type: 'time' },
-          y: { type: 'linear' },
-        }}
+        xScale={{ type: 'time' }}
+        yScale={{ type: 'linear', includeZero: false }}
       >
         <YAxis label="$$$" numTicks={4} />
         <LinearGradient
@@ -211,18 +213,39 @@ export default [
       <ResponsiveXYChart
         theme={{}}
         ariaLabel="Required label"
-        scales={{
-          x: { type: 'time' },
-          y: { type: 'linear', includeZero: true },
-        }}
+        xScale={{ type: 'time' }}
+        yScale={{ type: 'linear' }}
       >
         <YAxis label="Price ($)" numTicks={4} />
         <VerticalBarSeries
-          data={data}
+          data={data.filter((d, i) => i % 2 === 0)}
           label="Apple Stock"
+          fill="#484848"
+        />
+        <VerticalBarSeries
+          data={data.filter((d, i) => i % 2 !== 0 && i !== 5)}
+          label="Apple Stock ii"
           fill="#767676"
         />
         <XAxis label="Time" numTicks={5} />
+      </ResponsiveXYChart>
+    ),
+  },
+  {
+    description: 'vertical stack',
+    example: () => (
+      <ResponsiveXYChart
+        ariaLabel="Required label"
+        xScale={{ type: 'band', paddingInner: 0.05 }}
+        yScale={{ type: 'linear' }}
+      >
+        <YAxis label="Price ($)" numTicks={4} />
+        <VerticalBarSeries
+          data={stackedData}
+          label="Apple Stock"
+          stack={stackKeys}
+        />
+        <XAxis label="Time" numTicks={5} tickFormat={dateFormatter} />
       </ResponsiveXYChart>
     ),
   },

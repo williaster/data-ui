@@ -39,5 +39,8 @@
     "react": "~15.4.2",
     "react-dom": "~15.4.2"
   },
-  "private": true
+  "private": true,
+  "dependencies": {
+    "d3-time-format": "^2.0.5"
+  }
 }

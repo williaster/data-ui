@@ -1,4 +1,6 @@
 import { Children } from 'react';
+import { scaleLinear, scaleTime, scaleBand, scaleOrdinal } from '@vx/scale';
+import { extent } from 'd3-array';
 
 export function callOrValue(maybeFn, ...args) {
   if (typeof maybeFn === 'function') {
@@ -19,17 +21,63 @@ export function getChildWithName(name, children) {
   return ChildOfInterest.length ? ChildOfInterest[0] : null;
 }
 
-export function nonBandBarWidth({ children, totalWidth }) {
-  let barWidth = Infinity;
-  Children.forEach(children, (Child) => {
-    if (componentName(Child).match(/Bar/g)) {
-      const data = Child.props.data;
-      barWidth = Math.min(barWidth, (totalWidth / data.length) - 6);
-    }
-  });
-  return barWidth === Infinity ? 0 : Math.max(0, barWidth);
+export function isAxis(name) {
+  return name.match(/axis/gi);
 }
 
 export function isBarSeries(name) {
   return name.match(/Bar/g);
+}
+
+export function isSeries(name) {
+  return name.match(/series/gi);
+}
+
+export function isStackedSeries(name) {
+  return name.match(/stacked/gi);
+}
+
+export const scaleTypeToScale = {
+  time: scaleTime,
+  linear: scaleLinear,
+  band: scaleBand,
+  ordinal: scaleOrdinal,
+};
+
+export function collectDataFromChildSeries(children) {
+  let allData = [];
+  const dataByIndex = {};
+  const dataBySeriesType = {};
+  Children.forEach(children, (Child, i) => {
+    const name = componentName(Child);
+    const { data } = Child.props;
+    if (data && isSeries(name)) {
+      dataByIndex[i] = data;
+      allData = allData.concat(data);
+      dataBySeriesType[name] = (dataBySeriesType[name] || []).concat(data);
+    }
+  });
+  return { dataByIndex, allData, dataBySeriesType };
+}
+
+export function getScaleForAccessor({
+  allData,
+  accessor,
+  type,
+  includeZero = true,
+  range,
+  ...rest
+}) {
+  let domain;
+  if (type === 'band') {
+    domain = allData.map(accessor);
+  }
+  if (type === 'linear' || type === 'time') {
+    const [min, max] = extent(allData, accessor);
+    domain = [
+      type === 'linear' && includeZero ? Math.min(0, min) : min,
+      type === 'linear' && includeZero ? Math.max(0, max) : max,
+    ];
+  }
+  return scaleTypeToScale[type]({ domain, range, ...rest });
 }

@@ -1,15 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Group } from '@vx/group';
-import { Bar } from '@vx/shape';
+import { Bar, BarStack } from '@vx/shape';
 
 import { barSeriesDataShape } from '../utils/propShapes';
-import { callOrValue } from '../utils/chartUtils';
+import { callOrValue, scaleTypeToScale } from '../utils/chartUtils';
 import { colors } from '../theme';
 
 const propTypes = {
   data: barSeriesDataShape.isRequired,
   label: PropTypes.string.isRequired,
+  stack: PropTypes.arrayOf(PropTypes.string),
+  stackFills: PropTypes.arrayOf(PropTypes.string),
 
   // overridden by data props
   fill: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
@@ -23,15 +25,23 @@ const propTypes = {
 };
 
 const defaultProps = {
+  stack: null,
+  stackFills: colors.categories,
   fill: colors.default,
+  stackBy: null,
   stroke: '#FFFFFF',
   strokeWidth: 1,
 };
+
+const x = d => d.x;
+const y = d => d.y;
 
 export default function VerticalBarSeries({
   barWidth,
   data,
   fill,
+  stack,
+  stackFills,
   stroke,
   strokeWidth,
   label,
@@ -39,15 +49,32 @@ export default function VerticalBarSeries({
   yScale,
 }) {
   const maxHeight = (yScale.range() || [0])[0];
-  const offset = xScale.bandwidth ? 0 : (xScale.range() || [0])[0];
+  const offset = xScale.offset || 0;
+  console.log(data);
+  if (stack) {
+    const zScale = scaleTypeToScale.ordinal({ range: stackFills, domain: stack });
+    return (
+      <BarStack
+        data={data}
+        keys={stack}
+        height={maxHeight}
+        x={x}
+        xScale={xScale}
+        yScale={yScale}
+        zScale={zScale}
+        stroke={stroke}
+        strokeWidth={strokeWidth}
+      />
+    );
+  }
   return (
     <Group key={label}>
       {data.map((d, i) => {
-        const barHeight = maxHeight - yScale(d.y);
+        const barHeight = maxHeight - yScale(y(d));
         return (
           <Bar
-            key={`bar-${label}-${xScale(d.x)}`}
-            x={xScale(d.x) - offset}
+            key={`bar-${label}-${xScale(x(d))}`}
+            x={xScale(x(d)) - offset}
             y={maxHeight - barHeight}
             width={barWidth}
             height={barHeight}

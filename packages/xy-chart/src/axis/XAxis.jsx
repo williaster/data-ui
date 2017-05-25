@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { AxisBottom, AxisTop } from '@vx/axis';
 
 import { axisStylesShape, tickStylesShape } from '../utils/propShapes';
-import { xAxis as defaultAxisStyles, xTick as defaultTickStyles } from '../theme';
 
 const propTypes = {
   axisStyles: axisStylesShape,
