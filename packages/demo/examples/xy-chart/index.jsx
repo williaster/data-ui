@@ -18,7 +18,7 @@ import {
   LinearGradient,
   withScreenSize,
   theme,
-} from '@data-ui/xy-chart';
+} from '../../../xy-chart/build';
 
 import {
   timeSeriesData,

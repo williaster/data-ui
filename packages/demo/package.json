@@ -26,6 +26,7 @@
     "@vx/mock-data": "0.0.95",
     "aphrodite": "^1.2.0",
     "babel-preset-airbnb": "^2.2.3",
+    "d3-time-format": "^2.0.5",
     "git-directory-deploy": "^1.5.1",
     "glob": "^7.1.1",
     "immutable": "^3.8.1",
@@ -39,8 +40,5 @@
     "react": "~15.4.2",
     "react-dom": "~15.4.2"
   },
-  "private": true,
-  "dependencies": {
-    "d3-time-format": "^2.0.5"
-  }
+  "private": true
 }
