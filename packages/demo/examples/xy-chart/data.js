@@ -1,5 +1,5 @@
 import mockData from '@vx/mock-data';
-import { theme } from '../../../xy-chart/build';
+import { theme } from '@data-ui/xy-chart';
 
 const { cityTemperature, appleStock, genRandomNormalPoints, letterFrequency } = mockData;
 
