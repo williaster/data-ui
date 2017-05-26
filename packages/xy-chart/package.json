@@ -2,7 +2,7 @@
   "name": "@data-ui/xy-chart",
   "version": "0.0.2",
   "description": "A package of charts with standard x- and y- axes.",
-  "main": "index.js",
+  "main": "build/index.js",
   "scripts": {
     "build": "webpack -p --env build",
     "dev": "webpack --progress --colors --watch --env dev",
