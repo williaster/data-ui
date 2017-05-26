@@ -1,23 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Group } from '@vx/group';
-import { Bar, BarStack, BarGroup } from '@vx/shape';
+import { Bar } from '@vx/shape';
 
 import { barSeriesDataShape } from '../utils/propShapes';
-import { callOrValue, scaleTypeToScale } from '../utils/chartUtils';
+import { callOrValue } from '../utils/chartUtils';
 import { colors } from '../theme';
 
 const propTypes = {
   data: barSeriesDataShape.isRequired,
   label: PropTypes.string.isRequired,
-
-  // for groups
-  group: PropTypes.arrayOf(PropTypes.string),
-  groupFills: PropTypes.arrayOf(PropTypes.string),
-
-  // for stacks
-  stack: PropTypes.arrayOf(PropTypes.string),
-  stackFills: PropTypes.arrayOf(PropTypes.string),
 
   // overridden by data props
   fill: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
@@ -45,16 +37,10 @@ const defaultProps = {
 const x = d => d.x;
 const y = d => d.y;
 
-// every x value has group.length bars
-
-export default function VerticalBarSeries({
+export default function BarSeries({
   barWidth,
   data,
   fill,
-  stack,
-  stackFills,
-  group,
-  groupFills,
   stroke,
   strokeWidth,
   label,
@@ -63,44 +49,6 @@ export default function VerticalBarSeries({
 }) {
   const maxHeight = (yScale.range() || [0])[0];
   const offset = xScale.offset || 0;
-  if (stack) {
-    const zScale = scaleTypeToScale.ordinal({ range: stackFills, domain: stack });
-    return (
-      <BarStack
-        data={data}
-        keys={stack}
-        height={maxHeight}
-        x={x}
-        xScale={xScale}
-        yScale={yScale}
-        zScale={zScale}
-        stroke={stroke}
-        strokeWidth={strokeWidth}
-      />
-    );
-  }
-  if (group) {
-    debugger;
-    const zScale = scaleTypeToScale.ordinal({ range: groupFills, domain: group });
-    const x1Scale = scaleTypeToScale.band({
-      rangeRound: [0, xScale.bandwidth()],
-      domain: group,
-      padding: 0.1,
-    });
-    return (
-      <BarGroup
-        data={data}
-        keys={group}
-        height={maxHeight}
-        x0={x}
-        x0Scale={xScale}
-        x1Scale={x1Scale}
-        yScale={yScale}
-        zScale={zScale}
-        rx={2}
-      />
-    );
-  }
   return (
     <Group key={label}>
       {data.map((d, i) => {
@@ -122,6 +70,6 @@ export default function VerticalBarSeries({
   );
 }
 
-VerticalBarSeries.propTypes = propTypes;
-VerticalBarSeries.defaultProps = defaultProps;
-VerticalBarSeries.displayName = 'VerticalBarSeries';
+BarSeries.propTypes = propTypes;
+BarSeries.defaultProps = defaultProps;
+BarSeries.displayName = 'BarSeries';

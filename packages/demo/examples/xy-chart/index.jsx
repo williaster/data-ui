@@ -8,7 +8,9 @@ import {
 
   IntervalSeries,
   LineSeries,
-  VerticalBarSeries,
+  BarSeries,
+  GroupedBarSeries,
+  StackedBarSeries,
 
   XAxis,
   YAxis,
@@ -74,7 +76,7 @@ const intervalData = intervals.reduce((ret, [i0, i1]) => {
 
 export default [
   {
-    description: 'time bar chart',
+    description: '<BarSeries /> with <PatternLines /> and <LinearGradient />',
     example: () => (
       <ResponsiveXYChart
         ariaLabel="Required label"
@@ -94,7 +96,7 @@ export default [
           strokeWidth={1}
           orientation={['diagonal']}
         />
-        <VerticalBarSeries
+        <BarSeries
           data={data.map((d, i) => ({ ...d, fill: `url(#${i === 2 ? 'lines' : 'gradient'})` }))}
           label="Apple Stock"
           fill="url(#aqua_lightaqua_gradient)"
@@ -103,7 +105,7 @@ export default [
     ),
   },
   {
-    description: 'bar and line chart',
+    description: '<BarSeries /> and <LineSeries />',
     example: () => (
       <ResponsiveXYChart
         ariaLabel="Required label"
@@ -115,7 +117,7 @@ export default [
           from="#00A699"
           to="#84D2CB"
         />
-        <VerticalBarSeries
+        <BarSeries
           data={data}
           label="Apple Stock"
           fill="url(#aqua_lightaqua_gradient)"
@@ -129,7 +131,7 @@ export default [
     ),
   },
   {
-    description: 'time bar chart with axes',
+    description: '<BarSeries /> with <XAxis /> and <YAxis />',
     example: () => (
       <ResponsiveXYChart
         ariaLabel="Required label"
@@ -142,7 +144,7 @@ export default [
           from="#00A699"
           to="#84D2CB"
         />
-        <VerticalBarSeries
+        <BarSeries
           data={data}
           label="Apple Stock"
           fill="url(#aqua_lightaqua_gradient)"
@@ -152,7 +154,7 @@ export default [
     ),
   },
   {
-    description: 'time bar chart with inverted axes',
+    description: 'Inverted <XAxis />, <YAxis />',
     example: () => (
       <ResponsiveXYChart
         ariaLabel="Required label"
@@ -165,7 +167,7 @@ export default [
           from="#00A699"
           to="#84D2CB"
         />
-        <VerticalBarSeries
+        <BarSeries
           data={data}
           label="Apple Stock"
           fill="url(#aqua_lightaqua_gradient)"
@@ -175,7 +177,7 @@ export default [
     ),
   },
   {
-    description: 'line chart',
+    description: 'Multiple <LineSeries />',
     example: () => (
       <ResponsiveXYChart
         ariaLabel="Required label"
@@ -199,7 +201,7 @@ export default [
     ),
   },
   {
-    description: 'vertical stack',
+    description: '<StackedBarSeries />',
     example: () => (
       <ResponsiveXYChart
         ariaLabel="Required label"
@@ -207,17 +209,17 @@ export default [
         yScale={{ type: 'linear' }}
       >
         <YAxis label="Temperature (°F)" numTicks={4} />
-        <VerticalBarSeries
+        <StackedBarSeries
           data={stackedData}
           label="City Temperature"
-          stack={groupKeys}
+          stackKeys={groupKeys}
         />
         <XAxis tickFormat={dateFormatter} />
       </ResponsiveXYChart>
     ),
   },
   {
-    description: 'vertical grouped bar',
+    description: '<GroupedBarSeries />',
     example: () => (
       <ResponsiveXYChart
         ariaLabel="Required label"
@@ -226,17 +228,17 @@ export default [
         showYGrid={false}
       >
         <YAxis label="Temperature (°F)" numTicks={4} />
-        <VerticalBarSeries
+        <GroupedBarSeries
           data={groupedData}
           label="City Temperature"
-          group={groupKeys}
+          groupKeys={groupKeys}
         />
         <XAxis tickFormat={dateFormatter} />
       </ResponsiveXYChart>
     ),
   },
   {
-    description: 'categorical bar chart',
+    description: 'Categorical <BarSeries />',
     example: () => (
       <ResponsiveXYChart
         ariaLabel="Required label"
@@ -248,7 +250,7 @@ export default [
           from="#00A699"
           to="#84D2CB"
         />
-        <VerticalBarSeries
+        <BarSeries
           data={data.map((d, i) => ({ ...d, x: 'abcdefghijklmnopqrstuvwxyz'[i % 26] }))}
           label="Apple Stock"
           fill="url(#aqua_lightaqua_gradient)"
@@ -258,7 +260,7 @@ export default [
     ),
   },
   {
-    description: 'time intervals',
+    description: '<IntervalSeries />',
     example: () => (
       <ResponsiveXYChart
         ariaLabel="Required label"
@@ -289,7 +291,7 @@ export default [
     ),
   },
   {
-    description: 'non-zero y-axis',
+    description: 'Non-zero y-axis',
     example: () => (
       <ResponsiveXYChart
         ariaLabel="Required label"
@@ -302,7 +304,7 @@ export default [
           from="#00A699"
           to="#84D2CB"
         />
-        <VerticalBarSeries
+        <BarSeries
           data={data}
           label="Apple Stock"
           fill="url(#aqua_lightaqua_gradient)"
@@ -312,7 +314,7 @@ export default [
     ),
   },
   {
-    description: 'no theme',
+    description: 'No theme',
     example: () => (
       <ResponsiveXYChart
         theme={{}}
@@ -321,12 +323,12 @@ export default [
         yScale={{ type: 'linear' }}
       >
         <YAxis label="Price ($)" numTicks={4} />
-        <VerticalBarSeries
+        <BarSeries
           data={data.filter((d, i) => i % 2 === 0)}
           label="Apple Stock"
           fill="#484848"
         />
-        <VerticalBarSeries
+        <BarSeries
           data={data.filter((d, i) => i % 2 !== 0 && i !== 5)}
           label="Apple Stock ii"
           fill="#767676"
