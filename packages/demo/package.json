@@ -1,6 +1,6 @@
 {
   "name": "@data-ui/demo",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "description": "data-ui demo",
   "scripts": {
     "gh-pages:clean": "rm -rf _gh-pages",
