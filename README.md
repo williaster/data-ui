@@ -2,14 +2,15 @@
 A collection of custom + wrapped components for data-rich (desktop) UIs. Super beta :baby:
 
 ## Packages
-- [@data-ui/data-table](https://github.com/williaster/data-ui/tree/master/packages/data-table)
-- [@data-ui/demo](https://github.com/williaster/data-ui/tree/master/packages/demo)
++ [@data-ui/xy-chart](https://github.com/williaster/data-ui/tree/master/packages/xy-chart)
++ [@data-ui/data-table](https://github.com/williaster/data-ui/tree/master/packages/data-table)
++ [@data-ui/demo](https://github.com/williaster/data-ui/tree/master/packages/demo)
 
 Lots more coming.
 
 ## Live Playground
 
-For examples of the components in action, go to https://williaster.github.io/data-ui.
+For examples of the components in action, go to [williaster.github.io/data-ui](https://williaster.github.io/data-ui).
 
 OR
 

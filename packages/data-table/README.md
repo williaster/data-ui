@@ -23,5 +23,6 @@ npm run dev # or 'npm run prod'
 ```
 
 ## @data-ui packages
-- --> @data-ui/data-table
-- [@data-ui/demo](https://github.com/williaster/data-ui/tree/master/packages/demo)
++ [@data-ui/xy-chart](https://github.com/williaster/data-ui/tree/master/packages/xy-chart)
++ @data-ui/data-table
++ [@data-ui/demo](https://github.com/williaster/data-ui/tree/master/packages/demo)
