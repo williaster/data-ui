@@ -16,9 +16,17 @@ OR
 
 To run that demo on your own computer:
 ```
-# clone this repository
-cd demo
+git clone ...data-ui && cd data-ui
+
+# bootstrap all packages 
+npm install --global lerna@^2.0.0-beta.0
 npm install
+lerna bootstrap
+
+# alternatively install just the demo package
+# cd packages/demo
+# npm install 
+
 npm run storybook
 # visit http://localhost:9001/
 ```
