@@ -1,6 +1,4 @@
 import React from 'react';
-
-import mockData from '@vx/mock-data';
 import { timeParse, timeFormat } from 'd3-time-format';
 
 import {
@@ -20,8 +18,18 @@ import {
   LinearGradient,
   withScreenSize,
   theme,
-} from '../../../xy-chart/build';
+} from '@data-ui/xy-chart';
 
+import {
+  timeSeriesData,
+  categoricalData,
+  groupKeys,
+  stackedData,
+  groupedData,
+  pointData,
+  intervalLineData,
+  intervalData,
+} from './data';
 
 const parseDate = timeParse('%Y%m%d');
 const formatDate = timeFormat('%b %d');
@@ -30,60 +38,13 @@ const dateFormatter = date => formatDate(parseDate(date));
 const ResponsiveXYChart = withScreenSize(({ screenWidth, children, ...rest }) => (
   <XYChart
     theme={theme}
-    width={screenWidth / 1.1}
-    height={screenWidth / 1.1 / 2}
+    width={screenWidth / 1.5}
+    height={screenWidth / 1.5 / 2}
     {...rest}
   >
     {children}
   </XYChart>
 ));
-
-const { cityTemperature, appleStock, genRandomNormalPoints } = mockData;
-
-const data = appleStock.filter((d, i) => i % 120 === 0).map(d => ({
-  x: new Date(d.date),
-  y: d.close,
-}));
-
-// stacked data
-const groupKeys = Object.keys(cityTemperature[0]).filter(attr => attr !== 'date');
-const stackedData = cityTemperature.slice(0, 12).map(d => ({
-  ...d,
-  x: d.date,
-  y: groupKeys.reduce((ret, curr) => ret + Number(d[curr]), 0),
-}));
-
-const groupedData = stackedData.slice(0, 6).map(d => ({
-  ...d,
-  y: Math.max(...groupKeys.map(attr => Number(d[attr]))),
-}));
-
-// point data
-const n = 10;
-const pointData = genRandomNormalPoints(n).map(([x, y], i) => ({
-  x,
-  y,
-  fill: theme.colors.categories[Math.floor(i / n)],
-  size: Math.max(3, Math.random() * 10),
-  label: (i % n) === 0 ? `(${parseInt(x, 10)},${parseInt(y, 10)})` : null,
-}));
-
-// interval data
-const intervals = [[5, 8], [15, 19]];
-
-const intervalLineData = cityTemperature.slice(0, 25).map((d, i) => ({
-  ...d,
-  x: d.date,
-  y: intervals.some(([i0, i1]) => i >= i0 && i <= i1) ? null : d[groupKeys[0]],
-}));
-
-const intervalData = intervals.reduce((ret, [i0, i1]) => {
-  ret.push({
-    x0: cityTemperature[i0].date,
-    x1: cityTemperature[i1].date,
-  });
-  return ret;
-}, []);
 
 // @todo: factor these into separate stories to more fully demo each component
 export default [
@@ -109,7 +70,9 @@ export default [
           orientation={['diagonal']}
         />
         <BarSeries
-          data={data.map((d, i) => ({ ...d, fill: `url(#${i === 2 ? 'lines' : 'gradient'})` }))}
+          data={timeSeriesData.map((d, i) => ({
+            ...d, fill: `url(#${i === 2 ? 'lines' : 'gradient'})`,
+          }))}
           label="Apple Stock"
           fill="url(#aqua_lightaqua_gradient)"
         />
@@ -131,12 +94,12 @@ export default [
           to="#84D2CB"
         />
         <BarSeries
-          data={data}
+          data={timeSeriesData}
           label="Apple Stock"
           fill="url(#aqua_lightaqua_gradient)"
         />
         <LineSeries
-          data={data}
+          data={timeSeriesData}
           label="Apple Stock"
           stroke="#484848"
         />
@@ -159,7 +122,7 @@ export default [
           to="#84D2CB"
         />
         <BarSeries
-          data={data}
+          data={timeSeriesData}
           label="Apple Stock"
           fill="url(#aqua_lightaqua_gradient)"
         />
@@ -177,12 +140,12 @@ export default [
       >
         <YAxis label="Price ($)" numTicks={4} />
         <LineSeries
-          data={data}
+          data={timeSeriesData}
           label="Apple Stock"
           showPoints
         />
         <LineSeries
-          data={data.map(d => ({ ...d, y: Math.random() > 0.5 ? d.y * 2 : d.y / 2 }))}
+          data={timeSeriesData.map(d => ({ ...d, y: Math.random() > 0.5 ? d.y * 2 : d.y / 2 }))}
           label="Apple Stock 2"
           stroke="#484848"
           strokeDasharray="3 3"
@@ -263,11 +226,11 @@ export default [
           to="#84D2CB"
         />
         <BarSeries
-          data={data.map((d, i) => ({ ...d, x: 'abcdefghijklmnopqrstuvwxyz'[i % 26] }))}
+          data={categoricalData}
           label="Apple Stock"
           fill="url(#aqua_lightaqua_gradient)"
         />
-        <XAxis numTicks={data.length} />
+        <XAxis numTicks={categoricalData.length} />
       </ResponsiveXYChart>
     ),
   },
@@ -317,7 +280,7 @@ export default [
           to="#84D2CB"
         />
         <BarSeries
-          data={data}
+          data={timeSeriesData}
           label="Apple Stock"
           fill="url(#aqua_lightaqua_gradient)"
         />
@@ -336,12 +299,12 @@ export default [
       >
         <YAxis label="Price ($)" numTicks={4} />
         <BarSeries
-          data={data.filter((d, i) => i % 2 === 0)}
+          data={timeSeriesData.filter((d, i) => i % 2 === 0)}
           label="Apple Stock"
           fill="#484848"
         />
         <BarSeries
-          data={data.filter((d, i) => i % 2 !== 0 && i !== 5)}
+          data={timeSeriesData.filter((d, i) => i % 2 !== 0 && i !== 5)}
           label="Apple Stock ii"
           fill="#767676"
         />
