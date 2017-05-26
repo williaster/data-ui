@@ -43,20 +43,25 @@ const data = appleStock.filter((d, i) => i % 120 === 0).map(d => ({
 }));
 
 // stacked data
-const stackKeys = Object.keys(cityTemperature[0]).filter(attr => attr !== 'date');
+const groupKeys = Object.keys(cityTemperature[0]).filter(attr => attr !== 'date');
 const stackedData = cityTemperature.slice(0, 12).map(d => ({
   ...d,
   x: d.date,
-  y: stackKeys.reduce((ret, curr) => ret + Number(d[curr]), 0),
+  y: groupKeys.reduce((ret, curr) => ret + Number(d[curr]), 0),
+}));
+
+const groupedData = stackedData.slice(0, 6).map(d => ({
+  ...d,
+  y: Math.max(...groupKeys.map(attr => Number(d[attr]))),
 }));
 
 // interval data
 const intervals = [[5, 8], [15, 19]];
 
-const intervalLineData = cityTemperature.slice(0, 16).map((d, i) => ({
+const intervalLineData = cityTemperature.slice(0, 25).map((d, i) => ({
   ...d,
   x: d.date,
-  y: intervals.some(([i0, i1]) => i >= i0 && i <= i1) ? null : d[stackKeys[0]],
+  y: intervals.some(([i0, i1]) => i >= i0 && i <= i1) ? null : d[groupKeys[0]],
 }));
 
 const intervalData = intervals.reduce((ret, [i0, i1]) => {
@@ -205,7 +210,7 @@ export default [
         <VerticalBarSeries
           data={stackedData}
           label="City Temperature"
-          stack={stackKeys}
+          stack={groupKeys}
         />
         <XAxis tickFormat={dateFormatter} />
       </ResponsiveXYChart>
@@ -216,14 +221,15 @@ export default [
     example: () => (
       <ResponsiveXYChart
         ariaLabel="Required label"
-        xScale={{ type: 'band', paddingInner: 0.05 }}
+        xScale={{ type: 'band', paddingInner: 0.15 }}
         yScale={{ type: 'linear' }}
+        showYGrid={false}
       >
         <YAxis label="Temperature (°F)" numTicks={4} />
         <VerticalBarSeries
-          data={stackedData}
-          label="Apple Stock"
-          stack={stackKeys}
+          data={groupedData}
+          label="City Temperature"
+          group={groupKeys}
         />
         <XAxis tickFormat={dateFormatter} />
       </ResponsiveXYChart>

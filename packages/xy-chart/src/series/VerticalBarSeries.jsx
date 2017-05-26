@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Group } from '@vx/group';
-import { Bar, BarStack } from '@vx/shape';
+import { Bar, BarStack, BarGroup } from '@vx/shape';
 
 import { barSeriesDataShape } from '../utils/propShapes';
 import { callOrValue, scaleTypeToScale } from '../utils/chartUtils';
@@ -10,6 +10,12 @@ import { colors } from '../theme';
 const propTypes = {
   data: barSeriesDataShape.isRequired,
   label: PropTypes.string.isRequired,
+
+  // for groups
+  group: PropTypes.arrayOf(PropTypes.string),
+  groupFills: PropTypes.arrayOf(PropTypes.string),
+
+  // for stacks
   stack: PropTypes.arrayOf(PropTypes.string),
   stackFills: PropTypes.arrayOf(PropTypes.string),
 
@@ -27,6 +33,9 @@ const propTypes = {
 const defaultProps = {
   stack: null,
   stackFills: colors.categories,
+  group: null,
+  groupFills: colors.categories,
+
   fill: colors.default,
   stackBy: null,
   stroke: '#FFFFFF',
@@ -36,12 +45,16 @@ const defaultProps = {
 const x = d => d.x;
 const y = d => d.y;
 
+// every x value has group.length bars
+
 export default function VerticalBarSeries({
   barWidth,
   data,
   fill,
   stack,
   stackFills,
+  group,
+  groupFills,
   stroke,
   strokeWidth,
   label,
@@ -63,6 +76,28 @@ export default function VerticalBarSeries({
         zScale={zScale}
         stroke={stroke}
         strokeWidth={strokeWidth}
+      />
+    );
+  }
+  if (group) {
+    debugger;
+    const zScale = scaleTypeToScale.ordinal({ range: groupFills, domain: group });
+    const x1Scale = scaleTypeToScale.band({
+      rangeRound: [0, xScale.bandwidth()],
+      domain: group,
+      padding: 0.1,
+    });
+    return (
+      <BarGroup
+        data={data}
+        keys={group}
+        height={maxHeight}
+        x0={x}
+        x0Scale={xScale}
+        x1Scale={x1Scale}
+        yScale={yScale}
+        zScale={zScale}
+        rx={2}
       />
     );
   }
