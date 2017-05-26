@@ -5,7 +5,7 @@ import { curveCardinal, curveLinear } from '@vx/curve';
 import { GlyphDot } from '@vx/glyph';
 import { LinePath } from '@vx/shape';
 
-import { callOrValue } from '../utils/chartUtils';
+import { callOrValue, isDefined } from '../utils/chartUtils';
 import { colors } from '../theme';
 import { lineSeriesDataShape } from '../utils/propShapes';
 
@@ -59,28 +59,29 @@ export default function LineSeries({
       strokeDasharray={callOrValue(strokeDasharray)}
       curve={interpolation === 'linear' ? curveLinear : curveCardinal}
       glyph={showPoints && ((d, i) => (
-        <GlyphDot
-          key={`${label}-${i}-${x(d)}`}
-          cx={xScale(x(d))}
-          cy={yScale(y(d))}
-          r={4}
-          fill={d.stroke || callOrValue(stroke, d, i)}
-          stroke="#FFFFFF"
-          strokeWidth={1}
-        >
-          {d.label &&
-            <text
-              x={xScale(x(d))}
-              y={yScale(y(d))}
-              dx={10}
-              fill={d.stroke || callOrValue(stroke, d, i)}
-              stroke={'#fff'}
-              strokeWidth={1}
-              fontSize={12}
-            >
-              {d.label}
-            </text>}
-        </GlyphDot>
+        isDefined(y(d)) &&
+          <GlyphDot
+            key={`${label}-${i}-${x(d)}`}
+            cx={xScale(x(d))}
+            cy={yScale(y(d))}
+            r={4}
+            fill={d.stroke || callOrValue(stroke, d, i)}
+            stroke="#FFFFFF"
+            strokeWidth={1}
+          >
+            {d.label &&
+              <text
+                x={xScale(x(d))}
+                y={yScale(y(d))}
+                dx={10}
+                fill={d.stroke || callOrValue(stroke, d, i)}
+                stroke={'#fff'}
+                strokeWidth={1}
+                fontSize={12}
+              >
+                {d.label}
+              </text>}
+          </GlyphDot>
       ))}
     />
   );

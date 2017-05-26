@@ -50,7 +50,6 @@ export default function VerticalBarSeries({
 }) {
   const maxHeight = (yScale.range() || [0])[0];
   const offset = xScale.offset || 0;
-  console.log(data);
   if (stack) {
     const zScale = scaleTypeToScale.ordinal({ range: stackFills, domain: stack });
     return (

@@ -23,7 +23,6 @@ export const lineSeriesDataShape = PropTypes.arrayOf(
       PropTypes.instanceOf(Date),
     ]).isRequired,
     y: PropTypes.number.isRequired,
-    label: PropTypes.string,
   }),
 );
 
@@ -37,7 +36,22 @@ export const barSeriesDataShape = PropTypes.arrayOf(PropTypes.shape({
   fill: PropTypes.string,
   stroke: PropTypes.string,
   strokeWidth: PropTypes.number,
-  label: PropTypes.string,
+}));
+
+export const intervalSeriesDataShape = PropTypes.arrayOf(PropTypes.shape({
+  x0: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,
+    PropTypes.instanceOf(Date),
+  ]).isRequired,
+  x1: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,
+    PropTypes.instanceOf(Date),
+  ]).isRequired,
+  fill: PropTypes.string,
+  stroke: PropTypes.string,
+  strokeWidth: PropTypes.number,
 }));
 
 export const axisStylesShape = PropTypes.shape({

@@ -21,6 +21,10 @@ export function getChildWithName(name, children) {
   return ChildOfInterest.length ? ChildOfInterest[0] : null;
 }
 
+export function isDefined(val) {
+  return typeof val !== 'undefined' && val !== null;
+}
+
 export function isAxis(name) {
   return name.match(/axis/gi);
 }
