@@ -6,14 +6,15 @@ import { timeParse, timeFormat } from 'd3-time-format';
 import {
   XYChart,
 
-  IntervalSeries,
-  LineSeries,
-  BarSeries,
-  GroupedBarSeries,
-  StackedBarSeries,
-
   XAxis,
   YAxis,
+
+  BarSeries,
+  IntervalSeries,
+  LineSeries,
+  GroupedBarSeries,
+  StackedBarSeries,
+  PointSeries,
 
   PatternLines,
   LinearGradient,
@@ -37,7 +38,7 @@ const ResponsiveXYChart = withScreenSize(({ screenWidth, children, ...rest }) =>
   </XYChart>
 ));
 
-const { cityTemperature, appleStock } = mockData;
+const { cityTemperature, appleStock, genRandomNormalPoints } = mockData;
 
 const data = appleStock.filter((d, i) => i % 120 === 0).map(d => ({
   x: new Date(d.date),
@@ -57,6 +58,16 @@ const groupedData = stackedData.slice(0, 6).map(d => ({
   y: Math.max(...groupKeys.map(attr => Number(d[attr]))),
 }));
 
+// point data
+const n = 10;
+const pointData = genRandomNormalPoints(n).map(([x, y], i) => ({
+  x,
+  y,
+  fill: theme.colors.categories[Math.floor(i / n)],
+  size: Math.max(3, Math.random() * 10),
+  label: (i % n) === 0 ? `(${parseInt(x, 10)},${parseInt(y, 10)})` : null,
+}));
+
 // interval data
 const intervals = [[5, 8], [15, 19]];
 
@@ -74,6 +85,7 @@ const intervalData = intervals.reduce((ret, [i0, i1]) => {
   return ret;
 }, []);
 
+// @todo: factor these into separate stories to more fully demo each component
 export default [
   {
     description: '<BarSeries /> with <PatternLines /> and <LinearGradient />',
@@ -105,33 +117,7 @@ export default [
     ),
   },
   {
-    description: '<BarSeries /> and <LineSeries />',
-    example: () => (
-      <ResponsiveXYChart
-        ariaLabel="Required label"
-        xScale={{ type: 'time' }}
-        yScale={{ type: 'linear' }}
-      >
-        <LinearGradient
-          id="aqua_lightaqua_gradient"
-          from="#00A699"
-          to="#84D2CB"
-        />
-        <BarSeries
-          data={data}
-          label="Apple Stock"
-          fill="url(#aqua_lightaqua_gradient)"
-        />
-        <LineSeries
-          data={data}
-          label="Apple Stock"
-          stroke="#484848"
-        />
-      </ResponsiveXYChart>
-    ),
-  },
-  {
-    description: '<BarSeries /> with <XAxis /> and <YAxis />',
+    description: '<BarSeries /> + <LineSeries /> + <XAxis /> + <YAxis />',
     example: () => (
       <ResponsiveXYChart
         ariaLabel="Required label"
@@ -149,12 +135,17 @@ export default [
           label="Apple Stock"
           fill="url(#aqua_lightaqua_gradient)"
         />
+        <LineSeries
+          data={data}
+          label="Apple Stock"
+          stroke="#484848"
+        />
         <XAxis label="Time" numTicks={5} />
       </ResponsiveXYChart>
     ),
   },
   {
-    description: 'Inverted <XAxis />, <YAxis />',
+    description: 'Inverted <XAxis /> + <YAxis />',
     example: () => (
       <ResponsiveXYChart
         ariaLabel="Required label"
@@ -197,6 +188,27 @@ export default [
           strokeDasharray="3 3"
         />
         <XAxis label="Time" numTicks={5} />
+      </ResponsiveXYChart>
+    ),
+  },
+  {
+    description: '<PointSeries />',
+    example: () => (
+      <ResponsiveXYChart
+        ariaLabel="Required label"
+        xScale={{ type: 'linear', nice: true }}
+        yScale={{ type: 'linear', nice: true }}
+        showXGrid={false}
+        showYGrid={false}
+      >
+        <YAxis label="Y" numTicks={4} />
+        <XAxis label="X" numTicks={4} />
+        <PointSeries
+          data={pointData}
+          label="Random"
+          size={d => d.size}
+        />
+
       </ResponsiveXYChart>
     ),
   },

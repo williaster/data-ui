@@ -4,7 +4,7 @@ import { extent } from 'd3-array';
 
 export function callOrValue(maybeFn, ...args) {
   if (typeof maybeFn === 'function') {
-    return maybeFn(args);
+    return maybeFn(...args);
   }
   return maybeFn;
 }

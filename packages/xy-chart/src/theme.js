@@ -19,7 +19,10 @@ export const colors = {
     '#FFB400', // yellow-orange
     '#7b0051', // purple
     '#FC642D', // red-orange
-    '#FF5A5F', // coral
+    '#9BE382', // lime
+    '#484848', // dark grey
+    '#FFBAA0', // peach
+    '#008C99', // dark aqua
   ],
 };
 
@@ -107,6 +110,15 @@ export const yTickStyles = {
   },
 };
 
+export const labelStyles = {
+  fill: colors.label,
+  fontFamily,
+  fontSize: 12,
+  fontWeight: 200,
+  dx: '0.5em',
+  dy: '0.5em',
+};
+
 export default {
   colors,
   gridStyles,
@@ -115,4 +127,5 @@ export default {
   xTickStyles,
   yAxisStyles,
   yTickStyles,
+  labelStyles,
 };

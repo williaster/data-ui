@@ -12,6 +12,7 @@ export const scaleShape = PropTypes.shape({
   // these would override any computation done by xyplot
   // and would allow specifying colors for scales, etc.
   range: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.number, PropTypes.string])),
+  rangeRound: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.number, PropTypes.string])),
   domain: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.number, PropTypes.string])),
 });
 
@@ -36,6 +37,20 @@ export const barSeriesDataShape = PropTypes.arrayOf(PropTypes.shape({
   fill: PropTypes.string,
   stroke: PropTypes.string,
   strokeWidth: PropTypes.number,
+}));
+
+export const pointSeriesDataShape = PropTypes.arrayOf(PropTypes.shape({
+  x: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,
+    PropTypes.instanceOf(Date),
+  ]).isRequired,
+  y: PropTypes.number.isRequired,
+  size: PropTypes.number,
+  fill: PropTypes.string,
+  stroke: PropTypes.string,
+  strokeWidth: PropTypes.number,
+  strokeDasharray: PropTypes.string,
 }));
 
 export const intervalSeriesDataShape = PropTypes.arrayOf(PropTypes.shape({
