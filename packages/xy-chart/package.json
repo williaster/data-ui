@@ -6,7 +6,7 @@
   "scripts": {
     "build": "webpack -p --env build",
     "dev": "webpack --progress --colors --watch --env dev",
-    "test": "echo \"Error: no test specified\" && exit 0"
+    "test": "jest --colors --verbose --coverage"
   },
   "repository": "https://github.com/williaster/data-ui",
   "keywords": [
@@ -34,12 +34,16 @@
     "prop-types": "^15.5.10"
   },
   "devDependencies": {
+    "babel-jest": "^20.0.3",
     "babel-core": "^6.24.1",
     "babel-loader": "^6.4.1",
     "babel-plugin-syntax-jsx": "^6.18.0",
     "babel-preset-airbnb": "^2.2.3",
+    "enzyme": "^2.8.2",
+    "jest": "^20.0.3",
     "react": "~15.4.2",
     "react-dom": "~15.4.2",
+    "react-addons-test-utils": "^15.5.1",
     "webpack": "^2.4.1"
   },
   "peerDependencies": {

@@ -53,12 +53,14 @@ export function collectDataFromChildSeries(children) {
   const dataByIndex = {};
   const dataBySeriesType = {};
   Children.forEach(children, (Child, i) => {
-    const name = componentName(Child);
-    const { data } = Child.props;
-    if (data && isSeries(name)) {
-      dataByIndex[i] = data;
-      allData = allData.concat(data);
-      dataBySeriesType[name] = (dataBySeriesType[name] || []).concat(data);
+    if (Child && Child.props && Child.props.data) {
+      const name = componentName(Child);
+      const { data } = Child.props;
+      if (data && isSeries(name)) {
+        dataByIndex[i] = data;
+        allData = allData.concat(data);
+        dataBySeriesType[name] = (dataBySeriesType[name] || []).concat(data);
+      }
     }
   });
   return { dataByIndex, allData, dataBySeriesType };
@@ -73,7 +75,7 @@ export function getScaleForAccessor({
   ...rest
 }) {
   let domain;
-  if (type === 'band') {
+  if (type === 'band' || type === 'ordinal') {
     domain = allData.map(accessor);
   }
   if (type === 'linear' || type === 'time') {
