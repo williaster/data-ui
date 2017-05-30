@@ -1,6 +1,6 @@
 {
   "name": "@data-ui/xy-chart",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "A package of charts with standard x- and y- axes.",
   "main": "build/index.js",
   "scripts": {
@@ -34,16 +34,16 @@
     "prop-types": "^15.5.10"
   },
   "devDependencies": {
-    "babel-jest": "^20.0.3",
     "babel-core": "^6.24.1",
+    "babel-jest": "^20.0.3",
     "babel-loader": "^6.4.1",
     "babel-plugin-syntax-jsx": "^6.18.0",
     "babel-preset-airbnb": "^2.2.3",
     "enzyme": "^2.8.2",
     "jest": "^20.0.3",
     "react": "~15.4.2",
-    "react-dom": "~15.4.2",
     "react-addons-test-utils": "~15.4.2",
+    "react-dom": "~15.4.2",
     "webpack": "^2.4.1"
   },
   "peerDependencies": {
