@@ -39,6 +39,16 @@ export const barSeriesDataShape = PropTypes.arrayOf(PropTypes.shape({
   strokeWidth: PropTypes.number,
 }));
 
+export const groupedBarSeriesDataShape = PropTypes.arrayOf(PropTypes.shape({
+  x: PropTypes.string.isRequired,
+  y: PropTypes.number.isRequired,
+}));
+
+export const stackedBarSeriesDataShape = PropTypes.arrayOf(PropTypes.shape({
+  x: PropTypes.string.isRequired,
+  y: PropTypes.number.isRequired,
+}));
+
 export const pointSeriesDataShape = PropTypes.arrayOf(PropTypes.shape({
   x: PropTypes.oneOfType([ // data with null x/y are not rendered
     PropTypes.string,
