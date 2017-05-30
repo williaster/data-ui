@@ -16,22 +16,20 @@ const propTypes = {
   stroke: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   strokeWidth: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
 
-  // these will likely be injected by the parent xychart
-  barWidth: PropTypes.number.isRequired,
-  xScale: PropTypes.func.isRequired,
-  yScale: PropTypes.func.isRequired,
+  // probably injected by the parent xychart
+  barWidth: PropTypes.number,
+  xScale: PropTypes.func,
+  yScale: PropTypes.func,
 };
 
 const defaultProps = {
-  stack: null,
-  stackFills: colors.categories,
-  group: null,
-  groupFills: colors.categories,
-
+  barWidth: null,
   fill: colors.default,
   stackBy: null,
   stroke: '#FFFFFF',
   strokeWidth: 1,
+  xScale: null,
+  yScale: null,
 };
 
 const x = d => d.x;
@@ -47,6 +45,8 @@ export default function BarSeries({
   xScale,
   yScale,
 }) {
+  if (!xScale || !yScale || !barWidth) return null;
+
   const maxHeight = (yScale.range() || [0])[0];
   const offset = xScale.offset || 0;
   return (

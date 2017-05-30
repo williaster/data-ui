@@ -20,9 +20,9 @@ const propTypes = {
   strokeDasharray: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   size: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
 
-  // these will likely be injected by the parent chart
-  xScale: PropTypes.func.isRequired,
-  yScale: PropTypes.func.isRequired,
+  // likely be injected by the parent chart
+  xScale: PropTypes.func,
+  yScale: PropTypes.func,
 };
 
 const defaultProps = {
@@ -32,6 +32,8 @@ const defaultProps = {
   stroke: '#FFFFFF',
   strokeDasharray: null,
   strokeWidth: 1,
+  xScale: null,
+  yScale: null,
 };
 
 const x = d => d.x;
@@ -49,6 +51,8 @@ export default function PointSeries({
   xScale,
   yScale,
 }) {
+  if (!xScale || !yScale) return null;
+
   const labels = [];
   return (
     <Group key={label}>

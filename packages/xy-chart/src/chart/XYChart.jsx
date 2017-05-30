@@ -150,6 +150,7 @@ class XYChart extends React.PureComponent {
             const name = componentName(Child);
             if (isAxis(name)) {
               const styleKey = name[0].toLowerCase();
+              debugger;
               return React.cloneElement(Child, {
                 innerHeight,
                 innerWidth,

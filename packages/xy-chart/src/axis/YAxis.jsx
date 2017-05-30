@@ -17,18 +17,20 @@ const propTypes = {
   tickFormat: PropTypes.func,
 
   // probably injected by parent
-  innerWidth: PropTypes.number.isRequired,
-  scale: PropTypes.func.isRequired,
+  innerWidth: PropTypes.number,
+  scale: PropTypes.func,
 };
 
 const defaultProps = {
   axisStyles: {},
   hideZero: false,
+  innerWidth: null,
   label: null,
   labelOffset: 0,
   numTicks: null,
   orientation: 'right',
   rangePadding: null,
+  scale: null,
   tickFormat: null,
   tickLabelComponent: undefined,
   tickStyles: {},
@@ -48,6 +50,8 @@ export default function YAxis({
   tickLabelComponent,
   tickStyles,
 }) {
+  if (!scale || !innerWidth) return null;
+
   const Axis = orientation === 'left' ? AxisLeft : AxisRight;
   return (
     <Axis

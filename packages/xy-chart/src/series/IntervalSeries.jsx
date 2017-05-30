@@ -16,15 +16,17 @@ const propTypes = {
   stroke: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   strokeWidth: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
 
-  // these will likely be injected by the parent xychart
-  xScale: PropTypes.func.isRequired,
-  yScale: PropTypes.func.isRequired,
+  // likely be injected by the parent xychart
+  xScale: PropTypes.func,
+  yScale: PropTypes.func,
 };
 
 const defaultProps = {
   fill: colors.default,
   stroke: 'none',
   strokeWidth: 1,
+  xScale: null,
+  yScale: null,
 };
 
 const x0 = d => d.x0;
@@ -39,6 +41,8 @@ export default function IntervalSeries({
   xScale,
   yScale,
 }) {
+  if (!xScale || !yScale) return null;
+
   const barHeight = (yScale.range() || [0])[0];
   return (
     <Group key={label}>

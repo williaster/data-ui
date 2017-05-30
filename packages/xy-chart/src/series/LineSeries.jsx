@@ -20,8 +20,8 @@ const propTypes = {
   strokeWidth: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
 
   // these will likely be injected by the parent chart
-  xScale: PropTypes.func.isRequired,
-  yScale: PropTypes.func.isRequired,
+  xScale: PropTypes.func,
+  yScale: PropTypes.func,
 };
 
 const defaultProps = {
@@ -30,6 +30,8 @@ const defaultProps = {
   stroke: colors.default,
   strokeDasharray: null,
   strokeWidth: 3,
+  xScale: null,
+  yScale: null,
 };
 
 const x = d => d.x;
@@ -46,6 +48,8 @@ export default function LineSeries({
   xScale,
   yScale,
 }) {
+  if (!xScale || !yScale) return null;
+
   return (
     <LinePath
       key={label}
