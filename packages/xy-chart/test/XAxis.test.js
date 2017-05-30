@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import { AxisBottom, AxisTop, Axis } from '@vx/axis';
+import { AxisBottom, AxisTop } from '@vx/axis';
 import { XYChart, XAxis } from '../src/';
 
 describe('<XAxis />', () => {

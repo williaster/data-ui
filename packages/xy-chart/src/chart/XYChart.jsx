@@ -8,10 +8,13 @@ import {
   collectDataFromChildSeries,
   componentName,
   isAxis,
-  isSeries,
   isBarSeries,
+  isSeries,
   getChildWithName,
   getScaleForAccessor,
+  numTicksForWidth,
+  numTicksForHeight,
+  propOrFallback,
 } from '../utils/chartUtils';
 
 import { scaleShape, themeShape } from '../utils/propShapes';
@@ -42,8 +45,8 @@ const defaultProps = {
     bottom: 64,
     left: 64,
   },
-  showXGrid: true,
-  showYGrid: true,
+  showXGrid: false,
+  showYGrid: false,
   theme: {},
 };
 
@@ -63,12 +66,12 @@ class XYChart extends React.PureComponent {
     };
   }
 
-  getNumTicks() {
+  getNumTicks(innerWidth, innerHeight) {
     const xAxis = getChildWithName('XAxis', this.props.children);
     const yAxis = getChildWithName('YAxis', this.props.children);
     return {
-      numXTicks: (xAxis && xAxis.props.numTicks) || 0,
-      numYTicks: (yAxis && yAxis.props.numTicks) || 0,
+      numXTicks: propOrFallback(xAxis && xAxis.props, 'numTicks', numTicksForWidth(innerWidth)),
+      numYTicks: propOrFallback(yAxis && yAxis.props, 'numTicks', numTicksForHeight(innerHeight)),
     };
   }
 
@@ -125,7 +128,7 @@ class XYChart extends React.PureComponent {
     } = this.props;
 
     const { margin, innerWidth, innerHeight } = this.getDimmensions();
-    const { numXTicks, numYTicks } = this.getNumTicks(this.props);
+    const { numXTicks, numYTicks } = this.getNumTicks(innerWidth, innerHeight);
     const { xScale, yScale } = this.collectScalesFromProps();
     return (
       <svg
@@ -150,7 +153,6 @@ class XYChart extends React.PureComponent {
             const name = componentName(Child);
             if (isAxis(name)) {
               const styleKey = name[0].toLowerCase();
-              debugger;
               return React.cloneElement(Child, {
                 innerHeight,
                 innerWidth,
