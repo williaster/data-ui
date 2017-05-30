@@ -23,7 +23,7 @@ export const lineSeriesDataShape = PropTypes.arrayOf(
       PropTypes.number,
       PropTypes.instanceOf(Date),
     ]).isRequired,
-    y: PropTypes.number.isRequired,
+    y: PropTypes.number, // null data are not rendered
   }),
 );
 
@@ -33,7 +33,7 @@ export const barSeriesDataShape = PropTypes.arrayOf(PropTypes.shape({
     PropTypes.number,
     PropTypes.instanceOf(Date),
   ]).isRequired,
-  y: PropTypes.number.isRequired,
+  y: PropTypes.number, // null data are not rendered
   fill: PropTypes.string,
   stroke: PropTypes.string,
   strokeWidth: PropTypes.number,
@@ -45,7 +45,7 @@ export const pointSeriesDataShape = PropTypes.arrayOf(PropTypes.shape({
     PropTypes.number,
     PropTypes.instanceOf(Date),
   ]).isRequired,
-  y: PropTypes.number.isRequired,
+  y: PropTypes.number, // null data are not rendered
   size: PropTypes.number,
   fill: PropTypes.string,
   stroke: PropTypes.string,

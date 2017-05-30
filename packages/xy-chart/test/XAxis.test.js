@@ -16,6 +16,10 @@ describe('<XAxis />', () => {
     expect(XAxis).toBeDefined();
   });
 
+  test('it should not render without a scale', () => {
+    expect(shallow(<XAxis />).type()).toBeNull();
+  });
+
   test('<XYChart/> should render an Axis', () => {
     const wrapper = shallow(<XYChart {...chartProps}><XAxis /></XYChart>);
     expect(wrapper.find(XAxis).length).toBe(1);
@@ -40,7 +44,7 @@ describe('<XAxis />', () => {
     expect(axis.prop('tickStyles')).toEqual(xTickStyles);
   });
 
-  test('It should render the appropriate @vx/axis based on props.orientation', () => {
+  test('It should render the appropriate axis based on props.orientation', () => {
     const defaultAxis = shallow(<XYChart {...chartProps}><XAxis /></XYChart>)
       .find(XAxis).dive();
 

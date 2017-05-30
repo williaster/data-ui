@@ -1,4 +1,5 @@
 import { Grid } from '@vx/grid';
+import { Group } from '@vx/group';
 import React from 'react';
 import { shallow } from 'enzyme';
 
@@ -29,6 +30,14 @@ describe('<XYChart />', () => {
     const svg = wrapper.find('svg');
     expect(svg.length).toBe(1);
     expect(svg.prop('aria-label')).toBe(mockProps.ariaLabel);
+  });
+
+  test('it should render an offset <Group /> based on margin', () => {
+    const wrapper = shallow(<XYChart {...mockProps} />);
+    const group = wrapper.find(Group);
+    expect(group.length).toBe(1);
+    expect(group.prop('top')).toBe(mockProps.margin.top);
+    expect(group.prop('left')).toBe(mockProps.margin.left);
   });
 
   test('it should render a grid based on props', () => {

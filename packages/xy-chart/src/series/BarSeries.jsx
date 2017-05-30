@@ -4,7 +4,7 @@ import { Group } from '@vx/group';
 import { Bar } from '@vx/shape';
 
 import { barSeriesDataShape } from '../utils/propShapes';
-import { callOrValue } from '../utils/chartUtils';
+import { callOrValue, isDefined } from '../utils/chartUtils';
 import { colors } from '../theme';
 
 const propTypes = {
@@ -53,7 +53,7 @@ export default function BarSeries({
     <Group key={label}>
       {data.map((d, i) => {
         const barHeight = maxHeight - yScale(y(d));
-        return (
+        return isDefined(d.y) && (
           <Bar
             key={`bar-${label}-${xScale(x(d))}`}
             x={xScale(x(d)) - offset}
