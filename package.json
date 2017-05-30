@@ -33,7 +33,7 @@
     "jest": "^20.0.3",
     "lerna": "^2.0.0-rc.2",
     "react": "~15.4.2",
-    "react-addons-test-utils": "^15.5.1",
+    "react-addons-test-utils": "~15.4.2",
     "react-dom": "~15.4.2"
   },
   "peerDependencies": {

@@ -48,7 +48,6 @@ export default function XAxis({
   tickStyles,
 }) {
   if (!scale || !innerHeight) return null;
-
   const Axis = orientation === 'bottom' ? AxisBottom : AxisTop;
   return (
     <Axis

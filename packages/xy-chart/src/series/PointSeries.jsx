@@ -57,15 +57,18 @@ export default function PointSeries({
   return (
     <Group key={label}>
       {data.map((d, i) => {
-        const cx = xScale(x(d));
-        const cy = yScale(y(d));
-        const defined = isDefined(cx) && isDefined(cy);
+        const xVal = x(d);
+        const yVal = y(d);
+        const defined = isDefined(xVal) && isDefined(yVal);
+        const cx = xScale(xVal);
+        const cy = yScale(yVal);
+        const key = `${label}-${x(d)}`;
         if (defined && d.label) {
-          labels.push({ x: cx, y: cy, label: d.label });
+          labels.push({ x: cx, y: cy, label: d.label, key: `${key}-label` });
         }
         return defined && (
           <GlyphDot
-            key={`${label}-${x(d)}`}
+            key={key}
             cx={cx}
             cy={cy}
             r={callOrValue(size, d, i)}

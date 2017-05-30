@@ -60,4 +60,22 @@ describe('<LineSeries />', () => {
     const linePathNoPoints = lineSeriesNoPoints.find(LinePath).dive();
     expect(linePathNoPoints.find(GlyphDot).length).toBe(0);
   });
+
+  test('it should not render points for null data', () => {
+    const wrapper = shallow(
+      <XYChart {...mockProps} >
+        <LineSeries
+          label="l"
+          data={mockData.map((d, i) => ({ // test null x AND y's
+            x: i === 0 ? null : d.date,
+            y: i === 1 ? null : d.num,
+          }))}
+          showPoints
+        />
+      </XYChart>,
+    );
+    const series = wrapper.find(LineSeries).dive();
+    const path = series.find(LinePath).dive();
+    expect(path.find(GlyphDot).length).toBe(mockData.length - 2);
+  });
 });

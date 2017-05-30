@@ -1,11 +1,11 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import { AxisBottom, AxisTop } from '@vx/axis';
-import { XYChart, XAxis } from '../src/';
+import { XYChart, XAxis, LineSeries } from '../src/';
 
 describe('<XAxis />', () => {
   const chartProps = {
-    xScale: { type: 'time' },
+    xScale: { type: 'band' },
     yScale: { type: 'linear' },
     width: 100,
     height: 100,
@@ -70,5 +70,20 @@ describe('<XAxis />', () => {
       <XYChart {...chartProps}><XAxis label={label} /></XYChart>,
     );
     expect(wrapper.render().find('#label').length).toBe(1);
+  });
+
+  test('It should use a tickLabelComponent and tickFormat func when passed', () => {
+    const tickFormat = () => 'iNvaRiAnT LabEl';
+    const wrapper = shallow(
+      <XYChart {...chartProps}>
+        <LineSeries label="" data={[{ x: 'a', y: 7 }]} />
+        <XAxis
+          tickFormat={tickFormat}
+          tickLabelComponent={<text className="test" />}
+        />
+      </XYChart>,
+    );
+    const label = wrapper.render().find('.test');
+    expect(label.first().text()).toBe(tickFormat());
   });
 });

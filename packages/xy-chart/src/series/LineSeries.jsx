@@ -63,7 +63,7 @@ export default function LineSeries({
       strokeDasharray={callOrValue(strokeDasharray)}
       curve={interpolation === 'linear' ? curveLinear : curveCardinal}
       glyph={showPoints && ((d, i) => (
-        isDefined(y(d)) &&
+        isDefined(x(d)) && isDefined(y(d)) &&
           <GlyphDot
             key={`${label}-${i}-${x(d)}`}
             cx={xScale(x(d))}

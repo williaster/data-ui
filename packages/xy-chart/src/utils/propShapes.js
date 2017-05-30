@@ -18,11 +18,11 @@ export const scaleShape = PropTypes.shape({
 
 export const lineSeriesDataShape = PropTypes.arrayOf(
   PropTypes.shape({
-    x: PropTypes.oneOfType([
+    x: PropTypes.oneOfType([ // data with null x/y are not rendered
       PropTypes.string,
       PropTypes.number,
       PropTypes.instanceOf(Date),
-    ]).isRequired,
+    ]),
     y: PropTypes.number, // null data are not rendered
   }),
 );
@@ -40,12 +40,12 @@ export const barSeriesDataShape = PropTypes.arrayOf(PropTypes.shape({
 }));
 
 export const pointSeriesDataShape = PropTypes.arrayOf(PropTypes.shape({
-  x: PropTypes.oneOfType([
+  x: PropTypes.oneOfType([ // data with null x/y are not rendered
     PropTypes.string,
     PropTypes.number,
     PropTypes.instanceOf(Date),
-  ]).isRequired,
-  y: PropTypes.number, // null data are not rendered
+  ]),
+  y: PropTypes.number,
   size: PropTypes.number,
   fill: PropTypes.string,
   stroke: PropTypes.string,
