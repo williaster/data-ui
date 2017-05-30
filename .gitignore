@@ -5,3 +5,4 @@ _gh-pages
 node_modules
 *.log
 /.eslintcache
+coverage

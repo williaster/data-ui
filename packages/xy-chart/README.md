@@ -1,3 +1,12 @@
+<p align="center">
+  <img src="assets/xy-chart.gif" />
+</p>
+<p align="center">
+  <a title="package version" href="https://img.shields.io/npm/v/@data-ui/xy-chart.svg?style=flat-square">
+    <img src="https://img.shields.io/npm/v/@data-ui/xy-chart.svg?style=flat-square" />
+  </a>
+</p>
+
 # @data-ui/xy-chart
 A package of charts with standard x- and y- axes. More docs soon :v:!
 

@@ -2,26 +2,28 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { BarStack } from '@vx/shape';
 
-import { barSeriesDataShape } from '../utils/propShapes';
+import { stackedBarSeriesDataShape } from '../utils/propShapes';
 import { scaleTypeToScale } from '../utils/chartUtils';
 import { colors } from '../theme';
 
 const propTypes = {
-  data: barSeriesDataShape.isRequired,
+  data: stackedBarSeriesDataShape.isRequired,
   stackKeys: PropTypes.arrayOf(PropTypes.string).isRequired,
   stackFills: PropTypes.arrayOf(PropTypes.string),
   stroke: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   strokeWidth: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
 
   // these will likely be injected by the parent xychart
-  xScale: PropTypes.func.isRequired,
-  yScale: PropTypes.func.isRequired,
+  xScale: PropTypes.func,
+  yScale: PropTypes.func,
 };
 
 const defaultProps = {
   stackFills: colors.categories,
   stroke: '#FFFFFF',
   strokeWidth: 1,
+  xScale: null,
+  yScale: null,
 };
 
 const x = d => d.x;
@@ -35,6 +37,7 @@ export default function StackedBarSeries({
   xScale,
   yScale,
 }) {
+  if (!xScale || !yScale) return null;
   if (!xScale.bandwidth) { // @todo figure this out/be more graceful
     throw new Error("'StackedBarSeries' requires a 'band' type xScale");
   }

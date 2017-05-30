@@ -2,12 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { BarGroup } from '@vx/shape';
 
-import { barSeriesDataShape } from '../utils/propShapes';
+import { groupedBarSeriesDataShape } from '../utils/propShapes';
 import { scaleTypeToScale } from '../utils/chartUtils';
 import { colors } from '../theme';
 
 const propTypes = {
-  data: barSeriesDataShape.isRequired,
+  data: groupedBarSeriesDataShape.isRequired,
   groupKeys: PropTypes.arrayOf(PropTypes.string).isRequired,
   groupFills: PropTypes.arrayOf(PropTypes.string),
   stroke: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
@@ -15,21 +15,18 @@ const propTypes = {
   groupPadding: PropTypes.number, // see https://github.com/d3/d3-scale#band-scales
 
   // these will likely be injected by the parent xychart
-  xScale: PropTypes.func.isRequired,
-  yScale: PropTypes.func.isRequired,
+  xScale: PropTypes.func,
+  yScale: PropTypes.func,
 };
 
 const defaultProps = {
-  stack: null,
-  stackFills: colors.categories,
   groupKeys: null,
   groupFills: colors.categories,
   groupPadding: 0.1,
-
-  fill: colors.default,
-  stackBy: null,
   stroke: 'none',
   strokeWidth: 1,
+  xScale: null,
+  yScale: null,
 };
 
 const x = d => d.x;
@@ -44,6 +41,7 @@ export default function GroupedBarSeries({
   xScale,
   yScale,
 }) {
+  if (!xScale || !yScale) return null;
   if (!xScale.bandwidth) { // @todo figure this out/be more graceful
     throw new Error("'GroupedBarSeries' requires a 'band' type xScale");
   }

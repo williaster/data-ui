@@ -20,9 +20,9 @@ const propTypes = {
   strokeDasharray: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   size: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
 
-  // these will likely be injected by the parent chart
-  xScale: PropTypes.func.isRequired,
-  yScale: PropTypes.func.isRequired,
+  // likely be injected by the parent chart
+  xScale: PropTypes.func,
+  yScale: PropTypes.func,
 };
 
 const defaultProps = {
@@ -32,6 +32,8 @@ const defaultProps = {
   stroke: '#FFFFFF',
   strokeDasharray: null,
   strokeWidth: 1,
+  xScale: null,
+  yScale: null,
 };
 
 const x = d => d.x;
@@ -49,19 +51,24 @@ export default function PointSeries({
   xScale,
   yScale,
 }) {
+  if (!xScale || !yScale) return null;
+
   const labels = [];
   return (
     <Group key={label}>
       {data.map((d, i) => {
-        const cx = xScale(x(d));
-        const cy = yScale(y(d));
-        const defined = isDefined(cx) && isDefined(cy);
+        const xVal = x(d);
+        const yVal = y(d);
+        const defined = isDefined(xVal) && isDefined(yVal);
+        const cx = xScale(xVal);
+        const cy = yScale(yVal);
+        const key = `${label}-${x(d)}`;
         if (defined && d.label) {
-          labels.push({ x: cx, y: cy, label: d.label });
+          labels.push({ x: cx, y: cy, label: d.label, key: `${key}-label` });
         }
         return defined && (
           <GlyphDot
-            key={`${label}-${x(d)}`}
+            key={key}
             cx={cx}
             cy={cy}
             r={callOrValue(size, d, i)}

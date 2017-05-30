@@ -53,12 +53,14 @@ export function collectDataFromChildSeries(children) {
   const dataByIndex = {};
   const dataBySeriesType = {};
   Children.forEach(children, (Child, i) => {
-    const name = componentName(Child);
-    const { data } = Child.props;
-    if (data && isSeries(name)) {
-      dataByIndex[i] = data;
-      allData = allData.concat(data);
-      dataBySeriesType[name] = (dataBySeriesType[name] || []).concat(data);
+    if (Child && Child.props && Child.props.data) {
+      const name = componentName(Child);
+      const { data } = Child.props;
+      if (data && isSeries(name)) {
+        dataByIndex[i] = data;
+        allData = allData.concat(data);
+        dataBySeriesType[name] = (dataBySeriesType[name] || []).concat(data);
+      }
     }
   });
   return { dataByIndex, allData, dataBySeriesType };
@@ -73,7 +75,7 @@ export function getScaleForAccessor({
   ...rest
 }) {
   let domain;
-  if (type === 'band') {
+  if (type === 'band' || type === 'ordinal') {
     domain = allData.map(accessor);
   }
   if (type === 'linear' || type === 'time') {
@@ -84,4 +86,20 @@ export function getScaleForAccessor({
     ];
   }
   return scaleTypeToScale[type]({ domain, range, ...rest });
+}
+
+export function numTicksForHeight(height) {
+  if (height <= 300) return 3;
+  if (height <= 600) return 5;
+  return 8;
+}
+
+export function numTicksForWidth(width) {
+  if (width <= 300) return 3;
+  if (width <= 400) return 5;
+  return 10;
+}
+
+export function propOrFallback(props, propName, fallback) {
+  return props && isDefined(props[propName]) ? props[propName] : fallback;
 }

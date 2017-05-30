@@ -16,17 +16,19 @@ const propTypes = {
   tickFormat: PropTypes.func,
 
   // probably injected by parent
-  innerHeight: PropTypes.number.isRequired,
-  scale: PropTypes.func.isRequired,
+  innerHeight: PropTypes.number,
+  scale: PropTypes.func,
 };
 
 const defaultProps = {
   axisStyles: {},
   hideZero: false,
+  innerHeight: null,
   label: null,
   numTicks: null,
   orientation: 'bottom',
   rangePadding: null,
+  scale: null,
   tickFormat: null,
   tickLabelComponent: null,
   tickStyles: {},
@@ -45,6 +47,7 @@ export default function XAxis({
   tickLabelComponent,
   tickStyles,
 }) {
+  if (!scale || !innerHeight) return null;
   const Axis = orientation === 'bottom' ? AxisBottom : AxisTop;
   return (
     <Axis

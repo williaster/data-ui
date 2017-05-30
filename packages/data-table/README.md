@@ -1,3 +1,9 @@
+<p align="center">
+  <a title="package version" href="https://img.shields.io/npm/v/@data-ui/data-table.svg?style=flat-square">
+    <img src="https://img.shields.io/npm/v/@data-ui/data-table.svg?style=flat-square" />
+  </a>
+</p>
+
 # @data-ui/data-table
 
 Performant table components that can handle a lot of data.

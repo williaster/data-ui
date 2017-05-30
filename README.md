@@ -1,9 +1,18 @@
+<p align="center">
+  <a title="build status" href="https://travis-ci.org/williaster/data-ui">
+    <img src="https://travis-ci.org/williaster/data-ui.svg" />
+  </a>
+  <a href='https://coveralls.io/github/williaster/data-ui?branch=master'>
+    <img src='https://coveralls.io/repos/github/williaster/data-ui/badge.svg?branch=master' alt='Coverage Status' />
+  </a>
+</p>
+
 # data-ui
 A collection of custom + wrapped components for data-rich (desktop) UIs. Super beta :baby:
 
 ## Packages
-+ [@data-ui/xy-chart](https://github.com/williaster/data-ui/tree/master/packages/xy-chart)
-+ [@data-ui/data-table](https://github.com/williaster/data-ui/tree/master/packages/data-table)
++ [![Version](https://img.shields.io/npm/v/@data-ui/xy-chart.svg?style=flat-square)](https://img.shields.io/npm/v/@data-ui/xy-chart.svg?style=flat-square)[@data-ui/xy-chart](https://github.com/williaster/data-ui/tree/master/packages/xy-chart)
++ [![Version](https://img.shields.io/npm/v/@data-ui/data-table.svg?style=flat-square)](https://img.shields.io/npm/v/@data-ui/data-table.svg?style=flat-square)[@data-ui/data-table](https://github.com/williaster/data-ui/tree/master/packages/data-table)
 + [@data-ui/demo](https://github.com/williaster/data-ui/tree/master/packages/demo)
 
 Lots more coming.
@@ -18,14 +27,14 @@ To run that demo on your own computer:
 ```
 git clone ...data-ui && cd data-ui
 
-# bootstrap all packages 
+# bootstrap all packages
 npm install --global lerna@^2.0.0-beta.0
 npm install
 lerna bootstrap
 
 # alternatively install just the demo package
 # cd packages/demo
-# npm install 
+# npm install
 
 npm run storybook
 # visit http://localhost:9001/

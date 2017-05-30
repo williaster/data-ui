@@ -18,12 +18,12 @@ export const scaleShape = PropTypes.shape({
 
 export const lineSeriesDataShape = PropTypes.arrayOf(
   PropTypes.shape({
-    x: PropTypes.oneOfType([
+    x: PropTypes.oneOfType([ // data with null x/y are not rendered
       PropTypes.string,
       PropTypes.number,
       PropTypes.instanceOf(Date),
-    ]).isRequired,
-    y: PropTypes.number.isRequired,
+    ]),
+    y: PropTypes.number, // null data are not rendered
   }),
 );
 
@@ -33,19 +33,29 @@ export const barSeriesDataShape = PropTypes.arrayOf(PropTypes.shape({
     PropTypes.number,
     PropTypes.instanceOf(Date),
   ]).isRequired,
-  y: PropTypes.number.isRequired,
+  y: PropTypes.number, // null data are not rendered
   fill: PropTypes.string,
   stroke: PropTypes.string,
   strokeWidth: PropTypes.number,
 }));
 
+export const groupedBarSeriesDataShape = PropTypes.arrayOf(PropTypes.shape({
+  x: PropTypes.string.isRequired,
+  y: PropTypes.number.isRequired,
+}));
+
+export const stackedBarSeriesDataShape = PropTypes.arrayOf(PropTypes.shape({
+  x: PropTypes.string.isRequired,
+  y: PropTypes.number.isRequired,
+}));
+
 export const pointSeriesDataShape = PropTypes.arrayOf(PropTypes.shape({
-  x: PropTypes.oneOfType([
+  x: PropTypes.oneOfType([ // data with null x/y are not rendered
     PropTypes.string,
     PropTypes.number,
     PropTypes.instanceOf(Date),
-  ]).isRequired,
-  y: PropTypes.number.isRequired,
+  ]),
+  y: PropTypes.number,
   size: PropTypes.number,
   fill: PropTypes.string,
   stroke: PropTypes.string,

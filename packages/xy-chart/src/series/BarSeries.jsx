@@ -4,7 +4,7 @@ import { Group } from '@vx/group';
 import { Bar } from '@vx/shape';
 
 import { barSeriesDataShape } from '../utils/propShapes';
-import { callOrValue } from '../utils/chartUtils';
+import { callOrValue, isDefined } from '../utils/chartUtils';
 import { colors } from '../theme';
 
 const propTypes = {
@@ -16,22 +16,20 @@ const propTypes = {
   stroke: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   strokeWidth: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
 
-  // these will likely be injected by the parent xychart
-  barWidth: PropTypes.number.isRequired,
-  xScale: PropTypes.func.isRequired,
-  yScale: PropTypes.func.isRequired,
+  // probably injected by the parent xychart
+  barWidth: PropTypes.number,
+  xScale: PropTypes.func,
+  yScale: PropTypes.func,
 };
 
 const defaultProps = {
-  stack: null,
-  stackFills: colors.categories,
-  group: null,
-  groupFills: colors.categories,
-
+  barWidth: null,
   fill: colors.default,
   stackBy: null,
   stroke: '#FFFFFF',
   strokeWidth: 1,
+  xScale: null,
+  yScale: null,
 };
 
 const x = d => d.x;
@@ -47,13 +45,15 @@ export default function BarSeries({
   xScale,
   yScale,
 }) {
+  if (!xScale || !yScale || !barWidth) return null;
+
   const maxHeight = (yScale.range() || [0])[0];
   const offset = xScale.offset || 0;
   return (
     <Group key={label}>
       {data.map((d, i) => {
         const barHeight = maxHeight - yScale(y(d));
-        return (
+        return isDefined(d.y) && (
           <Bar
             key={`bar-${label}-${xScale(x(d))}`}
             x={xScale(x(d)) - offset}
