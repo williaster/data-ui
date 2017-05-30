@@ -6,7 +6,7 @@
   "scripts": {
     "lint": "eslint --ignore-path=.eslintignore --ext .js,.jsx ./packages/",
     "publish": "npm run lint && lerna run test && lerna publish && lerna run gh-pages",
-    "test": "lerna exec npm install && jest"
+    "test": "lerna exec npm install && npm run lint && jest"
   },
   "repository": "https://github.com/williaster/data-ui.git",
   "keywords": [
