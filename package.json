@@ -24,6 +24,7 @@
     "babel-jest": "^20.0.3",
     "babel-polyfill": "^6.23.0",
     "babel-register": "^6.24.1",
+    "coveralls": "^2.13.1",
     "eslint": "^3.19.0",
     "eslint-config-airbnb": "^14.1.0",
     "eslint-plugin-import": "^2.2.0",
@@ -55,5 +56,3 @@
     ]
   }
 }
-
-

@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="/assets/xy-chart.gif" />
+</p>
+
 # @data-ui/xy-chart
 A package of charts with standard x- and y- axes. More docs soon :v:!
 
