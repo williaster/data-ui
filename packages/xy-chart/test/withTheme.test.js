@@ -37,10 +37,22 @@ describe('HOC', () => {
 
   test('it passes the default theme when no theme is passed', () => {
     function MyComponent({ theme }) {
-      expect(theme).toEqual(defaultTheme);
+      expect(theme).toBe(defaultTheme);
       return null;
     }
     const HOC = withTheme()(MyComponent);
     shallow(<HOC />).dive();
+  });
+
+  test('it allows theme to be overridden', () => {
+    const overrideTheme = { override: 'theme' };
+    function MyComponent() { return null; }
+    const HOC = withTheme()(MyComponent);
+
+    let wrapper = shallow(<HOC />);
+    expect(wrapper.find(MyComponent).prop('theme')).toBe(defaultTheme);
+
+    wrapper = shallow(<HOC theme={overrideTheme} />);
+    expect(wrapper.find(MyComponent).prop('theme')).toBe(overrideTheme);
   });
 });
