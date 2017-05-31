@@ -6,7 +6,7 @@
   "scripts": {
     "build": "webpack -p --env build && npm run copy-styles",
     "copy-styles": "cp ./node_modules/react-virtualized/styles.css ./build/styles.css",
-    "dev": "webpack --progress --colors --watch --env dev",
+    "dev": "webpack-dashboard -- webpack --progress --colors --watch --env dev",
     "test": "jest --colors --verbose --coverage"
   },
   "repository": "https://github.com/williaster/data-ui",
@@ -34,7 +34,8 @@
     "react": "~15.4.2",
     "react-addons-test-utils": "~15.4.2",
     "react-dom": "~15.4.2",
-    "webpack": "^2.4.1"
+    "webpack": "^2.4.1",
+    "webpack-dashboard": "^0.4.0"
   },
   "peerDependencies": {
     "react": "~15.4.2",
