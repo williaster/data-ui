@@ -1,5 +1,6 @@
 /* eslint react/prop-types: 0 */
-import React, { PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React from 'react';
 
 import { baseHOC, updateDisplayName } from './hocUtils';
 import dataListPropType from '../propTypes/dataList';

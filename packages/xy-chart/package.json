@@ -1,7 +1,7 @@
 {
   "name": "@data-ui/xy-chart",
   "version": "0.0.4",
-  "description": "A package of charts with standard x- and y- axes.",
+  "description": "A package of charts with standard x- and y- axes. https://williaster.github.io/data-ui",
   "main": "build/index.js",
   "scripts": {
     "build": "webpack -p --env build",
@@ -41,14 +41,14 @@
     "babel-preset-airbnb": "^2.2.3",
     "enzyme": "^2.8.2",
     "jest": "^20.0.3",
-    "react": "~15.4.2",
-    "react-addons-test-utils": "~15.4.2",
-    "react-dom": "~15.4.2",
+    "react": "^15.5.0",
+    "react-addons-test-utils": "^15.5.0",
+    "react-dom": "^15.5.0",
     "webpack": "^2.4.1",
     "webpack-dashboard": "^0.4.0"
   },
   "peerDependencies": {
-    "react": "~15.4.2",
-    "react-dom": "~15.4.2"
+    "react": "^15.5.0",
+    "react-dom": "^15.5.0"
   }
 }

@@ -1,7 +1,7 @@
 {
   "name": "@data-ui/data-ui",
   "version": "0.0.0",
-  "description": "A collection of components for data-rich user interfaces",
+  "description": "A collection of components for data-rich user interfaces https://williaster.github.io/data-ui",
   "main": "index.js",
   "scripts": {
     "lint": "eslint --ignore-path=.eslintignore --ext .js,.jsx ./packages/",
@@ -32,14 +32,14 @@
     "eslint-plugin-react": "^6.10.3",
     "jest": "^20.0.3",
     "lerna": "^2.0.0-rc.2",
-    "react": "~15.4.2",
-    "react-addons-test-utils": "~15.4.2",
-    "react-dom": "~15.4.2"
+    "react": "^15.5.0",
+    "react-addons-test-utils": "^15.5.0",
+    "react-dom": "^15.5.0"
   },
   "peerDependencies": {
     "lerna": "2.0.0-rc.2",
-    "react": "~15.4.2",
-    "react-dom": "~15.4.2"
+    "react": "^15.5.0",
+    "react-dom": "^15.5.0"
   },
   "jest": {
     "projects": [

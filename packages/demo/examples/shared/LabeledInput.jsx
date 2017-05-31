@@ -1,5 +1,6 @@
 /* Controlled, labeled input */
-import React, { PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React from 'react';
 import { css, withStyles, withStylesProps } from '../../themes/withStyles';
 
 const propTypes = {
