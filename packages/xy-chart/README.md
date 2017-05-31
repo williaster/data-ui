@@ -1,3 +1,6 @@
+# @data-ui/xy-chart
+A package of charts with standard x- and y- axes.
+
 <p align="center">
   <img width="600px" src="/assets/xy-chart.gif" />
 </p>
@@ -5,10 +8,8 @@
   <img src="https://img.shields.io/npm/v/@data-ui/xy-chart.svg?style=flat-square" />
 </a>
 
-# @data-ui/xy-chart
-A package of charts with standard x- and y- axes. More docs soon :v:!
 
-See it live at [williaster.github.io/data-ui](https://williaster.github.io/data-ui).
+See it live at [williaster.github.io/data-ui](https://williaster.github.io/data-ui). More docs soon :v:!
 
 
 ## Example usage
