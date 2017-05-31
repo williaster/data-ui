@@ -25,6 +25,16 @@ describe('<XYChart />', () => {
     expect(XYChart).toBeDefined();
   });
 
+  test('it should not render with invalid width or height', () => {
+    const valid = shallow(<XYChart {...mockProps} />);
+    const invalidWidth = shallow(<XYChart {...mockProps} width={0} />);
+    const invalidHeight = shallow(<XYChart {...mockProps} height={0} />);
+
+    expect(valid.children().length).toBe(1);
+    expect(invalidWidth.children().length).toBe(0);
+    expect(invalidHeight.children().length).toBe(0);
+  });
+
   test('it should render an svg with an aria label', () => {
     const wrapper = shallow(<XYChart {...mockProps} />);
     const svg = wrapper.find('svg');

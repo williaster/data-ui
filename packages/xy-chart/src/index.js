@@ -11,6 +11,7 @@ export { default as StackedBarSeries } from './series/StackedBarSeries';
 
 export { LinearGradient } from '@vx/gradient';
 export { PatternLines } from '@vx/pattern';
-export { withScreenSize } from '@vx/responsive';
+export { withScreenSize, withParentSize } from '@vx/responsive';
 
+export { default as withTheme } from './enhancer/withTheme';
 export { default as theme } from './theme';

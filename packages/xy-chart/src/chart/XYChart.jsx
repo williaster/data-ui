@@ -130,7 +130,7 @@ class XYChart extends React.PureComponent {
     const { margin, innerWidth, innerHeight } = this.getDimmensions();
     const { numXTicks, numYTicks } = this.getNumTicks(innerWidth, innerHeight);
     const { xScale, yScale } = this.collectScalesFromProps();
-    return (
+    return innerWidth > 0 && innerHeight > 0 && (
       <svg
         aria-label={ariaLabel}
         role="img"
