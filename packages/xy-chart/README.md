@@ -1,5 +1,6 @@
 # @data-ui/xy-chart
 A package of charts with standard x- and y- axes.
+
 <a title="package version" href="https://img.shields.io/npm/v/@data-ui/xy-chart.svg?style=flat-square">
   <img src="https://img.shields.io/npm/v/@data-ui/xy-chart.svg?style=flat-square" />
 </a>
