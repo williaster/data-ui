@@ -7,9 +7,7 @@ A package of charts with standard x- and y- axes.
   <img width="600px" src="/assets/xy-chart.gif" />
 </p>
 
-
 See it live at [williaster.github.io/data-ui](https://williaster.github.io/data-ui). More docs soon :v:!
-
 
 ## Example usage
 
