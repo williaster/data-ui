@@ -1,4 +1,7 @@
-<p align="center">
+# data-ui
+A collection of custom + wrapped components for data-rich (desktop) UIs. Super beta :baby:
+
+<p>
   <a title="build status" href="https://travis-ci.org/williaster/data-ui">
     <img src="https://travis-ci.org/williaster/data-ui.svg" />
   </a>
@@ -7,12 +10,9 @@
   </a>
 </p>
 
-# data-ui
-A collection of custom + wrapped components for data-rich (desktop) UIs. Super beta :baby:
-
 ## Packages
-+ [![Version](https://img.shields.io/npm/v/@data-ui/xy-chart.svg?style=flat-square)](https://img.shields.io/npm/v/@data-ui/xy-chart.svg?style=flat-square) [@data-ui/xy-chart](https://github.com/williaster/data-ui/tree/master/packages/xy-chart)
-+ [![Version](https://img.shields.io/npm/v/@data-ui/data-table.svg?style=flat-square)](https://img.shields.io/npm/v/@data-ui/data-table.svg?style=flat-square) [@data-ui/data-table](https://github.com/williaster/data-ui/tree/master/packages/data-table)
++ [@data-ui/xy-chart](https://github.com/williaster/data-ui/tree/master/packages/xy-chart) [![Version](https://img.shields.io/npm/v/@data-ui/xy-chart.svg?style=flat-square)](https://img.shields.io/npm/v/@data-ui/xy-chart.svg?style=flat-square) 
++ [@data-ui/data-table](https://github.com/williaster/data-ui/tree/master/packages/data-table) [![Version](https://img.shields.io/npm/v/@data-ui/data-table.svg?style=flat-square)](https://img.shields.io/npm/v/@data-ui/data-table.svg?style=flat-square) 
 + [@data-ui/demo](https://github.com/williaster/data-ui/tree/master/packages/demo)
 
 Lots more coming.
