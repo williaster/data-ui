@@ -24,7 +24,7 @@ For examples of the components in action, go to [williaster.github.io/data-ui](h
 OR
 
 To run that demo on your own computer:
-```
+```sh
 git clone ...data-ui && cd data-ui
 
 # bootstrap all packages
@@ -60,7 +60,7 @@ data-ui/
 
 For easiest development, clone this repo, install `lerna` globally and the root npm modules,
 then have lerna install package dependencies and manage the symlinking between packages for you
-```
+```sh
 git clone ...data-ui && cd data-ui
 npm install --global lerna@^2.0.0-beta.0
 npm install
@@ -68,10 +68,14 @@ lerna bootstrap
 ```
 
 Enzyme and jest are used for testing. Each package defines its own tests, which you can run from within a `packages/package-name` directory using
-`npm run test`
+```sh 
+npm run test
+```
 
 for a single test or subset of tests run 
-`npm run test -t regex`
+```sh
+npm run test -t regex
+```
 
 To run tests in all packages run `npm run test` from the root @data-ui directory.
 
