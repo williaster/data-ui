@@ -67,10 +67,13 @@ npm install
 lerna bootstrap
 ```
 
-Each package defines its own tests which you can run from within a directory with
+Enzyme and jest are used for testing. Each package defines its own tests, which you can run from within a `packages/package-name` directory using
 `npm run test`
 
-To run tests in all packages run the same command from the root @data-ui directory.
+for a single test or subset of tests run 
+`npm run test -t regex`
+
+To run tests in all packages run `npm run test` from the root @data-ui directory.
 
 ## License
 [MIT](./LICENSE)
