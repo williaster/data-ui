@@ -6,7 +6,7 @@
   "scripts": {
     "build": "webpack -p --env build && npm run copy-styles",
     "copy-styles": "cp ./node_modules/react-virtualized/styles.css ./build/styles.css",
-    "dev": "webpack-dashboard -- webpack --progress --colors --watch --env dev",
+    "dev": "webpack-dashboard --port 3001 -- webpack --progress --colors --watch --env dev",
     "test": "jest --colors --verbose --coverage"
   },
   "repository": "https://github.com/williaster/data-ui",
@@ -21,6 +21,7 @@
   "homepage": "https://github.com/williaster/data-ui#readme",
   "dependencies": {
     "immutable": "^3.8.1",
+    "prop-types": "^15.5.10",
     "react-virtualized": "^9.7.3"
   },
   "devDependencies": {
@@ -31,14 +32,13 @@
     "babel-preset-airbnb": "^2.2.3",
     "css-loader": "^0.28.0",
     "jest": "^20.0.3",
-    "react": "~15.4.2",
-    "react-addons-test-utils": "~15.4.2",
-    "react-dom": "~15.4.2",
+    "react": "^15.5.0",
+    "react-addons-test-utils": "^15.5.0",
+    "react-dom": "^15.5.0",
     "webpack": "^2.4.1",
     "webpack-dashboard": "^0.4.0"
   },
   "peerDependencies": {
-    "react": "~15.4.2",
-    "react-dom": "~15.4.2"
+    "react": "^15.5.0"
   }
 }

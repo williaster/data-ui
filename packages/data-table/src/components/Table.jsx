@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React from 'react';
 import { Column, SortDirection, Table } from 'react-virtualized';
 
 import dataListPropType from '../propTypes/dataList';

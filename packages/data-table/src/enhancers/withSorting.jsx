@@ -1,6 +1,7 @@
 /* eslint react/prop-types: 0 */
 /* ^ there is a bug with how props are parsed with the enhanced component */
-import React, { PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React from 'react';
 import { SortDirection } from 'react-virtualized';
 
 import dataListPropType from '../propTypes/dataList';

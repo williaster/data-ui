@@ -30,7 +30,8 @@ const config = {
     ],
   },
   plugins: [
-    new DashboardPlugin(),
+    // make the port diff from other packages to run simultaneously
+    new DashboardPlugin({ port: 3001 }),
   ],
 };
 
