@@ -39,7 +39,6 @@
     "webpack-dashboard": "^0.4.0"
   },
   "peerDependencies": {
-    "react": "^15.5.0",
-    "react-dom": "^15.5.0"
+    "react": "^15.5.0"
   }
 }

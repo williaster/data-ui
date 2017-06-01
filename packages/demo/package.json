@@ -38,8 +38,7 @@
   },
   "peerDependencies": {
     "aphrodite": "^1.2.0",
-    "react": "^15.5.0",
-    "react-dom": "^15.5.0"
+    "react": "^15.5.0"
   },
   "private": true
 }
