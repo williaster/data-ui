@@ -1,6 +1,6 @@
 {
   "name": "@data-ui/data-table",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "description": "Table components that can handle a lot of data",
   "main": "build/index.js",
   "scripts": {
@@ -42,6 +42,3 @@
     "react": "~15.4.2 || ~15.5.0"
   }
 }
-
-
-
