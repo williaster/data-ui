@@ -171,7 +171,6 @@ export default [
           label="Random"
           size={d => d.size}
         />
-
       </ResponsiveXYChart>
     ),
   },

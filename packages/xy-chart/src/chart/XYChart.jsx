@@ -156,7 +156,7 @@ class XYChart extends React.PureComponent {
               return React.cloneElement(Child, {
                 innerHeight,
                 innerWidth,
-                labelOffset: name === 'YAxis' ? 0.6 * margin.right : 0,
+                labelOffset: name === 'YAxis' ? 0.7 * margin.right : 0,
                 numTicks: name === 'XAxis' ? numXTicks : numYTicks,
                 scale: name === 'XAxis' ? xScale : yScale,
                 rangePadding: name === 'XAxis' ? xScale.offset : null,
