@@ -22,6 +22,7 @@ export const lineSeriesDataShape = PropTypes.arrayOf(
       PropTypes.string,
       PropTypes.number,
       PropTypes.instanceOf(Date),
+      PropTypes.object, // eg a moment() instance
     ]),
     y: PropTypes.number, // null data are not rendered
   }),
@@ -32,6 +33,7 @@ export const barSeriesDataShape = PropTypes.arrayOf(PropTypes.shape({
     PropTypes.string,
     PropTypes.number,
     PropTypes.instanceOf(Date),
+    PropTypes.object, // eg a moment() instance
   ]).isRequired,
   y: PropTypes.number, // null data are not rendered
   fill: PropTypes.string,
@@ -40,12 +42,18 @@ export const barSeriesDataShape = PropTypes.arrayOf(PropTypes.shape({
 }));
 
 export const groupedBarSeriesDataShape = PropTypes.arrayOf(PropTypes.shape({
-  x: PropTypes.string.isRequired,
+  x: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.object, // eg a moment() instance
+  ]).isRequired,
   y: PropTypes.number.isRequired,
 }));
 
 export const stackedBarSeriesDataShape = PropTypes.arrayOf(PropTypes.shape({
-  x: PropTypes.string.isRequired,
+  x: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.object, // eg a moment() instance
+  ]).isRequired,
   y: PropTypes.number.isRequired,
 }));
 
@@ -54,6 +62,7 @@ export const pointSeriesDataShape = PropTypes.arrayOf(PropTypes.shape({
     PropTypes.string,
     PropTypes.number,
     PropTypes.instanceOf(Date),
+    PropTypes.object, // eg a moment() instance
   ]),
   y: PropTypes.number,
   size: PropTypes.number,
@@ -68,11 +77,13 @@ export const intervalSeriesDataShape = PropTypes.arrayOf(PropTypes.shape({
     PropTypes.string,
     PropTypes.number,
     PropTypes.instanceOf(Date),
+    PropTypes.object, // eg a moment() instance
   ]).isRequired,
   x1: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.number,
     PropTypes.instanceOf(Date),
+    PropTypes.object, // eg a moment() instance
   ]).isRequired,
   fill: PropTypes.string,
   stroke: PropTypes.string,
