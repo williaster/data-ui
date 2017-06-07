@@ -1,0 +1,52 @@
+{
+  "name": "@data-ui/event-flow",
+  "version": "0.0.0",
+  "description": "A visualization to explore sequences of events",
+  "keywords": [
+    "d3",
+    "react",
+    "vx",
+    "visualization",
+    "event",
+    "chart"
+  ],
+  "main": "build/index.js",
+  "scripts": {
+    "build": "webpack -p --env build",
+    "dev": "webpack-dashboard -- webpack --progress --colors --watch --env dev",
+    "test": "jest --colors --verbose --coverage"
+  },
+  "repository": "https://github.com/williaster/data-ui.git",
+  "author": "Chris Williams <chris.williams@airbnb.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/williaster/data-ui#readme",
+  "devDependencies": {
+    "babel-core": "^6.24.1",
+    "babel-jest": "^20.0.3",
+    "babel-loader": "^6.4.1",
+    "babel-plugin-syntax-jsx": "^6.18.0",
+    "babel-preset-airbnb": "^2.2.3",
+    "enzyme": "^2.8.2",
+    "jest": "^20.0.3",
+    "react": "^15.5.4",
+    "react-dom": "^15.5.4",
+    "react-test-renderer": "^15.5.4",
+    "webpack": "^2.4.1",
+    "webpack-dashboard": "^0.4.0"
+  },
+  "peerDependencies": {
+    "react": "~15.4.2 || ~15.5.0"
+  },
+  "dependencies": {
+    "@vx/axis": "0.0.119",
+    "@vx/gradient": "0.0.112",
+    "@vx/group": "0.0.114",
+    "@vx/pattern": "0.0.112",
+    "@vx/scale": "0.0.117",
+    "@vx/shape": "0.0.119",
+    "d3-array": "^1.2.0",
+    "d3-hierarchy": "^1.1.4",
+    "immutable": "^3.8.1",
+    "prop-types": "^15.5.10"
+  }
+}
