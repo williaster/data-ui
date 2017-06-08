@@ -27,13 +27,6 @@ export function getEventUuid(event, index) {
 }
 
 /*
- * Returns a unique node id for a given (eventId, depth) tuple
- */
-export function eventNameFromUuid(uuid) {
-  return uuid.split('__')[0];
-}
-
-/*
  * Event comparator for sorting events
  */
 function eventSortComparator(a, b) {
