@@ -24,7 +24,7 @@ const defaultProps = {
   orientation: 'top',
   rangePadding: null,
   tickLabelComponent: null,
-  timeUnit: 'minute',
+  timeUnit: null,
 };
 
 export default function XAxis({
@@ -57,7 +57,7 @@ export default function XAxis({
       scale={scale}
       stroke={xAxisStyles.stroke}
       strokeWidth={xAxisStyles.strokeWidth}
-      tickFormat={val => formatInterval(val, timeUnit)}
+      tickFormat={timeUnit && (val => formatInterval(val, timeUnit))}
       tickLength={xTickStyles.tickLength}
       tickStroke={xTickStyles.stroke}
       tickLabelComponent={

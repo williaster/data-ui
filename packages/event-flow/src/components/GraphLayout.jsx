@@ -11,15 +11,13 @@ const propTypes = {
   graph: graphShape.isRequired,
   xScale: PropTypes.func.isRequired,
   yScale: PropTypes.func.isRequired,
-  x: PropTypes.func,
-  y: PropTypes.func,
   fillScale: PropTypes.func.isRequired,
+  x: PropTypes.func.isRequired,
+  y: PropTypes.func.isRequired,
+  fill: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
-  //@todo map type to accessor
-  x: d => d.ELAPSED_MS_ROOT,
-  y: d => d.EVENT_COUNT,
 };
 
 class GraphLayout extends React.PureComponent {
@@ -27,6 +25,7 @@ class GraphLayout extends React.PureComponent {
     const {
       x,
       y,
+      fill,
       graph,
       xScale,
       yScale,
@@ -35,17 +34,38 @@ class GraphLayout extends React.PureComponent {
 
     return (
       <Group>
+        {graph.links.map(link => (
+          <Link
+            key={`${fill(link.source)}-${fill(link.target)}`}
+            link={link}
+            xScale={xScale}
+            yScale={yScale}
+            x={x}
+            y={y}
+          />
+        ))}
         {Object.keys(graph.nodes).map(id => (
-          <text
+          <Node
             key={id}
-            x={xScale(x(graph.nodes[id]))}
-            y={yScale(y(graph.nodes[id]))}
-            dy="0.25em"
-            fill={fillScale(graph.nodes[id].name)}
-            stroke="none"
-          >
-            {graph.nodes[id].name}
-          </text>
+            node={graph.nodes[id]}
+            xScale={xScale}
+            yScale={yScale}
+            fillScale={fillScale}
+            x={x}
+            y={y}
+            fill={fill}
+            label={
+              <text
+                key={id}
+                dx="0.25em"
+                dy="-0.5em"
+                fill="#484848"
+                stroke="none"
+              >
+                {graph.nodes[id].name}
+              </text>
+            }
+          />
         ))}
       </Group>
     );

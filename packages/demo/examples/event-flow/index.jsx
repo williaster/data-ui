@@ -57,11 +57,7 @@ export default [
   {
     description: 'Vis',
     example: () => (
-      <div>
-        <ResponsiveVis
-          data={data}
-        />
-      </div>
+      <ResponsiveVis data={data} />
     ),
   },
   {

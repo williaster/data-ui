@@ -65,7 +65,7 @@ export function buildNodesFromEntityEvents(events, startIndex, nodes) {
     eventUuid = getEventUuid(event, index);
 
     tempNode = getNodeFromEvent(nodes, eventName, depth);
-    // tempNode[EVENT_COUNT] += (events.length - index);
+    tempNode[EVENT_COUNT] += (events.length - index) + startIndex;
     tempNode.events[eventUuid] = {
       ...event,
       [EVENT_UUID]: eventUuid,
@@ -93,7 +93,7 @@ export function buildNodesFromEntityEvents(events, startIndex, nodes) {
     eventUuid = getEventUuid(event, index);
 
     tempNode = getNodeFromEvent(nodes, eventName, depth);
-    // tempNode[EVENT_COUNT] += index + 1;
+    tempNode[EVENT_COUNT] += index + 1;
     tempNode.events[eventUuid] = {
       ...event,
       [EVENT_UUID]: eventUuid,

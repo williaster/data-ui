@@ -23,6 +23,20 @@ export const dataShape = PropTypes.arrayOf(datumShape);
 export const graphShape = PropTypes.shape({
   nodes: PropTypes.object.isRequired,
   root: PropTypes.object.isRequired,
+  links: PropTypes.arrayOf(PropTypes.object).isRequired,
   totalEventCount: PropTypes.number.isRequired,
   filteredEventCount: PropTypes.number.isRequired,
+});
+
+export const nodeShape = PropTypes.shape({
+  id: PropTypes.string.isRequired,
+  depth: PropTypes.number.isRequired,
+  parent: PropTypes.string,
+  children: PropTypes.object.isRequired,
+  events: PropTypes.object.isRequired,
+});
+
+export const linkShape = PropTypes.shape({
+  source: nodeShape.isRequired,
+  target: nodeShape.isRequired,
 });

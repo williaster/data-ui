@@ -3,11 +3,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { buildGraph } from '../utils/graph-utils';
-import { buildAllScales } from '../utils/scale-utils';
+import { buildAllScales, scaleAccessors, scaleLabels } from '../utils/scale-utils';
 import { dataShape } from '../propShapes';
+
 import {
   ELAPSED_TIME_SCALE,
-  // EVENT_SEQUENCE_SCALE,
+  EVENT_SEQUENCE_SCALE,
   EVENT_COUNT_SCALE,
   // NODE_SEQUENCE_SCALE,
   NODE_COLOR_SCALE,
@@ -44,8 +45,6 @@ class VisApp extends React.PureComponent {
     const scales = this.getScales(graph, props);
 
     this.state = {
-      xScaleLabel: 'Elapsed time',
-      yScaleLabel: '# Events',
       xScaleKey: ELAPSED_TIME_SCALE,
       yScaleKey: EVENT_COUNT_SCALE,
       scales,
@@ -87,8 +86,6 @@ class VisApp extends React.PureComponent {
     const {
       graph,
       scales,
-      xScaleLabel,
-      yScaleLabel,
       xScaleKey,
       yScaleKey,
     } = this.state;
@@ -106,13 +103,14 @@ class VisApp extends React.PureComponent {
         <Group top={margin.top} left={margin.left}>
           <XAxis
             scale={xScale}
-            label={xScaleLabel}
+            label={scaleLabels[xScaleKey]}
             labelOffset={margin.top * 0.6}
             height={Math.max(yScale.range())}
+            timeUnit={xScaleKey === ELAPSED_TIME_SCALE ? 'minute' : null}
           />
           <YAxis
             scale={yScale}
-            label={yScaleLabel}
+            label={scaleLabels[yScaleKey]}
             labelOffset={margin.left * 0.6}
             width={Math.max(xScale.range())}
           />
@@ -121,6 +119,9 @@ class VisApp extends React.PureComponent {
             xScale={xScale}
             yScale={yScale}
             fillScale={scales[NODE_COLOR_SCALE]}
+            x={scaleAccessors[xScaleKey]}
+            y={scaleAccessors[yScaleKey]}
+            fill={scaleAccessors[NODE_COLOR_SCALE]}
           />
         </Group>
       </svg>

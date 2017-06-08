@@ -8,6 +8,7 @@ import { extent as d3Extent } from 'd3-array';
 import { format } from 'd3-format';
 
 import {
+  EVENT_COUNT,
   ELAPSED_MS_ROOT,
   ELAPSED_TIME_SCALE,
   EVENT_SEQUENCE_SCALE,
@@ -37,9 +38,9 @@ export function computeEventCountScale(totalCount, height) {
 
 export function computeEventSequenceScale(nodesArray, width) {
   const domain = d3Extent(nodesArray, n => n.depth);
-  return scaleBand({
+  return scaleLinear({
     nice: true,
-    rangeBand: [0, width],
+    range: [0, width],
     domain,
   });
 }
@@ -92,21 +93,37 @@ export function numTicksForWidth(width) {
   return 6;
 }
 
-const zeroDec = format(',.0f');
-const oneDec = format(',.1f');
+export const zeroDecimals = format(',.0f');
+export const oneDecimal = format(',.1f');
 
 export function formatInterval(ms, unit) {
   const num = typeof ms === 'string' ? parseInt(ms, 10) : ms;
   switch (unit) {
     case 'second':
-      return `${zeroDec(num / 1000)}s`;
+      return `${zeroDecimals(num / 1000)}s`;
     case 'minute':
-      return `${zeroDec(num / 1000 / 60)}m`;
+      return `${zeroDecimals(num / 1000 / 60)}m`;
     case 'hour':
-      return `${oneDec(num / 1000 / 60 / 60)}h`;
+      return `${oneDecimal(num / 1000 / 60 / 60)}h`;
     case 'day':
-      return `${oneDec(num / 1000 / 60 / 60 / 24)}d`;
+      return `${oneDecimal(num / 1000 / 60 / 60 / 24)}d`;
     default:
-      return zeroDec(num);
+      return zeroDecimals(num);
   }
 }
+
+export const scaleAccessors = {
+  [ELAPSED_TIME_SCALE]: n => n[ELAPSED_MS_ROOT],
+  [EVENT_SEQUENCE_SCALE]: n => n.depth,
+  [EVENT_COUNT_SCALE]: n => n[EVENT_COUNT],
+  [NODE_SEQUENCE_SCALE]: n => n.id,
+  [NODE_COLOR_SCALE]: n => n.name,
+};
+
+export const scaleLabels = {
+  [ELAPSED_TIME_SCALE]: 'Elapsed time',
+  [EVENT_SEQUENCE_SCALE]: 'Event number',
+  [EVENT_COUNT_SCALE]: '# Events',
+  [NODE_SEQUENCE_SCALE]: 'Node sequence',
+  [NODE_COLOR_SCALE]: 'Event name',
+};
