@@ -1,16 +1,23 @@
 import { Group } from '@vx/group';
 import React from 'react';
 import PropTypes from 'prop-types';
+import { zoom as d3Zoom } from 'd3-zoom';
+import { event as d3Event, select as d3Select } from 'd3-selection';
 
 import { buildGraph } from '../utils/graph-utils';
-import { buildAllScales, scaleAccessors, scaleLabels } from '../utils/scale-utils';
 import { dataShape } from '../propShapes';
+import {
+  buildAllScales,
+  scaleAccessors,
+  scaleLabels,
+  timeUnitFromTimeExtent,
+} from '../utils/scale-utils';
 
 import {
   ELAPSED_TIME_SCALE,
   EVENT_SEQUENCE_SCALE,
   EVENT_COUNT_SCALE,
-  // NODE_SEQUENCE_SCALE,
+  NODE_SEQUENCE_SCALE,
   NODE_COLOR_SCALE,
 } from '../constants';
 
@@ -44,6 +51,8 @@ class VisApp extends React.PureComponent {
     super(props);
     this.getGraph = this.getGraph.bind(this);
     this.getScales = this.getScales.bind(this);
+    this.panOrZoom = this.panOrZoom.bind(this);
+    this.zoom = d3Zoom().scaleExtent([1, 40]).on('zoom', this.panOrZoom);
 
     const graph = this.getGraph(props);
     const scales = this.getScales(graph, props);
@@ -53,7 +62,12 @@ class VisApp extends React.PureComponent {
       yScaleKey: EVENT_COUNT_SCALE,
       scales,
       graph,
+      viewTransform: null,
     };
+  }
+
+  componentDidMount() {
+    this.zoom(d3Select(this.view));
   }
 
   componentWillReceiveProps(nextProps) {
@@ -85,8 +99,29 @@ class VisApp extends React.PureComponent {
     const innerHeight = (props || this.props).height - margin.top - margin.bottom;
     console.time('scales');
     const scales = buildAllScales(graph, innerWidth, innerHeight);
+    this.zoom.translateExtent([[0, 0], [innerWidth, innerHeight]]);
+    this.zoom.extent([[0, 0], [innerWidth, innerHeight]]);
     console.timeEnd('scales');
     return scales;
+  }
+
+  panOrZoom() {
+    const {
+      scales,
+      xScaleKey,
+      yScaleKey,
+      viewTransform: currViewTransform,
+    } = this.state;
+
+    const viewTransform = d3Event.transform.toString();
+
+    if (viewTransform !== currViewTransform) {
+      this.setState({
+        xScaleZoomed: d3Event.transform.rescaleX(scales[xScaleKey]),
+        yScaleZoomed: d3Event.transform.rescaleY(scales[yScaleKey]),
+        viewTransform,
+      });
+    }
   }
 
   render() {
@@ -96,10 +131,15 @@ class VisApp extends React.PureComponent {
       scales,
       xScaleKey,
       yScaleKey,
+      xScaleZoomed,
+      yScaleZoomed,
+      viewTransform,
     } = this.state;
-    console.log(graph);
+
     const xScale = scales[xScaleKey];
     const yScale = scales[yScaleKey];
+    const innerWidth = Math.max(...xScale.range());
+    const innerHeight = Math.max(...yScale.range());
 
     return xScale && yScale ? (
       <svg
@@ -107,31 +147,49 @@ class VisApp extends React.PureComponent {
         aria-label="Event flow"
         width={width}
         height={height}
+        ref={(ref) => { this.view = ref; }}
       >
-        <Group top={margin.top} left={margin.left}>
-          <SubTree
-            subtreeNodes={graph.root.children}
-            xScale={xScale}
-            yScale={yScale}
-            colorScale={scales[NODE_COLOR_SCALE]}
-            getX={scaleAccessors[xScaleKey]}
-            getY={scaleAccessors[yScaleKey]}
-            getColor={scaleAccessors[NODE_COLOR_SCALE]}
-          />
-          <XAxis
-            scale={xScale}
-            label={scaleLabels[xScaleKey]}
-            labelOffset={margin.top * 0.6}
-            height={Math.max(yScale.range())}
-            timeUnit={xScaleKey === ELAPSED_TIME_SCALE ? 'hour' : null}
-          />
+        <Group
+          top={margin.top}
+          left={margin.left}
+        >
+          <defs>
+            <clipPath id="clip">
+              <rect x={-2} width={innerWidth + margin.right + 2} height={innerHeight} />
+            </clipPath>
+          </defs>
           <YAxis
-            scale={yScale}
+            scale={yScaleZoomed || yScale}
             label={scaleLabels[yScaleKey]}
             labelOffset={margin.left * 0.6}
-            width={Math.max(xScale.range())}
+            width={innerWidth}
           />
-          <ZeroLine xScale={xScale} yScale={yScale} />
+          <g clipPath="url(#clip)">
+            <g transform={viewTransform}>
+              <SubTree
+                subtreeNodes={graph.root.children}
+                xScale={xScale}
+                yScale={yScale}
+                colorScale={scales[NODE_COLOR_SCALE]}
+                getX={scaleAccessors[xScaleKey]}
+                getY={scaleAccessors[yScaleKey]}
+                getColor={scaleAccessors[NODE_COLOR_SCALE]}
+              />
+              <ZeroLine xScale={xScale} yScale={yScale} />
+            </g>
+          </g>
+          {/* Axes should use a 'zoomed' */}
+          <XAxis
+            scale={xScaleZoomed || xScale}
+            label={scaleLabels[xScaleKey]}
+            labelOffset={margin.top * 0.6}
+            height={innerHeight}
+            timeUnit={
+              xScaleKey === ELAPSED_TIME_SCALE ?
+              timeUnitFromTimeExtent((xScaleZoomed || xScale).domain())
+              : null
+            }
+          />
         </Group>
       </svg>
     ) : null;

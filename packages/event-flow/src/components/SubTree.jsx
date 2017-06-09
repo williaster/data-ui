@@ -10,7 +10,6 @@ const NODE_WIDTH = 5;
 const LINK_COLOR = '#ddd';
 
 const propTypes = {
-  // allNodes: PropTypes.objectOf(nodeShape).isRequired,
   subtreeNodes: PropTypes.objectOf(nodeShape).isRequired,
   nodeSorter: PropTypes.func, // could default to # events
 
@@ -28,7 +27,7 @@ const defaultProps = {
   nodeSorter(a, b) {
     return b[EVENT_COUNT] - a[EVENT_COUNT];
   },
-  nodePadding: 5,
+  nodePadding: 2,
 };
 
 class SubTree extends React.PureComponent {
@@ -74,6 +73,11 @@ class SubTree extends React.PureComponent {
               top={top}
               className="subtree"
             >
+              {hasChildren &&
+                <SubTree
+                  {...this.props}
+                  subtreeNodes={node.children}
+                />}
               {/* link back to the parent */}
               {hasParent &&
                 <Bar
@@ -81,11 +85,14 @@ class SubTree extends React.PureComponent {
                   x={Math.min(left, parentLeft) + ((left > parentLeft ? 1 : 0) * (NODE_WIDTH))}
                   y={0}
                   width={Math.abs(left - parentLeft)}
-                  height={Math.max(1, height - nodePadding)}
+                  height={Math.max(1, height)}
                   fill={LINK_COLOR}
                   fillOpacity={0.9}
                   rx={2}
                   ry={2}
+                  stroke="#fff"
+                  strokeWidth={2}
+                  vectorEffect="non-scaling-stroke"
                 />
               }
               <Bar
@@ -93,27 +100,23 @@ class SubTree extends React.PureComponent {
                 x={left}
                 y={0}
                 width={NODE_WIDTH}
-                height={Math.max(1, height - nodePadding)}
+                height={Math.max(1, height)}
                 fill={nodeColor}
                 stroke="#fff"
                 strokeWidth={1}
                 rx={2}
                 ry={2}
+                vectorEffect="non-scaling-stroke"
               />
 
               <text
                 x={left + (NODE_WIDTH / 2)}
                 y={height / 2}
                 textAnchor="middle"
+                vectorEffect="non-scaling-stroke"
               >
                 {node.name}
               </text>
-
-              {hasChildren &&
-                <SubTree
-                  {...this.props}
-                  subtreeNodes={node.children}
-                />}
             </Group>
           );
         })}

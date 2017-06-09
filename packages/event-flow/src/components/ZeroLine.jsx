@@ -23,6 +23,7 @@ export default function ZeroLine({
       strokeWidth={2}
       strokeDasharray="8 4"
       stroke="#484848"
+      vectorEffect="non-scaling-stroke"
     />
   );
 }

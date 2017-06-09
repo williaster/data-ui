@@ -22,7 +22,6 @@ const ResponsiveVis = withScreenSize(({ screenWidth, ...rest }) => (
   />
 ));
 
-
 const withAlignment = withState('alignBy', 'setAlignBy', 0);
 
 // one example per dataset

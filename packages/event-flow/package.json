@@ -47,6 +47,8 @@
     "@vx/shape": "0.0.119",
     "d3-array": "^1.2.0",
     "d3-format": "^1.2.0",
+    "d3-selection": "^1.1.0",
+    "d3-zoom": "^1.3.0",
     "immutable": "^3.8.1",
     "prop-types": "^15.5.10"
   }

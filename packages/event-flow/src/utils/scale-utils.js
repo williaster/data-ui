@@ -23,6 +23,7 @@ export function computeElapsedTimeScale(nodesArray, width) {
   const domain = d3Extent(nodesArray, n => n[ELAPSED_MS_ROOT]);
   return scaleLinear({
     nice: true,
+    clamp: true,
     range: [0, width],
     domain,
   });
@@ -36,6 +37,7 @@ export function computeEventCountScale(root, height) {
 
   return scaleLinear({
     nice: true,
+    clamp: true,
     range: [0, height],
     domain: [0, max],
   });
@@ -45,6 +47,7 @@ export function computeEventSequenceScale(nodesArray, width) {
   const domain = d3Extent(nodesArray, n => n.depth);
   return scaleLinear({
     nice: true,
+    clamp: true,
     range: [0, width],
     domain,
   });
@@ -57,6 +60,7 @@ export function computeNodeSequenceScale(nodesArray, height) {
 
   return scaleBand({
     nice: true,
+    clamp: true,
     rangeBand: [0, height],
     domain,
   });
@@ -101,20 +105,33 @@ export function numTicksForWidth(width) {
 export const zeroDecimals = format(',.0f');
 export const oneDecimal = format(',.1f');
 
+const second = 1000;
+const minute = second * 60;
+const hour = minute * 60;
+const day = hour * 24;
+
 export function formatInterval(ms, unit) {
   const num = typeof ms === 'string' ? parseInt(ms, 10) : ms;
   switch (unit) {
     case 'second':
-      return `${zeroDecimals(num / 1000)}s`;
+      return `${zeroDecimals(num / second)}sec`;
     case 'minute':
-      return `${zeroDecimals(num / 1000 / 60)}m`;
+      return `${zeroDecimals(num / minute)}min`;
     case 'hour':
-      return `${oneDecimal(num / 1000 / 60 / 60)}hr`;
+      return `${oneDecimal(num / hour)}hr`;
     case 'day':
-      return `${oneDecimal(num / 1000 / 60 / 60 / 24)}d`;
+      return `${oneDecimal(num / day)}d`;
     default:
       return zeroDecimals(num);
   }
+}
+
+export function timeUnitFromTimeExtent(extent) {
+  const maxMs = Math.max(...(extent.map(Math.abs)));
+  if (maxMs / day >= 3) return 'day';
+  if (maxMs / hour >= 3) return 'hour';
+  if (maxMs / minute >= 3) return 'minute';
+  return 'second';
 }
 
 export const scaleAccessors = {
