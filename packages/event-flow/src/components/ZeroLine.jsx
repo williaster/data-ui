@@ -20,8 +20,8 @@ export default function ZeroLine({
     <Line
       from={fromPoint}
       to={toPoint}
-      strokeWidth={3}
-      strokeDasharray="4 4"
+      strokeWidth={2}
+      strokeDasharray="8 4"
       stroke="#484848"
     />
   );

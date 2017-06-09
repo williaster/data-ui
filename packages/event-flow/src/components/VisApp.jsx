@@ -28,6 +28,7 @@ const margin = {
 };
 
 const propTypes = {
+  alignBy: PropTypes.func,
   data: dataShape,
   width: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired,
@@ -35,6 +36,7 @@ const propTypes = {
 
 const defaultProps = {
   data: [],
+  alignBy: (/* events */) => 0,
 };
 
 class VisApp extends React.PureComponent {
@@ -55,7 +57,10 @@ class VisApp extends React.PureComponent {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.data !== nextProps.data) {
+    if (
+      this.props.data !== nextProps.data ||
+      this.props.alignBy !== nextProps.alignBy
+    ) {
       const graph = this.getGraph(nextProps);
       const scales = this.getScales(graph, nextProps);
       this.setState({ graph, scales });
@@ -67,9 +72,10 @@ class VisApp extends React.PureComponent {
   }
 
   getGraph(props) {
-    const { data } = props || this.props;
+    const { data, alignBy } = props || this.props;
+    console.log('graph input data', data);
     console.time('graph');
-    const graph = buildGraph(data);
+    const graph = buildGraph(data, alignBy);
     console.timeEnd('graph');
     return graph;
   }

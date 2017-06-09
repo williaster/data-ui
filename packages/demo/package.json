@@ -47,6 +47,7 @@
   "private": true,
   "dependencies": {
     "@vx/legend": "0.0.121",
-    "@vx/scale": "0.0.121"
+    "@vx/scale": "0.0.121",
+    "recompose": "^0.23.5"
   }
 }

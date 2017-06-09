@@ -177,7 +177,7 @@ export function createLinks(nodes) {
 /*
  * Parses raw events and builds a graph of 'aggregate' nodes
  */
-export function buildGraph(cleanedEvents, getStartIndex = (events) => events.length - 1) {
+export function buildGraph(cleanedEvents, getStartIndex = (events) => 0) {
   const nodes = {};
   const eventsByEntityId = binEventsByEntityId(cleanedEvents);
 

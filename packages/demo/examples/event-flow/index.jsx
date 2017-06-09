@@ -1,44 +1,19 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { withScreenSize } from '@vx/responsive';
+import { withState } from 'recompose';
 // import data from './omg_20170605T183803.json';
 
 import {
-  TS,
+  // TS,
   EVENT_NAME,
   ENTITY_ID,
+  sampleEvents,
 
-  // cleanEvents,
-  // binEventsByEntityId,
-  // buildNodesFromEntityEvents,
-  buildGraph,
   VisApp,
 } from '@data-ui/event-flow';
 
-const user1 = [
-  { [TS]: new Date('2017-03-22 18:33:10'), [EVENT_NAME]: 'a', [ENTITY_ID]: 'u1' },
-  { [TS]: new Date('2017-03-22 19:34:10'), [EVENT_NAME]: 'b', [ENTITY_ID]: 'u1' },
-  { [TS]: new Date('2017-03-22 20:35:10'), [EVENT_NAME]: 'c', [ENTITY_ID]: 'u1' },
-  { [TS]: new Date('2017-03-22 22:36:10'), [EVENT_NAME]: 'd', [ENTITY_ID]: 'u1' },
-];
+import Step from './Step';
 
-const user2 = [
-  { [TS]: new Date('2017-03-22 18:33:10'), [EVENT_NAME]: 'a', [ENTITY_ID]: 'u2' },
-  { [TS]: new Date('2017-03-22 19:34:10'), [EVENT_NAME]: 'b', [ENTITY_ID]: 'u2' },
-  { [TS]: new Date('2017-03-22 22:36:10'), [EVENT_NAME]: 'b', [ENTITY_ID]: 'u2' },
-  { [TS]: new Date('2017-03-22 23:36:10'), [EVENT_NAME]: 'c', [ENTITY_ID]: 'u2' },
-  { [TS]: new Date('2017-03-23 00:37:10'), [EVENT_NAME]: 'd', [ENTITY_ID]: 'u2' },
-];
-
-const user3 = [
-  { [TS]: new Date('2017-03-22 18:34:10'), [EVENT_NAME]: 'b', [ENTITY_ID]: 'u3' },
-  { [TS]: new Date('2017-03-22 20:36:10'), [EVENT_NAME]: 'c', [ENTITY_ID]: 'u3' },
-  { [TS]: new Date('2017-03-22 21:37:10'), [EVENT_NAME]: 'c', [ENTITY_ID]: 'u3' },
-  { [TS]: new Date('2017-03-22 23:38:10'), [EVENT_NAME]: 'c', [ENTITY_ID]: 'u3' },
-  { [TS]: new Date('2017-03-23 18:39:10'), [EVENT_NAME]: 'd', [ENTITY_ID]: 'u3' },
-];
-
-const data = [...user1, ...user2, ...user3];
 const ResponsiveVis = withScreenSize(({ screenWidth, ...rest }) => (
   <VisApp
     width={screenWidth * 0.8}
@@ -47,26 +22,35 @@ const ResponsiveVis = withScreenSize(({ screenWidth, ...rest }) => (
   />
 ));
 
-export default [
-  {
-    description: 'Vis',
-    example: () => (
-      <div>
-        <ResponsiveVis data={data} />
-        {[user1, user2, user3].map(u => (
-          <div key={u[0][ENTITY_ID]} >
-            {u.map(d => d[EVENT_NAME])}
-          </div>
-        ))}
-      </div>
-    ),
-  },
-  {
-    description: 'Graph',
-    example: () => (
-      <div>
-        <pre>{JSON.stringify(buildGraph(data), null, 2)}</pre>
-      </div>
-    ),
-  },
-];
+
+const withAlignment = withState('alignBy', 'setAlignBy', 0);
+
+// one example per dataset
+const examples = Object.keys(sampleEvents).map((name) => {
+  const dataset = sampleEvents[name];
+  console.log(dataset);
+  return {
+    description: name,
+    example: () => React.createElement(
+      withAlignment(({ alignBy, setAlignBy }) => (
+        <div>
+          <Step
+            label="Align by event #"
+            onChange={(val) => { console.log(val); setAlignBy(() => val); }}
+          />
+          <ResponsiveVis
+            a={Math.random()}
+            data={dataset.allEvents}
+            alignBy={events => (alignBy >= 0 ? alignBy : events.length + alignBy)}
+          />
+          {Object.keys(dataset.userEvents).map(u => (
+            <div key={dataset.userEvents[u][0][ENTITY_ID]} >
+              {dataset.userEvents[u].map(d => d[EVENT_NAME])}
+            </div>
+          ))}
+        </div>
+      ))),
+  };
+});
+
+export default examples;
