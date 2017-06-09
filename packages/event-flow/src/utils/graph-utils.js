@@ -177,7 +177,7 @@ export function createLinks(nodes) {
 /*
  * Parses raw events and builds a graph of 'aggregate' nodes
  */
-export function buildGraph(cleanedEvents, getStartIndex = (events) => 0) {
+export function buildGraph(cleanedEvents, getStartIndex = () => 0) {
   const nodes = {};
   const eventsByEntityId = binEventsByEntityId(cleanedEvents);
 
@@ -185,7 +185,7 @@ export function buildGraph(cleanedEvents, getStartIndex = (events) => 0) {
   Object.keys(eventsByEntityId).forEach((id) => {
     const events = eventsByEntityId[id];
     const initialEventIndex = getStartIndex(events);
-    if (initialEventIndex > -1) {
+    if (initialEventIndex > -1 && typeof events[initialEventIndex] !== 'undefined') {
       buildNodesFromEntityEvents(events, initialEventIndex, nodes);
     } else {
       filtered += events.length;

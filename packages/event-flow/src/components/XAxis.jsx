@@ -68,7 +68,7 @@ export default function XAxis({
   );
 }
 
-XAxis.height = 100;
+XAxis.height = 50;
 XAxis.propTypes = propTypes;
 XAxis.defaultProps = defaultProps;
 XAxis.displayName = 'XAxis';

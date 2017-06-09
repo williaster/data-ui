@@ -58,9 +58,9 @@ export function binEventsByEntityId(events) {
  *   [ENTITY_ID]: fn(e) => id,
  *  }
  */
-export function cleanEvents(rawEvents) {
+export function cleanEvents(rawEvents, accessors) {
   return rawEvents
-    .map((event, index) => createEvent(event, index))
+    .map(event => createEvent(event, accessors))
     .sort(eventSortComparator);
 }
 

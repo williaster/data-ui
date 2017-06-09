@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { EVENT_COUNT } from '../constants';
 import { nodeShape } from '../propShapes';
 
-const NODE_WIDTH = 20;
+const NODE_WIDTH = 5;
 const LINK_COLOR = '#ddd';
 
 const propTypes = {
@@ -66,7 +66,6 @@ class SubTree extends React.PureComponent {
           const height = yScale(getY(node));
           const nodeColor = colorScale(getColor(node));
 
-          debugger;
           yOffset[offset] += height;
 
           return (
@@ -82,9 +81,9 @@ class SubTree extends React.PureComponent {
                   x={Math.min(left, parentLeft) + ((left > parentLeft ? 1 : 0) * (NODE_WIDTH))}
                   y={0}
                   width={Math.abs(left - parentLeft)}
-                  height={height - nodePadding}
+                  height={Math.max(1, height - nodePadding)}
                   fill={LINK_COLOR}
-                  fillOpacity={0.2}
+                  fillOpacity={0.9}
                   rx={2}
                   ry={2}
                 />
@@ -94,7 +93,7 @@ class SubTree extends React.PureComponent {
                 x={left}
                 y={0}
                 width={NODE_WIDTH}
-                height={height - nodePadding}
+                height={Math.max(1, height - nodePadding)}
                 fill={nodeColor}
                 stroke="#fff"
                 strokeWidth={1}
