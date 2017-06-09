@@ -27,8 +27,8 @@ export function getNodeId(eventName, depth) {
  * Returns the node corresponding to the passed event and depth
  * Initializes the node if it doesn't already exist
  */
-export function getNodeFromEvent(allNodes, eventName, depth) {
-  const id = getNodeId(eventName, depth);
+export function getNodeFromEvent(allNodes, id, eventName, depth) {
+  // const id = getNodeId(eventName, depth);
   const node = allNodes[id] || { // lazy init
     id,
     name: eventName,
@@ -57,15 +57,16 @@ export function buildNodesFromEntityEvents(events, startIndex, nodes) {
   let eventName;
   let eventUuid;
   const ts0 = events[startIndex] && events[startIndex][TS];
+  let nodeId = '';
 
   // traverse events >= starting index
   while (index < events.length) {
     event = events[index];
     eventName = event[EVENT_NAME];
     eventUuid = getEventUuid(event, index);
+    nodeId += eventName;
 
-    tempNode = getNodeFromEvent(nodes, eventName, depth);
-    tempNode[EVENT_COUNT] += (events.length - index) + startIndex;
+    tempNode = getNodeFromEvent(nodes, nodeId, eventName, depth);
     tempNode.events[eventUuid] = {
       ...event,
       [EVENT_UUID]: eventUuid,
@@ -73,7 +74,7 @@ export function buildNodesFromEntityEvents(events, startIndex, nodes) {
       [TS_PREV]: events[index - 1] && events[index - 1][TS],
       [TS_NEXT]: events[index + 1] && events[index + 1][TS],
     };
-    tempNode.parent = currNode && currNode.id;
+    tempNode.parent = currNode;
     if (currNode) currNode.children[tempNode.id] = tempNode;
 
     currNode = tempNode;
@@ -84,6 +85,7 @@ export function buildNodesFromEntityEvents(events, startIndex, nodes) {
   }
 
   // traverse events < starting index
+  nodeId = `-${(firstNode && firstNode.id) || ''}`;
   currNode = firstNode;
   index = startIndex - 1;
   depth = -1;
@@ -91,9 +93,9 @@ export function buildNodesFromEntityEvents(events, startIndex, nodes) {
     event = events[index];
     eventName = event[EVENT_NAME];
     eventUuid = getEventUuid(event, index);
+    nodeId += eventName;
 
-    tempNode = getNodeFromEvent(nodes, eventName, depth);
-    tempNode[EVENT_COUNT] += index + 1;
+    tempNode = getNodeFromEvent(nodes, nodeId, eventName, depth);
     tempNode.events[eventUuid] = {
       ...event,
       [EVENT_UUID]: eventUuid,
@@ -101,7 +103,7 @@ export function buildNodesFromEntityEvents(events, startIndex, nodes) {
       [TS_PREV]: events[index - 1] && events[index - 1][TS],
       [TS_NEXT]: events[index + 1] && events[index + 1][TS],
     };
-    tempNode.parent = currNode && currNode.id;
+    tempNode.parent = currNode;
     if (currNode) currNode.children[tempNode.id] = tempNode;
 
     currNode = tempNode;
@@ -138,7 +140,7 @@ export function addMetaDataToNodes(nodes, allNodes) {
     node[EVENT_COUNT] = Object.keys(node.events || {}).length;
     node[ELAPSED_MS] = computeElapsedMs(node);
     node[ELAPSED_MS_ROOT] = node[ELAPSED_MS] +
-      (node.parent ? allNodes[node.parent][ELAPSED_MS_ROOT] : 0);
+      (node.parent ? node.parent[ELAPSED_MS_ROOT] : 0);
 
     addMetaDataToNodes(node.children, allNodes); // recurse
   });

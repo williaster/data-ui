@@ -31,7 +31,7 @@ export const graphShape = PropTypes.shape({
 export const nodeShape = PropTypes.shape({
   id: PropTypes.string.isRequired,
   depth: PropTypes.number.isRequired,
-  parent: PropTypes.string,
+  parent: PropTypes.object,
   children: PropTypes.object.isRequired,
   events: PropTypes.object.isRequired,
 });

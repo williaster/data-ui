@@ -28,11 +28,16 @@ export function computeElapsedTimeScale(nodesArray, width) {
   });
 }
 
-export function computeEventCountScale(totalCount, height) {
+export function computeEventCountScale(root, height) {
+  // The maximum event count should be the sum of events at the root node
+  const max = Object.keys(root.children).reduce((result, curr) => (
+    result + root.children[curr][EVENT_COUNT]
+  ), 0);
+
   return scaleLinear({
     nice: true,
     range: [0, height],
-    domain: [0, totalCount],
+    domain: [0, max],
   });
 }
 
@@ -75,7 +80,7 @@ export function buildAllScales(graph, width, height) {
   return {
     [ELAPSED_TIME_SCALE]: computeElapsedTimeScale(nodesArray, width),
     [EVENT_SEQUENCE_SCALE]: computeEventSequenceScale(nodesArray, width),
-    [EVENT_COUNT_SCALE]: computeEventCountScale(graph.totalEventCount, height),
+    [EVENT_COUNT_SCALE]: computeEventCountScale(graph.root, height),
     [NODE_SEQUENCE_SCALE]: computeNodeSequenceScale(nodesArray, height),
     [NODE_COLOR_SCALE]: computeColorScale(nodesArray),
   };
@@ -104,7 +109,7 @@ export function formatInterval(ms, unit) {
     case 'minute':
       return `${zeroDecimals(num / 1000 / 60)}m`;
     case 'hour':
-      return `${oneDecimal(num / 1000 / 60 / 60)}h`;
+      return `${oneDecimal(num / 1000 / 60 / 60)}hr`;
     case 'day':
       return `${oneDecimal(num / 1000 / 60 / 60 / 24)}d`;
     default:

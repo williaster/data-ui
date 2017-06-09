@@ -12,12 +12,6 @@ import {
   // binEventsByEntityId,
   // buildNodesFromEntityEvents,
   buildGraph,
-  // getNodeFromEvent,
-
-  // buildHierarchy,
-
-  // addMetaDataToNodes,
-  // createRoot,
   VisApp,
 } from '@data-ui/event-flow';
 
@@ -31,9 +25,9 @@ const user1 = [
 const user2 = [
   { [TS]: new Date('2017-03-22 18:33:10'), [EVENT_NAME]: 'a', [ENTITY_ID]: 'u2' },
   { [TS]: new Date('2017-03-22 19:34:10'), [EVENT_NAME]: 'b', [ENTITY_ID]: 'u2' },
-  { [TS]: new Date('2017-03-22 20:35:10'), [EVENT_NAME]: 'b', [ENTITY_ID]: 'u2' },
-  { [TS]: new Date('2017-03-22 21:36:10'), [EVENT_NAME]: 'c', [ENTITY_ID]: 'u2' },
-  { [TS]: new Date('2017-03-22 22:37:10'), [EVENT_NAME]: 'd', [ENTITY_ID]: 'u2' },
+  { [TS]: new Date('2017-03-22 22:36:10'), [EVENT_NAME]: 'b', [ENTITY_ID]: 'u2' },
+  { [TS]: new Date('2017-03-22 23:36:10'), [EVENT_NAME]: 'c', [ENTITY_ID]: 'u2' },
+  { [TS]: new Date('2017-03-23 00:37:10'), [EVENT_NAME]: 'd', [ENTITY_ID]: 'u2' },
 ];
 
 const user3 = [
@@ -44,7 +38,7 @@ const user3 = [
   { [TS]: new Date('2017-03-23 18:39:10'), [EVENT_NAME]: 'd', [ENTITY_ID]: 'u3' },
 ];
 
-const data = user1; //[...user1, ...user2, ...user3];
+const data = [...user1, ...user2, ...user3];
 const ResponsiveVis = withScreenSize(({ screenWidth, ...rest }) => (
   <VisApp
     width={screenWidth * 0.8}
@@ -57,7 +51,14 @@ export default [
   {
     description: 'Vis',
     example: () => (
-      <ResponsiveVis data={data} />
+      <div>
+        <ResponsiveVis data={data} />
+        {[user1, user2, user3].map(u => (
+          <div key={u[0][ENTITY_ID]} >
+            {u.map(d => d[EVENT_NAME])}
+          </div>
+        ))}
+      </div>
     ),
   },
   {

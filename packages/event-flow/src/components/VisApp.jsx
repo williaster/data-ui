@@ -14,9 +14,11 @@ import {
   NODE_COLOR_SCALE,
 } from '../constants';
 
-import GraphLayout from './GraphLayout';
+// import GraphLayout from './GraphLayout';
+import SubTree from './SubTree';
 import XAxis from './XAxis';
 import YAxis from './YAxis';
+import ZeroLine from './ZeroLine';
 
 const margin = {
   top: XAxis.height,
@@ -92,7 +94,7 @@ class VisApp extends React.PureComponent {
     console.log(graph);
     const xScale = scales[xScaleKey];
     const yScale = scales[yScaleKey];
-    debugger;
+
     return xScale && yScale ? (
       <svg
         role="img"
@@ -101,12 +103,21 @@ class VisApp extends React.PureComponent {
         height={height}
       >
         <Group top={margin.top} left={margin.left}>
+          <SubTree
+            subtreeNodes={graph.root.children}
+            xScale={xScale}
+            yScale={yScale}
+            colorScale={scales[NODE_COLOR_SCALE]}
+            getX={scaleAccessors[xScaleKey]}
+            getY={scaleAccessors[yScaleKey]}
+            getColor={scaleAccessors[NODE_COLOR_SCALE]}
+          />
           <XAxis
             scale={xScale}
             label={scaleLabels[xScaleKey]}
             labelOffset={margin.top * 0.6}
             height={Math.max(yScale.range())}
-            timeUnit={xScaleKey === ELAPSED_TIME_SCALE ? 'minute' : null}
+            timeUnit={xScaleKey === ELAPSED_TIME_SCALE ? 'hour' : null}
           />
           <YAxis
             scale={yScale}
@@ -114,15 +125,7 @@ class VisApp extends React.PureComponent {
             labelOffset={margin.left * 0.6}
             width={Math.max(xScale.range())}
           />
-          <GraphLayout
-            graph={graph}
-            xScale={xScale}
-            yScale={yScale}
-            fillScale={scales[NODE_COLOR_SCALE]}
-            x={scaleAccessors[xScaleKey]}
-            y={scaleAccessors[yScaleKey]}
-            fill={scaleAccessors[NODE_COLOR_SCALE]}
-          />
+          <ZeroLine xScale={xScale} yScale={yScale} />
         </Group>
       </svg>
     ) : null;
