@@ -35,8 +35,3 @@ export const nodeShape = PropTypes.shape({
   children: PropTypes.object.isRequired,
   events: PropTypes.object.isRequired,
 });
-
-export const linkShape = PropTypes.shape({
-  source: nodeShape.isRequired,
-  target: nodeShape.isRequired,
-});

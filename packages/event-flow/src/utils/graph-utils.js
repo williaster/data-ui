@@ -161,19 +161,6 @@ export function createRoot(nodes) {
   };
 }
 
-export function createLinks(nodes) {
-  const links = [];
-  Object.keys(nodes).forEach((parentId) => {
-    const parent = nodes[parentId];
-    if (parent.children) {
-      Object.keys(parent.children).forEach((childId) => {
-        links.push({ source: parent, target: nodes[childId] });
-      });
-    }
-  });
-  return links;
-}
-
 /*
  * Parses raw events and builds a graph of 'aggregate' nodes
  */
@@ -195,12 +182,9 @@ export function buildGraph(cleanedEvents, getStartIndex = () => 0) {
   const root = createRoot(nodes);
   addMetaDataToNodes(root.children, nodes);
 
-  const links = createLinks(nodes);
-
   return {
     root,
     nodes,
-    links,
     totalEventCount: cleanedEvents.length,
     filteredEventCount: filtered,
   };

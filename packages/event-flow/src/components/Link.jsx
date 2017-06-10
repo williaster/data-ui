@@ -2,37 +2,40 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Bar } from '@vx/shape';
 
-import { linkShape } from '../propShapes';
+const DEFAULT_LINK_COLOR = '#ddd';
 
 const propTypes = {
-  link: linkShape.isRequired,
-  xScale: PropTypes.func.isRequired,
-  yScale: PropTypes.func.isRequired,
-  x: PropTypes.func.isRequired,
-  y: PropTypes.func.isRequired,
+  x: PropTypes.number.isRequired,
+  y: PropTypes.number.isRequired,
+  width: PropTypes.number.isRequired,
+  height: PropTypes.number.isRequired,
+  fill: PropTypes.string,
 };
 
-const defaultProps = {};
+const defaultProps = {
+  fill: DEFAULT_LINK_COLOR,
+};
 
 function Link({
-  link,
-  xScale,
-  yScale,
   x,
   y,
+  width,
+  height,
+  fill,
 }) {
-  const x0 = xScale(x(link.source));
-  const x1 = xScale(x(link.target));
-  const y0 = yScale(y(link.source));
-  const y1 = yScale(y(link.target));
   return (
     <Bar
-      x={Math.min(x0, x1)}
-      y={Math.min(y0, y1)}
-      fill="#bbb"
-      width={Math.abs(x1 - x0) - 10}
-      height={50}
-      fillOpacity={0.5}
+      x={x}
+      y={y}
+      width={width}
+      height={height}
+      fill={fill}
+      fillOpacity={0.9}
+      rx={2}
+      ry={2}
+      stroke="#fff"
+      strokeWidth={2}
+      vectorEffect="non-scaling-stroke"
     />
   );
 }

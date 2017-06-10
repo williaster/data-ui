@@ -3,11 +3,11 @@ import { Group } from '@vx/group';
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import Link from './Link';
+import Node from './Node';
+
 import { EVENT_COUNT } from '../constants';
 import { nodeShape } from '../propShapes';
-
-const NODE_WIDTH = 5;
-const LINK_COLOR = '#ddd';
 
 const propTypes = {
   nodes: PropTypes.objectOf(nodeShape).isRequired,
@@ -77,43 +77,20 @@ class SubTree extends React.PureComponent {
                 />}
               {/* link back to the parent */}
               {hasParent &&
-                <Bar
-                  className="link"
-                  x={Math.min(left, parentLeft) + ((left > parentLeft ? 1 : 0) * (NODE_WIDTH))}
+                <Link
+                  x={Math.min(left, parentLeft) + ((left > parentLeft ? 1 : 0) * (Node.width))}
                   y={0}
                   width={Math.abs(left - parentLeft)}
                   height={Math.max(1, height)}
-                  fill={LINK_COLOR}
-                  fillOpacity={0.9}
-                  rx={2}
-                  ry={2}
-                  stroke="#fff"
-                  strokeWidth={2}
-                  vectorEffect="non-scaling-stroke"
                 />
               }
-              <Bar
-                className="node"
+              <Node
+                node={node}
                 x={left}
                 y={0}
-                width={NODE_WIDTH}
                 height={Math.max(1, height)}
                 fill={nodeColor}
-                stroke="#fff"
-                strokeWidth={1}
-                rx={2}
-                ry={2}
-                vectorEffect="non-scaling-stroke"
               />
-
-              <text
-                x={left + (NODE_WIDTH / 2)}
-                y={height / 2}
-                textAnchor="middle"
-                vectorEffect="non-scaling-stroke"
-              >
-                {node.name}
-              </text>
             </Group>
           );
         })}
