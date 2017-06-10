@@ -9,13 +9,13 @@ import {
   ENTITY_ID,
   sampleEvents,
 
-  VisApp,
+  Visualization,
 } from '@data-ui/event-flow';
 
 import Step from './Step';
 
 const ResponsiveVis = withScreenSize(({ screenWidth, ...rest }) => (
-  <VisApp
+  <Visualization
     width={screenWidth * 0.8}
     height={screenWidth * 0.8 * 0.6}
     {...rest}
@@ -35,10 +35,9 @@ const examples = Object.keys(sampleEvents).map((name) => {
         <div>
           <Step
             label="Align by event #"
-            onChange={(val) => { console.log(val); setAlignBy(() => val); }}
+            onChange={(val) => { setAlignBy(() => val); }}
           />
           <ResponsiveVis
-            a={Math.random()}
             data={dataset.allEvents}
             alignBy={events => (alignBy >= 0 ? alignBy : events.length + alignBy)}
           />

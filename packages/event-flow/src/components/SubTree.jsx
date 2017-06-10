@@ -10,7 +10,7 @@ const NODE_WIDTH = 5;
 const LINK_COLOR = '#ddd';
 
 const propTypes = {
-  subtreeNodes: PropTypes.objectOf(nodeShape).isRequired,
+  nodes: PropTypes.objectOf(nodeShape).isRequired,
   nodeSorter: PropTypes.func, // could default to # events
 
   xScale: PropTypes.func.isRequired,
@@ -20,14 +20,12 @@ const propTypes = {
   getX: PropTypes.func.isRequired,
   getY: PropTypes.func.isRequired,
   getColor: PropTypes.func.isRequired,
-  nodePadding: PropTypes.number,
 };
 
 const defaultProps = {
   nodeSorter(a, b) {
     return b[EVENT_COUNT] - a[EVENT_COUNT];
   },
-  nodePadding: 2,
 };
 
 class SubTree extends React.PureComponent {
@@ -39,17 +37,16 @@ class SubTree extends React.PureComponent {
   render() {
     const {
       nodeSorter,
-      subtreeNodes,
+      nodes,
       xScale,
       yScale,
       colorScale,
       getX,
       getY,
       getColor,
-      nodePadding,
     } = this.props;
 
-    const sortedNodes = Object.values(subtreeNodes).sort(nodeSorter);
+    const sortedNodes = Object.values(nodes).sort(nodeSorter);
     const yOffset = { left: 0, right: 0 };
 
     return (
@@ -76,7 +73,7 @@ class SubTree extends React.PureComponent {
               {hasChildren &&
                 <SubTree
                   {...this.props}
-                  subtreeNodes={node.children}
+                  nodes={node.children}
                 />}
               {/* link back to the parent */}
               {hasParent &&

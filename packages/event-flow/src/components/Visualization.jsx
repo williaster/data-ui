@@ -1,7 +1,7 @@
 import { Group } from '@vx/group';
 import React from 'react';
 import PropTypes from 'prop-types';
-import { zoom as d3Zoom } from 'd3-zoom';
+import { zoom as d3Zoom, zoomIdentity } from 'd3-zoom';
 import { event as d3Event, select as d3Select } from 'd3-selection';
 
 import { buildGraph } from '../utils/graph-utils';
@@ -39,20 +39,22 @@ const propTypes = {
   data: dataShape,
   width: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired,
+  zoomScaleExtent: PropTypes.arrayOf(PropTypes.number),
 };
 
 const defaultProps = {
   data: [],
   alignBy: (/* events */) => 0,
+  zoomScaleExtent: [1, 40],
 };
 
-class VisApp extends React.PureComponent {
+class Visualization extends React.PureComponent {
   constructor(props) {
     super(props);
     this.getGraph = this.getGraph.bind(this);
     this.getScales = this.getScales.bind(this);
     this.panOrZoom = this.panOrZoom.bind(this);
-    this.zoom = d3Zoom().scaleExtent([1, 40]).on('zoom', this.panOrZoom);
+    this.zoom = d3Zoom().scaleExtent(props.zoomScaleExtent).on('zoom', this.panOrZoom);
 
     const graph = this.getGraph(props);
     const scales = this.getScales(graph, props);
@@ -60,14 +62,14 @@ class VisApp extends React.PureComponent {
     this.state = {
       xScaleKey: ELAPSED_TIME_SCALE,
       yScaleKey: EVENT_COUNT_SCALE,
+      viewTransform: null,
       scales,
       graph,
-      viewTransform: null,
     };
   }
 
   componentDidMount() {
-    this.zoom(d3Select(this.view));
+    this.zoom(d3Select(this.view)); // this attaches all zoom-related listeners to the view ref
   }
 
   componentWillReceiveProps(nextProps) {
@@ -77,17 +79,25 @@ class VisApp extends React.PureComponent {
     ) {
       const graph = this.getGraph(nextProps);
       const scales = this.getScales(graph, nextProps);
-      this.setState({ graph, scales });
+      this.setState({
+        graph,
+        scales,
+        xScaleZoomed: null,
+        yScaleZoomed: null,
+        viewTransform: null,
+      });
     } else if (this.props.width !== nextProps.width || this.props.height !== nextProps.height) {
       this.setState({
         scales: this.getScales(this.state.graph, nextProps),
+        xScaleZoomed: null,
+        yScaleZoomed: null,
+        viewTransform: null,
       });
     }
   }
 
   getGraph(props) {
     const { data, alignBy } = props || this.props;
-    console.log('graph input data', data);
     console.time('graph');
     const graph = buildGraph(data, alignBy);
     console.timeEnd('graph');
@@ -101,6 +111,9 @@ class VisApp extends React.PureComponent {
     const scales = buildAllScales(graph, innerWidth, innerHeight);
     this.zoom.translateExtent([[0, 0], [innerWidth, innerHeight]]);
     this.zoom.extent([[0, 0], [innerWidth, innerHeight]]);
+    if (this.view) {
+      this.zoom.transform(d3Select(this.view), zoomIdentity);
+    }
     console.timeEnd('scales');
     return scales;
   }
@@ -140,7 +153,7 @@ class VisApp extends React.PureComponent {
     const yScale = scales[yScaleKey];
     const innerWidth = Math.max(...xScale.range());
     const innerHeight = Math.max(...yScale.range());
-
+    console.log(graph);
     return xScale && yScale ? (
       <svg
         role="img"
@@ -167,7 +180,7 @@ class VisApp extends React.PureComponent {
           <g clipPath="url(#clip)">
             <g transform={viewTransform}>
               <SubTree
-                subtreeNodes={graph.root.children}
+                nodes={graph.root.children}
                 xScale={xScale}
                 yScale={yScale}
                 colorScale={scales[NODE_COLOR_SCALE]}
@@ -196,7 +209,7 @@ class VisApp extends React.PureComponent {
   }
 }
 
-VisApp.propTypes = propTypes;
-VisApp.defaultProps = defaultProps;
+Visualization.propTypes = propTypes;
+Visualization.defaultProps = defaultProps;
 
-export default VisApp;
+export default Visualization;
