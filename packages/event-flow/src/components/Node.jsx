@@ -4,7 +4,7 @@ import { Bar } from '@vx/shape';
 
 import { nodeShape } from '../propShapes';
 
-export const DEFAULT_NODE_WIDTH = 5;
+export const DEFAULT_NODE_WIDTH = 7;
 
 const propTypes = {
   node: nodeShape.isRequired,

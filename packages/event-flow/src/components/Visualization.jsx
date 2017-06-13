@@ -113,10 +113,10 @@ class Visualization extends React.PureComponent {
     console.log('over', { node, event, coords });
     // @todo single event pane
   }
-  onMouseOver({ node, event, coords }) {
-    console.log('over', { node, event, coords });
+  onMouseOver({ node, link, event, coords }) {
+    console.log('over', { node, link, event, coords });
     this.setState({
-      tooltip: { coords, node },
+      tooltip: { coords, node, link },
     });
   }
 
@@ -195,6 +195,7 @@ class Visualization extends React.PureComponent {
           width={width}
           height={height}
           ref={(ref) => { this.svg = ref; }}
+          style={{ cursor: 'move' }}
         >
           <Group
             top={margin.top}
@@ -245,6 +246,7 @@ class Visualization extends React.PureComponent {
           <Tooltip
             svg={this.svg}
             node={tooltip.node}
+            link={tooltip.link}
             x={xScaleZoomed ? xScaleZoomed(xScale.invert(tooltip.coords.x)) : tooltip.coords.x}
             y={yScaleZoomed ? yScaleZoomed(yScale.invert(tooltip.coords.y)) : tooltip.coords.y}
             colorScale={scales[NODE_COLOR_SCALE]}

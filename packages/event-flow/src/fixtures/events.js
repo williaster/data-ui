@@ -70,8 +70,7 @@ export function generateEventsForUsers({
 }
 
 export default {
-  oneUser: generateEventsForUsers({ nUsers: 1, minEvents: 5 }),
-  twoUsers: generateEventsForUsers({ nUsers: 2 }),
+  twoUsers: generateEventsForUsers({ nUsers: 2, minEvents: 5 }),
   threeUsers: generateEventsForUsers({ nUsers: 3 }),
   fourUsers: generateEventsForUsers({ nUsers: 4 }),
   fiveUsers: generateEventsForUsers({ nUsers: 5 }),

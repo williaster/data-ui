@@ -53,7 +53,7 @@ class SubTree extends React.PureComponent {
     const { node, link } = this.getNodeFromTarget(target);
     if (node || link) {
       const coords = getCoordsFromEvent(target, event);
-      this.props.onMouseOver({ node: node || link.source, coords, event });
+      this.props.onMouseOver({ node, link, coords, event });
     }
   }
 
@@ -73,7 +73,7 @@ class SubTree extends React.PureComponent {
   onClickLink(event) {
     const target = event.target;
     const { link } = this.getNodeFromTarget(target);
-    console.log('link', link);
+    console.log('link', link.target.events);
   }
 
   getNodeFromTarget(target) {
@@ -127,7 +127,7 @@ class SubTree extends React.PureComponent {
           yOffset[offset] += height;
 
           return (
-            <Group key={node.id}>
+            <g key={node.id} style={{ cursor: 'pointer' }}>
               {/* link back to the parent */}
               {hasParent &&
                 <Link
@@ -159,7 +159,7 @@ class SubTree extends React.PureComponent {
                   yOffset={top}
                   nodes={node.children}
                 />}
-            </Group>
+            </g>
           );
         })}
       </Group>
