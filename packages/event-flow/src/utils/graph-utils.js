@@ -14,6 +14,7 @@ import {
   EVENT_COUNT,
   ELAPSED_MS,
   ELAPSED_MS_ROOT,
+  FILTERED_EVENTS,
 } from '../constants';
 
 /*
@@ -28,7 +29,6 @@ export function getNodeId(eventName, depth) {
  * Initializes the node if it doesn't already exist
  */
 export function getNodeFromEvent(allNodes, id, eventName, depth) {
-  // const id = getNodeId(eventName, depth);
   const node = allNodes[id] || { // lazy init
     id,
     name: eventName,
@@ -146,18 +146,19 @@ export function addMetaDataToNodes(nodes, allNodes) {
   });
 }
 
-export function createRoot(nodes) {
+export function getRoot(nodes) {
+  const children = Object.keys(nodes).filter(n => nodes[n] && nodes[n].depth === 0);
+  const childNodes = children.reduce((ret, curr) => {
+    ret[curr] = nodes[curr];
+    return ret;
+  }, {});
+
   return {
     name: 'root',
     id: 'root',
     parent: null,
-    depth: null,
-    children: Object.keys(nodes)
-      .filter(n => nodes[n] && nodes[n].depth === 0)
-      .reduce((ret, curr) => {
-        ret[curr] = nodes[curr];
-        return ret;
-      }, {}),
+    depth: NaN,
+    children: childNodes,
   };
 }
 
@@ -179,13 +180,15 @@ export function buildGraph(cleanedEvents, getStartIndex = () => 0) {
     }
   });
 
-  const root = createRoot(nodes);
+  const root = getRoot(nodes);
   addMetaDataToNodes(root.children, nodes);
+
+  root[EVENT_COUNT] = Object.keys(root.children)
+    .reduce((sum, curr) => sum + nodes[curr][EVENT_COUNT], 0);
 
   return {
     root,
     nodes,
-    totalEventCount: cleanedEvents.length,
-    filteredEventCount: filtered,
+    [FILTERED_EVENTS]: filtered,
   };
 }

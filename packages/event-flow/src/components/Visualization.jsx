@@ -242,16 +242,17 @@ class Visualization extends React.PureComponent {
             />
           </Group>
         </svg>
-        {tooltip &&
+        {tooltip ?
           <Tooltip
             svg={this.svg}
+            root={graph.root}
             node={tooltip.node}
             link={tooltip.link}
             x={xScaleZoomed ? xScaleZoomed(xScale.invert(tooltip.coords.x)) : tooltip.coords.x}
             y={yScaleZoomed ? yScaleZoomed(yScale.invert(tooltip.coords.y)) : tooltip.coords.y}
             colorScale={scales[NODE_COLOR_SCALE]}
             getColor={scaleAccessors[NODE_COLOR_SCALE]}
-          />}
+          /> : null}
       </div>
     ) : null;
   }

@@ -1,9 +1,19 @@
+import { css, StyleSheet } from 'aphrodite';
+import { Bar } from '@vx/shape';
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Bar } from '@vx/shape';
+
 import { nodeShape } from '../propShapes';
 
 const DEFAULT_LINK_COLOR = '#ddd';
+
+const styles = StyleSheet.create({
+  group: {
+    ':hover': {
+      opacity: 0.4,
+    },
+  },
+});
 
 const propTypes = {
   source: nodeShape.isRequired,
@@ -39,6 +49,7 @@ function Link({
 }) {
   return (
     <g
+      className={css(styles.group)}
       onClick={onClick}
       onMouseOver={onMouseOver}
       onMouseOut={onMouseOut}

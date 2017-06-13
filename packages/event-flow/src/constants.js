@@ -10,6 +10,7 @@ export const META = 'META';
 export const ELAPSED_MS_ROOT = 'ELAPSED_MS_ROOT';
 export const ELAPSED_MS = 'ELAPSED_MS';
 export const EVENT_COUNT = 'EVENT_COUNT';
+export const FILTERED_EVENTS = 'FILTERED_EVENTS';
 
 // Scales
 export const ELAPSED_TIME_SCALE = 'ELAPSED_TIME_SCALE';

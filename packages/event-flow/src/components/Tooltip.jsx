@@ -4,17 +4,24 @@ import PropTypes from 'prop-types';
 import { nodeShape, linkShape } from '../propShapes';
 
 import {
+  formatInterval,
+  timeUnitFromTimeExtent,
+  oneDecimal,
+} from '../utils/scale-utils';
+
+import {
   ELAPSED_MS_ROOT,
   ELAPSED_MS,
   EVENT_COUNT,
 } from '../constants';
 
-const titleStyles = {};
+import NodeSequence from './NodeSequence';
 
 const propTypes = {
   svg: PropTypes.node.isRequired,
   link: linkShape,
   node: nodeShape,
+  root: nodeShape,
   x: PropTypes.number.isRequired,
   y: PropTypes.number.isRequired,
   colorScale: PropTypes.func.isRequired,
@@ -24,98 +31,81 @@ const propTypes = {
 
 const defaultProps = {
   width: 200,
-  nodeShape,
-  linkShape,
+  link: null,
+  node: null,
+  root: null,
 };
 
-function sequenceFromNode(node) {
+function formatElapsedTime(ms) {
+  return formatInterval(ms, timeUnitFromTimeExtent([0, ms]));
+}
+
+function ancestorsFromNode(node) {
   let curr = node;
-  const nodes = [];
+  const ancestors = [];
   while (curr) {
-    nodes.push(curr);
+    ancestors.push(curr);
     curr = curr.parent;
   }
-  return nodes[0].depth < 0 ? nodes : nodes.reverse();
+  return ancestors.reverse();
 }
 
 function Tooltip({
   svg,
   node,
   link,
+  root,
   getColor,
   colorScale,
   x,
   y,
   width,
 }) {
-  // @todo underline root?
-  // component for sequence
-  const sequence = sequenceFromNode(link ? link.target : node);
-  const lastSequence = sequence.slice(-2);
-  const negativeDepth = lastSequence[0].depth < 0;
-  const lastNodeIndex = negativeDepth ? 0 : sequence.length - 1;
-  const separator = negativeDepth ? ' < ' : ' > ';
-  const lastNode = sequence[lastNodeIndex];
+  const sequence = ancestorsFromNode(link ? link.target : node);
+  const hasNegativeDepth = sequence[0].depth < 0 || sequence[sequence.length - 1].depth < 0;
+  const currNodeIndex = hasNegativeDepth ? 0 : sequence.length - 1;
+  const separator = hasNegativeDepth ? ' < ' : ' > ';
+  const subSequenceIndex = hasNegativeDepth ? [0, 2] : [-2];
+  if (hasNegativeDepth) sequence.reverse();
 
-  const nodeEvents = lastNode[EVENT_COUNT];
-  const fractionPrev = nodeEvents / lastSequence[0][EVENT_COUNT];
-
-  const elapsedToNode = lastNode[ELAPSED_MS];
-  const elapsedToRoot = lastNode[ELAPSED_MS_ROOT];
-
-  const parentWidth = svg.getBoundingClientRect().width;
-  const left = x + width > parentWidth ? x - width : x;
-
-  const Sequence = sequence.map((n, i) => (
-    <span key={n.id}>
-      {i !== 0 &&
-        <span style={{ color: '#484848', fontSize: 14 }}>
-          {separator}
-        </span>}
-      <span
-        style={{
-          color: colorScale(getColor(n)),
-          fontSize: 15,
-          fontWeight: i === lastNodeIndex ? 700 : 200,
-          textDecoration: i === lastNodeIndex ? 'underline' : 'none',
-        }}
-      >
-        {n.name.toUpperCase()}
-      </span>
-    </span>
-  ));
-
-  const subsequenceIndex = negativeDepth ? [0, 2] : [-2];
-  const SubSequence = sequence.length <= 2 ? null :
-    sequence.slice(...subsequenceIndex).map((n, i) => (
-      <span key={n.id}>
-        {i !== 0 &&
-          <span style={{ color: '#484848', fontSize: 14 }}>
-            {separator}
-          </span>}
-        <span
-          style={{
-            color: colorScale(getColor(n)),
-            fontSize: 16,
-            fontWeight: (i === 0 && negativeDepth) || (i !== 0 && !negativeDepth) ? 700 : 200,
-            textDecoration:
-              (i === 0 && negativeDepth) || (i !== 0 && !negativeDepth)
-              ? 'underline' : 'none',
-          }}
-        >
-          {n.name.toUpperCase()}
-        </span>
-      </span>
-    ),
+  const Sequence = (
+    <NodeSequence
+      nodeArray={sequence}
+      currNodeIndex={currNodeIndex}
+      separator={separator}
+      colorScale={colorScale}
+      getColor={getColor}
+    />
   );
 
-  debugger;
+  const SubSequence = sequence.length <= 2 ? null : (
+    <NodeSequence
+      nodeArray={sequence.slice(...subSequenceIndex)}
+      currNodeIndex={hasNegativeDepth ? 0 : 1}
+      separator={separator}
+      colorScale={colorScale}
+      getColor={getColor}
+    />
+  );
+
+  const currNode = sequence[currNodeIndex];
+  const nodeEvents = currNode[EVENT_COUNT];
+  const percentOfPrev =
+    `${oneDecimal((nodeEvents / (currNode.parent || currNode)[EVENT_COUNT]) * 100)}%`;
+  const percentOfRoot = `${oneDecimal((nodeEvents / root[EVENT_COUNT]) * 100)}%`;
+
+  const elapsedToNode = formatElapsedTime(currNode[ELAPSED_MS]);
+  const elapsedToRoot = formatElapsedTime(currNode[ELAPSED_MS_ROOT]);
+
+  const parentWidth = svg.getBoundingClientRect().width;
+  const left = x + width > parentWidth ? (x - width) + 16 : x + 50;
+
   return (
     <div
       style={{
         pointerEvents: 'none',
         position: 'absolute',
-        top: y + 50,
+        top: y + 60,
         left,
         width,
         background: 'white',
@@ -126,14 +116,20 @@ function Tooltip({
         fontSize: 12,
       }}
     >
-      {Sequence}
-      <div>{nodeEvents} events</div>
-      <div>{elapsedToRoot} mean elapsed time</div>
-      <div>--% of root</div>
-      <br />
       {SubSequence}
-      {SubSequence  && <div>{elapsedToNode} mean elapsed time</div>}
-      {SubSequence && <div>{(fractionPrev * 100).toFixed(2)}% of previous</div>}
+      {SubSequence &&
+        <div>
+          <div><strong>{nodeEvents}</strong> events</div>
+          <div><strong>{elapsedToNode}</strong> mean elapsed time</div>
+          <div><strong>{percentOfPrev}</strong> of previous</div>
+          <br />
+        </div>}
+
+      {Sequence}
+      <div>
+        <div><strong>{percentOfRoot}</strong> of root</div>
+        <div><strong>{elapsedToRoot}</strong> mean elapsed time to root</div>
+      </div>
     </div>
   );
 }

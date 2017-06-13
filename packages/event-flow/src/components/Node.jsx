@@ -1,10 +1,19 @@
+import { css, StyleSheet } from 'aphrodite';
+import { Bar } from '@vx/shape';
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Bar } from '@vx/shape';
 
 import { nodeShape } from '../propShapes';
 
 export const DEFAULT_NODE_WIDTH = 7;
+
+const styles = StyleSheet.create({
+  group: {
+    ':hover': {
+      opacity: 0.4,
+    },
+  },
+});
 
 const propTypes = {
   node: nodeShape.isRequired,
@@ -40,6 +49,7 @@ function Node({
 }) {
   return (
     <g
+      className={css(styles.group)}
       onClick={onClick}
       onMouseOver={onMouseOver}
       onMouseOut={onMouseOut}
@@ -51,8 +61,6 @@ function Node({
         width={width}
         height={Math.max(1, height)}
         fill={fill}
-        stroke="#fff"
-        strokeWidth={1}
         rx={2}
         ry={2}
         vectorEffect="non-scaling-stroke"

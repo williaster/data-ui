@@ -104,6 +104,7 @@ export function numTicksForWidth(width) {
 
 export const zeroDecimals = format(',.0f');
 export const oneDecimal = format(',.1f');
+export const twoDecimals = format(',.2f');
 
 const second = 1000;
 const minute = second * 60;
