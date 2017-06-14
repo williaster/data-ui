@@ -132,6 +132,8 @@ function Tooltip({
       {Sequence}
       <div>
         {!SubSequence && <div><strong>{nodeEvents}</strong> events</div>}
+        {!SubSequence && currNode.depth !== 0 &&
+          <div><strong>{percentOfPrev}</strong> of previous</div>}
         <div><strong>{percentOfRoot}</strong> of root</div>
         <div><strong>{elapsedToRoot}</strong> mean elapsed time to root</div>
       </div>

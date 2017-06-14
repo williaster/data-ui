@@ -11,12 +11,6 @@ import {
   NODE_SEQUENCE_SCALE,
 } from './constants';
 
-export const rawDataAccessorShape = {
-  [TS]: PropTypes.func.isRequired,
-  [EVENT_NAME]: PropTypes.func.isRequired,
-  [ENTITY_ID]: PropTypes.func.isRequired,
-};
-
 export const datumShape = PropTypes.shape({
   [TS]: PropTypes.instanceOf(Date).isRequired,
   [EVENT_NAME]: PropTypes.string.isRequired,

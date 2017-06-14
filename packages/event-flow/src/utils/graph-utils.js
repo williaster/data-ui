@@ -126,6 +126,13 @@ export function addMetaDataToNodes(nodes, allNodes) {
     node[EVENT_COUNT] = Object.keys(node.events || {}).length;
     node[ELAPSED_MS] = d3Mean(Object.values(node.events || {}), d => d[ELAPSED_MS]);
     node[ELAPSED_MS_ROOT] = d3Mean(Object.values(node.events || {}), d => d[ELAPSED_MS_ROOT]);
+
+    // enforce that a node has at least as much elapsed time to the root as it's parent
+    if (node.parent) {
+      const compare = node.depth > 0 ? Math.max : Math.min;
+      const diff = node.depth > 0 ? 1000 : -1000;
+      node[ELAPSED_MS_ROOT] = compare(node[ELAPSED_MS_ROOT], node.parent[ELAPSED_MS_ROOT] + diff);
+    }
     addMetaDataToNodes(node.children, allNodes); // recurse
   });
 }

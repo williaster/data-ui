@@ -1,4 +1,5 @@
-/* esline class-methods-use-this: 0 */
+/* eslint class-methods-use-this: 0 */
+import { css, StyleSheet } from 'aphrodite';
 import PropTypes from 'prop-types';
 import React from 'react';
 import SplitPane from 'react-split-pane';
@@ -11,9 +12,25 @@ import SingleSequencePanel from './SingleSequencePanel';
 
 import { buildGraph } from '../utils/graph-utils';
 import { buildAllScales } from '../utils/scale-utils';
+import { collectSequencesFromNode } from '../utils/data-utils';
 import { dataShape, xScaleTypeShape, yScaleTypeShape } from '../propShapes';
 import { ELAPSED_TIME_SCALE, EVENT_COUNT_SCALE, NODE_COLOR_SCALE } from '../constants';
 
+const styles = StyleSheet.create({
+  clearSelectionButton: {
+    cursor: 'pointer',
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    border: '1px solid #ddd',
+    background: '#fff',
+    padding: '4px 8px',
+    borderBottomLeftRadius: 4,
+    color: '#484848',
+    outline: 'none',
+    zIndex: 1,
+  },
+});
 const minPaneSize = 15;
 
 const propTypes = {
@@ -37,17 +54,17 @@ class Visualization extends React.PureComponent {
     super(props);
     this.onClickNode = this.onClickNode.bind(this);
     this.getGraph = this.getGraph.bind(this);
-    this.onPaneResizeStarted = this.onPaneResizeStarted.bind(this);
-    this.onPaneResizeFinished = this.onPaneResizeFinished.bind(this);
+    this.handleDragStart = this.handleDragStart.bind(this);
+    this.handleDragEnd = this.handleDragEnd.bind(this);
+    this.handleClearSelection = this.handleClearSelection.bind(this);
 
     const paneHeight = props.height - minPaneSize;
     const graph = this.getGraph(props);
-    const scales = this.getScales({ graph, width: props.width, height: paneHeight });
+    const scales = this.getScales({ graph, width: props.width, height: props.height });
 
     this.state = {
       paneHeight,
-      paneFraction: paneHeight / props.height,
-      selectedNodes: {},
+      selectedNode: null,
       graph,
       scales,
     };
@@ -57,15 +74,17 @@ class Visualization extends React.PureComponent {
     const nextState = {};
     if (this.props.data !== nextProps.data || this.props.alignBy !== nextProps.alignBy) {
       nextState.graph = this.getGraph(nextProps);
+      nextState.selectedNode = null;
+      nextState.paneHeight = nextProps.height - minPaneSize;
     }
     if (this.props.height !== nextProps.height) {
-      nextState.paneHeight = nextProps.height * this.state.paneFraction;
+      nextState.paneHeight = this.state.paneHeight * (nextProps.height / this.props.height);
     }
     if (nextState.paneHeight || nextState.graph || this.props.width !== nextProps.width) {
       nextState.scales = this.getScales({
         graph: nextState.graph || this.state.graph,
         width: nextProps.width,
-        height: nextState.paneHeight || this.state.paneHeight,
+        height: nextProps.height,
       });
     }
     if (Object.keys(nextState).length > 0) {
@@ -74,36 +93,22 @@ class Visualization extends React.PureComponent {
   }
 
   onClickNode({ node }) {
-    this.setState((prevState) => {
-      const { selectedNodes } = prevState;
-      const isSelected = Boolean(selectedNodes[node.id]);
-      const nextSelectedNodes = {
-        ...selectedNodes,
-        [node.id]: isSelected ? null : node,
-      };
-      return {
-        selectedNodes: nextSelectedNodes,
-        force: Object.keys(nextSelectedNodes).length > 0,
-      };
-    });
-  }
+    const { height } = this.props;
+    const { selectedNode, graph } = this.state;
+    const isSelected = selectedNode && selectedNode.id === node.id;
+    const sequences = isSelected ? null : collectSequencesFromNode(node, graph.entityEvents);
 
-  onPaneResizeStarted() {
-    this.setState({ dragging: true });
-  }
-
-  onPaneResizeFinished(nextHeight) {
-    const { width, height } = this.props;
     this.setState({
-      paneHeight: nextHeight,
-      paneFraction: nextHeight / height,
-      scales: this.getScales({ graph: this.state.graph, width, height: nextHeight }),
-      dragging: false,
+      selectedNode: isSelected ? null : node,
+      selectedSequences: sequences,
+      paneHeight: isSelected ?
+        (height - minPaneSize) :
+        Math.max(minPaneSize, height - (30 * sequences.length) - 75),
     });
   }
 
   getGraph(props) {
-    const { data, alignBy } = props || this.props;
+    const { data, alignBy } = props;
     const graph = buildGraph(data, alignBy);
     return graph;
   }
@@ -117,6 +122,25 @@ class Visualization extends React.PureComponent {
     return scales;
   }
 
+  handleDragStart() {
+    this.setState({ dragging: true });
+  }
+
+  handleDragEnd(paneHeight) {
+    this.setState({
+      dragging: false,
+      paneHeight: this.state.selectedNode ? paneHeight : this.state.paneHeight,
+    });
+  }
+
+  handleClearSelection() {
+    this.setState({
+      selectedNode: null,
+      selectedSequences: null,
+      paneHeight: this.props.height - minPaneSize,
+    });
+  }
+
   render() {
     const {
       xScaleType,
@@ -127,42 +151,47 @@ class Visualization extends React.PureComponent {
 
     const {
       graph,
-      selectedNodes,
+      selectedSequences,
       paneHeight,
       scales,
-      force,
       dragging,
     } = this.state;
-
-    const selected = Object.keys(selectedNodes).length > 0 ? selectedNodes : null;
 
     return (
       <div style={{ position: 'relative', width, height }}>
         <SplitPane
           split="horizontal"
-          defaultSize={force ? 0.65 * paneHeight : paneHeight}
+          size={dragging ? undefined : paneHeight}
           minSize={minPaneSize}
           maxSize={height - minPaneSize}
-          onDragStarted={this.onPaneResizeStarted}
-          onDragFinished={this.onPaneResizeFinished}
+          onDragStarted={this.handleDragStart}
+          onDragFinished={this.handleDragEnd}
         >
-          <AggregatePanel
-            graph={graph}
-            xScale={scales[xScaleType]}
-            yScale={scales[yScaleType]}
-            colorScale={scales[NODE_COLOR_SCALE]}
-            onClickNode={this.onClickNode}
-            selectedNodes={selected}
-            width={width}
-            height={paneHeight}
-          />
-          <div style={{ width: '100%', heigth: '100%', opacity: dragging ? 0 : 1 }}>
-            <SingleSequencePanel
-              nodes={selected}
-              entityEvents={graph.entityEvents}
+          <div style={{ width: '100%', height: '100%', pointerEvents: dragging ? 'none' : null }}>
+            <AggregatePanel
+              graph={graph}
+              xScale={scales[xScaleType]}
+              yScale={scales[yScaleType]}
               colorScale={scales[NODE_COLOR_SCALE]}
+              onClickNode={this.onClickNode}
               width={width}
+              height={height}
             />
+          </div>
+          <div style={{ width: '100%', height: '100%', position: 'relative' }}>
+            {selectedSequences &&
+              <button
+                className={css(styles.clearSelectionButton)}
+                onClick={this.handleClearSelection}
+              >
+                Clear
+              </button>}
+            {selectedSequences &&
+              <SingleSequencePanel
+                sequences={selectedSequences}
+                colorScale={scales[NODE_COLOR_SCALE]}
+                width={width}
+              />}
           </div>
         </SplitPane>
       </div>

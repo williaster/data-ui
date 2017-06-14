@@ -1,5 +1,6 @@
 import {
   scaleBand,
+  scalePoint,
   scaleOrdinal,
   scaleLinear,
 } from '@vx/scale';
@@ -24,10 +25,10 @@ export function computeEntityNameScale(sequences, heightPerEntity = 30) {
   const domain = sequences.map(sequence => sequence[0] && sequence[0][ENTITY_ID]);
   const height = sequences.length * heightPerEntity;
 
-  return scaleBand({
-    nice: true,
+  return scalePoint({
     clamp: true,
-    range: [heightPerEntity, height],
+    range: [0, height],
+    padding: 0.2,
     domain,
   });
 }
@@ -153,19 +154,23 @@ export function timeUnitFromTimeExtent(extent) {
   return 'second';
 }
 
+export function getTimeFormatter(scale) {
+  const unit = timeUnitFromTimeExtent(scale.domain());
+  return (ms => formatInterval(ms, unit));
+}
+
 export function buildAllScales(graph, width, height) {
   if (!graph || !graph.nodes || !width || !height) return {};
-  const nodesArray = Object.keys(graph.nodes).map(k => graph.nodes[k]);
 
+  const nodesArray = Object.keys(graph.nodes).map(k => graph.nodes[k]);
   const timeScale = computeElapsedTimeScale(nodesArray, width);
-  const timeUnit = timeUnitFromTimeExtent(timeScale.domain());
 
   return {
     [ELAPSED_TIME_SCALE]: {
       scale: timeScale,
       accessor: n => n[ELAPSED_MS_ROOT],
       label: 'Elapsed time',
-      tickFormat: ms => formatInterval(ms, timeUnit),
+      tickFormat: getTimeFormatter(timeScale),
       isTimeScale: true,
     },
 

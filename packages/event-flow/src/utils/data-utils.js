@@ -90,3 +90,24 @@ export function findNthIndexOfX(array, n = 1, filter) {
     return false;
   });
 }
+
+/*
+ * Given a node, returns all events from all entities included in the node
+ */
+export function collectSequencesFromNode(node, entityEvents) {
+  const entitiesSeen = {};
+  const sequences = [];
+
+  if (node && node.events) {
+    Object.keys(node.events).forEach((eventId) => {
+      const event = node.events[eventId];
+      const entityId = event.ENTITY_ID;
+      if (!entitiesSeen[entityId]) {
+        sequences.push(entityEvents[entityId]);
+        entitiesSeen[entityId] = true;
+      }
+    });
+  }
+
+  return sequences;
+}

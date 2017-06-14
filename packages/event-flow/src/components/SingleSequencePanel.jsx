@@ -1,73 +1,67 @@
+import { css, StyleSheet } from 'aphrodite';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Grid } from '@vx/grid';
+import { Line } from '@vx/shape';
+import { Point } from '@vx/point';
 import { Group } from '@vx/group';
 
 import XAxis from './XAxis';
+import ZeroLine from './ZeroLine';
 
 import {
   ENTITY_ID,
   ELAPSED_MS_ROOT,
   EVENT_UUID,
+  EVENT_NAME,
 } from '../constants';
 
-import { computeTimeScaleForSequences, computeEntityNameScale } from '../utils/scale-utils';
-import { nodeShape, scaleShape } from '../propShapes';
+import {
+  computeTimeScaleForSequences,
+  computeEntityNameScale,
+  getTimeFormatter,
+} from '../utils/scale-utils';
+
+import { datumShape, scaleShape } from '../propShapes';
 import { yTickStyles } from '../theme';
 
-function collectSequencesFromNodes(nodes, entityEvents) {
-  const entitiesSeen = {};
-  const sequences = [];
+const unit = 8;
 
-  // collect all events from all entities included in this node
-  if (nodes) {
-    Object.keys(nodes).forEach((nodeId) => {
-      const node = nodes[nodeId];
-      if (node && node.events) {
-        Object.keys(node.events).forEach((eventId) => {
-          const event = node.events[eventId];
-          const entityId = event.ENTITY_ID;
-          if (!entitiesSeen[entityId]) {
-            sequences.push(entityEvents[entityId]);
-            entitiesSeen[entityId] = true;
-          }
-        });
-      }
-    });
-  }
-
-  return sequences;
-}
+const styles = StyleSheet.create({
+  container: {
+    position: 'relative',
+    background: '#fff',
+    width: '100%',
+    height: '100%',
+    borderTop: '1px solid #ddd',
+    padding: 1.5 * unit,
+  },
+});
 
 const margin = {
-  top: 16 + (XAxis.height / 2),
-  left: 16 + 100,
-  right: 40,
-  bottom: 16,
+  top: (2 * unit) + (XAxis.height / 2),
+  left: 2 * unit,
+  right: (2 * unit) + 100,
+  bottom: 2 * unit,
 };
 
 const propTypes = {
-  entityEvents: PropTypes.objectOf(PropTypes.array),
-  nodes: PropTypes.objectOf(nodeShape),
+  sequences: PropTypes.arrayOf(PropTypes.arrayOf(datumShape)),
   colorScale: scaleShape.isRequired,
   width: PropTypes.number.isRequired,
 };
 
 const defaultProps = {
-  entityEvents: {},
-  nodes: null,
+  sequences: [],
 };
 
 class SingleSequencePanel extends React.PureComponent {
   constructor(props) {
     super(props);
 
-    const { nodes, entityEvents, width } = props;
+    const { sequences, width } = props;
     const innerWidth = width - margin.left - margin.right;
-    const sequences = collectSequencesFromNodes(nodes, entityEvents);
 
     this.state = {
-      sequences,
       xScale: computeTimeScaleForSequences(sequences, innerWidth),
       yScale: computeEntityNameScale(sequences),
     };
@@ -75,43 +69,31 @@ class SingleSequencePanel extends React.PureComponent {
 
   componentWillReceiveProps(nextProps) {
     if (
-      this.props.nodes !== nextProps.nodes ||
-      this.props.entityEvents !== nextProps.entityEvents ||
-      this.width !== nextProps.width
+      nextProps.sequences &&
+      (this.props.sequences !== nextProps.sequences || this.width !== nextProps.width)
     ) {
-      const { nodes, entityEvents, width } = nextProps;
-      const sequences = collectSequencesFromNodes(nodes, entityEvents);
+      const { sequences, width } = nextProps;
+      const innerWidth = width - margin.left - margin.right;
       this.setState({
-        sequences,
-        xScale: computeTimeScaleForSequences(sequences, width - margin.left - margin-right),
+        xScale: computeTimeScaleForSequences(sequences, innerWidth),
         yScale: computeEntityNameScale(sequences),
       });
     }
   }
 
   render() {
-    const { width, nodes, colorScale } = this.props;
-    const { sequences, xScale, yScale } = this.state;
+    const { width, sequences, colorScale } = this.props;
+    const { xScale, yScale } = this.state;
 
-    if (!nodes) {
+    if (!sequences || !sequences.length) {
       return null;
     }
-    debugger;
-    const innerWidth = Math.max(...xScale.range());
-    const innerHeight = Math.max(...yScale.range());
 
+    const innerHeight = Math.max(...yScale.range());
+    const innerWidth = Math.max(...xScale.range());
+    console.log(sequences);
     return (
-      <div
-        style={{
-          background: '#fff',
-          width: '100%',
-          height: '100%',
-          borderTop: '1px solid #ddd',
-          borderBottom: '1px solid #ddd',
-          overflowY: 'auto',
-          padding: 12,
-        }}
-      >
+      <div className={css(styles.container)}>
         <svg
           role="img"
           aria-label="Single event sequences"
@@ -119,49 +101,60 @@ class SingleSequencePanel extends React.PureComponent {
           height={innerHeight + margin.top + margin.bottom}
         >
           <Group left={margin.left} top={margin.top}>
-            {/* @todo @vx/grid bug for non-tick scales */}
-            <Grid
-              xScale={xScale}
-              yScale={yScale}
-              width={innerWidth}
-              height={innerHeight}
-              stroke={'#DBDBDB'}
-              strokeWidth={1}
-              numTicksRows={sequences.length}
-              numTicksColumns={2}
-            />
             <XAxis
               scale={xScale}
               labelOffset={0}
               height={innerHeight}
-              tickFormat={null}
+              tickFormat={getTimeFormatter(xScale)}
             />
+            <ZeroLine xScale={xScale} yScale={yScale} />
             {sequences.map((sequence) => {
-              const entityId = (sequence[0] || {})[ENTITY_ID]; // @todo accessor?
+              const entityId = (sequence[0] || {})[ENTITY_ID];
               return (
                 <Group
                   key={`${yScale(entityId)}-${sequence.length}`}
                   top={yScale(entityId)}
                 >
+                  <Line
+                    from={new Point({ x: 0, y: 0 })}
+                    to={new Point({ x: innerWidth, y: 0 })}
+                    strokeWidth={1}
+                    stroke="#DBDBDB"
+                  />
                   <text
-                    x={-10}
+                    x={innerWidth + 8}
                     y={0}
-                    {...yTickStyles.label.left}
+                    {...yTickStyles.label.right}
                   >
                     {entityId}
                   </text>
-                  {sequence.map(event => (
-                    <circle
-                      key={event[EVENT_UUID]}
-                      cx={xScale(event[ELAPSED_MS_ROOT])}
-                      cy={0}
-                      r={5}
-                      opacity={0.75}
-                      fill={colorScale.scale(event.EVENT_NAME)}
-                      stroke="#fff"
-                      strokeWidth={1}
-                    />
-                  ))}
+                  {sequence.map((event) => {
+                    const color = colorScale.scale(event[EVENT_NAME]);
+                    // @todo replace with glyph dot?
+                    return (
+                      <Group
+                        key={`${event[EVENT_UUID]}`}
+                        left={xScale(event[ELAPSED_MS_ROOT])}
+                      >
+                        <circle
+                          cx={0}
+                          cy={0}
+                          r={5}
+                          opacity={0.75}
+                          fill={color}
+                          stroke="#fff"
+                          strokeWidth={1}
+                        />
+                        <text
+                          {...yTickStyles.label.right}
+                          y={10}
+                          fill={color}
+                        >
+                          {event[EVENT_NAME]}
+                        </text>
+                      </Group>
+                    );
+                  })}
                 </Group>
               );
             })}

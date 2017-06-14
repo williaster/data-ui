@@ -35,12 +35,10 @@ class Node extends React.PureComponent {
 
     this.state = {
       isMousedOver: false,
-      isSelected: false,
     };
   }
 
   onClick(e) {
-    this.setState({ isSelected: !this.state.isSelected });
     this.props.onClick(e);
   }
 
@@ -56,7 +54,6 @@ class Node extends React.PureComponent {
 
   render() {
     const {
-      isSelected,
       isMousedOver,
     } = this.state;
 
@@ -82,8 +79,8 @@ class Node extends React.PureComponent {
           width={Math.max(1, width)}
           height={Math.max(1, height)}
           fill={fill}
-          stroke={isSelected || isMousedOver ? '#484848' : '#FFF'}
-          strokeWidth={isSelected || isMousedOver ? 2 : 1}
+          stroke={isMousedOver ? '#484848' : '#FFF'}
+          strokeWidth={isMousedOver ? 2 : 1}
           rx={2}
           ry={2}
           vectorEffect="non-scaling-stroke"
