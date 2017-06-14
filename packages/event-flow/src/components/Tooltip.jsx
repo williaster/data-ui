@@ -18,7 +18,7 @@ import {
 import NodeSequence from './NodeSequence';
 
 const propTypes = {
-  svg: PropTypes.node.isRequired,
+  svg: PropTypes.object.isRequired,
   link: linkShape,
   node: nodeShape,
   root: nodeShape,
@@ -97,8 +97,11 @@ function Tooltip({
   const elapsedToNode = formatElapsedTime(currNode[ELAPSED_MS]);
   const elapsedToRoot = formatElapsedTime(currNode[ELAPSED_MS_ROOT]);
 
-  const parentWidth = svg.getBoundingClientRect().width;
+  const rect = svg.getBoundingClientRect();
+  const parentWidth = rect.width;
+  const parentHeight = rect.height;
   const left = x + width > parentWidth ? (x - width) + 16 : x + 50;
+  const top = y + 170 > parentHeight ? (y - 110) : y + 60;
 
   return (
     <div
@@ -106,7 +109,7 @@ function Tooltip({
         pointerEvents: 'none',
         position: 'absolute',
         zIndex: 100,
-        top: y + 60,
+        top,
         left,
         width,
         background: 'white',
@@ -128,6 +131,7 @@ function Tooltip({
 
       {Sequence}
       <div>
+        {!SubSequence && <div><strong>{nodeEvents}</strong> events</div>}
         <div><strong>{percentOfRoot}</strong> of root</div>
         <div><strong>{elapsedToRoot}</strong> mean elapsed time to root</div>
       </div>

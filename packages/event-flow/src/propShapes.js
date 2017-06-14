@@ -6,8 +6,8 @@ import {
   ENTITY_ID,
 
   ELAPSED_TIME_SCALE,
-  EVENT_SEQUENCE_SCALE,
   EVENT_COUNT_SCALE,
+  EVENT_SEQUENCE_SCALE,
   NODE_SEQUENCE_SCALE,
 } from './constants';
 
@@ -25,19 +25,19 @@ export const datumShape = PropTypes.shape({
 
 export const dataShape = PropTypes.arrayOf(datumShape);
 
-export const graphShape = PropTypes.shape({
-  nodes: PropTypes.object.isRequired,
-  root: PropTypes.object.isRequired,
-  totalEventCount: PropTypes.number.isRequired,
-  filteredEventCount: PropTypes.number.isRequired,
-});
-
 export const nodeShape = PropTypes.shape({
   id: PropTypes.string.isRequired,
   depth: PropTypes.number.isRequired,
   parent: PropTypes.object,
   children: PropTypes.object.isRequired,
   events: PropTypes.object.isRequired,
+});
+
+export const graphShape = PropTypes.shape({
+  nodes: PropTypes.objectOf(nodeShape).isRequired,
+  root: nodeShape.isRequired,
+  filtered: PropTypes.number.isRequired,
+  entityEvents: PropTypes.objectOf(PropTypes.array).isRequired,
 });
 
 export const linkShape = PropTypes.shape({
@@ -50,6 +50,7 @@ export const scaleShape = PropTypes.shape({
   label: PropTypes.string.isRequired,
   accessor: PropTypes.func.isRequired,
   isTimeScale: PropTypes.bool,
+  tickFormat: PropTypes.func,
 });
 
 export const xScaleTypeShape = PropTypes.oneOf([
@@ -58,6 +59,6 @@ export const xScaleTypeShape = PropTypes.oneOf([
 ]);
 
 export const yScaleTypeShape = PropTypes.oneOf([
-  ELAPSED_TIME_SCALE,
-  EVENT_SEQUENCE_SCALE,
+  EVENT_COUNT_SCALE,
+  NODE_SEQUENCE_SCALE,
 ]);

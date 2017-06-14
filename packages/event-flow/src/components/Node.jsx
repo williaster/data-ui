@@ -1,4 +1,3 @@
-import { css, StyleSheet } from 'aphrodite';
 import { Bar } from '@vx/shape';
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -6,14 +5,6 @@ import PropTypes from 'prop-types';
 import { nodeShape } from '../propShapes';
 
 export const DEFAULT_NODE_WIDTH = 7;
-
-const styles = StyleSheet.create({
-  group: {
-    ':hover': {
-      opacity: 0.4,
-    },
-  },
-});
 
 const propTypes = {
   node: nodeShape.isRequired,
@@ -35,40 +26,71 @@ const defaultProps = {
   onClick: null,
 };
 
+class Node extends React.PureComponent {
+  constructor(props) {
+    super(props);
+    this.onClick = this.onClick.bind(this);
+    this.onMouseOut = this.onMouseOut.bind(this);
+    this.onMouseOver = this.onMouseOver.bind(this);
 
-function Node({
-  node,
-  x,
-  y,
-  width,
-  height,
-  fill,
-  onClick,
-  onMouseOver,
-  onMouseOut,
-}) {
-  return (
-    <g
-      className={css(styles.group)}
-      onClick={onClick}
-      onMouseOver={onMouseOver}
-      onMouseOut={onMouseOut}
-      data-node={node.id}
-    >
-      <Bar
-        x={x}
-        y={y}
-        width={Math.max(1, width)}
-        height={Math.max(1, height)}
-        fill={fill}
-        stroke="#FFF"
-        strokeWidth={1}
-        rx={2}
-        ry={2}
-        vectorEffect="non-scaling-stroke"
-      />
-    </g>
-  );
+    this.state = {
+      isMousedOver: false,
+      isSelected: false,
+    };
+  }
+
+  onClick(e) {
+    this.setState({ isSelected: !this.state.isSelected });
+    this.props.onClick(e);
+  }
+
+  onMouseOver(e) {
+    this.setState({ isMousedOver: true });
+    this.props.onMouseOver(e);
+  }
+
+  onMouseOut(e) {
+    this.setState({ isMousedOver: false });
+    this.props.onMouseOut(e);
+  }
+
+  render() {
+    const {
+      isSelected,
+      isMousedOver,
+    } = this.state;
+
+    const {
+      node,
+      x,
+      y,
+      width,
+      height,
+      fill,
+    } = this.props;
+
+    return (
+      <g
+        onClick={this.onClick}
+        onMouseOver={this.onMouseOver}
+        onMouseOut={this.onMouseOut}
+        data-node={node.id}
+      >
+        <Bar
+          x={x}
+          y={y}
+          width={Math.max(1, width)}
+          height={Math.max(1, height)}
+          fill={fill}
+          stroke={isSelected || isMousedOver ? '#484848' : '#FFF'}
+          strokeWidth={isSelected || isMousedOver ? 2 : 1}
+          rx={2}
+          ry={2}
+          vectorEffect="non-scaling-stroke"
+        />
+      </g>
+    );
+  }
 }
 
 Node.propTypes = propTypes;

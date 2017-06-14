@@ -128,6 +128,12 @@ class SubTree extends React.PureComponent {
 
           return (
             <g key={node.id} style={{ cursor: 'pointer' }}>
+              {hasChildren &&
+                <SubTree
+                  {...this.props}
+                  yOffset={top}
+                  nodes={node.children}
+                />}
               {/* link back to the parent */}
               {hasParent &&
                 <Link
@@ -153,12 +159,6 @@ class SubTree extends React.PureComponent {
                 onMouseOut={this.onMouseOut}
                 data-node={node.id}
               />
-              {hasChildren &&
-                <SubTree
-                  {...this.props}
-                  yOffset={top}
-                  nodes={node.children}
-                />}
             </g>
           );
         })}

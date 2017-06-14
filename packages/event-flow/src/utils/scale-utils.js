@@ -8,6 +8,7 @@ import { extent as d3Extent } from 'd3-array';
 import { format } from 'd3-format';
 
 import {
+  ENTITY_ID,
   EVENT_COUNT,
   ELAPSED_MS_ROOT,
   ELAPSED_TIME_SCALE,
@@ -18,6 +19,35 @@ import {
 } from '../constants';
 
 import { colors } from '../theme';
+
+export function computeEntityNameScale(sequences, heightPerEntity = 30) {
+  const domain = sequences.map(sequence => sequence[0] && sequence[0][ENTITY_ID]);
+  const height = sequences.length * heightPerEntity;
+
+  return scaleBand({
+    nice: true,
+    clamp: true,
+    range: [heightPerEntity, height],
+    domain,
+  });
+}
+
+export function computeTimeScaleForSequences(sequences, width) {
+  let domain = null;
+  sequences.forEach((sequence) => {
+    const [min, max] = d3Extent(sequence, n => n[ELAPSED_MS_ROOT]);
+    if (!domain) domain = [min, max];
+    domain[0] = Math.min(min, domain[0]);
+    domain[1] = Math.max(max, domain[1]);
+  });
+
+  return scaleLinear({
+    nice: true,
+    clamp: true,
+    range: [0, width],
+    domain,
+  });
+}
 
 export function computeElapsedTimeScale(nodesArray, width) {
   const domain = d3Extent(nodesArray, n => n[ELAPSED_MS_ROOT]);
@@ -61,7 +91,7 @@ export function computeNodeSequenceScale(nodesArray, height) {
   return scaleBand({
     nice: true,
     clamp: true,
-    rangeBand: [0, height],
+    range: [0, height],
     domain,
   });
 }

@@ -6,7 +6,6 @@ import { event as d3Event, select as d3Select } from 'd3-selection';
 import { zoom as d3Zoom, zoomIdentity } from 'd3-zoom';
 
 import { graphShape, scaleShape } from '../propShapes';
-import { timeUnitFromTimeExtent, formatInterval } from '../utils/scale-utils';
 
 import SubTree from './SubTree';
 import Tooltip from './Tooltip';
@@ -138,7 +137,7 @@ class AggregatePanel extends React.PureComponent {
       <div style={{ position: 'relative', width, height }}>
         <svg
           role="img"
-          aria-label="Event flow"
+          aria-label="Aggregated events"
           width={width}
           height={height - 5}
           ref={(ref) => { this.svg = ref; }}
@@ -187,7 +186,7 @@ class AggregatePanel extends React.PureComponent {
         </svg>
         {tooltip &&
           <Tooltip
-            svg={this.svg}
+            svg={this.svg || null}
             root={graph.root}
             node={tooltip.node}
             link={tooltip.link}

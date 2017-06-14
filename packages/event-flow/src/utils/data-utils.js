@@ -42,7 +42,7 @@ export function binEventsByEntityId(events) {
   events.forEach((event) => {
     const id = event[ENTITY_ID];
     eventsByEntityId[id] = eventsByEntityId[id] || [];
-    eventsByEntityId[id].push(event);
+    eventsByEntityId[id].push({ ...event });
   });
 
   return eventsByEntityId;
