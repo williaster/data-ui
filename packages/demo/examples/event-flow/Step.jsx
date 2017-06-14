@@ -1,12 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import { css, withStyles, withStylesProps } from '../../themes/withStyles';
+
 const propTypes = {
+  ...withStylesProps,
   min: PropTypes.number,
   max: PropTypes.number,
   label: PropTypes.string,
   initialValue: PropTypes.number,
   onChange: PropTypes.func,
+  inline: PropTypes.bool,
 };
 
 const defaultProps = {
@@ -15,6 +19,7 @@ const defaultProps = {
   label: null,
   initialValue: 0,
   onChange: () => {},
+  inline: false,
 };
 
 class Step extends React.Component {
@@ -46,10 +51,10 @@ class Step extends React.Component {
   }
 
   render() {
+    const { styles, inline, label } = this.props;
     return (
-      <div>
-        {this.props.label &&
-          <span>{this.props.label} </span>}
+      <div {...css(styles.container, inline && styles.inline)}>
+        {label && <span>{label}</span>}
         <span>{this.state.value}</span>
         <button onClick={this.incrementValue}>
           +
@@ -65,4 +70,12 @@ class Step extends React.Component {
 Step.propTypes = propTypes;
 Step.defaultProps = defaultProps;
 
-export default Step;
+export default withStyles(({ font }) => ({
+  container: {
+    ...font.small,
+  },
+
+  inline: {
+    display: 'inline-block',
+  },
+}))(Step);

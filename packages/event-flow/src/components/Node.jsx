@@ -58,9 +58,11 @@ function Node({
       <Bar
         x={x}
         y={y}
-        width={width}
+        width={Math.max(1, width)}
         height={Math.max(1, height)}
         fill={fill}
+        stroke="#FFF"
+        strokeWidth={1}
         rx={2}
         ry={2}
         vectorEffect="non-scaling-stroke"

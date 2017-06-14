@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { AxisBottom, AxisTop } from '@vx/axis';
 
 import { xAxisStyles, xTickStyles } from '../theme';
-import { numTicksForWidth, formatInterval } from '../utils/scale-utils';
+import { numTicksForWidth } from '../utils/scale-utils';
 
 const propTypes = {
   hideZero: PropTypes.bool,
@@ -14,7 +14,7 @@ const propTypes = {
   tickLabelComponent: PropTypes.element,
   height: PropTypes.number.isRequired,
   scale: PropTypes.func.isRequired,
-  timeUnit: PropTypes.oneOf(['second', 'minute', 'hour', 'day']),
+  tickFormat: PropTypes.func,
 };
 
 const defaultProps = {
@@ -24,7 +24,7 @@ const defaultProps = {
   orientation: 'top',
   rangePadding: null,
   tickLabelComponent: null,
-  timeUnit: null,
+  tickFormat: null,
 };
 
 export default function XAxis({
@@ -36,7 +36,7 @@ export default function XAxis({
   rangePadding,
   scale,
   tickLabelComponent,
-  timeUnit,
+  tickFormat,
 }) {
   const Axis = orientation === 'bottom' ? AxisBottom : AxisTop;
   const width = Math.max(...scale.range());
@@ -57,7 +57,7 @@ export default function XAxis({
       scale={scale}
       stroke={xAxisStyles.stroke}
       strokeWidth={xAxisStyles.strokeWidth}
-      tickFormat={timeUnit && (val => formatInterval(val, timeUnit))}
+      tickFormat={tickFormat}
       tickLength={xTickStyles.tickLength}
       tickStroke={xTickStyles.stroke}
       tickLabelComponent={

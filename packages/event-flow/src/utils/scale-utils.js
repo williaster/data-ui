@@ -78,18 +78,6 @@ export function computeColorScale(nodesArray) {
   });
 }
 
-export function buildAllScales(graph, width, height) {
-  if (!graph || !graph.nodes || !width || !height) return {};
-  const nodesArray = Object.keys(graph.nodes).map(k => graph.nodes[k]);
-  return {
-    [ELAPSED_TIME_SCALE]: computeElapsedTimeScale(nodesArray, width),
-    [EVENT_SEQUENCE_SCALE]: computeEventSequenceScale(nodesArray, width),
-    [EVENT_COUNT_SCALE]: computeEventCountScale(graph.root, height),
-    [NODE_SEQUENCE_SCALE]: computeNodeSequenceScale(nodesArray, height),
-    [NODE_COLOR_SCALE]: computeColorScale(nodesArray),
-  };
-}
-
 export function numTicksForHeight(height) {
   if (height <= 300) return 3;
   if (height <= 600) return 5;
@@ -135,18 +123,44 @@ export function timeUnitFromTimeExtent(extent) {
   return 'second';
 }
 
-export const scaleAccessors = {
-  [ELAPSED_TIME_SCALE]: n => n[ELAPSED_MS_ROOT],
-  [EVENT_SEQUENCE_SCALE]: n => n.depth,
-  [EVENT_COUNT_SCALE]: n => n[EVENT_COUNT],
-  [NODE_SEQUENCE_SCALE]: n => n.id,
-  [NODE_COLOR_SCALE]: n => n.name,
-};
+export function buildAllScales(graph, width, height) {
+  if (!graph || !graph.nodes || !width || !height) return {};
+  const nodesArray = Object.keys(graph.nodes).map(k => graph.nodes[k]);
 
-export const scaleLabels = {
-  [ELAPSED_TIME_SCALE]: 'Elapsed time',
-  [EVENT_SEQUENCE_SCALE]: 'Event number',
-  [EVENT_COUNT_SCALE]: '# Events',
-  [NODE_SEQUENCE_SCALE]: 'Node sequence',
-  [NODE_COLOR_SCALE]: 'Event name',
-};
+  const timeScale = computeElapsedTimeScale(nodesArray, width);
+  const timeUnit = timeUnitFromTimeExtent(timeScale.domain());
+
+  return {
+    [ELAPSED_TIME_SCALE]: {
+      scale: timeScale,
+      accessor: n => n[ELAPSED_MS_ROOT],
+      label: 'Elapsed time',
+      tickFormat: ms => formatInterval(ms, timeUnit),
+      isTimeScale: true,
+    },
+
+    [EVENT_SEQUENCE_SCALE]: {
+      scale: computeEventSequenceScale(nodesArray, width),
+      accessor: n => n.depth,
+      label: 'Event number',
+    },
+
+    [EVENT_COUNT_SCALE]: {
+      scale: computeEventCountScale(graph.root, height),
+      accessor: n => n[EVENT_COUNT],
+      label: '# Events',
+    },
+
+    [NODE_SEQUENCE_SCALE]: {
+      scale: computeNodeSequenceScale(nodesArray, height),
+      accessor: n => n.id,
+      label: 'Node sequence',
+    },
+
+    [NODE_COLOR_SCALE]: {
+      scale: computeColorScale(nodesArray),
+      accessor: n => n.name,
+      label: 'Event name',
+    },
+  };
+}

@@ -105,6 +105,7 @@ function Tooltip({
       style={{
         pointerEvents: 'none',
         position: 'absolute',
+        zIndex: 100,
         top: y + 60,
         left,
         width,

@@ -1,260 +1,154 @@
-import { Group } from '@vx/group';
-import React from 'react';
+/* esline class-methods-use-this: 0 */
 import PropTypes from 'prop-types';
-import { zoom as d3Zoom, zoomIdentity } from 'd3-zoom';
-import { event as d3Event, select as d3Select } from 'd3-selection';
+import React from 'react';
+import SplitPane from 'react-split-pane';
+
+// @todo import this in storybook for 1x injection
+import '../splitpane.css';
+
+import AggregatePanel, { margin } from './AggregatePanel';
+import SingleSequencePanel from './SingleSequencePanel';
 
 import { buildGraph } from '../utils/graph-utils';
-import { dataShape } from '../propShapes';
-import {
-  buildAllScales,
-  scaleAccessors,
-  scaleLabels,
-  timeUnitFromTimeExtent,
-} from '../utils/scale-utils';
+import { buildAllScales } from '../utils/scale-utils';
+import { dataShape, xScaleTypeShape, yScaleTypeShape } from '../propShapes';
+import { ELAPSED_TIME_SCALE, EVENT_COUNT_SCALE, NODE_COLOR_SCALE } from '../constants';
 
-import {
-  ELAPSED_TIME_SCALE,
-  EVENT_SEQUENCE_SCALE,
-  EVENT_COUNT_SCALE,
-  NODE_SEQUENCE_SCALE,
-  NODE_COLOR_SCALE,
-} from '../constants';
-
-import SubTree from './SubTree';
-import Tooltip from './Tooltip';
-import XAxis from './XAxis';
-import YAxis from './YAxis';
-import ZeroLine from './ZeroLine';
-
-const margin = {
-  top: XAxis.height,
-  right: 30,
-  bottom: 30,
-  left: YAxis.width,
-};
+const minPaneSize = 15;
 
 const propTypes = {
   alignBy: PropTypes.func,
-  xScaleType: PropTypes.oneOf([ELAPSED_TIME_SCALE, EVENT_SEQUENCE_SCALE]),
-  yScaleType: PropTypes.oneOf([EVENT_COUNT_SCALE, NODE_SEQUENCE_SCALE]),
   data: dataShape,
+  xScaleType: xScaleTypeShape,
+  yScaleType: yScaleTypeShape,
   width: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired,
-  zoomScaleExtent: PropTypes.arrayOf(PropTypes.number),
 };
 
 const defaultProps = {
   data: [],
   alignBy: (/* events */) => 0,
-  zoomScaleExtent: [1, 40],
   xScaleType: ELAPSED_TIME_SCALE,
   yScaleType: EVENT_COUNT_SCALE,
 };
 
 class Visualization extends React.PureComponent {
-  static clearedState() {
-    return {
-      xScaleZoomed: null,
-      yScaleZoomed: null,
-      viewTransform: null,
-      tooltip: null,
-    };
-  }
-
   constructor(props) {
     super(props);
+    this.onClickNode = this.onClickNode.bind(this);
     this.getGraph = this.getGraph.bind(this);
-    this.getScales = this.getScales.bind(this);
-    this.panOrZoom = this.panOrZoom.bind(this);
-    this.onMouseOver = this.onMouseOver.bind(this);
-    this.onMouseOut = this.onMouseOut.bind(this);
-    this.onClick = this.onClick.bind(this);
+    this.onPaneResize = this.onPaneResize.bind(this);
 
-    this.zoom = d3Zoom()
-      .scaleExtent(props.zoomScaleExtent)
-      .on('zoom', this.panOrZoom);
-
+    const paneHeight = props.height - minPaneSize;
     const graph = this.getGraph(props);
-    const scales = this.getScales(graph, props);
+    const scales = this.getScales({ graph, width: props.width, height: paneHeight });
 
     this.state = {
-      ...Visualization.clearedState(),
-      scales,
+      paneHeight,
+      paneFraction: paneHeight / props.height,
+      selectedNodes: {},
       graph,
+      scales,
     };
-  }
-
-  componentDidMount() {
-    this.zoom(d3Select(this.svg)); // this attaches all zoom-related listeners to the view ref
   }
 
   componentWillReceiveProps(nextProps) {
-    if (
-      this.props.data !== nextProps.data ||
-      this.props.alignBy !== nextProps.alignBy
-    ) {
-      const graph = this.getGraph(nextProps);
-      const scales = this.getScales(graph, nextProps);
-      this.setState({
-        ...(Visualization.clearedState()),
-        graph,
-        scales,
+    const nextState = {};
+    if (this.props.data !== nextProps.data || this.props.alignBy !== nextProps.alignBy) {
+      nextState.graph = this.getGraph(nextProps);
+    }
+    if (this.props.height !== nextProps.height) {
+      nextState.paneHeight = nextProps.height * this.state.paneFraction;
+    }
+    if (nextState.paneHeight || nextState.graph || this.props.width !== nextProps.width) {
+      nextState.scales = this.getScales({
+        graph: nextState.graph || this.state.graph,
+        width: nextProps.width,
+        height: nextState.paneHeight || this.state.paneHeight,
       });
-    } else if (this.props.width !== nextProps.width || this.props.height !== nextProps.height) {
-      this.setState({
-        ...Visualization.clearedState(),
-        scales: this.getScales(this.state.graph, nextProps),
-      });
+    }
+    if (Object.keys(nextState).length > 0) {
+      this.setState(nextState);
     }
   }
 
-  onClick({ node, event, coords }) {
-    console.log('over', { node, event, coords });
-    // @todo single event pane
-  }
-  onMouseOver({ node, link, event, coords }) {
-    console.log('over', { node, link, event, coords });
-    this.setState({
-      tooltip: { coords, node, link },
+  onClickNode({ node }) {
+    this.setState((prevState) => {
+      const { selectedNodes } = prevState;
+      const isSelected = Boolean(selectedNodes[node.id]);
+      return {
+        selectedNodes: {
+          ...selectedNodes,
+          [node.id]: isSelected ? null : node,
+        },
+      };
     });
   }
 
-  onMouseOut() {
-    this.setState({ tooltip: null });
+  onPaneResize(nextHeight) {
+    const { width, height } = this.props;
+    this.setState({
+      paneHeight: nextHeight,
+      paneFraction: nextHeight / height,
+      scales: this.getScales({ graph: this.state.graph, width, height: nextHeight }),
+    });
   }
 
   getGraph(props) {
-    console.time('graph');
     const { data, alignBy } = props || this.props;
     const graph = buildGraph(data, alignBy);
-    console.timeEnd('graph');
     return graph;
   }
 
-  getScales(graph, props) {
-    console.time('scales');
-    const innerWidth = (props || this.props).width - margin.left - margin.right;
-    const innerHeight = (props || this.props).height - margin.top - margin.bottom;
+  getScales({ graph, width, height }) {
+    const innerWidth = width - margin.left - margin.right;
+    const innerHeight = height - margin.top - margin.bottom;
     const scales = buildAllScales(graph, innerWidth, innerHeight);
-
-    // reset the current zoom
-    this.zoom.translateExtent([[0, 0], [innerWidth, innerHeight]]);
-    this.zoom.extent([[0, 0], [innerWidth, innerHeight]]);
-    if (this.svg) {
-      this.zoom.transform(d3Select(this.svg), zoomIdentity);
-    }
-    console.timeEnd('scales');
     return scales;
-  }
-
-  panOrZoom() {
-    const { xScaleType, yScaleType } = this.props;
-    const { scales, viewTransform: currViewTransform } = this.state;
-
-    const viewTransform = d3Event.transform.toString();
-
-    if (viewTransform !== currViewTransform) {
-      this.setState({
-        xScaleZoomed: d3Event.transform.rescaleX(scales[xScaleType]),
-        yScaleZoomed: d3Event.transform.rescaleY(scales[yScaleType]),
-        viewTransform,
-        tooltip: null,
-      });
-    }
   }
 
   render() {
     const {
-      width,
-      height,
       xScaleType,
       yScaleType,
+      width,
+      height,
     } = this.props;
 
     const {
       graph,
+      selectedNodes,
+      paneHeight,
       scales,
-      xScaleZoomed,
-      yScaleZoomed,
-      viewTransform,
-      tooltip,
     } = this.state;
 
-    const xScale = scales[xScaleType];
-    const yScale = scales[yScaleType];
-    const innerWidth = Math.max(...xScale.range());
-    const innerHeight = Math.max(...yScale.range());
-    console.log(graph);
+    const selected = Object.keys(selectedNodes).length > 0 ? selectedNodes : null;
 
-    return xScale && yScale ? (
-      <div style={{ position: 'relative' }}>
-        <svg
-          role="img"
-          aria-label="Event flow"
-          width={width}
-          height={height}
-          ref={(ref) => { this.svg = ref; }}
-          style={{ cursor: 'move' }}
+    return (
+      <div style={{ position: 'relative', width, height, border: '1px solid magenta' }}>
+        <SplitPane
+          split="horizontal"
+          defaultSize={paneHeight}
+          minSize={minPaneSize}
+          maxSize={height - minPaneSize}
+          onDragFinished={this.onPaneResize}
         >
-          <Group
-            top={margin.top}
-            left={margin.left}
-          >
-            <defs>
-              <clipPath id="clip">
-                <rect x={-2} width={innerWidth + margin.right + 2} height={innerHeight} />
-              </clipPath>
-            </defs>
-            <YAxis
-              scale={yScaleZoomed || yScale}
-              label={scaleLabels[yScaleType]}
-              labelOffset={margin.left * 0.6}
-              width={innerWidth}
-            />
-            <g clipPath="url(#clip)">
-              <g transform={viewTransform}>
-                <SubTree
-                  nodes={graph.root.children}
-                  xScale={xScale}
-                  yScale={yScale}
-                  colorScale={scales[NODE_COLOR_SCALE]}
-                  getX={scaleAccessors[xScaleType]}
-                  getY={scaleAccessors[yScaleType]}
-                  getColor={scaleAccessors[NODE_COLOR_SCALE]}
-                  onMouseOver={this.onMouseOver}
-                  onMouseOut={this.onMouseOut}
-                  onClick={this.onClick}
-                />
-                <ZeroLine xScale={xScale} yScale={yScale} />
-              </g>
-            </g>
-            <XAxis
-              scale={xScaleZoomed || xScale}
-              label={scaleLabels[xScaleType]}
-              labelOffset={margin.top * 0.6}
-              height={innerHeight}
-              timeUnit={
-                xScaleType === ELAPSED_TIME_SCALE ?
-                timeUnitFromTimeExtent((xScaleZoomed || xScale).domain())
-                : null
-              }
-            />
-          </Group>
-        </svg>
-        {tooltip ?
-          <Tooltip
-            svg={this.svg}
-            root={graph.root}
-            node={tooltip.node}
-            link={tooltip.link}
-            x={xScaleZoomed ? xScaleZoomed(xScale.invert(tooltip.coords.x)) : tooltip.coords.x}
-            y={yScaleZoomed ? yScaleZoomed(yScale.invert(tooltip.coords.y)) : tooltip.coords.y}
+          <AggregatePanel
+            graph={graph}
+            xScale={scales[xScaleType]}
+            yScale={scales[yScaleType]}
             colorScale={scales[NODE_COLOR_SCALE]}
-            getColor={scaleAccessors[NODE_COLOR_SCALE]}
-          /> : null}
+            onClickNode={this.onClickNode}
+            selectedNodes={selected}
+            width={width}
+            height={paneHeight}
+          />
+          <SingleSequencePanel
+            nodes={selected}
+          />
+        </SplitPane>
       </div>
-    ) : null;
+    );
   }
 }
 

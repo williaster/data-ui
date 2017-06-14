@@ -59,8 +59,8 @@ function Link({
       <Bar
         x={x}
         y={y}
-        width={width}
-        height={height}
+        width={Math.max(1, width)}
+        height={Math.max(1, height)}
         fill={fill}
         fillOpacity={0.9}
         rx={2}
