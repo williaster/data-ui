@@ -17,20 +17,17 @@ import { dataShape, xScaleTypeShape, yScaleTypeShape } from '../propShapes';
 import { ELAPSED_TIME_SCALE, EVENT_COUNT_SCALE, NODE_COLOR_SCALE } from '../constants';
 
 const styles = StyleSheet.create({
-  clearSelectionButton: {
-    cursor: 'pointer',
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    border: '1px solid #ddd',
-    background: '#fff',
-    padding: '4px 8px',
-    borderBottomLeftRadius: 4,
-    color: '#484848',
-    outline: 'none',
-    zIndex: 1,
+  fillParent: {
+    width: '100%',
+    height: '100%',
+    position: 'relative',
+  },
+
+  noPointerEvents: {
+    pointerEvents: 'none',
   },
 });
+
 const minPaneSize = 15;
 
 const propTypes = {
@@ -152,6 +149,7 @@ class Visualization extends React.PureComponent {
     const {
       graph,
       selectedSequences,
+      selectedNode,
       paneHeight,
       scales,
       dragging,
@@ -167,7 +165,7 @@ class Visualization extends React.PureComponent {
           onDragStarted={this.handleDragStart}
           onDragFinished={this.handleDragEnd}
         >
-          <div style={{ width: '100%', height: '100%', pointerEvents: dragging ? 'none' : null }}>
+          <div className={css(styles.fillParent, dragging && styles.noPointerEvents)}>
             <AggregatePanel
               graph={graph}
               xScale={scales[xScaleType]}
@@ -178,19 +176,14 @@ class Visualization extends React.PureComponent {
               height={height}
             />
           </div>
-          <div style={{ width: '100%', height: '100%', position: 'relative' }}>
-            {selectedSequences &&
-              <button
-                className={css(styles.clearSelectionButton)}
-                onClick={this.handleClearSelection}
-              >
-                Clear
-              </button>}
+          <div className={css(styles.fillParent)}>
             {selectedSequences &&
               <SingleSequencePanel
+                node={selectedNode}
                 sequences={selectedSequences}
                 colorScale={scales[NODE_COLOR_SCALE]}
                 width={width}
+                clearSelection={this.handleClearSelection}
               />}
           </div>
         </SplitPane>

@@ -44,7 +44,7 @@ export const scaleShape = PropTypes.shape({
   label: PropTypes.string.isRequired,
   accessor: PropTypes.func.isRequired,
   isTimeScale: PropTypes.bool,
-  tickFormat: PropTypes.func,
+  format: PropTypes.func,
 });
 
 export const xScaleTypeShape = PropTypes.oneOf([

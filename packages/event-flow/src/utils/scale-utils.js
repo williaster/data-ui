@@ -170,7 +170,7 @@ export function buildAllScales(graph, width, height) {
       scale: timeScale,
       accessor: n => n[ELAPSED_MS_ROOT],
       label: 'Elapsed time',
-      tickFormat: getTimeFormatter(timeScale),
+      format: getTimeFormatter(timeScale),
       isTimeScale: true,
     },
 

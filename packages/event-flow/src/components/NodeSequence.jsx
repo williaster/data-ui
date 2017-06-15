@@ -1,49 +1,61 @@
+import { css, StyleSheet } from 'aphrodite';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { nodeShape } from '../propShapes';
+import { nodeShape, scaleShape } from '../propShapes';
+
+const styles = StyleSheet.create({
+  container: {
+    fontFamily: 'BlinkMacSystemFont,Roboto,Helvetica Neue,sans-serif',
+  },
+
+  separator: {
+    color: '#484848',
+    fontSize: 14,
+  },
+
+  node: {
+    fontSize: 15,
+    fontWeight: 200,
+  },
+
+  currNode: {
+    fontWeight: 700,
+    textDecoration: 'underline',
+    textDecorationColor: '#484848',
+  },
+});
 
 const propTypes = {
   nodeArray: PropTypes.arrayOf(nodeShape),
   currNodeIndex: PropTypes.number,
   separator: PropTypes.node,
-  colorScale: PropTypes.func,
-  getColor: PropTypes.func,
-}
-;
+  colorScale: scaleShape.isRequired,
+};
+
 const defaultProps = {
   nodeArray: [],
   currNodeIndex: -1,
   separator: ' > ',
-  colorScale: () => {},
-  getColor: () => {},
 };
-
-const separatorStyles = { color: '#484848', fontSize: 14 };
 
 function NodeSequence({
   nodeArray,
   currNodeIndex,
   separator,
   colorScale,
-  getColor,
 }) {
   return nodeArray.length ? (
-    <div>
+    <div className={css(styles.container)}>
       {nodeArray.map((node, index) => (
         <span key={node.id}>
           {index !== 0 &&
-            <span style={separatorStyles}>
+            <span className={css(styles.separator)}>
               {separator}
             </span>}
           <span
-            style={{
-              fontSize: 15,
-              color: colorScale(getColor(node)),
-              fontWeight: index === currNodeIndex ? 700 : 200,
-              textDecoration: index === currNodeIndex ? 'underline' : 'none',
-              textDecorationColor: '#484848',
-            }}
+            className={css(styles.node, index === currNodeIndex && styles.currNode)}
+            style={{ color: colorScale.scale(colorScale.accessor(node)) }}
           >
             {node.name.toUpperCase()}
           </span>

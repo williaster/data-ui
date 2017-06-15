@@ -7,6 +7,7 @@ import { zoom as d3Zoom, zoomIdentity } from 'd3-zoom';
 
 import { graphShape, scaleShape } from '../propShapes';
 
+import NodeDetails from './NodeDetails';
 import SubTree from './SubTree';
 import Tooltip from './Tooltip';
 import XAxis from './XAxis';
@@ -70,13 +71,21 @@ class AggregatePanel extends React.PureComponent {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.resetZoom(nextProps);
-    this.setState({ ...AggregatePanel.clearedState() });
+    if (Object.keys(nextProps).some(prop => nextProps[prop] !== this.props[prop])) {
+      this.resetZoom(nextProps);
+      this.setState({ ...AggregatePanel.clearedState() });
+    }
   }
 
   onMouseOver({ node, link, coords }) {
+    const { xScale, yScale } = this.props;
+    const { xScaleZoomed, yScaleZoomed } = this.state;
     this.setState({
-      tooltip: { coords, node, link },
+      tooltip: {
+        node: node || link.target,
+        x: xScaleZoomed ? xScaleZoomed(xScale.scale.invert(coords.x)) : coords.x,
+        y: yScaleZoomed ? yScaleZoomed(yScale.scale.invert(coords.y)) : coords.y,
+      },
     });
   }
 
@@ -180,25 +189,19 @@ class AggregatePanel extends React.PureComponent {
               label={xScale.label}
               labelOffset={margin.top * 0.6}
               height={innerHeight}
-              tickFormat={xScale.tickFormat}
+              tickFormat={xScale.format}
             />
           </Group>
         </svg>
         {tooltip &&
-          <Tooltip
-            svg={this.svg || null}
-            root={graph.root}
-            node={tooltip.node}
-            link={tooltip.link}
-            x={xScaleZoomed ?
-              xScaleZoomed(xScale.scale.invert(tooltip.coords.x)) : tooltip.coords.x
-            }
-            y={yScaleZoomed ?
-              yScaleZoomed(yScale.scale.invert(tooltip.coords.y)) : tooltip.coords.y
-            }
-            colorScale={colorScale.scale}
-            getColor={colorScale.accessor}
-          />}
+          <Tooltip parentRef={this.svg} x={tooltip.x} y={tooltip.y}>
+            <NodeDetails
+              node={tooltip.node}
+              root={graph.root}
+              colorScale={colorScale}
+              timeScale={xScale}
+            />
+          </Tooltip>}
       </div>
     );
   }

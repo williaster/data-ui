@@ -5,6 +5,7 @@ import { Line } from '@vx/shape';
 import { Point } from '@vx/point';
 import { Group } from '@vx/group';
 
+import NodeSequence from './NodeSequence';
 import XAxis from './XAxis';
 import ZeroLine from './ZeroLine';
 
@@ -21,31 +22,69 @@ import {
   getTimeFormatter,
 } from '../utils/scale-utils';
 
-import { datumShape, scaleShape } from '../propShapes';
+import { ancestorsFromNode } from '../utils/graph-utils';
+
+import { datumShape, scaleShape, nodeShape } from '../propShapes';
 import { yTickStyles } from '../theme';
 
 const unit = 8;
 
+const margin = {
+  top: (2 * unit) + (XAxis.height / 2),
+  left: 3 * unit,
+  right: (2 * unit) + 100,
+  bottom: 2 * unit,
+};
+
 const styles = StyleSheet.create({
   container: {
+    fontFamily: 'BlinkMacSystemFont,Roboto,Helvetica Neue,sans-serif', // @todo fix this mess
     position: 'relative',
     background: '#fff',
     width: '100%',
     height: '100%',
     borderTop: '1px solid #ddd',
-    padding: 1.5 * unit,
+    paddingTop: 1.5 * unit,
+  },
+
+  header: {
+    position: 'absolute',
+    top: -1,
+    right: 0, // padding
+    display: 'flex',
+    justifyContent: 'flex-end',
+    alignItems: 'top',
+    width: '100%',
+  },
+
+  controls: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-end',
+  },
+
+  showLabelsCheckbox: {
+    fontSize: 12,
+    fontWeight: 200,
+  },
+
+  clearSelectionButton: {
+    cursor: 'pointer',
+    border: '1px solid #ddd',
+    background: '#fff',
+    marginLeft: unit,
+    padding: `${0.5 * unit}px ${unit}px`,
+    borderBottomLeftRadius: 0.5 * unit,
+    color: '#484848',
+    outline: 'none',
+    zIndex: 1,
   },
 });
 
-const margin = {
-  top: (2 * unit) + (XAxis.height / 2),
-  left: 2 * unit,
-  right: (2 * unit) + 100,
-  bottom: 2 * unit,
-};
-
 const propTypes = {
   sequences: PropTypes.arrayOf(PropTypes.arrayOf(datumShape)),
+  node: nodeShape.isRequired,
+  clearSelection: PropTypes.func.isRequired,
   colorScale: scaleShape.isRequired,
   width: PropTypes.number.isRequired,
 };
@@ -57,6 +96,7 @@ const defaultProps = {
 class SingleSequencePanel extends React.PureComponent {
   constructor(props) {
     super(props);
+    this.toggleEventLabels = this.toggleEventLabels.bind(this);
 
     const { sequences, width } = props;
     const innerWidth = width - margin.left - margin.right;
@@ -64,6 +104,8 @@ class SingleSequencePanel extends React.PureComponent {
     this.state = {
       xScale: computeTimeScaleForSequences(sequences, innerWidth),
       yScale: computeEntityNameScale(sequences),
+      mousedOverEvent: null,
+      showEventLabels: true,
     };
   }
 
@@ -81,9 +123,13 @@ class SingleSequencePanel extends React.PureComponent {
     }
   }
 
+  toggleEventLabels() {
+    this.setState({ showEventLabels: !this.state.showEventLabels });
+  }
+
   render() {
-    const { width, sequences, colorScale } = this.props;
-    const { xScale, yScale } = this.state;
+    const { width, node, sequences, colorScale, clearSelection } = this.props;
+    const { xScale, yScale, showEventLabels } = this.state;
 
     if (!sequences || !sequences.length) {
       return null;
@@ -91,9 +137,34 @@ class SingleSequencePanel extends React.PureComponent {
 
     const innerHeight = Math.max(...yScale.range());
     const innerWidth = Math.max(...xScale.range());
-    console.log(sequences);
+
     return (
       <div className={css(styles.container)}>
+        <div className={css(styles.header)}>
+          <NodeSequence
+            nodeArray={ancestorsFromNode(node)}
+            separator={node.depth < 0 ? '<' : '>'}
+            colorScale={colorScale}
+          />
+          <div className={css(styles.controls)}>
+            <button
+              className={css(styles.clearSelectionButton)}
+              onClick={clearSelection}
+            >
+              Clear Selection
+            </button>
+            <div className={css(styles.showLabelsCheckbox)}>
+              <input
+                id="event_labels"
+                name="event_labels"
+                type="checkbox"
+                checked={showEventLabels}
+                onChange={this.toggleEventLabels}
+              />
+              <label htmlFor="event_labels">Show labels</label>
+            </div>
+          </div>
+        </div>
         <svg
           role="img"
           aria-label="Single event sequences"
@@ -131,6 +202,8 @@ class SingleSequencePanel extends React.PureComponent {
                   {sequence.map((event) => {
                     const color = colorScale.scale(event[EVENT_NAME]);
                     // @todo replace with glyph dot?
+                    // @todo toggle labels off/on?
+                    // @todo emphasize event of interest
                     return (
                       <Group
                         key={`${event[EVENT_UUID]}`}
@@ -145,13 +218,14 @@ class SingleSequencePanel extends React.PureComponent {
                           stroke="#fff"
                           strokeWidth={1}
                         />
-                        <text
-                          {...yTickStyles.label.right}
-                          y={10}
-                          fill={color}
-                        >
-                          {event[EVENT_NAME]}
-                        </text>
+                        {showEventLabels &&
+                          <text
+                            {...yTickStyles.label.right}
+                            y={10}
+                            fill={color}
+                          >
+                            {event[EVENT_NAME]}
+                          </text>}
                       </Group>
                     );
                   })}

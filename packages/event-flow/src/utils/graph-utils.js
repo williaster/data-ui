@@ -185,3 +185,16 @@ export function buildGraph(cleanedEvents, getStartIndex = () => 0) {
     filtered,
   };
 }
+
+/*
+ * Given a node, returns an array of ancestors from the root to the node
+ */
+export function ancestorsFromNode(node) {
+  let curr = node;
+  const ancestors = [];
+  while (curr) {
+    ancestors.push(curr);
+    curr = curr.parent;
+  }
+  return ancestors.reverse();
+}
