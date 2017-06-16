@@ -1,20 +1,12 @@
 import { css, StyleSheet } from 'aphrodite';
+import { Group } from '@vx/group';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Line } from '@vx/shape';
-import { Point } from '@vx/point';
-import { Group } from '@vx/group';
 
+import EventSequence from './EventSequence';
 import NodeSequence from './NodeSequence';
 import XAxis from './XAxis';
 import ZeroLine from './ZeroLine';
-
-import {
-  ENTITY_ID,
-  ELAPSED_MS_ROOT,
-  EVENT_UUID,
-  EVENT_NAME,
-} from '../constants';
 
 import {
   computeTimeScaleForSequences,
@@ -22,17 +14,19 @@ import {
   getTimeFormatter,
 } from '../utils/scale-utils';
 
-import { ancestorsFromNode } from '../utils/graph-utils';
+import {
+  ENTITY_ID,
+} from '../constants';
 
+import { ancestorsFromNode } from '../utils/graph-utils';
 import { datumShape, scaleShape, nodeShape } from '../propShapes';
-import { yTickStyles } from '../theme';
 
 const unit = 8;
 
 const margin = {
-  top: (2 * unit) + (XAxis.height / 2),
+  top: (3 * unit) + (XAxis.height / 2),
   left: 3 * unit,
-  right: (2 * unit) + 100,
+  right: (3 * unit) + 100,
   bottom: 2 * unit,
 };
 
@@ -42,15 +36,15 @@ const styles = StyleSheet.create({
     position: 'relative',
     background: '#fff',
     width: '100%',
-    height: '100%',
     borderTop: '1px solid #ddd',
     paddingTop: 1.5 * unit,
+    overflowY: 'auto',
   },
 
   header: {
     position: 'absolute',
-    top: -1,
-    right: 0, // padding
+    top: -1, // border
+    right: 0,
     display: 'flex',
     justifyContent: 'flex-end',
     alignItems: 'top',
@@ -61,9 +55,11 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'flex-end',
+    flexShrink: 0,
   },
 
   showLabelsCheckbox: {
+    paddingTop: 0.5 * unit,
     fontSize: 12,
     fontWeight: 200,
   },
@@ -87,6 +83,7 @@ const propTypes = {
   clearSelection: PropTypes.func.isRequired,
   colorScale: scaleShape.isRequired,
   width: PropTypes.number.isRequired,
+  height: PropTypes.number.isRequired,
 };
 
 const defaultProps = {
@@ -104,8 +101,7 @@ class SingleSequencePanel extends React.PureComponent {
     this.state = {
       xScale: computeTimeScaleForSequences(sequences, innerWidth),
       yScale: computeEntityNameScale(sequences),
-      mousedOverEvent: null,
-      showEventLabels: true,
+      showEventLabels: false,
     };
   }
 
@@ -128,21 +124,22 @@ class SingleSequencePanel extends React.PureComponent {
   }
 
   render() {
-    const { width, node, sequences, colorScale, clearSelection } = this.props;
+    const { width, node, sequences, colorScale, clearSelection, height } = this.props;
     const { xScale, yScale, showEventLabels } = this.state;
 
-    if (!sequences || !sequences.length) {
+    if (!sequences || !sequences.length || !node) {
       return null;
     }
 
     const innerHeight = Math.max(...yScale.range());
-    const innerWidth = Math.max(...xScale.range());
+    const nodeSequence = ancestorsFromNode(node);
 
     return (
-      <div className={css(styles.container)}>
+      <div className={css(styles.container)} style={{ height }}>
+
         <div className={css(styles.header)}>
           <NodeSequence
-            nodeArray={ancestorsFromNode(node)}
+            nodeArray={node.depth < 0 ? nodeSequence.reverse() : nodeSequence}
             separator={node.depth < 0 ? '<' : '>'}
             colorScale={colorScale}
           />
@@ -165,9 +162,11 @@ class SingleSequencePanel extends React.PureComponent {
             </div>
           </div>
         </div>
+
         <svg
           role="img"
           aria-label="Single event sequences"
+          ref={(ref) => { this.svg = ref; }}
           width={width}
           height={innerHeight + margin.top + margin.bottom}
         >
@@ -179,59 +178,17 @@ class SingleSequencePanel extends React.PureComponent {
               tickFormat={getTimeFormatter(xScale)}
             />
             <ZeroLine xScale={xScale} yScale={yScale} />
-            {sequences.map((sequence) => {
-              const entityId = (sequence[0] || {})[ENTITY_ID];
-              return (
-                <Group
-                  key={`${yScale(entityId)}-${sequence.length}`}
-                  top={yScale(entityId)}
-                >
-                  <Line
-                    from={new Point({ x: 0, y: 0 })}
-                    to={new Point({ x: innerWidth, y: 0 })}
-                    strokeWidth={1}
-                    stroke="#DBDBDB"
-                  />
-                  <text
-                    x={innerWidth + 8}
-                    y={0}
-                    {...yTickStyles.label.right}
-                  >
-                    {entityId}
-                  </text>
-                  {sequence.map((event) => {
-                    const color = colorScale.scale(event[EVENT_NAME]);
-                    // @todo replace with glyph dot?
-                    // @todo toggle labels off/on?
-                    // @todo emphasize event of interest
-                    return (
-                      <Group
-                        key={`${event[EVENT_UUID]}`}
-                        left={xScale(event[ELAPSED_MS_ROOT])}
-                      >
-                        <circle
-                          cx={0}
-                          cy={0}
-                          r={5}
-                          opacity={0.75}
-                          fill={color}
-                          stroke="#fff"
-                          strokeWidth={1}
-                        />
-                        {showEventLabels &&
-                          <text
-                            {...yTickStyles.label.right}
-                            y={10}
-                            fill={color}
-                          >
-                            {event[EVENT_NAME]}
-                          </text>}
-                      </Group>
-                    );
-                  })}
-                </Group>
-              );
-            })}
+            {sequences.map(sequence => (
+              <EventSequence
+                key={`${(sequence[0] || {})[ENTITY_ID]}-${sequence.length}`}
+                sequence={sequence}
+                xScale={xScale}
+                yScale={yScale}
+                colorScale={colorScale}
+                emphasisIndex={node.depth}
+                showEventLabels={showEventLabels}
+              />
+            ))}
           </Group>
         </svg>
       </div>

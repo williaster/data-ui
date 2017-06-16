@@ -73,7 +73,10 @@ class SubTree extends React.PureComponent {
   onClickLink(event) {
     const target = event.target;
     const { link } = this.getNodeFromTarget(target);
-    console.log('link', link.target.events);
+    if (link) {
+      const coords = getCoordsFromEvent(target, event);
+      this.props.onClick({ coords, event, node: link.target });
+    }
   }
 
   getNodeFromTarget(target) {

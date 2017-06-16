@@ -3,11 +3,18 @@ import { withScreenSize } from '@vx/responsive';
 import { withState, compose } from 'recompose';
 import { withStyles, css } from '../../themes/withStyles';
 
-// import data from './omg_20170605T183803.json';
+import data from './omg_20170605T183803.json';
 
 import {
   ELAPSED_TIME_SCALE,
   EVENT_SEQUENCE_SCALE,
+
+  TS,
+  EVENT_NAME,
+  ENTITY_ID,
+
+  cleanEvents,
+  findNthIndexOfX,
   sampleEvents,
   Visualization,
 } from '@data-ui/event-flow';
@@ -45,9 +52,22 @@ const withStylesHOC = withStyles(({ font }) => ({
 
 const enhancer = compose(withAlignment, withXScaleSelect, withStylesHOC);
 
+// sampleEvents.realData = {
+//   allEvents: cleanEvents(data, {
+//     [TS]: d => new Date(d.ts_touch_point),
+//     [EVENT_NAME]: d => d.dim_action_type,
+//     [ENTITY_ID]: d => String(d.id_user),
+//   }),
+// };
+
+// const alignByLastAffiliateClick = (events) => (
+//   findNthIndexOfX(events, -1, d => (d[EVENT_NAME] === 'affiliate_impression'))
+// );
+
 // one example per dataset
 const examples = Object.keys(sampleEvents).map((name) => {
   const dataset = sampleEvents[name];
+  console.log(dataset);
   return {
     description: name,
     example: () => React.createElement(
@@ -81,7 +101,9 @@ const examples = Object.keys(sampleEvents).map((name) => {
           </div>
           <ResponsiveVis
             data={dataset.allEvents}
-            alignBy={events => (alignBy >= 0 ? alignBy : events.length + alignBy)}
+            alignBy={
+              // name === 'realData' ? alignByLastAffiliateClick :
+              events => (alignBy >= 0 ? alignBy : events.length + alignBy)}
             xScaleType={xScaleType}
           />
         </div>

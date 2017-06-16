@@ -164,6 +164,7 @@ export function buildGraph(cleanedEvents, getStartIndex = () => 0) {
   Object.keys(entityEvents).forEach((id) => {
     const events = entityEvents[id];
     const initialEventIndex = getStartIndex(events);
+    entityEvents[id].zeroIndex = initialEventIndex;
     if (initialEventIndex > -1 && typeof events[initialEventIndex] !== 'undefined') {
       buildNodesFromEntityEvents(events, initialEventIndex, nodes);
     } else {

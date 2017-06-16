@@ -8,7 +8,7 @@ import SplitPane from 'react-split-pane';
 import '../splitpane.css';
 
 import AggregatePanel, { margin } from './AggregatePanel';
-import SingleSequencePanel from './SingleSequencePanel';
+import SingleSequencesPanel from './SingleSequencesPanel';
 
 import { buildGraph } from '../utils/graph-utils';
 import { buildAllScales } from '../utils/scale-utils';
@@ -177,12 +177,13 @@ class Visualization extends React.PureComponent {
             />
           </div>
           <div className={css(styles.fillParent)}>
-            {selectedSequences &&
-              <SingleSequencePanel
+            {selectedSequences && selectedNode &&
+              <SingleSequencesPanel
                 node={selectedNode}
                 sequences={selectedSequences}
                 colorScale={scales[NODE_COLOR_SCALE]}
                 width={width}
+                height={height}
                 clearSelection={this.handleClearSelection}
               />}
           </div>

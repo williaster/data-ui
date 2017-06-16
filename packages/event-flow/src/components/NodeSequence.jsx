@@ -57,6 +57,7 @@ function NodeSequence({
             className={css(styles.node, index === currNodeIndex && styles.currNode)}
             style={{ color: colorScale.scale(colorScale.accessor(node)) }}
           >
+            {/* @todo may need to truncate this for short names */}
             {node.name.toUpperCase()}
           </span>
         </span>

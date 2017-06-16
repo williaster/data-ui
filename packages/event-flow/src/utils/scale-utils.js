@@ -11,6 +11,7 @@ import { format } from 'd3-format';
 import {
   ENTITY_ID,
   EVENT_COUNT,
+  EVENT_NAME,
   ELAPSED_MS_ROOT,
   ELAPSED_TIME_SCALE,
   EVENT_SEQUENCE_SCALE,
@@ -194,7 +195,7 @@ export function buildAllScales(graph, width, height) {
 
     [NODE_COLOR_SCALE]: {
       scale: computeColorScale(nodesArray),
-      accessor: n => n.name,
+      accessor: n => n.name || n[EVENT_NAME],
       label: 'Event name',
     },
   };
