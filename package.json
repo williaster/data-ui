@@ -32,13 +32,13 @@
     "eslint-plugin-react": "^6.10.3",
     "jest": "^20.0.3",
     "lerna": "^2.0.0-rc.2",
-    "react": "^15.5.4",
-    "react-dom": "^15.5.4",
-    "react-test-renderer": "^15.5.4"
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "react-test-renderer": "^15.6.1"
   },
   "peerDependencies": {
     "lerna": "2.0.0-rc.2",
-    "react": "~15.4.2 || ~15.5.0"
+    "react": "^15.4.0"
   },
   "jest": {
     "projects": [
