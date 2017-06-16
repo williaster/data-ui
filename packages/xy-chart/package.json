@@ -41,13 +41,13 @@
     "babel-preset-airbnb": "^2.2.3",
     "enzyme": "^2.8.2",
     "jest": "^20.0.3",
-    "react": "^15.5.4",
-    "react-dom": "^15.5.4",
-    "react-test-renderer": "^15.5.4",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "react-test-renderer": "^15.6.1",
     "webpack": "^2.4.1",
     "webpack-dashboard": "^0.4.0"
   },
   "peerDependencies": {
-    "react": "~15.4.2 || ~15.5.0"
+    "react": "^15.4.0"
   }
 }
