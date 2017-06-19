@@ -31,12 +31,14 @@ const propTypes = {
   currNodeIndex: PropTypes.number,
   separator: PropTypes.node,
   colorScale: scaleShape.isRequired,
+  maxNameLength: PropTypes.number,
 };
 
 const defaultProps = {
   nodeArray: [],
   currNodeIndex: -1,
   separator: ' > ',
+  maxNameLength: 10,
 };
 
 function NodeSequence({
@@ -44,6 +46,7 @@ function NodeSequence({
   currNodeIndex,
   separator,
   colorScale,
+  maxNameLength,
 }) {
   return nodeArray.length ? (
     <div className={css(styles.container)}>
@@ -57,8 +60,8 @@ function NodeSequence({
             className={css(styles.node, index === currNodeIndex && styles.currNode)}
             style={{ color: colorScale.scale(colorScale.accessor(node)) }}
           >
-            {/* @todo may need to truncate this for short names */}
-            {node.name.toUpperCase()}
+            {node.name.length > maxNameLength ?
+              `${node.slice(maxNameLength + 1).toUpperCase()}…` : node.toUpperCase()}
           </span>
         </span>
       ))}
