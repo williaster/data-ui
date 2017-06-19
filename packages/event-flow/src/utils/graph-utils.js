@@ -125,14 +125,23 @@ export function addMetaDataToNodes(nodes, allNodes) {
     const node = nodes[id];
     node[EVENT_COUNT] = Object.keys(node.events || {}).length;
     node[ELAPSED_MS] = d3Mean(Object.values(node.events || {}), d => d[ELAPSED_MS]);
-    node[ELAPSED_MS_ROOT] = d3Mean(Object.values(node.events || {}), d => d[ELAPSED_MS_ROOT]);
 
-    // enforce that a node has at least as much elapsed time to the root as it's parent
+    /*
+     * potentially up for debate:
+     *    if you simply compute the mean of ELAPSED_MS_ROOT across all events,
+     *    leaf nodes may have am ELAPSED_MS_ROOT that is LESS than the leaf's parent node
+     *    eg parent node has 3 events:
+     *       2 with very long elapsed to root + 1 with a shorter value -> long average
+     *       if leaf node only includes the event with a shorter value -> less than parent avg
+     *
+     *    building ELAPSED_MS_ROOT from the sum of ELAPSED_MS prevents this
+     */
     if (node.parent) {
-      const compare = node.depth > 0 ? Math.max : Math.min;
-      const diff = node.depth > 0 ? 1000 : -1000;
-      node[ELAPSED_MS_ROOT] = compare(node[ELAPSED_MS_ROOT], node.parent[ELAPSED_MS_ROOT] + diff);
+      node[ELAPSED_MS_ROOT] = node[ELAPSED_MS] + node.parent[ELAPSED_MS_ROOT];
+    } else {
+      node[ELAPSED_MS_ROOT] = d3Mean(Object.values(node.events || {}), d => d[ELAPSED_MS_ROOT]);
     }
+
     addMetaDataToNodes(node.children, allNodes); // recurse
   });
 }
