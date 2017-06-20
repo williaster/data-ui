@@ -98,15 +98,19 @@ export function computeNodeSequenceScale(nodesArray, height) {
   });
 }
 
-export function computeColorScale(nodesArray) {
-  const domain = [];
-  nodesArray.forEach((node) => {
-    domain.push(node.name);
+export function computeColorScale(array, accessor = d => d.name || d[EVENT_NAME]) {
+  const nameToCount = {}; // sort by occurrence
+  array.forEach((d) => {
+    const key = accessor(d);
+    if (key) {
+      nameToCount[key] = nameToCount[key] || 0;
+      nameToCount[key] += 1;
+    }
   });
 
   return scaleOrdinal({
     range: colors.categories,
-    domain,
+    domain: Object.keys(nameToCount).sort(),
   });
 }
 

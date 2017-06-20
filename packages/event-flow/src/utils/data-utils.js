@@ -74,7 +74,6 @@ export function cleanEvents(rawEvents, accessors) {
  * @param {fn(element) => bool} filter, the function to test if an element matches
  */
 export function findNthIndexOfX(array, n = 1, filter) {
-  debugger;
   if (n < 0) {
     const revIndex = findNthIndexOfX([...array].reverse(), -n, filter);
     return revIndex === -1 ? -1 : array.length - 1 - revIndex;

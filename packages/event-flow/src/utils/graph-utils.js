@@ -127,14 +127,13 @@ export function addMetaDataToNodes(nodes, allNodes) {
     node[ELAPSED_MS] = d3Mean(Object.values(node.events || {}), d => d[ELAPSED_MS]);
 
     /*
-     * potentially up for debate:
-     *    if you simply compute the mean of ELAPSED_MS_ROOT across all events,
-     *    leaf nodes may have am ELAPSED_MS_ROOT that is LESS than the leaf's parent node
-     *    eg parent node has 3 events:
-     *       2 with very long elapsed to root + 1 with a shorter value -> long average
-     *       if leaf node only includes the event with a shorter value -> less than parent avg
+     * if you simply compute the mean of ELAPSED_MS_ROOT across all events,
+     * leaf nodes may have am ELAPSED_MS_ROOT that is LESS than the leaf's parent node
+     * eg parent node has 3 events:
+     *    2 with very long elapsed to root + 1 with a shorter value -> long average
+     *    if leaf node only includes the event with a shorter value -> less than parent avg
      *
-     *    building ELAPSED_MS_ROOT from the sum of ELAPSED_MS prevents this
+     * building ELAPSED_MS_ROOT from the sum of ELAPSED_MS prevents this
      */
     if (node.parent) {
       node[ELAPSED_MS_ROOT] = node[ELAPSED_MS] + node.parent[ELAPSED_MS_ROOT];

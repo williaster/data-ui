@@ -1,0 +1,44 @@
+{
+  "name": "@data-ui/forms",
+  "version": "0.0.0",
+  "description": "A package of form elements for data-rich UIs. https://williaster.github.io/data-ui",
+  "main": "build/index.js",
+  "scripts": {
+    "build": "webpack -p --env build",
+    "dev": "webpack --progress --colors --watch --env dev",
+    "test": "jest --colors --verbose --coverage"
+  },
+  "repository": "https://github.com/williaster/data-ui",
+  "keywords": [
+    "react virtualized",
+    "react",
+    "data"
+  ],
+  "author": "Chris Williams <chris.williams@airbnb.com>",
+  "license": "MIT",
+  "dependencies": {
+    "prop-types": "^15.5.10",
+    "react-select": "^1.0.0-rc.5"
+  },
+  "devDependencies": {
+    "aphrodite": "^1.2.0",
+    "babel-core": "^6.24.1",
+    "babel-jest": "^20.0.3",
+    "babel-loader": "^6.4.1",
+    "babel-plugin-inline-react-svg": "^0.4.0",
+    "babel-plugin-syntax-jsx": "^6.18.0",
+    "babel-preset-airbnb": "^2.2.3",
+    "css-loader": "^0.28.4",
+    "enzyme": "^2.8.2",
+    "jest": "^20.0.3",
+    "react": "^15.5.4",
+    "react-dom": "^15.5.4",
+    "react-test-renderer": "^15.5.4",
+    "style-loader": "^0.18.2",
+    "webpack": "^2.4.1"
+  },
+  "peerDependencies": {
+    "aphrodite": "^1.2.0",
+    "react": "^15.4.0"
+  }
+}

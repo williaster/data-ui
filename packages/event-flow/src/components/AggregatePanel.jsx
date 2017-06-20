@@ -15,9 +15,9 @@ import YAxis from './YAxis';
 import ZeroLine from './ZeroLine';
 
 export const margin = {
-  top: XAxis.height,
-  right: 30,
-  bottom: 30,
+  top: XAxis.height + 16,
+  right: 32,
+  bottom: 32,
   left: YAxis.width,
 };
 

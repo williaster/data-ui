@@ -24,7 +24,7 @@
     width: 100%;
 }
 
-.Resizer:after {
+.Resizer.horizontal:after {
     content: "";
     height: 3px;
     width: 40px;
@@ -39,4 +39,17 @@
 .Resizer.horizontal:hover {
     border-top: 5px solid rgba(0, 0, 0, 0.5);
     border-bottom: 5px solid rgba(0, 0, 0, 0.5);
+}
+
+.Resizer.vertical {
+    width: 11px;
+    margin: 0 -5px;
+    border-left: 5px solid rgba(255, 255, 255, 0);
+    border-right: 5px solid rgba(255, 255, 255, 0);
+    cursor: col-resize;
+}
+
+.Resizer.vertical:hover {
+    border-left: 5px solid rgba(0, 0, 0, 0.5);
+    border-right: 5px solid rgba(0, 0, 0, 0.5);
 }

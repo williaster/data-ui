@@ -17,6 +17,7 @@ const styles = StyleSheet.create({
   node: {
     fontSize: 15,
     fontWeight: 200,
+    textTransform: 'uppercase',
   },
 
   currNode: {
@@ -50,21 +51,24 @@ function NodeSequence({
 }) {
   return nodeArray.length ? (
     <div className={css(styles.container)}>
-      {nodeArray.map((node, index) => (
-        <span key={node.id}>
-          {index !== 0 &&
-            <span className={css(styles.separator)}>
-              {separator}
-            </span>}
-          <span
-            className={css(styles.node, index === currNodeIndex && styles.currNode)}
-            style={{ color: colorScale.scale(colorScale.accessor(node)) }}
-          >
-            {node.name.length > maxNameLength ?
-              `${node.slice(maxNameLength + 1).toUpperCase()}…` : node.toUpperCase()}
+      {nodeArray.map((node, index) => {
+        const name = node.name.length > maxNameLength ?
+          `${node.name.slice(maxNameLength + 1)}…` : node.name;
+        return (
+          <span key={node.id}>
+            {index !== 0 &&
+              <span className={css(styles.separator)}>
+                {separator}
+              </span>}
+            <span
+              className={css(styles.node, index === currNodeIndex && styles.currNode)}
+              style={{ color: colorScale.scale(colorScale.accessor(node)) }}
+            >
+              {name}
+            </span>
           </span>
-        </span>
-      ))}
+        );
+      })}
     </div>
   ) : null;
 }
