@@ -18,6 +18,7 @@ import {
 import { yTickStyles } from '../theme';
 
 const CIRCLE_RADIUS = 5;
+const MAX_NAME_LENGTH = 12;
 
 const propTypes = {
   sequence: PropTypes.arrayOf(PropTypes.object),
@@ -83,7 +84,8 @@ function EventSequence({
 
   const emphasisMin = Math.min(...emphasizeBounds);
   const emphasisMax = Math.max(...emphasizeBounds);
-
+  const entityLabel = entityId.length > MAX_NAME_LENGTH ?
+    `${entityId.slice(0, MAX_NAME_LENGTH + 1)}…` : entityId;
   return (
     <Group>
       <Line
@@ -97,7 +99,7 @@ function EventSequence({
         y={y}
         {...yTickStyles.label.right}
       >
-        {entityId}
+        {entityLabel}
       </text>
       <Bar
         fill="#DBDBDB"

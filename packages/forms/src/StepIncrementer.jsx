@@ -28,6 +28,10 @@ const styles = StyleSheet.create({
   buttons: {
     display: 'inherit',
   },
+
+  spacer: {
+    width: 0.5 * unit,
+  },
 });
 
 const propTypes = {
@@ -93,7 +97,6 @@ class StepIncrementer extends React.Component {
   }
 
   render() {
-    console.log('render step')
     const { min, max, formatValue, inline, labelWidth: width } = this.props;
     const { value } = this.state;
 
@@ -110,6 +113,7 @@ class StepIncrementer extends React.Component {
           >
             -
           </Button>
+          <div className={css(styles.spacer)}/>
           <Button
             onClick={this.incrementValue}
             disabled={value >= max}

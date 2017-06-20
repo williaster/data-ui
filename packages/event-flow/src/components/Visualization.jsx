@@ -20,13 +20,15 @@ const styles = StyleSheet.create({
   },
 });
 
-const MIN_PANE_SIZE = 25;
+const MIN_PANE_SIZE = 10;
 
 const propTypes = {
   graph: graphShape.isRequired,
   xScale: scaleShape.isRequired,
   yScale: scaleShape.isRequired,
+  timeScale: scaleShape.isRequired,
   colorScale: scaleShape.isRequired,
+  nodeSorter: PropTypes.func.isRequired,
   width: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired,
 };
@@ -50,7 +52,7 @@ class Visualization extends React.PureComponent {
   }
 
   componentWillReceiveProps(nextProps) {
-    const updateProps = ['xScale', 'yScale', 'graph'];
+    const updateProps = ['graph'];
     if (updateProps.some(key => nextProps[key] !== this.props[key])) {
       this.setState({
         paneHeight: nextProps.height - MIN_PANE_SIZE,
@@ -99,7 +101,9 @@ class Visualization extends React.PureComponent {
       graph,
       xScale,
       yScale,
+      timeScale,
       colorScale,
+      nodeSorter,
       width,
       height,
     } = this.props;
@@ -126,8 +130,10 @@ class Visualization extends React.PureComponent {
               graph={graph}
               xScale={xScale}
               yScale={yScale}
+              timeScale={timeScale}
               colorScale={colorScale}
               onClickNode={this.onClickNode}
+              nodeSorter={nodeSorter}
               width={width}
               height={height}
             />

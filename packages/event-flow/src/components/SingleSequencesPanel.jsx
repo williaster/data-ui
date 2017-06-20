@@ -64,6 +64,10 @@ const styles = StyleSheet.create({
     fontWeight: 200,
     marginLeft: 1 * unit,
   },
+
+  checkbox: {
+    marginRight: 1 * unit,
+  },
 });
 
 const propTypes = {
@@ -82,7 +86,7 @@ const defaultProps = {
 class SingleSequencePanel extends React.PureComponent {
   // given a sequence count, returns an estimate of the panel height
   static getEstimatedHeight(numSequences) {
-    return (numSequences * 40) + margin.top;
+    return (numSequences * 30) + margin.top + 50;
   }
 
   constructor(props) {
@@ -142,7 +146,7 @@ class SingleSequencePanel extends React.PureComponent {
             </div>}
           <div className={css(styles.controls)}>
             {hasSequences &&
-              <div>
+              <div className={css(styles.checkbox)}>
                 <input
                   id="event_labels"
                   name="event_labels"

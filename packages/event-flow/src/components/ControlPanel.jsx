@@ -14,6 +14,8 @@ import {
   EVENT_SEQUENCE_SCALE,
   EVENT_COUNT_SCALE,
   NODE_SEQUENCE_SCALE,
+  ORDER_BY_EVENT_COUNT,
+  ORDER_BY_ELAPSED_MS,
 } from '../constants';
 
 export const width = 300;
@@ -28,7 +30,7 @@ const styles = StyleSheet.create({
     fontFamily,
     fontSize: 12,
     fontColor: '#767676',
-    width: `calc(100% - ${EVENT_COUNT_SCALE}px)`,
+    width: `calc(100% - ${padding}px)`,
     height: '100%',
     padding,
     background: '#fff',
@@ -57,7 +59,21 @@ const styles = StyleSheet.create({
     paddingBottom: 3 * unit,
   },
 
-  label: {
+  option: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+
+  optionLegend: {
+    color: 'inherit',
+    background: 'currentColor',
+    width: 12,
+    height: 12,
+    borderRadius: '50%',
+    marginRight: 8,
+  },
+
+  title: {
     fontWeight: 700,
     fontSize: 14,
   },
@@ -66,7 +82,7 @@ const styles = StyleSheet.create({
 const propTypes = {
   alignByIndex: PropTypes.number.isRequired,
   alignByEventType: PropTypes.string.isRequired,
-  showControls: PropTypes.bool.isRequired,
+  orderBy: PropTypes.string.isRequired,
   colorScale: scaleShape.isRequired,
   xScaleType: xScaleTypeShape.isRequired,
   yScaleType: yScaleTypeShape.isRequired,
@@ -75,6 +91,8 @@ const propTypes = {
   onToggleShowControls: PropTypes.func.isRequired,
   onChangeAlignByIndex: PropTypes.func.isRequired,
   onChangeAlignByEventType: PropTypes.func.isRequired,
+  onChangeOrderBy: PropTypes.func.isRequired,
+  showControls: PropTypes.bool.isRequired,
 };
 
 const defaultProps = {};
@@ -83,6 +101,7 @@ function ControlPanel({
   showControls,
   alignByIndex,
   alignByEventType,
+  orderBy,
   xScaleType,
   yScaleType,
   colorScale,
@@ -91,18 +110,23 @@ function ControlPanel({
   onChangeAlignByIndex,
   onChangeXScale,
   onChangeYScale,
+  onChangeOrderBy,
 }) {
   const eventTypeOptions = [
     { value: ANY_EVENT_TYPE, label: 'event' },
     ...colorScale.scale.domain().map(value => ({ value, label: value })),
   ];
 
-  const valueRenderer = ({ value }) => (
-    value === ANY_EVENT_TYPE ? 'event' :
-    <span style={{ color: colorScale.scale(value) }}>
-      {value}
-    </span>
-  );
+  const valueRenderer = (option) => {
+    if (option.value === ANY_EVENT_TYPE) return option.label;
+    const color = colorScale.scale(option.value);
+    return (
+      <div className={css(styles.option)} style={{ color }}>
+        <div className={css(styles.optionLegend)} />
+        {option.label}
+      </div>
+    );
+  };
 
   return (
     <div className={css(styles.container)}>
@@ -114,59 +138,75 @@ function ControlPanel({
         </Button>
       </div>
 
-
-      <div className={css(styles.input)}>
-        <div className={css(styles.label)}>
-          X-axis
-        </div>
-        <Select
-          value={xScaleType}
-          options={[
-            { label: 'Elapsed time', value: ELAPSED_TIME_SCALE },
-            { label: 'Event sequence', value: EVENT_SEQUENCE_SCALE },
-          ]}
-          onChange={({ value }) => onChangeXScale(value)}
-        />
-      </div>
-
-      <div className={css(styles.input)}>
-        <div className={css(styles.label)}>
-          Y-axis
-        </div>
-        <Select
-          value={yScaleType}
-          options={[
-            { label: 'Event count', value: EVENT_COUNT_SCALE },
-            { label: 'Normalized size', value: NODE_SEQUENCE_SCALE },
-          ]}
-          onChange={({ value }) => onChangeYScale(value)}
-        />
-      </div>
-
-      <div className={css(styles.input)}>
-        <div className={css(styles.label)}>
-          Align sequences by
-        </div>
-        <div className={css(styles.flexRow)}>
-          <StepIncrementer
-            min={-5}
-            max={5}
-            value={alignByIndex}
-            onChange={onChangeAlignByIndex}
-            formatValue={formatIncrementerValue}
-            disableZero
-          />
-          <div className={css(styles.alignBySelect)}>
+      {showControls &&
+        <div>
+          <div className={css(styles.input)}>
+            <div className={css(styles.title)}>
+              X-axis
+            </div>
             <Select
-              value={alignByEventType}
-              options={eventTypeOptions}
-              optionRenderer={valueRenderer}
-              valueRenderer={valueRenderer}
-              onChange={({ value }) => onChangeAlignByEventType(value)}
+              value={xScaleType}
+              options={[
+                { label: 'Elapsed time', value: ELAPSED_TIME_SCALE },
+                { label: 'Event sequence', value: EVENT_SEQUENCE_SCALE },
+              ]}
+              onChange={({ value }) => onChangeXScale(value)}
             />
           </div>
-        </div>
-      </div>
+
+          <div className={css(styles.input)}>
+            <div className={css(styles.title)}>
+              Y-axis
+            </div>
+            <Select
+              value={yScaleType}
+              options={[
+                { label: 'Event count', value: EVENT_COUNT_SCALE },
+                { label: 'Normalized size', value: NODE_SEQUENCE_SCALE },
+              ]}
+              onChange={({ value }) => onChangeYScale(value)}
+            />
+          </div>
+
+          <div className={css(styles.input)}>
+            <div className={css(styles.title)}>
+              Align sequences by
+            </div>
+            <div className={css(styles.flexRow)}>
+              <StepIncrementer
+                min={-5}
+                max={5}
+                value={alignByIndex}
+                onChange={onChangeAlignByIndex}
+                formatValue={formatIncrementerValue}
+                disableZero
+              />
+              <div className={css(styles.alignBySelect)}>
+                <Select
+                  value={alignByEventType}
+                  options={eventTypeOptions}
+                  optionRenderer={valueRenderer}
+                  valueRenderer={valueRenderer}
+                  onChange={({ value }) => onChangeAlignByEventType(value)}
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className={css(styles.input)}>
+            <div className={css(styles.title)}>
+              Sort nodes with the same parent by
+            </div>
+            <Select
+              value={orderBy}
+              options={[
+                { label: 'Event count', value: ORDER_BY_EVENT_COUNT },
+                { label: 'Time to next event', value: ORDER_BY_ELAPSED_MS },
+              ]}
+              onChange={({ value }) => onChangeOrderBy(value)}
+            />
+          </div>
+        </div>}
     </div>
   );
 }

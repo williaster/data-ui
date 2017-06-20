@@ -12,12 +12,15 @@ import {
   ENTITY_ID,
   EVENT_COUNT,
   EVENT_NAME,
+  ELAPSED_MS,
   ELAPSED_MS_ROOT,
   ELAPSED_TIME_SCALE,
   EVENT_SEQUENCE_SCALE,
   EVENT_COUNT_SCALE,
   NODE_SEQUENCE_SCALE,
   NODE_COLOR_SCALE,
+  ORDER_BY_EVENT_COUNT,
+  ORDER_BY_ELAPSED_MS,
 } from '../constants';
 
 import { colors } from '../theme';
@@ -63,6 +66,7 @@ export function computeElapsedTimeScale(nodesArray, width) {
 
 export function computeEventCountScale(root, height) {
   // The maximum event count should be the sum of events at the root node
+  // @todo: correct for filter nodes
   const max = Object.keys(root.children).reduce((result, curr) => (
     result + root.children[curr][EVENT_COUNT]
   ), 0);
@@ -85,32 +89,63 @@ export function computeEventSequenceScale(nodesArray, width) {
   });
 }
 
-export function computeNodeSequenceScale(nodesArray, height) {
-  const domain = nodesArray
-    .filter(n => typeof n.depth !== 'undefined' && n.depth === 0)
-    .map(n => n.id);
+function recursivelyDivideHeight(nodes, height, lookup) {
+  if (nodes) {
+    const leftNodes = [];
+    const rightNodes = [];
+    Object.values(nodes).forEach((n) => {
+      if (n.depth >= 0) rightNodes.push(n);
+      if (n.depth < 0) leftNodes.push(n);
+    });
 
-  return scaleBand({
-    nice: true,
-    clamp: true,
-    range: [0, height],
-    domain,
-  });
+    const rightHeight = height / rightNodes.length;
+    const leftHeight = height / leftNodes.length;
+
+    leftNodes.forEach((n) => {
+      lookup[n.id] = leftHeight; // eslint-disable-line no-param-reassign
+      recursivelyDivideHeight(n.children, leftHeight, lookup);
+    });
+
+    rightNodes.forEach((n) => {
+      lookup[n.id] = rightHeight; // eslint-disable-line no-param-reassign
+      recursivelyDivideHeight(n.children, rightHeight, lookup);
+    });
+  }
+}
+
+export function computeNodeSequenceScale(root, height) {
+  /*
+   * the goal here is to distribute the nodes at every depth evenly across height
+   * the height of a node with a given depth should therefore be the same, taking into
+   * account the height of all parent nodes
+   */
+  const idToHeight = {};
+  recursivelyDivideHeight(root.children, height, idToHeight);
+
+  function scale(id) {
+    return idToHeight[id];
+  }
+
+  // mock these out to make other dependencies happy
+  scale.range = () => [0, height];
+  scale.domain = () => [0, 0];
+  scale.copy = () => scale;
+
+  return scale;
 }
 
 export function computeColorScale(array, accessor = d => d.name || d[EVENT_NAME]) {
-  const nameToCount = {}; // sort by occurrence
+  const names = {};
   array.forEach((d) => {
     const key = accessor(d);
     if (key) {
-      nameToCount[key] = nameToCount[key] || 0;
-      nameToCount[key] += 1;
+      names[key] = true;
     }
   });
 
   return scaleOrdinal({
     range: colors.categories,
-    domain: Object.keys(nameToCount).sort(),
+    domain: Object.keys(names).sort(),
   });
 }
 
@@ -164,6 +199,14 @@ export function getTimeFormatter(scale) {
   return (ms => formatInterval(ms, unit));
 }
 
+export const nodeSorters = {
+  [ORDER_BY_EVENT_COUNT]: (a, b) => b[EVENT_COUNT] - a[EVENT_COUNT], // high to low
+  [ORDER_BY_ELAPSED_MS]: (a, b) => {
+    const delta = a[ELAPSED_MS] - b[ELAPSED_MS];
+    return a.depth >= 0 ? delta : -delta; // low to high
+  },
+};
+
 export function buildAllScales(graph, width, height) {
   if (!graph || !graph.nodes || !width || !height) return {};
 
@@ -192,7 +235,7 @@ export function buildAllScales(graph, width, height) {
     },
 
     [NODE_SEQUENCE_SCALE]: {
-      scale: computeNodeSequenceScale(nodesArray, height),
+      scale: computeNodeSequenceScale(graph.root, height),
       accessor: n => n.id,
       label: 'Node sequence',
     },

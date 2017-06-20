@@ -53,7 +53,7 @@ function NodeSequence({
     <div className={css(styles.container)}>
       {nodeArray.map((node, index) => {
         const name = node.name.length > maxNameLength ?
-          `${node.name.slice(maxNameLength + 1)}…` : node.name;
+          `${node.name.slice(0, maxNameLength + 1)}…` : node.name;
         return (
           <span key={node.id}>
             {index !== 0 &&

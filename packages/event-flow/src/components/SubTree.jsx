@@ -113,6 +113,7 @@ class SubTree extends React.PureComponent {
 
     const sortedNodes = Object.values(nodes).sort(nodeSorter);
     const yOffset = { left: parentYOffset, right: parentYOffset };
+    debugger;
 
     return (
       <Group className="subtree">

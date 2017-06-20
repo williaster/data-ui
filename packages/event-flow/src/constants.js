@@ -1,4 +1,4 @@
-// Event attributes
+// event attributes
 export const TS0 = 'TS0';
 export const TS_NEXT = 'TS_NEXT';
 export const TS_PREV = 'TS_PREV';
@@ -15,9 +15,13 @@ export const EVENT_COUNT = 'EVENT_COUNT';
 
 export const ANY_EVENT_TYPE = 'ANY_EVENT_TYPE';
 
-// Scales
+// scales
 export const ELAPSED_TIME_SCALE = 'ELAPSED_TIME_SCALE';
 export const EVENT_SEQUENCE_SCALE = 'EVENT_SEQUENCE_SCALE';
 export const NODE_COLOR_SCALE = 'NODE_COLOR_SCALE';
 export const EVENT_COUNT_SCALE = 'EVENT_COUNT_SCALE';
 export const NODE_SEQUENCE_SCALE = 'NODE_SEQUENCE_SCALE';
+
+// node sorters
+export const ORDER_BY_EVENT_COUNT = 'ORDER_BY_EVENT_COUNT';
+export const ORDER_BY_ELAPSED_MS = 'ORDER_BY_ELAPSED_MS';

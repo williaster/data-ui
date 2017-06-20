@@ -27,7 +27,9 @@ const propTypes = {
   graph: graphShape.isRequired,
   xScale: scaleShape.isRequired,
   yScale: scaleShape.isRequired,
+  timeScale: scaleShape.isRequired,
   colorScale: scaleShape.isRequired,
+  nodeSorter: PropTypes.func.isRequired,
 
   onClickNode: PropTypes.func,
   width: PropTypes.number.isRequired,
@@ -128,8 +130,10 @@ class AggregatePanel extends React.PureComponent {
       height,
       xScale,
       yScale,
+      timeScale,
       colorScale,
       onClickNode,
+      nodeSorter,
     } = this.props;
 
     const {
@@ -180,6 +184,7 @@ class AggregatePanel extends React.PureComponent {
                   onMouseOver={this.onMouseOver}
                   onMouseOut={this.onMouseOut}
                   onClick={onClickNode}
+                  nodeSorter={nodeSorter}
                 />
                 <ZeroLine xScale={xScale.scale} yScale={yScale.scale} />
               </g>
@@ -199,7 +204,7 @@ class AggregatePanel extends React.PureComponent {
               node={tooltip.node}
               root={graph.root}
               colorScale={colorScale}
-              timeScale={xScale}
+              timeScale={timeScale}
             />
           </Tooltip>}
       </div>

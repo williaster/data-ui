@@ -11,7 +11,7 @@ import Visualization, { margin as VIS_MARGIN } from './Visualization';
 
 import { findNthIndexOfX } from '../utils/data-utils';
 import { buildGraph } from '../utils/graph-utils';
-import { buildAllScales } from '../utils/scale-utils';
+import { buildAllScales, nodeSorters } from '../utils/scale-utils';
 import { dataShape } from '../propShapes';
 
 import {
@@ -20,6 +20,8 @@ import {
   ELAPSED_TIME_SCALE,
   EVENT_COUNT_SCALE,
   NODE_COLOR_SCALE,
+  ORDER_BY_EVENT_COUNT,
+
 } from '../constants';
 
 const propTypes = {
@@ -49,8 +51,9 @@ class App extends React.PureComponent {
     this.state = {
       alignByIndex,
       alignByEventType,
-      xScaleType: ELAPSED_TIME_SCALE,
+      xScaleType: ELAPSED_TIME_SCALE, // @todo could pull these from controls
       yScaleType: EVENT_COUNT_SCALE,
+      orderBy: ORDER_BY_EVENT_COUNT,
       showControls: true,
       visualizationWidth,
       graph,
@@ -58,7 +61,7 @@ class App extends React.PureComponent {
     };
   }
 
-  onComponentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps) {
     const nextState = {};
     if (this.props.data !== nextProps.data) {
       const { alignByIndex, alignByEventType } = this.state;
@@ -70,7 +73,7 @@ class App extends React.PureComponent {
       nextState.graph
     ) {
       const { showControls, graph } = this.state;
-      nextState.visualizationWidth = nextProps.width - (showControls ? CONTROLS_WIDTH : 0);
+      nextState.visualizationWidth = this.getVisualizationWidth(nextProps.width, showControls);
       nextState.scales = this.getScales(
         nextState.graph || graph,
         nextState.visualizationWidth,
@@ -135,6 +138,7 @@ class App extends React.PureComponent {
     const {
       alignByIndex,
       alignByEventType,
+      orderBy,
       graph,
       scales,
       showControls,
@@ -143,12 +147,15 @@ class App extends React.PureComponent {
       visualizationWidth,
     } = this.state;
 
+    console.log(graph);
     const { width, height } = this.props;
 
     return (
       <div style={{ position: 'relative', width, height }}>
         <SplitPane
           size={visualizationWidth}
+          minSize={visualizationWidth}
+          maxSize={visualizationWidth}
           split="vertical"
         >
           <Visualization
@@ -157,12 +164,15 @@ class App extends React.PureComponent {
             graph={graph}
             xScale={scales[xScaleType]}
             yScale={scales[yScaleType]}
+            timeScale={scales[ELAPSED_TIME_SCALE]}
             colorScale={scales[NODE_COLOR_SCALE]}
+            nodeSorter={nodeSorters[orderBy]}
           />
           <ControlPanel
             showControls={showControls}
             alignByIndex={alignByIndex}
             alignByEventType={alignByEventType}
+            orderBy={orderBy}
             colorScale={scales[NODE_COLOR_SCALE]}
             xScaleType={xScaleType}
             yScaleType={yScaleType}
@@ -171,6 +181,7 @@ class App extends React.PureComponent {
             onChangeAlignByIndex={this.handleAlignByIndex}
             onChangeXScale={(type) => { this.setState({ xScaleType: type }); }}
             onChangeYScale={(type) => { this.setState({ yScaleType: type }); }}
+            onChangeOrderBy={(value) => { this.setState({ orderBy: value }); }}
           />
         </SplitPane>
       </div>
