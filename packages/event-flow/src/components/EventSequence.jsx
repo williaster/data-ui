@@ -3,6 +3,7 @@ import React from 'react';
 
 import { Bar, Line } from '@vx/shape';
 import { Point } from '@vx/point';
+import { GlyphDot } from '@vx/glyph';
 import { Group } from '@vx/group';
 
 import { scaleShape } from '../propShapes';
@@ -58,18 +59,18 @@ function EventSequence({
     if (relativeIndex === emphasisIndex) emphasizeBounds[1] = x;
 
     return (
-      <Group
+      <GlyphDot
         key={`${event[EVENT_UUID]}`}
         left={x}
         top={y}
+        r={CIRCLE_RADIUS}
+        cx={0}
+        cy={0}
+        fillOpacity={0.75}
+        fill={color}
+        stroke={relativeIndex === 0 ? '#000' : '#fff'}
+        strokeWidth={1}
       >
-        <circle
-          r={CIRCLE_RADIUS}
-          opacity={0.75}
-          fill={color}
-          stroke={relativeIndex === 0 ? '#000' : '#fff'}
-          strokeWidth={1}
-        />
         {showEventLabels &&
           <text
             {...yTickStyles.label.right}
@@ -78,7 +79,7 @@ function EventSequence({
           >
             {event[EVENT_NAME]}
           </text>}
-      </Group>
+      </GlyphDot>
     );
   });
 
