@@ -2,8 +2,8 @@
 A collection of custom + wrapped components for data-rich (desktop) UIs. Super beta :baby:
 
 <p>
-  <a title="build status" href="https://travis-ci.org/williaster/data-ui">
-    <img src="https://travis-ci.org/williaster/data-ui.svg" />
+  <a title="build status" href="https://travis-ci.org/williaster/data-ui.svg?branch=master">
+    <img src="https://travis-ci.org/williaster/data-ui.svg?branch=master" />
   </a>
   <a href='https://coveralls.io/github/williaster/data-ui?branch=master'>
     <img src='https://coveralls.io/repos/github/williaster/data-ui/badge.svg?branch=master' alt='Coverage Status' />
