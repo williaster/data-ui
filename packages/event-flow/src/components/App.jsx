@@ -4,6 +4,7 @@ import React from 'react';
 import SplitPane from 'react-split-pane';
 
 // @todo import this in storybook for 1x injection
+import '@data-ui/forms/build/react-select.css';
 import '../splitpane.css';
 
 import ControlPanel, { width as CONTROLS_WIDTH } from './ControlPanel';

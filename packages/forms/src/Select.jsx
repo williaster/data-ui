@@ -2,8 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ReactSelect from 'react-select';
 
-import 'react-select/dist/react-select.css';
-
 import IconChevronDown from './icons/IconChevronDown';
 import IconX from './icons/IconX';
 

@@ -40,5 +40,8 @@
   "peerDependencies": {
     "aphrodite": "^1.2.0",
     "react": "^15.4.0"
+  },
+  "jest": {
+    "setupTestFrameworkScriptFile": "./test/testsSetup.js"
   }
 }
