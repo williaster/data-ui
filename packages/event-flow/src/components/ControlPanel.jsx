@@ -86,16 +86,23 @@ const propTypes = {
   colorScale: scaleShape.isRequired,
   xScaleType: xScaleTypeShape.isRequired,
   yScaleType: yScaleTypeShape.isRequired,
-  onChangeXScale: PropTypes.func.isRequired,
-  onChangeYScale: PropTypes.func.isRequired,
-  onToggleShowControls: PropTypes.func.isRequired,
-  onChangeAlignByIndex: PropTypes.func.isRequired,
-  onChangeAlignByEventType: PropTypes.func.isRequired,
-  onChangeOrderBy: PropTypes.func.isRequired,
+  onChangeXScale: PropTypes.func,
+  onChangeYScale: PropTypes.func,
+  onToggleShowControls: PropTypes.func,
+  onChangeAlignByIndex: PropTypes.func,
+  onChangeAlignByEventType: PropTypes.func,
+  onChangeOrderBy: PropTypes.func,
   showControls: PropTypes.bool.isRequired,
 };
 
-const defaultProps = {};
+const defaultProps = {
+  onChangeXScale: () => {},
+  onChangeYScale: () => {},
+  onToggleShowControls: () => {},
+  onChangeAlignByIndex: () => {},
+  onChangeAlignByEventType: () => {},
+  onChangeOrderBy: () => {},
+};
 
 function ControlPanel({
   showControls,

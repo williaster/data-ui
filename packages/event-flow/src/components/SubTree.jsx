@@ -83,7 +83,8 @@ class SubTree extends React.PureComponent {
     if (target) {
       const result = { node: null, link: null };
       const { nodes } = this.props;
-      const group = SVGGElement === target.constructor ? target : target.parentElement;
+      const hasDataAttr = target.attributes['data-node'] || target.attributes['data-target'];
+      const group = hasDataAttr ? target : target.parentElement;
       if (group && group.attributes['data-node']) {
         result.node = nodes[group.attributes['data-node'].value];
       } else if (group && group.attributes['data-target']) {
@@ -113,7 +114,6 @@ class SubTree extends React.PureComponent {
 
     const sortedNodes = Object.values(nodes).sort(nodeSorter);
     const yOffset = { left: parentYOffset, right: parentYOffset };
-    debugger;
 
     return (
       <Group className="subtree">
