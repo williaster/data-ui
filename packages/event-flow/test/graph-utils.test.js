@@ -13,7 +13,6 @@ import {
   getNodeFromEvent,
   addMetaDataToNodes,
   getRoot,
-  getNodeId,
   ancestorsFromNode,
 } from '../src/utils/graph-utils';
 
@@ -224,3 +223,18 @@ describe('ancestorsFromNode', () => {
   });
 });
 
+describe('buildGraph', () => {
+  test('it should be defined', () => {
+    expect(buildGraph).toBeDefined();
+  });
+
+  test('it should return a graph with root, nodes, entityEvents, and filtered keys', () => {
+    const graph = buildGraph([...user1, ...user2]);
+    expect(graph).toEqual(expect.objectContaining({
+      root: expect.any(Object),
+      nodes: expect.any(Object),
+      entityEvents: expect.any(Object),
+      filtered: expect.any(Number),
+    }));
+  });
+});

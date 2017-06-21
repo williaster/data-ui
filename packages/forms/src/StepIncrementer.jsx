@@ -113,7 +113,7 @@ class StepIncrementer extends React.Component {
           >
             -
           </Button>
-          <div className={css(styles.spacer)}/>
+          <div className={css(styles.spacer)} />
           <Button
             onClick={this.incrementValue}
             disabled={value >= max}

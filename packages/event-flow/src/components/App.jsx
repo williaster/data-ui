@@ -22,7 +22,6 @@ import {
   EVENT_COUNT_SCALE,
   NODE_COLOR_SCALE,
   ORDER_BY_EVENT_COUNT,
-
 } from '../constants';
 
 const propTypes = {
