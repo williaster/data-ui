@@ -4,10 +4,10 @@
   "description": "data-ui demo",
   "scripts": {
     "gh-pages:clean": "rm -rf _gh-pages",
-    "gh-pages:build": "build-storybook -o _gh-pages -c ./storybook-config",
+    "gh-pages:build": "build-storybook -o _gh-pages -c ./storybook-config -s ../../assets/",
     "gh-pages:publish": "git-directory-deploy --directory _gh-pages",
     "gh-pages": "npm run gh-pages:clean && npm run gh-pages:build && npm run gh-pages:publish && npm run gh-pages:clean",
-    "dev": "start-storybook -p 9001 -c ./storybook-config",
+    "dev": "start-storybook -p 9001 -c ./storybook-config -s ../../assets/",
     "test": "echo no tests in @data-ui/demo"
   },
   "repository": "https://github.com/williaster/data-ui.git",
