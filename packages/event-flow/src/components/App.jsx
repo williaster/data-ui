@@ -4,7 +4,7 @@ import React from 'react';
 import SplitPane from 'react-split-pane';
 
 // @todo import this in storybook for 1x injection
-import '@data-ui/forms/build/react-select.css';
+// import '@data-ui/forms/build/react-select.css';
 import '../splitpane.css';
 
 import ControlPanel, { width as CONTROLS_WIDTH } from './ControlPanel';
@@ -42,7 +42,7 @@ class App extends React.PureComponent {
     this.handleAlignByEventType = this.handleAlignByEventType.bind(this);
 
     const { width, height, data } = props;
-    const visualizationWidth = this.getVisualizationWidth(width, true);
+    const visualizationWidth = this.getVisualizationWidth(width, false);
     const alignByEventType = ANY_EVENT_TYPE;
     const alignByIndex = 1;
     const graph = this.getGraph(data, alignByIndex, alignByEventType);
@@ -54,7 +54,7 @@ class App extends React.PureComponent {
       xScaleType: ELAPSED_TIME_SCALE, // @todo could pull these from controls
       yScaleType: EVENT_COUNT_SCALE,
       orderBy: ORDER_BY_EVENT_COUNT,
-      showControls: true,
+      showControls: false,
       visualizationWidth,
       graph,
       scales,

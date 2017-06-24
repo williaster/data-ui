@@ -21,7 +21,7 @@ import {
 export const width = 300;
 
 const unit = 8;
-const padding = 2 * unit;
+const padding = 3 * unit;
 const styles = StyleSheet.create({
   container: {
     position: 'relative',
@@ -65,6 +65,7 @@ const styles = StyleSheet.create({
   },
 
   optionLegend: {
+    flexShrink: 0,
     color: 'inherit',
     background: 'currentColor',
     width: 12,
