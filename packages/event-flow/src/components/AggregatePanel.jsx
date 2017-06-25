@@ -7,6 +7,8 @@ import { zoom as d3Zoom, zoomIdentity } from 'd3-zoom';
 
 import { graphShape, scaleShape } from '../propShapes';
 
+import AggregatePanelClipPath, { CLIP_ID } from './AggregatePanelClipPath';
+import FilteredEventsPattern from './FilteredEventsPattern';
 import NodeDetails from './NodeDetails';
 import SubTree from './SubTree';
 import Tooltip from './Tooltip';
@@ -160,18 +162,19 @@ class AggregatePanel extends React.PureComponent {
             top={margin.top}
             left={margin.left}
           >
-            <defs>
-              <clipPath id="clip">
-                <rect x={-2} width={innerWidth + margin.right + 2} height={innerHeight} />
-              </clipPath>
-            </defs>
+            <AggregatePanelClipPath
+              x={-2}
+              width={innerWidth + margin.right + 2}
+              height={innerHeight}
+            />
+            <FilteredEventsPattern />
             <YAxis
               scale={yScaleZoomed || yScale.scale}
               label={yScale.label}
               labelOffset={margin.left * 0.6}
               width={innerWidth}
             />
-            <g clipPath="url(#clip)">
+            <g clipPath={`url(#${CLIP_ID})`}>
               <g transform={viewTransform}>
                 <SubTree
                   nodes={graph.root.children}

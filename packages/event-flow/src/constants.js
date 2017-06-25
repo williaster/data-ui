@@ -25,3 +25,7 @@ export const NODE_SEQUENCE_SCALE = 'NODE_SEQUENCE_SCALE';
 // node sorters
 export const ORDER_BY_EVENT_COUNT = 'ORDER_BY_EVENT_COUNT';
 export const ORDER_BY_ELAPSED_MS = 'ORDER_BY_ELAPSED_MS';
+
+// note this can't have spaces or it breaks its use in the Pattern 'url(#id)''
+export const FILTERED_EVENTS = 'FILTERED_EVENTS';
+export const CLIP_ID = 'CLIP_PATH_ID';

@@ -34,7 +34,7 @@ function eventSortComparator(a, b) {
 }
 
 /*
- * Bins events by entity Id.
+ * Bins events by entity Id. Note that this method shallow copies all events
  */
 export function binEventsByEntityId(events) {
   const eventsByEntityId = {};

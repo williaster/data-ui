@@ -16,6 +16,7 @@ import {
   EVENT_COUNT,
   ELAPSED_MS,
   ELAPSED_MS_ROOT,
+  FILTERED_EVENTS,
 } from '../constants';
 
 /*
@@ -161,14 +162,17 @@ export function getRoot(nodes) {
 }
 
 /*
- * Parses raw events and builds a graph of 'aggregate' nodes
+ * Parses raw events and builds a graph of 'aggregate' nodes.
+ * raw events should be
+ *    *cleaned* meaning they have ts, entity id, and event name keys
+ *    in no particular order, they are binned by entity id and sorted by TS
  */
 export function buildGraph(cleanedEvents, getStartIndex = () => 0) {
   console.time('buildGraph');
   const nodes = {};
-  const entityEvents = binEventsByEntityId(cleanedEvents);
+  const entityEvents = binEventsByEntityId(cleanedEvents); // note this shallow copies
 
-  let filtered = 0;
+  const filteredEvents = {};
   Object.keys(entityEvents).forEach((id) => {
     const events = entityEvents[id];
     const initialEventIndex = getStartIndex(events);
@@ -176,12 +180,28 @@ export function buildGraph(cleanedEvents, getStartIndex = () => 0) {
     if (initialEventIndex > -1 && typeof events[initialEventIndex] !== 'undefined') {
       buildNodesFromEntityEvents(events, initialEventIndex, nodes);
     } else {
-      filtered += events.length;
+      // given that a node size may respresent an event count,
+      // the "filtered" node should contain only one event
+      filteredEvents[id] = events[0];
     }
   });
 
   const root = getRoot(nodes);
   addMetaDataToNodes(root.children, nodes);
+
+  const numFiltered = Object.keys(filteredEvents).length;
+
+  if (numFiltered) {
+    nodes[FILTERED_EVENTS] = {
+      ...getNodeFromEvent(nodes, FILTERED_EVENTS, FILTERED_EVENTS, 0),
+      [EVENT_COUNT]: numFiltered,
+      [ELAPSED_MS]: 0,
+      [ELAPSED_MS_ROOT]: 0,
+      events: filteredEvents,
+    };
+
+    root.children[FILTERED_EVENTS] = nodes[FILTERED_EVENTS];
+  }
 
   root[EVENT_COUNT] = Object.keys(root.children)
     .reduce((sum, curr) => sum + nodes[curr][EVENT_COUNT], 0);
@@ -191,7 +211,7 @@ export function buildGraph(cleanedEvents, getStartIndex = () => 0) {
     root,
     nodes,
     entityEvents,
-    filtered,
+    filtered: numFiltered,
   };
 }
 

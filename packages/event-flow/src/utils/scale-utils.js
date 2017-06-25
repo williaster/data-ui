@@ -1,5 +1,4 @@
 import {
-  scaleBand,
   scalePoint,
   scaleOrdinal,
   scaleLinear,
@@ -17,6 +16,7 @@ import {
   ELAPSED_TIME_SCALE,
   EVENT_SEQUENCE_SCALE,
   EVENT_COUNT_SCALE,
+  FILTERED_EVENTS,
   NODE_SEQUENCE_SCALE,
   NODE_COLOR_SCALE,
   ORDER_BY_EVENT_COUNT,
@@ -144,8 +144,8 @@ export function computeColorScale(array, accessor = d => d.name || d[EVENT_NAME]
   });
 
   return scaleOrdinal({
-    range: colors.categories,
-    domain: Object.keys(names).sort(),
+    range: [`url(#${FILTERED_EVENTS})`, ...colors.categories],
+    domain: [FILTERED_EVENTS, ...(Object.keys(names).sort())],
   });
 }
 
