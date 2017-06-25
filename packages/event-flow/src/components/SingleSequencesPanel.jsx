@@ -39,6 +39,7 @@ const styles = StyleSheet.create({
     width: '100%',
     borderTop: '1px solid #ddd',
     overflowY: 'auto',
+    overflowX: 'hidden',
     dipslay: 'flex',
     flexDirection: 'column',
   },
@@ -160,7 +161,7 @@ class SingleSequencePanel extends React.PureComponent {
               onClick={clearSelection}
               disabled={!hasSequences}
             >
-              Clear Selection
+              Clear Selection ({sequences.length})
             </Button>
           </div>
         </div>

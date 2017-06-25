@@ -5,6 +5,7 @@ import SplitPane from 'react-split-pane';
 
 import AggregatePanel, { margin } from './AggregatePanel';
 import SingleSequencesPanel from './SingleSequencesPanel';
+import { EVENT_COUNT, FILTERED_EVENTS } from '../constants';
 import { collectSequencesFromNode } from '../utils/data-utils';
 import { graphShape, scaleShape } from '../propShapes';
 
@@ -63,6 +64,8 @@ class Visualization extends React.PureComponent {
   }
 
   onClickNode({ node }) {
+    if (node.id === FILTERED_EVENTS) return;
+
     const { height, graph } = this.props;
     const { selectedNode } = this.state;
     const isSelected = selectedNode && selectedNode.id === node.id;
@@ -73,7 +76,10 @@ class Visualization extends React.PureComponent {
       selectedSequences: sequences,
       paneHeight: isSelected ?
         (height - MIN_PANE_SIZE) :
-        Math.max(MIN_PANE_SIZE, height - SingleSequencesPanel.getEstimatedHeight(sequences.length)),
+        Math.max(
+          MIN_PANE_SIZE + 100,
+          height - SingleSequencesPanel.getEstimatedHeight(sequences.length),
+        ),
     });
   }
 
@@ -125,9 +131,23 @@ class Visualization extends React.PureComponent {
           onDragStarted={this.onDragStart}
           onDragFinished={this.onDragEnd}
         >
-          <div className={css(styles.fillParent, dragging && styles.noPointerEvents)}>
+          <div
+            className={css(
+              styles.fillParent,
+              dragging && styles.noPointerEvents,
+            )}
+          >
             <AggregatePanel
-              graph={graph}
+              graph={selectedNode ?
+                ({ ...graph,
+                  root: {
+                    ...graph.root,
+                    [EVENT_COUNT]: selectedNode[EVENT_COUNT],
+                    children: {
+                      [selectedNode.id]: selectedNode,
+                    },
+                  },
+                }) : graph}
               xScale={xScale}
               yScale={yScale}
               timeScale={timeScale}
@@ -145,7 +165,7 @@ class Visualization extends React.PureComponent {
                 sequences={selectedSequences}
                 colorScale={colorScale}
                 width={width}
-                height={height}
+                height={height - paneHeight}
                 clearSelection={this.onClearSelection}
               />}
           </div>
