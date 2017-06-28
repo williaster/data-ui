@@ -37,7 +37,6 @@
     "react-test-renderer": "^15.6.1"
   },
   "peerDependencies": {
-    "lerna": "2.0.0-rc.2",
     "react": "^15.4.0"
   },
   "jest": {
