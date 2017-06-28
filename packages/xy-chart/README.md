@@ -68,3 +68,10 @@ A subset of [vx](https://github.com/hshoff/vx/blob/master/) gradients and patter
 npm install
 npm run dev # or 'prod'
 ```
+
+## @data-ui packages
+- @data-ui/xy-chart
+- [@data-ui/data-table](https://github.com/williaster/data-ui/tree/master/packages/data-table)
+- [@data-ui/theme](https://github.com/williaster/data-ui/tree/master/packages/theme)
+- [@data-ui/demo](https://github.com/williaster/data-ui/tree/master/packages/demo)
+

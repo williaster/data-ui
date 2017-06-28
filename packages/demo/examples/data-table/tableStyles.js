@@ -11,6 +11,7 @@ const tableStyles = {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
+    ...font.regular,
     ...font.bold,
   },
 
@@ -18,7 +19,7 @@ const tableStyles = {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    ...font.small,
+    ...font.regular,
     ...font.light,
     background: index % 2 === 0 ? color.lightGray : null,
   }),
