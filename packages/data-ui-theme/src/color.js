@@ -16,28 +16,38 @@ export const allColors = {
   orange: ['#fff4e6', '#ffe8cc', '#ffd8a8', '#ffc078', '#ffa94d', '#ff922b', '#fd7e14', '#f76707', '#e8590c', '#d9480f'],
 };
 
-export const getPaletteForBrightness = (brightness = 7) => (
-  Object.values(allColors).map(x => x[brightness]).sort()
-);
-
 export const grayColors = [
   '#f8f9fa', '#f1f3f5', '#e9ecef', '#dee2e6', '#ced4da', '#adb5bd', '#868e96', '#495057', '#343a40', '#212529',
 ];
 
+export const getPaletteForBrightness = ({
+  brightness = 7,
+  order = ['cyan', 'yellow', 'pink', 'grape', 'teal', 'blue', 'lime', 'violet', 'orange', 'indigo', 'red', 'green'],
+}) => (
+  order.map(key => allColors[key][brightness])
+);
+
 export const dataColorHues = Object.keys(allColors).sort();
 
-export default {
-  default: allColors.cyan[6],
-  dark: allColors.cyan[8],
-  light: allColors.cyan[4],
+export const textColor = grayColors[7];
 
-  disabled: grayColors[6],
+export default {
+  default: allColors.cyan[5],
+  dark: allColors.cyan[7],
+  light: allColors.cyan[3],
+
+  disabled: textColor,
   lightDisabled: grayColors[4],
 
-  grid: grayColors[4],
-  gridDark: grayColors[7],
-  label: grayColors[6],
-  tickLabel: grayColors[6],
+  text: textColor,
+  black: grayColors[9],
+  darkGray: grayColors[8],
+  lightGray: grayColors[3],
 
-  categories: getPaletteForBrightness(7),
+  grid: grayColors[4],
+  gridDark: grayColors[8],
+  label: textColor,
+  tickLabel: textColor,
+
+  categories: getPaletteForBrightness({ brightness: 7 }),
 };

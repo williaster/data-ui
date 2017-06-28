@@ -19,7 +19,7 @@ export const tickLabels = {
   },
   right: {
     ...baseTickLabel,
-    ...font.right,
+    ...font.start,
     dx: '0.25em',
     dy: '0.25em',
   },
@@ -29,7 +29,7 @@ export const tickLabels = {
   },
   left: {
     ...baseTickLabel,
-    ...font.left,
+    ...font.end,
     dx: '-0.25em',
     dy: '0.25em',
   },

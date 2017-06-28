@@ -46,6 +46,8 @@ const ResponsiveXYChart = withScreenSize(({ screenWidth, children, ...rest }) =>
   </XYChart>
 ));
 
+const { colors } = theme;
+
 // @todo: factor these into separate stories to more fully demo each component
 export default [
   {
@@ -58,14 +60,14 @@ export default [
       >
         <LinearGradient
           id="gradient"
-          from="#00A699"
-          to="#84D2CB"
+          from={colors.default}
+          to={colors.dark}
         />
         <PatternLines
           id="lines"
           height={5}
           width={5}
-          stroke="#00A699"
+          stroke={colors.default}
           strokeWidth={1}
           orientation={['diagonal']}
         />
@@ -90,8 +92,8 @@ export default [
         <YAxis label="Price ($)" numTicks={4} />
         <LinearGradient
           id="aqua_lightaqua_gradient"
-          from="#00A699"
-          to="#84D2CB"
+          from={colors.default}
+          to={colors.dark}
         />
         <BarSeries
           data={timeSeriesData}
@@ -101,7 +103,7 @@ export default [
         <LineSeries
           data={timeSeriesData}
           label="Apple Stock"
-          stroke="#484848"
+          stroke={colors.text}
         />
         <XAxis label="Time" numTicks={5} />
       </ResponsiveXYChart>
@@ -118,8 +120,8 @@ export default [
         <YAxis label="Price ($)" numTicks={4} orientation="left" />
         <LinearGradient
           id="aqua_lightaqua_gradient"
-          from="#00A699"
-          to="#84D2CB"
+          from={colors.default}
+          to={colors.dark}
         />
         <BarSeries
           data={timeSeriesData}
@@ -147,7 +149,7 @@ export default [
         <LineSeries
           data={timeSeriesData.map(d => ({ ...d, y: Math.random() > 0.5 ? d.y * 2 : d.y / 2 }))}
           label="Apple Stock 2"
-          stroke="#484848"
+          stroke={colors.black}
           strokeDasharray="3 3"
         />
         <XAxis label="Time" numTicks={5} />
@@ -221,8 +223,8 @@ export default [
       >
         <LinearGradient
           id="aqua_lightaqua_gradient"
-          from="#00A699"
-          to="#84D2CB"
+          from={colors.default}
+          to={colors.dark}
         />
         <BarSeries
           data={categoricalData}
@@ -246,7 +248,7 @@ export default [
           id="interval_pattern"
           height={8}
           width={8}
-          stroke="#84D2CB"
+          stroke={colors.dark}
           strokeWidth={1}
           orientation={['diagonal']}
         />
@@ -275,8 +277,8 @@ export default [
         <YAxis label="$$$" numTicks={4} />
         <LinearGradient
           id="aqua_lightaqua_gradient"
-          from="#00A699"
-          to="#84D2CB"
+          from={colors.default}
+          to={colors.dark}
         />
         <BarSeries
           data={timeSeriesData}

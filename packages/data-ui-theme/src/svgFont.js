@@ -1,9 +1,12 @@
-const getFont = ({
+import { textColor } from './color';
+
+const getSvgFont = ({
   fontFamily,
   fontSize,
   letterSpacing,
 }) => ({
-  color: '#222222',
+  fill: textColor,
+  stroke: 'none',
   fontFamily,
   fontSize,
   letterSpacing,
@@ -23,40 +26,40 @@ export default {
   },
 
   // alignment
-  left: {
+  start: {
     textAnchor: 'start',
   },
   middle: {
     textAnchor: 'middle',
   },
-  right: {
+  end: {
     textAnchor: 'end',
   },
 
   // size
   tiny: {
-    ...getFont({
+    ...getSvgFont({
       fontFamily,
       fontSize: 10,
       letterSpacing: 0.4,
     }),
   },
   small: {
-    ...getFont({
+    ...getSvgFont({
       fontFamily,
       fontSize: 12,
       letterSpacing: 0.4,
     }),
   },
   regular: {
-    ...getFont({
+    ...getSvgFont({
       fontFamily,
       fontSize: 14,
       letterSpacing: 0.2,
     }),
   },
   large: {
-    ...getFont({
+    ...getSvgFont({
       fontFamily,
       fontSize: 18,
       spacing: 0,

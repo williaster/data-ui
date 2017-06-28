@@ -11,9 +11,9 @@ describe('svgFont', () => {
   });
 
   test('it should define alignments', () => {
-    expect(svgFont.left).toBeDefined();
+    expect(svgFont.start).toBeDefined();
     expect(svgFont.middle).toBeDefined();
-    expect(svgFont.right).toBeDefined();
+    expect(svgFont.end).toBeDefined();
   });
 
   test('it should define sizes', () => {

@@ -144,10 +144,10 @@ class XYChart extends React.PureComponent {
               yScale={yScale}
               width={innerWidth}
               height={innerHeight}
-              stroke={theme.gridStyles && theme.gridStyles.stroke}
-              strokeWidth={theme.gridStyles && theme.gridStyles.strokeWidth}
               numTicksRows={showYGrid && numYTicks}
               numTicksColumns={showXGrid && numXTicks}
+              stroke={theme.gridStyles && theme.gridStyles.stroke}
+              strokeWidth={theme.gridStyles && theme.gridStyles.strokeWidth}
             />}
           {React.Children.map(children, (Child) => {
             const name = componentName(Child);

@@ -4,7 +4,7 @@
   "description": "Themes for data-ui",
   "main": "build/index.js",
   "scripts": {
-    "build": "babel src/ -d lib/ --ignore src/components",
+    "build": "babel src/ -d build/",
     "test": "jest --colors --verbose --coverage"
   },
   "repository": "https://github.com/williaster/data-ui.git",
@@ -17,9 +17,9 @@
   "license": "MIT",
   "homepage": "https://github.com/williaster/data-ui#readme",
   "devDependencies": {
+    "babel-cli": "^6.24.1",
     "babel-core": "^6.24.1",
     "babel-jest": "^20.0.3",
-    "babel-loader": "^6.4.1",
     "babel-plugin-syntax-jsx": "^6.18.0",
     "babel-preset-airbnb": "^2.2.3",
     "jest": "^19.0.0",

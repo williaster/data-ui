@@ -1,3 +1,5 @@
+import { textColor } from './color';
+
 const getFont = ({
   fontFamily,
   fontSize,
@@ -5,7 +7,7 @@ const getFont = ({
   lineHeight,
   padding,
 }) => ({
-  color: '#222222',
+  color: textColor,
   fontFamily,
   fontSize,
   letterSpacing,
