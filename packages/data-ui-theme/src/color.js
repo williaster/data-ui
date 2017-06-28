@@ -49,5 +49,6 @@ export default {
   label: textColor,
   tickLabel: textColor,
 
+  grays: grayColors,
   categories: getPaletteForBrightness({ brightness: 7 }),
 };

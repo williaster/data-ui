@@ -3,6 +3,9 @@
   "version": "0.0.0",
   "description": "Themes for data-ui",
   "main": "build/index.js",
+  "files": [
+    "build"
+  ],
   "scripts": {
     "build": "babel src/ -d build/",
     "test": "jest --colors --verbose --coverage"
