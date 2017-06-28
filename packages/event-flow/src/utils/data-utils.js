@@ -5,6 +5,13 @@ import {
   META,
 } from '../constants';
 
+import {
+  mean as d3Mean,
+  median as d3Median,
+  min as d3Min,
+  max as d3Max,
+} from 'd3-array';
+
 /*
  * Creates an event with standard shape from a raw record/event object
  */
@@ -103,11 +110,34 @@ export function collectSequencesFromNode(node, entityEvents) {
       const event = node.events[eventId];
       const entityId = event.ENTITY_ID;
       if (!entitiesSeen[entityId]) {
-        sequences.push(entityEvents[entityId]);
+        sequences.push(entityEvents[entityId]); // push all events from this entity
         entitiesSeen[entityId] = true;
       }
     });
   }
 
   return sequences;
+}
+
+export function getEventMetaData(sequences) {
+  const eventCountByType = {};
+
+  sequences.forEach((seq) => {
+    seq.forEach((event) => {
+      const name = event[EVENT_NAME];
+      eventCountByType[name] = eventCountByType[name] || 0;
+      eventCountByType[name] += 1;
+    });
+  });
+  const sequenceLengths = sequences.map(sequence => sequence.length);
+
+  return {
+    eventCountByType,
+    sequenceLength: {
+      min: d3Min(sequenceLengths),
+      max: d3Max(sequenceLengths),
+      mean: d3Mean(sequenceLengths),
+      median: d3Median(sequenceLengths),
+    },
+  };
 }

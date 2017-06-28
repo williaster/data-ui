@@ -30,6 +30,8 @@ const defaultProps = {
   children: null,
 };
 
+// @TODO detect actual size of tooltip for overflow
+//  this should prob live within a @vx tooltip
 function Tooltip({
   parentRef,
   x,
