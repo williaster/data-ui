@@ -1,5 +1,4 @@
 const path = require('path');
-const DashboardPlugin = require('webpack-dashboard/plugin');
 
 const dist = path.resolve(__dirname, './build');
 const src = path.resolve(__dirname, './src');
@@ -25,9 +24,6 @@ const config = {
       },
     ],
   },
-  plugins: [
-    new DashboardPlugin(),
-  ],
 };
 
 module.exports = config;

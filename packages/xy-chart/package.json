@@ -5,7 +5,7 @@
   "main": "build/index.js",
   "scripts": {
     "build": "webpack -p --env build",
-    "dev": "webpack-dashboard -- webpack --progress --colors --watch --env dev",
+    "dev": "webpack --progress --colors --watch --env dev",
     "test": "jest --colors --verbose --coverage"
   },
   "repository": "https://github.com/williaster/data-ui",
@@ -45,8 +45,7 @@
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-test-renderer": "^15.6.1",
-    "webpack": "^2.4.1",
-    "webpack-dashboard": "^0.4.0"
+    "webpack": "^2.4.1"
   },
   "peerDependencies": {
     "react": "^15.4.0"
