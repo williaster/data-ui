@@ -75,6 +75,7 @@ export default [
         <RadialChart {...chartProps}>
           <ArcSeries
             {...seriesProps}
+            labelComponent={<ArcLabel stroke="#222" fill="#fff" fontSize={10} />}
             innerRadius={0}
             fill={arc => categoryColorScale(arc.data.label)}
           />

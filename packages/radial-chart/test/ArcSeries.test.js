@@ -1,7 +1,7 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import { Arc } from '@vx/shape';
-import { ArcSeries } from '../src';
+import { ArcSeries, ArcLabel } from '../src';
 
 describe('<ArcSeries />', () => {
   test('it should be defined', () => {
@@ -35,7 +35,7 @@ describe('<ArcSeries />', () => {
       <ArcSeries
         pieValue={d => d.value}
         data={[{ value: 10 }, { value: 5 }]}
-        labelComponent={<text className="test" />}
+        labelComponent={<ArcLabel className="test" />}
         label={arc => arc.data.value}
       />,
     );

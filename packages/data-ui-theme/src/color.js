@@ -20,15 +20,15 @@ export const grayColors = [
   '#f8f9fa', '#f1f3f5', '#e9ecef', '#dee2e6', '#ced4da', '#adb5bd', '#868e96', '#495057', '#343a40', '#212529',
 ];
 
-export const getPaletteForBrightness = ({
+export const getPaletteForBrightness = (
   brightness = 6,
   hues = ['cyan', 'yellow', 'pink', 'grape', 'blue', 'lime', 'teal', 'red', 'violet', 'orange', 'indigo', 'green'],
-}) => {
-  const index = Math.max( // min value is 0
-    0,
-    Math.min(brightness, allColors.red.length - 1),
-  ); // sanity check value
-  return hues.map(hue => allColors[hue][index]);
+) => {
+  // sanity check indices
+  const index = Math.max(0, Math.min(brightness, allColors.red.length - 1));
+
+  // filter non-sensical hues
+  return hues.map(hue => allColors[hue] && allColors[hue][index]).filter(val => val);
 };
 
 const primaryHue = 'cyan';
@@ -55,5 +55,5 @@ export default {
   tickLabel: textColor,
 
   grays: grayColors,
-  categories: getPaletteForBrightness({ brightness: 6 }),
+  categories: getPaletteForBrightness(6),
 };

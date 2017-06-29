@@ -3,8 +3,8 @@ import { scaleOrdinal } from '@vx/scale';
 import { allColors, grayColors, getPaletteForBrightness } from '@data-ui/theme/build/color';
 
 // returns an ordinal scale of multi-hue colors with normalized/comparable brightness
-export function multiHueScaleFactory(brightness) {
-  return scaleOrdinal({ range: getPaletteForBrightness({ brightness }) });
+export function multiHueScaleFactory(brightness, hues) {
+  return scaleOrdinal({ range: getPaletteForBrightness(brightness, hues) });
 }
 
 // returns an ordinal scale of single-hue colors with varying brightness (dark to light)

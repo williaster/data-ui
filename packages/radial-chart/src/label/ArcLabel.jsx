@@ -14,6 +14,7 @@ const propTypes = {
 const defaultProps = {
   x: 0,
   y: 0,
+  paintOrder: 'stroke',
   arc: null,
   children: null,
 };
