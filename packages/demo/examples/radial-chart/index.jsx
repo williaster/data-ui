@@ -3,7 +3,7 @@ import React from 'react';
 import { scaleOrdinal } from '@vx/scale';
 import { LegendOrdinal } from '@vx/legend';
 
-import { allColors } from '@data-ui/theme';
+import { allColors, color } from '@data-ui/theme';
 import { RadialChart, ArcSeries, ArcLabel } from '@data-ui/radial-chart';
 
 const { browserUsage } = mockData;
@@ -18,9 +18,11 @@ const browserFractions = Object.entries(browsersLast)
 
 const width = 400;
 const height = 400;
-const colorScale = scaleOrdinal({
-  range: [...allColors.pink].reverse(),
-});
+
+const pinkColorScale = scaleOrdinal({ range: [...allColors.pink].reverse() });
+const categoryColorScale = scaleOrdinal({ range: color.categories });
+
+const wrapperStyles = { display: 'flex', alignItems: 'center' };
 
 const chartProps = {
   ariaLabel: 'This is a radial-chart chart of...',
@@ -32,7 +34,7 @@ const chartProps = {
 const seriesProps = {
   data: browserFractions,
   pieValue: d => d.value,
-  fill: arc => colorScale(arc.data.label),
+  fill: arc => pinkColorScale(arc.data.label),
   label: arc => `${(arc.data.value).toFixed(1)}%`,
   labelComponent: <ArcLabel fill="#fff" fontSize={10} />,
   innerRadius: radius => 0.35 * radius,
@@ -42,27 +44,57 @@ const seriesProps = {
   strokeWidth: 1,
 };
 
+const PinkLegend = (
+  <LegendOrdinal
+    direction="column"
+    scale={pinkColorScale}
+    shape="rect"
+    fill={({ datum }) => pinkColorScale(datum)}
+    labelFormat={label => label}
+  />
+);
+
+const CategoryLegend = (
+  <LegendOrdinal
+    direction="column"
+    scale={categoryColorScale}
+    shape="circle"
+    fill={({ datum }) => categoryColorScale(datum)}
+    labelFormat={label => label}
+  />
+);
+
 export default [
   {
     description: '<RadialChart /> -- donut 🍩',
     example: () => (
-      <RadialChart {...chartProps}>
-        <ArcSeries {...seriesProps} />
-      </RadialChart>
+      <div style={wrapperStyles}>
+        <RadialChart {...chartProps}>
+          <ArcSeries {...seriesProps} />
+        </RadialChart>
+        {PinkLegend}
+      </div>
     ),
   },
   {
     description: '<RadialChart /> -- pie 🍰',
     example: () => (
-      <RadialChart {...chartProps}>
-        <ArcSeries {...seriesProps} innerRadius={0} />
-      </RadialChart>
+      <div style={wrapperStyles}>
+        <RadialChart {...chartProps}>
+          <ArcSeries
+            {...seriesProps}
+            innerRadius={0}
+            fill={arc => categoryColorScale(arc.data.label)}
+          />
+        </RadialChart>
+        {CategoryLegend}
+      </div>
     ),
   },
   {
-    description: '<RadialChart /> -- visual padding',
+    description: '<RadialChart /> -- outer labels 🍩',
     example: () => (
-      <div style={{ display: 'flex', alignItems: 'center' }}>
+      <div style={wrapperStyles}>
         <RadialChart {...chartProps}>
           <ArcSeries
             {...seriesProps}
@@ -77,19 +109,13 @@ export default [
                 textAnchor={arc => (
                   ((arc.endAngle + arc.startAngle) / 2) > 3.14 ? 'end' : 'start'
                 )}
-                fill={arc => colorScale(arc.data.label)}
+                fill={arc => pinkColorScale(arc.data.label)}
               />
             }
             labelRadius={radius => 0.65 * radius}
           />
         </RadialChart>
-        <LegendOrdinal
-          direction="column"
-          scale={colorScale}
-          shape="rect"
-          fill={({ datum }) => colorScale(datum)}
-          labelFormat={label => label}
-        />
+        {PinkLegend}
       </div>
     ),
   },
