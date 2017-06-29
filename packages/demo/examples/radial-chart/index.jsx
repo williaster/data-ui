@@ -1,10 +1,14 @@
 import mockData from '@vx/mock-data';
 import React from 'react';
-import { scaleOrdinal } from '@vx/scale';
 import { LegendOrdinal } from '@vx/legend';
 
-import { allColors, color } from '@data-ui/theme';
-import { RadialChart, ArcSeries, ArcLabel } from '@data-ui/radial-chart';
+import {
+  RadialChart,
+  ArcSeries,
+  ArcLabel,
+  singleHueScaleFactory,
+  multiHueScaleFactory,
+} from '@data-ui/radial-chart';
 
 const { browserUsage } = mockData;
 
@@ -19,8 +23,8 @@ const browserFractions = Object.entries(browsersLast)
 const width = 400;
 const height = 400;
 
-const pinkColorScale = scaleOrdinal({ range: [...allColors.pink].reverse() });
-const categoryColorScale = scaleOrdinal({ range: color.categories });
+const pinkColorScale = singleHueScaleFactory('pink');
+const categoryColorScale = multiHueScaleFactory();
 
 const wrapperStyles = { display: 'flex', alignItems: 'center' };
 
@@ -34,14 +38,13 @@ const chartProps = {
 const seriesProps = {
   data: browserFractions,
   pieValue: d => d.value,
-  fill: arc => pinkColorScale(arc.data.label),
   label: arc => `${(arc.data.value).toFixed(1)}%`,
   labelComponent: <ArcLabel fill="#fff" fontSize={10} />,
   innerRadius: radius => 0.35 * radius,
   outerRadius: radius => 0.6 * radius,
   labelRadius: radius => 0.47 * radius,
   stroke: '#fff',
-  strokeWidth: 1,
+  strokeWidth: 1.5,
 };
 
 const PinkLegend = (
@@ -66,17 +69,6 @@ const CategoryLegend = (
 
 export default [
   {
-    description: '<RadialChart /> -- donut 🍩',
-    example: () => (
-      <div style={wrapperStyles}>
-        <RadialChart {...chartProps}>
-          <ArcSeries {...seriesProps} />
-        </RadialChart>
-        {PinkLegend}
-      </div>
-    ),
-  },
-  {
     description: '<RadialChart /> -- pie 🍰',
     example: () => (
       <div style={wrapperStyles}>
@@ -92,14 +84,15 @@ export default [
     ),
   },
   {
-    description: '<RadialChart /> -- outer labels 🍩',
+    description: '<RadialChart /> -- outer label donut 🍩',
     example: () => (
       <div style={wrapperStyles}>
         <RadialChart {...chartProps}>
           <ArcSeries
             {...seriesProps}
+            fill={arc => pinkColorScale(arc.data.label)}
             fillOpacity={0.5}
-            stroke={seriesProps.fill}
+            stroke={arc => pinkColorScale(arc.data.label)}
             strokeWidth={2}
             padAngle={0.03}
             cornerRadius={5}
@@ -116,6 +109,16 @@ export default [
           />
         </RadialChart>
         {PinkLegend}
+      </div>
+    ),
+  },
+  {
+    description: '<RadialChart /> -- default colors 🍩',
+    example: () => (
+      <div style={wrapperStyles}>
+        <RadialChart {...chartProps}>
+          <ArcSeries {...seriesProps} />
+        </RadialChart>
       </div>
     ),
   },

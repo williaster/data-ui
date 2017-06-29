@@ -5,6 +5,9 @@ import PropTypes from 'prop-types';
 import ArcLabel from '../label/ArcLabel';
 import callOrValue from '../util/callOrValue';
 import complainAboutTooManySlicesIfNecessary from '../util/complainAboutTooManySlicesIfNecessary';
+import { singleHueScaleFactory } from '../util/fillScaleFactory';
+
+const grayScale = singleHueScaleFactory();
 
 const propTypes = {
   data: PropTypes.arrayOf(PropTypes.shape({
@@ -37,7 +40,9 @@ const defaultProps = {
   outerRadius: radius => radius * 0.9,
   labelRadius: radius => radius * 0.75,
   cornerRadius: 3,
-  fill: '#cccccc',
+  fill: arc => (
+    (arc.data && arc.data.label) ? grayScale(arc.data.label) : '#dddddd'
+  ),
   fillOpacity: 1,
   stroke: '#ffffff',
   strokeWidth: 1,

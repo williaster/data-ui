@@ -1,25 +1,47 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import { Arc } from '@vx/shape';
-import { RadialChart, ArcSeries } from '../src';
+import { ArcSeries } from '../src';
 
 describe('<ArcSeries />', () => {
-  const mockProps = {
-    ariaLabel: 'This is a pie chart of ...',
-    width: 100,
-    height: 100,
-  };
-
   test('it should be defined', () => {
-    expect(RadialChart).toBeDefined();
+    expect(ArcSeries).toBeDefined();
   });
 
   test('it should render an Arc', () => {
-    const wrapper = shallow(
-      <RadialChart {...mockProps}>
-        <ArcSeries data={[{ value: 10 }, { value: 5 }]} />
-      </RadialChart>,
+    const wrapper = mount(
+      <ArcSeries
+        pieValue={d => d.value}
+        data={[{ value: 10 }, { value: 5 }]}
+        label={null}
+      />,
     );
-    expect(wrapper.dive().find(Arc).length).toBe(1);
+    expect(wrapper.find(Arc).length).toBe(1);
+  });
+
+  test('it should render an Arc for slices and an Arc for Labels', () => {
+    const wrapper = mount(
+      <ArcSeries
+        pieValue={d => d.value}
+        data={[{ value: 10 }, { value: 5 }]}
+        label={() => '!!!'}
+      />,
+    );
+    expect(wrapper.find(Arc).length).toBe(2);
+  });
+
+  test('it should pass arc objects to the label accessor and use the output of the accessor', () => {
+    const wrapper = mount(
+      <ArcSeries
+        pieValue={d => d.value}
+        data={[{ value: 10 }, { value: 5 }]}
+        labelComponent={<text className="test" />}
+        label={arc => arc.data.value}
+      />,
+    );
+    const labels = wrapper.find('.test');
+    expect(labels.length).toBe(2);
+    expect(labels.first().text()).toBe('10');
+    expect(labels.last().text()).toBe('5');
   });
 });

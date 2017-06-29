@@ -21,23 +21,28 @@ export const grayColors = [
 ];
 
 export const getPaletteForBrightness = ({
-  brightness = 7,
-  order = ['cyan', 'yellow', 'pink', 'grape', 'teal', 'blue', 'lime', 'violet', 'orange', 'indigo', 'red', 'green'],
-}) => (
-  order.map(key => allColors[key][brightness])
-);
+  brightness = 6,
+  hues = ['cyan', 'yellow', 'pink', 'grape', 'blue', 'lime', 'teal', 'red', 'violet', 'orange', 'indigo', 'green'],
+}) => {
+  const index = Math.max( // min value is 0
+    0,
+    Math.min(brightness, allColors.red.length - 1),
+  ); // sanity check value
+  return hues.map(hue => allColors[hue][index]);
+};
 
-export const dataColorHues = Object.keys(allColors).sort();
+const primaryHue = 'cyan';
 
+export const colorHues = Object.keys(allColors).sort();
 export const textColor = grayColors[7];
 
 export default {
-  default: allColors.cyan[5],
-  dark: allColors.cyan[7],
-  light: allColors.cyan[3],
+  default: allColors[primaryHue][5],
+  dark: allColors[primaryHue][7],
+  light: allColors[primaryHue][3],
 
   disabled: textColor,
-  lightDisabled: grayColors[4],
+  lightDisabled: grayColors[3],
 
   text: textColor,
   black: grayColors[9],
@@ -50,5 +55,5 @@ export default {
   tickLabel: textColor,
 
   grays: grayColors,
-  categories: getPaletteForBrightness({ brightness: 7 }),
+  categories: getPaletteForBrightness({ brightness: 6 }),
 };

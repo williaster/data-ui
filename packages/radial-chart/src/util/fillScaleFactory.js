@@ -1,7 +1,14 @@
 /* eslint import/prefer-default-export: 0 */
 import { scaleOrdinal } from '@vx/scale';
-import { allColors, grayColors } from '@data-ui/theme/build/color';
+import { allColors, grayColors, getPaletteForBrightness } from '@data-ui/theme/build/color';
 
-export function fillScaleFactory(color) {
-  return scaleOrdinal({ range: [...(allColors[color] || grayColors)].reverse() });
+// returns an ordinal scale of multi-hue colors with normalized/comparable brightness
+export function multiHueScaleFactory(brightness) {
+  return scaleOrdinal({ range: getPaletteForBrightness({ brightness }) });
+}
+
+// returns an ordinal scale of single-hue colors with varying brightness (dark to light)
+// if no hue is specified or is invalid, returns grays
+export function singleHueScaleFactory(hue) {
+  return scaleOrdinal({ range: [...(allColors[hue] || grayColors)].reverse() });
 }
