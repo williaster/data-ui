@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 
 import ArcLabel from '../label/ArcLabel';
 import callOrValue from '../util/callOrValue';
+import complainAboutTooManySlicesIfNecessary from '../util/complainAboutTooManySlicesIfNecessary';
 
 const propTypes = {
   data: PropTypes.arrayOf(PropTypes.shape({
@@ -65,6 +66,7 @@ export default function ArcSeries({
   labelComponent,
   ...restProps
 }) {
+  complainAboutTooManySlicesIfNecessary(data.length);
   return (
     <g>
       <Arc
