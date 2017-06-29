@@ -21,8 +21,8 @@
   "homepage": "https://github.com/williaster/data-ui#readme",
   "devDependencies": {
     "@data-ui/data-table": "^0.0.17",
-    "@data-ui/radial-chart": "^0.0.0",
-    "@data-ui/theme": "^0.0.1",
+    "@data-ui/radial-chart": "^0.0.1",
+    "@data-ui/theme": "^0.0.2",
     "@data-ui/xy-chart": "^0.0.9",
     "@kadira/storybook": "^2.35.3",
     "@vx/mock-data": "0.0.95",
