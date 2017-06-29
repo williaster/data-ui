@@ -1,3 +1,4 @@
+/* eslint no-param-reassign: 0*/
 import callOrValue from './callOrValue';
 
 export default function additionalProps(restProps, data) {
