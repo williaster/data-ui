@@ -10,12 +10,16 @@ A collection of custom + wrapped components for data-rich (desktop) UIs. Super b
   </a>
 </p>
 
-## Packages
-+ [@data-ui/xy-chart](https://github.com/williaster/data-ui/tree/master/packages/xy-chart) [![Version](https://img.shields.io/npm/v/@data-ui/xy-chart.svg?style=flat-square)](https://img.shields.io/npm/v/@data-ui/xy-chart.svg?style=flat-square) 
-+ [@data-ui/data-table](https://github.com/williaster/data-ui/tree/master/packages/data-table) [![Version](https://img.shields.io/npm/v/@data-ui/data-table.svg?style=flat-square)](https://img.shields.io/npm/v/@data-ui/data-table.svg?style=flat-square) 
-+ [@data-ui/demo](https://github.com/williaster/data-ui/tree/master/packages/demo)
+demo at [williaster.github.io/data-ui](https://williaster.github.io/data-ui) :chart_with_upwards_trend:
 
-Lots more coming.
+## Packages
+- [@data-ui/xy-chart](https://github.com/williaster/data-ui/tree/master/packages/xy-chart) [![Version](https://img.shields.io/npm/v/@data-ui/xy-chart.svg?style=flat-square)](https://img.shields.io/npm/v/@data-ui/xy-chart.svg?style=flat-square)
+- [@data-ui/radial-chart](https://github.com/williaster/data-ui/tree/master/packages/radial-chart) [![Version](https://img.shields.io/npm/v/@data-ui/radial-chart.svg?style=flat-square)](https://img.shields.io/npm/v/@data-ui/radial-chart.svg?style=flat-square)
+- [@data-ui/data-table](https://github.com/williaster/data-ui/tree/master/packages/data-table) [![Version](https://img.shields.io/npm/v/@data-ui/data-table.svg?style=flat-square)](https://img.shields.io/npm/v/@data-ui/data-table.svg?style=flat-square)
+- [@data-ui/theme](https://github.com/williaster/data-ui/tree/master/packages/theme)
+- [@data-ui/demo](https://github.com/williaster/data-ui/tree/master/packages/demo)
+
+More coming.
 
 ## Live Playground
 
@@ -68,11 +72,11 @@ lerna bootstrap
 ```
 
 Enzyme and jest are used for testing. Each package defines its own tests, which you can run from within a `packages/package-name` directory using
-```sh 
+```sh
 npm run test
 ```
 
-for a single test or subset of tests run 
+for a single test or subset of tests run
 ```sh
 npm run test -t regex
 ```
