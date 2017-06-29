@@ -20,7 +20,7 @@
   "author": "Chris Williams <chris.williams@airbnb.com>",
   "license": "MIT",
   "dependencies": {
-    "@data-ui/theme": "^0.0.0",
+    "@data-ui/theme": "^0.0.1",
     "@vx/group": "0.0.120",
     "@vx/scale": "0.0.121",
     "@vx/shape": "0.0.120",
@@ -33,7 +33,7 @@
     "babel-plugin-syntax-jsx": "^6.18.0",
     "babel-preset-airbnb": "^2.2.3",
     "enzyme": "^2.8.2",
-    "jest": "^20.0.3",
+    "jest": "^19.0.0",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-test-renderer": "^15.6.1",
