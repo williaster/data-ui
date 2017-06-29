@@ -23,7 +23,7 @@
     "@data-ui/data-table": "^0.0.18",
     "@data-ui/radial-chart": "^0.0.1",
     "@data-ui/theme": "^0.0.2",
-    "@data-ui/xy-chart": "^0.0.9",
+    "@data-ui/xy-chart": "^0.0.11",
     "@kadira/storybook": "^2.35.3",
     "@vx/mock-data": "0.0.95",
     "aphrodite": "^1.2.0",
