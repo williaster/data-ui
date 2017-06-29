@@ -8,6 +8,8 @@ This package exports declarative react `<RadialChart />`s implmented with [@vx](
 ### Usage
 See the demo at [williaster.github.io/data-ui](https://williaster.github.io/data-ui) for more example outputs.
 
+<img width="566" alt="screen shot 2017-06-28 at 5 48 06 pm" src="https://user-images.githubusercontent.com/4496521/27712141-839c1adc-5cda-11e7-829e-af3b6abb1bdc.png">
+
 ```js
 import { scaleOrdinal } from '@vx/scale';
 import { LegendOrdinal } from '@vx/legend';
@@ -60,8 +62,9 @@ Although pie :cake: and donut :doughnut: charts are frequently encountered, they
 
 
 ## @data-ui packages
-- [@data-ui/xy-chart](https://github.com/williaster/data-ui/tree/master/packages/xy-chart) [![Version](https://img.shields.io/npm/v/@data-ui/xy-chart.svg?style=flat-square)](https://img.shields.io/npm/v/@data-ui/xy-chart.svg?style=flat-square)
-- @data-ui/radial-chart [![Version](https://img.shields.io/npm/v/@data-ui/radial-chart.svg?style=flat-square)](https://img.shields.io/npm/v/@data-ui/radial-chart.svg?style=flat-square)
-- [@data-ui/data-table](https://github.com/williaster/data-ui/tree/master/packages/data-table) [![Version](https://img.shields.io/npm/v/@data-ui/data-table.svg?style=flat-square)](https://img.shields.io/npm/v/@data-ui/data-table.svg?style=flat-square)
-- [@data-ui/theme](https://github.com/williaster/data-ui/tree/master/packages/theme)
+- @data-ui/xy-chart [![Version](https://img.shields.io/npm/v/@data-ui/xy-chart.svg?style=flat)](https://img.shields.io/npm/v/@data-ui/xy-chart.svg?style=flat)
+- @data-ui/radial-chart [![Version](https://img.shields.io/npm/v/@data-ui/radial-chart.svg?style=flat)](https://img.shields.io/npm/v/@data-ui/radial-chart.svg?style=flat)
+- [@data-ui/data-table](https://github.com/williaster/data-ui/tree/master/packages/data-table) [![Version](https://img.shields.io/npm/v/@data-ui/data-table.svg?style=flat)](https://img.shields.io/npm/v/@data-ui/data-table.svg?style=flat)
+- [@data-ui/theme](https://github.com/williaster/data-ui/tree/master/packages/theme) [![Version](https://img.shields.io/npm/v/@data-ui/theme.svg?style=flat)](https://img.shields.io/npm/v/@data-ui/theme.svg?style=flat)
 - [@data-ui/demo](https://github.com/williaster/data-ui/tree/master/packages/demo)
+
