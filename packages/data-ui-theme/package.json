@@ -1,8 +1,11 @@
 {
   "name": "@data-ui/theme",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Themes for data-ui",
   "main": "build/index.js",
+  "files": [
+    "build"
+  ],
   "scripts": {
     "build": "babel src/ -d build/",
     "test": "jest --colors --verbose --coverage"
@@ -22,12 +25,6 @@
     "babel-jest": "^20.0.3",
     "babel-plugin-syntax-jsx": "^6.18.0",
     "babel-preset-airbnb": "^2.2.3",
-    "jest": "^19.0.0",
-    "react": "^15.6.1",
-    "react-dom": "^15.6.1",
-    "react-test-renderer": "^15.6.1"
-  },
-  "peerDependencies": {
-    "react": "^15.4.0"
+    "jest": "^19.0.0"
   }
 }
