@@ -13,10 +13,10 @@ A collection of custom + wrapped components for data-rich (desktop) UIs. Super b
 demo at [williaster.github.io/data-ui](https://williaster.github.io/data-ui) :chart_with_upwards_trend:
 
 ## Packages
-- [@data-ui/xy-chart](https://github.com/williaster/data-ui/tree/master/packages/xy-chart) [![Version](https://img.shields.io/npm/v/@data-ui/xy-chart.svg?style=flat-square)](https://img.shields.io/npm/v/@data-ui/xy-chart.svg?style=flat-square)
-- [@data-ui/radial-chart](https://github.com/williaster/data-ui/tree/master/packages/radial-chart) [![Version](https://img.shields.io/npm/v/@data-ui/radial-chart.svg?style=flat-square)](https://img.shields.io/npm/v/@data-ui/radial-chart.svg?style=flat-square)
-- [@data-ui/data-table](https://github.com/williaster/data-ui/tree/master/packages/data-table) [![Version](https://img.shields.io/npm/v/@data-ui/data-table.svg?style=flat-square)](https://img.shields.io/npm/v/@data-ui/data-table.svg?style=flat-square)
-- [@data-ui/theme](https://github.com/williaster/data-ui/tree/master/packages/theme)
+- [@data-ui/xy-chart](https://github.com/williaster/data-ui/tree/master/packages/xy-chart) [![Version](https://img.shields.io/npm/v/@data-ui/xy-chart.svg?style=flat)](https://img.shields.io/npm/v/@data-ui/xy-chart.svg?style=flat)
+- [@data-ui/radial-chart](https://github.com/williaster/data-ui/tree/master/packages/radial-chart) [![Version](https://img.shields.io/npm/v/@data-ui/radial-chart.svg?style=flat)](https://img.shields.io/npm/v/@data-ui/radial-chart.svg?style=flat)
+- [@data-ui/data-table](https://github.com/williaster/data-ui/tree/master/packages/data-table) [![Version](https://img.shields.io/npm/v/@data-ui/data-table.svg?style=flat)](https://img.shields.io/npm/v/@data-ui/data-table.svg?style=flat)
+- [@data-ui/theme](https://github.com/williaster/data-ui/tree/master/packages/theme) [![Version](https://img.shields.io/npm/v/@data-ui/theme.svg?style=flat)](https://img.shields.io/npm/v/@data-ui/theme.svg?style=flat)
 - [@data-ui/demo](https://github.com/williaster/data-ui/tree/master/packages/demo)
 
 More coming.
