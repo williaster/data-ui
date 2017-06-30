@@ -4,6 +4,7 @@ import { mean as d3Mean } from 'd3-array';
 import {
   binEventsByEntityId,
   getEventUuid,
+  getEventCountsFromNode,
 } from './data-utils';
 
 import {
@@ -182,7 +183,12 @@ export function buildGraph(cleanedEvents, getStartIndex = () => 0) {
     } else {
       // given that a node size may respresent an event count,
       // the "filtered" node should contain only one event
-      filteredEvents[id] = events[0];
+      let i = 0;
+      filteredEvents[id] = events.reduce((all, curr) => {
+        all[`${i}`] = curr;
+        i += 1;
+        return all;
+      }, {});
     }
   });
 
@@ -206,12 +212,15 @@ export function buildGraph(cleanedEvents, getStartIndex = () => 0) {
   root[EVENT_COUNT] = Object.keys(root.children)
     .reduce((sum, curr) => sum + nodes[curr][EVENT_COUNT], 0);
 
+  const metaData = getEventCountsFromNode(root.children);
+
   console.timeEnd('buildGraph');
   return {
     root,
     nodes,
     entityEvents,
     filtered: numFiltered,
+    metaData,
   };
 }
 

@@ -42,7 +42,7 @@ class App extends React.PureComponent {
     this.handleAlignByEventType = this.handleAlignByEventType.bind(this);
 
     const { width, height, data } = props;
-    const visualizationWidth = this.getVisualizationWidth(width, false);
+    const visualizationWidth = this.getVisualizationWidth(width, true);
     const alignByEventType = ANY_EVENT_TYPE;
     const alignByIndex = 1;
     const graph = this.getGraph(data, alignByIndex, alignByEventType);
@@ -54,7 +54,7 @@ class App extends React.PureComponent {
       xScaleType: ELAPSED_TIME_SCALE, // @todo could pull these from controls
       yScaleType: EVENT_COUNT_SCALE,
       orderBy: ORDER_BY_EVENT_COUNT,
-      showControls: false,
+      showControls: true,
       visualizationWidth,
       graph,
       scales,
@@ -175,13 +175,13 @@ class App extends React.PureComponent {
             orderBy={orderBy}
             colorScale={scales[NODE_COLOR_SCALE]}
             xScaleType={xScaleType}
-            yScaleType={yScaleType}
             onToggleShowControls={this.onToggleShowControls}
             onChangeAlignByEventType={this.handleAlignByEventType}
             onChangeAlignByIndex={this.handleAlignByIndex}
             onChangeXScale={(type) => { this.setState({ xScaleType: type }); }}
-            onChangeYScale={(type) => { this.setState({ yScaleType: type }); }}
             onChangeOrderBy={(value) => { this.setState({ orderBy: value }); }}
+            metaData={graph.metaData}
+            width={width - visualizationWidth}
           />
         </SplitPane>
       </div>

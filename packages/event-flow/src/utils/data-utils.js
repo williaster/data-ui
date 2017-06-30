@@ -1,16 +1,18 @@
+/* eslint no-param-reassign: 0 */
 import {
   TS,
   ENTITY_ID,
   EVENT_NAME,
   META,
+  FILTERED_EVENTS,
 } from '../constants';
 
-import {
-  mean as d3Mean,
-  median as d3Median,
-  min as d3Min,
-  max as d3Max,
-} from 'd3-array';
+// import {
+//   mean as d3Mean,
+//   median as d3Median,
+//   min as d3Min,
+//   max as d3Max,
+// } from 'd3-array';
 
 /*
  * Creates an event with standard shape from a raw record/event object
@@ -119,25 +121,32 @@ export function collectSequencesFromNode(node, entityEvents) {
   return sequences;
 }
 
-export function getEventMetaData(sequences) {
-  const eventCountByType = {};
 
-  sequences.forEach((seq) => {
-    seq.forEach((event) => {
-      const name = event[EVENT_NAME];
-      eventCountByType[name] = eventCountByType[name] || 0;
-      eventCountByType[name] += 1;
-    });
+function recursivelyCountEvents(nodes, eventCounts = {}) {
+  if (!nodes || Object.keys(nodes).length === 0) return;
+  Object.entries(nodes).forEach(([nodeName, node]) => {
+    if (node.events && Object.keys(node.events).length > 0) {
+      Object.values(node.events).forEach((event) => {
+        const name = nodeName === FILTERED_EVENTS ? FILTERED_EVENTS : event[EVENT_NAME];
+
+        eventCounts[name] = eventCounts[name] || 0;
+        eventCounts[name] += nodeName === FILTERED_EVENTS
+          ? Object.keys(Object.values(event)).length
+          : 1;
+      });
+      recursivelyCountEvents(node.children, eventCounts);
+    }
   });
-  const sequenceLengths = sequences.map(sequence => sequence.length);
+}
 
+// Recursively traverses the graph fro the starting node, counting events by type along the way
+export function getEventCountsFromNode(nodes) {
+  const eventLookup = {};
+  recursivelyCountEvents(nodes, eventLookup);
+  const countTotal = Object.values(eventLookup).reduce((sum, curr) => sum + curr, 0);
   return {
-    eventCountByType,
-    sequenceLength: {
-      min: d3Min(sequenceLengths),
-      max: d3Max(sequenceLengths),
-      mean: d3Mean(sequenceLengths),
-      median: d3Median(sequenceLengths),
-    },
+    countLookup: eventLookup,
+    countArray: Object.entries(eventLookup).map(([label, value]) => ({ label, value })),
+    countTotal,
   };
 }

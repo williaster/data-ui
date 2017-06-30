@@ -4,7 +4,10 @@ import PropTypes from 'prop-types';
 
 import { Button, Select, StepIncrementer } from '@data-ui/forms';
 
-import { scaleShape, xScaleTypeShape, yScaleTypeShape } from '../propShapes';
+import EventTypeLegend from './EventTypeLegend';
+import EventTypeRadialChart from './EventTypeRadialChart';
+
+import { scaleShape, xScaleTypeShape } from '../propShapes';
 import formatIncrementerValue from '../utils/formatIncrementerValue';
 import { fontFamily } from '../theme';
 
@@ -12,8 +15,7 @@ import {
   ANY_EVENT_TYPE,
   ELAPSED_TIME_SCALE,
   EVENT_SEQUENCE_SCALE,
-  EVENT_COUNT_SCALE,
-  NODE_SEQUENCE_SCALE,
+  FILTERED_EVENTS,
   ORDER_BY_EVENT_COUNT,
   ORDER_BY_ELAPSED_MS,
 } from '../constants';
@@ -40,6 +42,11 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
+  },
+
+  flexColumn: {
+    display: 'flex',
+    flexDirection: 'column',
   },
 
   alignBySelect: {
@@ -86,14 +93,13 @@ const propTypes = {
   orderBy: PropTypes.string.isRequired,
   colorScale: scaleShape.isRequired,
   xScaleType: xScaleTypeShape.isRequired,
-  yScaleType: yScaleTypeShape.isRequired,
   onChangeXScale: PropTypes.func,
-  onChangeYScale: PropTypes.func,
   onToggleShowControls: PropTypes.func,
   onChangeAlignByIndex: PropTypes.func,
   onChangeAlignByEventType: PropTypes.func,
   onChangeOrderBy: PropTypes.func,
   showControls: PropTypes.bool.isRequired,
+  metaData: PropTypes.object,
 };
 
 const defaultProps = {
@@ -103,6 +109,7 @@ const defaultProps = {
   onChangeAlignByIndex: () => {},
   onChangeAlignByEventType: () => {},
   onChangeOrderBy: () => {},
+  metaData: {},
 };
 
 function ControlPanel({
@@ -111,20 +118,27 @@ function ControlPanel({
   alignByEventType,
   orderBy,
   xScaleType,
-  yScaleType,
   colorScale,
   onToggleShowControls,
   onChangeAlignByEventType,
   onChangeAlignByIndex,
   onChangeXScale,
-  onChangeYScale,
   onChangeOrderBy,
+  metaData,
 }) {
   const eventTypeOptions = [
     { value: ANY_EVENT_TYPE, label: 'event' },
     ...colorScale.scale.domain().map(value => ({ value, label: value })),
   ];
 
+  // Sort the scale by count
+  const eventTypeScale = colorScale.scale.copy();
+  eventTypeScale.domain(eventTypeScale.domain().sort((a, b) => (
+    (metaData.countLookup[b] || 0) - (metaData.countLookup[a] || 0)
+  )));
+  eventTypeScale.range(eventTypeScale.domain().map(eventType => colorScale.scale(eventType)));
+
+  // option renderer
   const valueRenderer = (option) => {
     if (option.value === ANY_EVENT_TYPE) return option.label;
     const color = colorScale.scale(option.value);
@@ -141,8 +155,9 @@ function ControlPanel({
 
       <div className={css(styles.header)}>
         <Button onClick={onToggleShowControls}>
-          {showControls ?
-            <span>{'Hide >'}</span> : <span>{'< Controls'}</span>}
+          {showControls
+            ? <span>{'Hide >'}</span>
+            : <span>{'< Controls'}</span>}
         </Button>
       </div>
 
@@ -164,20 +179,6 @@ function ControlPanel({
 
           <div className={css(styles.input)}>
             <div className={css(styles.title)}>
-              Y-axis
-            </div>
-            <Select
-              value={yScaleType}
-              options={[
-                { label: 'Event count', value: EVENT_COUNT_SCALE },
-                { label: 'Normalized size', value: NODE_SEQUENCE_SCALE },
-              ]}
-              onChange={({ value }) => onChangeYScale(value)}
-            />
-          </div>
-
-          <div className={css(styles.input)}>
-            <div className={css(styles.title)}>
               Align sequences by
             </div>
             <div className={css(styles.flexRow)}>
@@ -192,7 +193,7 @@ function ControlPanel({
               <div className={css(styles.alignBySelect)}>
                 <Select
                   value={alignByEventType}
-                  options={eventTypeOptions}
+                  options={eventTypeOptions.filter(opt => opt.value !== FILTERED_EVENTS)}
                   optionRenderer={valueRenderer}
                   valueRenderer={valueRenderer}
                   onChange={({ value }) => onChangeAlignByEventType(value)}
@@ -214,6 +215,30 @@ function ControlPanel({
               onChange={({ value }) => onChangeOrderBy(value)}
             />
           </div>
+
+          <div className={css(styles.flexColumn)}>
+            <div className={css(styles.title)}>
+              {`Event type summary (n = ${metaData.countTotal})`}
+            </div>
+            <div className={css(styles.flexColumn)}>
+              <EventTypeRadialChart
+                data={metaData.countArray}
+                width={0.7 * width}
+                height={0.7 * width}
+                colorScale={eventTypeScale}
+              />
+              <EventTypeLegend
+                scale={eventTypeScale}
+                labelFormat={(label) => {
+                  const count = metaData.eventCountLookup[label];
+                  const percentage = (count / metaData.totalCount) * 100;
+                  const text = label === FILTERED_EVENTS ? 'filtered' : label;
+                  return !isNaN(percentage) ? `${text} (${percentage.toFixed(1)}%)` : text;
+                }}
+              />
+            </div>
+          </div>
+
         </div>}
     </div>
   );

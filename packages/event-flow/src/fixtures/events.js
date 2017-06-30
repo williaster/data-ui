@@ -25,7 +25,7 @@ export function generateEvents({
   for (let i = 0; i < nEvents; i += 1) {
     const elapsedMs = intBetween(minElapsedMs, maxElapsedMs);
     const eventIndex = intBetween(0, eventCardinality);
-    const event = eventNames[eventIndex];
+    const event = eventNames.slice(eventIndex, 10);
 
     currDate += elapsedMs;
 
