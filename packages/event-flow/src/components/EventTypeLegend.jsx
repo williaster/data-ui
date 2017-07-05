@@ -6,23 +6,20 @@ import { FILTERED_EVENTS } from '../constants';
 
 const propTypes = {
   scale: PropTypes.func.isRequired,
-  direction: PropTypes.oneOf(['column', 'row']),
   labelFormat: PropTypes.func,
 };
 
 const defaultProps = {
-  direction: 'column',
   labelFormat: label => label,
 };
 
 function EventTypeLegend({
   scale,
-  direction,
   labelFormat,
 }) {
   return (
     <LegendOrdinal
-      direction={direction}
+      direction="column"
       scale={scale}
       shape={({ fill, width, height, label }) => (
         label.datum === FILTERED_EVENTS ? (

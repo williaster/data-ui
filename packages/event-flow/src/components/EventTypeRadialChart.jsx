@@ -5,7 +5,9 @@ import { RadialChart, ArcSeries, ArcLabel } from '@data-ui/radial-chart';
 import { FILTERED_EVENTS } from '../constants';
 
 const propTypes = {
-  data: PropTypes.arrayOf(PropTypes.object).isRequired,
+  data: PropTypes.arrayOf(PropTypes.shape({
+    label: PropTypes.string, // used for colors
+  })).isRequired,
   pieValue: PropTypes.func,
   colorScale: PropTypes.func.isRequired,
   width: PropTypes.number.isRequired,
@@ -57,7 +59,7 @@ function EventTypeRadialChart({
         stroke="#fff"
         fillOpacity={0.8}
         strokeWidth={2}
-        cornerRadius={5}
+        cornerRadius={4}
         label={(arc) => {
           if (arc.data && arc.data.label) {
             return arc.data.label === FILTERED_EVENTS

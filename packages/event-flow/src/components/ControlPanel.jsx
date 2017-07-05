@@ -103,7 +103,11 @@ const propTypes = {
   onChangeAlignByEventType: PropTypes.func,
   onChangeOrderBy: PropTypes.func,
   showControls: PropTypes.bool.isRequired,
-  metaData: PropTypes.object,
+  metaData: PropTypes.shape({
+    countLookup: PropTypes.object,
+    countArray: PropTypes.array,
+    countTotal: PropTypes.number,
+  }),
 };
 
 const defaultProps = {
@@ -113,7 +117,10 @@ const defaultProps = {
   onChangeAlignByIndex: () => {},
   onChangeAlignByEventType: () => {},
   onChangeOrderBy: () => {},
-  metaData: {},
+  metaData: {
+    countLookup: {},
+    countArray: [],
+  },
 };
 
 function ControlPanel({

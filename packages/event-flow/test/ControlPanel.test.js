@@ -3,6 +3,8 @@ import { shallow } from 'enzyme';
 import { Button, Select, StepIncrementer } from '@data-ui/forms';
 
 import ControlPanel from '../src/components/ControlPanel';
+import EventTypeLegend from '../src/components/EventTypeLegend';
+import EventTypeRadialChart from '../src/components/EventTypeRadialChart';
 import { scales } from '../src/fixtures/testFixtures';
 import { ELAPSED_TIME_SCALE, NODE_COLOR_SCALE, EVENT_COUNT_SCALE } from '../src/constants';
 
@@ -26,9 +28,9 @@ describe('<ControlPanel />', () => {
     expect(wrapper.find(Button).length).toBe(1);
   });
 
-  test('It should render a select for x-axis, y-axis, event alignment, and order by', () => {
+  test('It should render a select for x-axis, event alignment, and order by', () => {
     const wrapper = shallow(<ControlPanel {...props} />);
-    expect(wrapper.find(Select).length).toBe(4);
+    expect(wrapper.find(Select).length).toBe(3);
   });
 
   test('It should render a stepper', () => {
@@ -41,5 +43,15 @@ describe('<ControlPanel />', () => {
     expect(wrapper.find(Button).length).toBe(1);
     expect(wrapper.find(Select).length).toBe(0);
     expect(wrapper.find(StepIncrementer).length).toBe(0);
+  });
+
+  test('It should render a radial chart', () => {
+    const wrapper = shallow(<ControlPanel {...props} />);
+    expect(wrapper.find(EventTypeRadialChart).length).toBe(1);
+  });
+
+  test('It should render a legend', () => {
+    const wrapper = shallow(<ControlPanel {...props} />);
+    expect(wrapper.find(EventTypeLegend).length).toBe(1);
   });
 });
