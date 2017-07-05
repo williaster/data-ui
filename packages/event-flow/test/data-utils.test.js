@@ -22,8 +22,8 @@ describe('cleanEvents', () => {
 
   const dirty = [
     { i: 'am', a: 'raw', event: ['!!!'], ts: 3, id: 'id', name: 'name' },
-    { i: 'am', a: 'raw', event: ['!!!'], ts: 1, id: 'id', name: 'name' },
-    { i: 'am', a: 'raw', event: ['!!!'], ts: 2, id: 'id', name: 'name' },
+    { i: 'am', a: 'raw', event: ['!!!'], ts: 1, id: 'id1', name: 'name' },
+    { i: 'am', a: 'raw', event: ['!!!'], ts: 2, id: 'id2', name: 'name' },
   ];
 
   const clean = cleanEvents(dirty, accessors);
@@ -97,6 +97,32 @@ describe('binEventsByEntityId', () => {
     const result = binEventsByEntityId([{ [ENTITY_ID]: 1 }, { [ENTITY_ID]: 2 }]);
     expect(Array.isArray(result[1])).toBe(true);
     expect(Array.isArray(result[2])).toBe(true);
+  });
+
+  test('it should ignore the specified event types', () => {
+    const testEvents = [
+      { [ENTITY_ID]: 1, [EVENT_NAME]: 'a' },
+      { [ENTITY_ID]: 1, [EVENT_NAME]: 'b' },
+      { [ENTITY_ID]: 2, [EVENT_NAME]: 'b' },
+      { [ENTITY_ID]: 2, [EVENT_NAME]: 'b' },
+    ];
+
+    const unfiltered = binEventsByEntityId(testEvents);
+    const filterAs = binEventsByEntityId(testEvents, { a: true });
+    const filterBs = binEventsByEntityId(testEvents, { b: true });
+    const filtered = binEventsByEntityId(testEvents, { a: true, b: true });
+
+    expect(unfiltered[1].length).toBe(2);
+    expect(unfiltered[2].length).toBe(2);
+
+    expect(filterAs[1].length).toBe(1);
+    expect(filterAs[2].length).toBe(2);
+
+    expect(filterBs[1].length).toBe(1);
+    expect(filterBs[2]).toBeUndefined();
+
+    expect(filtered[1]).toBeUndefined();
+    expect(filtered[2]).toBeUndefined();
   });
 });
 

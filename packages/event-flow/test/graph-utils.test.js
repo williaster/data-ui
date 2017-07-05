@@ -228,13 +228,14 @@ describe('buildGraph', () => {
     expect(buildGraph).toBeDefined();
   });
 
-  test('it should return a graph with root, nodes, entityEvents, and filtered keys', () => {
-    const graph = buildGraph([...user1, ...user2]);
+  test('it should return a graph with root, nodes, entityEvents, filtered, and metaData keys', () => {
+    const graph = buildGraph({ cleanedEvents: [...user1, ...user2] });
     expect(graph).toEqual(expect.objectContaining({
       root: expect.any(Object),
       nodes: expect.any(Object),
       entityEvents: expect.any(Object),
       filtered: expect.any(Number),
+      metaData: expect.any(Object),
     }));
   });
 });

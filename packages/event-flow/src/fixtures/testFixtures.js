@@ -12,5 +12,5 @@ export const events = [
 export const width = 500;
 export const height = 500;
 
-export const graph = buildGraph(events);
+export const graph = buildGraph({ cleanedEvents: events });
 export const scales = buildAllScales(graph, width, height);

@@ -168,12 +168,14 @@ export function getRoot(nodes) {
  *    *cleaned* meaning they have ts, entity id, and event name keys
  *    in no particular order, they are binned by entity id and sorted by TS
  */
-export function buildGraph(cleanedEvents, getStartIndex = () => 0) {
+export function buildGraph({ cleanedEvents, getStartIndex = () => 0, ignoreEventTypes = {} }) {
   console.time('buildGraph');
   const nodes = {};
-  const entityEvents = binEventsByEntityId(cleanedEvents); // note this shallow copies
-
   const filteredEvents = {};
+
+  // note this shallow copies
+  const entityEvents = binEventsByEntityId(cleanedEvents, ignoreEventTypes);
+
   Object.keys(entityEvents).forEach((id) => {
     const events = entityEvents[id];
     const initialEventIndex = getStartIndex(events);
@@ -181,11 +183,10 @@ export function buildGraph(cleanedEvents, getStartIndex = () => 0) {
     if (initialEventIndex > -1 && typeof events[initialEventIndex] !== 'undefined') {
       buildNodesFromEntityEvents(events, initialEventIndex, nodes);
     } else {
-      // given that a node size may respresent an event count,
-      // the "filtered" node should contain only one event
+      // keep a ref to all events so that event type meta data includes all events
       let i = 0;
       filteredEvents[id] = events.reduce((all, curr) => {
-        all[`${i}`] = curr;
+        all[i] = curr;
         i += 1;
         return all;
       }, {});
@@ -195,6 +196,8 @@ export function buildGraph(cleanedEvents, getStartIndex = () => 0) {
   const root = getRoot(nodes);
   addMetaDataToNodes(root.children, nodes);
 
+  // given that a node size respresents an event count, the "filtered" node should
+  // contain only one event / the root event for the filtered sequence
   const numFiltered = Object.keys(filteredEvents).length;
 
   if (numFiltered) {
@@ -215,6 +218,7 @@ export function buildGraph(cleanedEvents, getStartIndex = () => 0) {
   const metaData = getEventCountsFromNode(root.children);
 
   console.timeEnd('buildGraph');
+
   return {
     root,
     nodes,

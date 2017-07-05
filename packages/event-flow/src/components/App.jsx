@@ -40,21 +40,24 @@ class App extends React.PureComponent {
     this.onToggleShowControls = this.onToggleShowControls.bind(this);
     this.handleAlignByIndex = this.handleAlignByIndex.bind(this);
     this.handleAlignByEventType = this.handleAlignByEventType.bind(this);
+    this.handleClickLegend = this.handleClickLegend.bind(this);
 
     const { width, height, data } = props;
     const visualizationWidth = this.getVisualizationWidth(width, true);
     const alignByEventType = ANY_EVENT_TYPE;
     const alignByIndex = 1;
-    const graph = this.getGraph(data, alignByIndex, alignByEventType);
+    const hiddenEventTypes = {};
+    const graph = this.getGraph({ data, alignByIndex, alignByEventType, hiddenEventTypes });
     const scales = this.getScales(graph, visualizationWidth, height);
 
     this.state = {
       alignByIndex,
       alignByEventType,
-      xScaleType: ELAPSED_TIME_SCALE, // @todo could pull these from controls
+      xScaleType: ELAPSED_TIME_SCALE,
       yScaleType: EVENT_COUNT_SCALE,
       orderBy: ORDER_BY_EVENT_COUNT,
       showControls: true,
+      hiddenEventTypes,
       visualizationWidth,
       graph,
       scales,
@@ -65,20 +68,29 @@ class App extends React.PureComponent {
     const nextState = {};
     if (this.props.data !== nextProps.data) {
       const { alignByIndex, alignByEventType } = this.state;
-      nextState.graph = this.getGraph(nextProps.data, alignByIndex, alignByEventType);
+      nextState.hiddenEventTypes = {};
+      nextState.graph = this.getGraph({
+        data: nextProps.data,
+        alignByIndex,
+        alignByEventType,
+        hiddenEventTypes: nextState.hiddenEventTypes,
+      });
     }
     if (
       this.props.width !== nextProps.width ||
       this.props.height !== nextProps.height ||
       nextState.graph
     ) {
-      const { showControls, graph } = this.state;
+      const { showControls, graph, scales: prevScales } = this.state;
       nextState.visualizationWidth = this.getVisualizationWidth(nextProps.width, showControls);
       nextState.scales = this.getScales(
         nextState.graph || graph,
         nextState.visualizationWidth,
         nextProps.height,
       );
+      if (!nextState.hiddenEventTypes) {
+        nextState.scales[NODE_COLOR_SCALE].scale = prevScales[NODE_COLOR_SCALE].scale;
+      }
     }
     if (Object.keys(nextState).length > 0) {
       this.setState(nextState);
@@ -93,7 +105,11 @@ class App extends React.PureComponent {
 
     this.setState({
       visualizationWidth,
-      scales: this.getScales(graph, visualizationWidth, height),
+      // use the previous color scale in case event types are hidden
+      scales: {
+        ...this.getScales(graph, visualizationWidth, height),
+        [NODE_COLOR_SCALE]: this.state.scales[NODE_COLOR_SCALE],
+      },
       showControls,
     });
   }
@@ -102,11 +118,17 @@ class App extends React.PureComponent {
     return width - (showControls ? CONTROLS_WIDTH + VIS_MARGIN.right : 0);
   }
 
-  getGraph(data, alignByIndex, alignByEventType) {
+  getGraph({ data, alignByIndex, alignByEventType, hiddenEventTypes }) {
     // the graph is built from a root event derived from event type + index
-    return buildGraph(data, events => findNthIndexOfX(events, alignByIndex, event => (
-      alignByEventType === ANY_EVENT_TYPE || event[EVENT_NAME] === alignByEventType
-    )));
+    return buildGraph({
+      cleanedEvents: data,
+      getStartIndex: eventSequence => (
+        findNthIndexOfX(eventSequence, alignByIndex, event => (
+          alignByEventType === ANY_EVENT_TYPE || event[EVENT_NAME] === alignByEventType
+        ))
+      ),
+      ignoreEventTypes: hiddenEventTypes,
+    });
   }
 
   getScales(graph, width, height) {
@@ -120,18 +142,47 @@ class App extends React.PureComponent {
 
   handleAlignByIndex(alignByIndex) {
     const { data, height } = this.props;
-    const { alignByEventType, visualizationWidth } = this.state;
-    const graph = this.getGraph(data, alignByIndex, alignByEventType);
-    const scales = this.getScales(graph, visualizationWidth, height);
-    this.setState({ alignByIndex, graph, scales });
+    const { alignByEventType, visualizationWidth, hiddenEventTypes } = this.state;
+    const graph = this.getGraph({ data, alignByIndex, alignByEventType, hiddenEventTypes });
+    const scales = { // use the previous color scale in case event types are hidden
+      ...this.getScales(graph, visualizationWidth, height),
+      [NODE_COLOR_SCALE]: this.state.scales[NODE_COLOR_SCALE],
+    };
+    this.setState({ alignByIndex, graph, scales, hiddenEventTypes });
   }
 
   handleAlignByEventType(alignByEventType) {
     const { data, height } = this.props;
-    const { alignByIndex, visualizationWidth } = this.state;
-    const graph = this.getGraph(data, alignByIndex, alignByEventType);
-    const scales = this.getScales(graph, visualizationWidth, height);
-    this.setState({ alignByEventType, graph, scales });
+    const { alignByIndex, visualizationWidth, hiddenEventTypes } = this.state;
+    const graph = this.getGraph({ data, alignByIndex, alignByEventType, hiddenEventTypes });
+    const scales = { // use the previous color scale in case event types are hidden
+      ...this.getScales(graph, visualizationWidth, height),
+      [NODE_COLOR_SCALE]: this.state.scales[NODE_COLOR_SCALE],
+    };
+    this.setState({ alignByEventType, graph, scales, hiddenEventTypes });
+  }
+
+  handleClickLegend(eventType) {
+    const { data, height } = this.props;
+    const { alignByIndex, visualizationWidth, alignByEventType, hiddenEventTypes } = this.state;
+    const nextHiddenEventTypes = {
+      ...hiddenEventTypes,
+      [eventType]: !hiddenEventTypes[eventType],
+    };
+
+    const graph = this.getGraph({
+      data,
+      alignByIndex,
+      alignByEventType,
+      hiddenEventTypes: nextHiddenEventTypes,
+    });
+
+    const scales = { // use the previous color scale in case event types are hidden
+      ...this.getScales(graph, visualizationWidth, height),
+      [NODE_COLOR_SCALE]: this.state.scales[NODE_COLOR_SCALE],
+    };
+
+    this.setState({ graph, scales, hiddenEventTypes: nextHiddenEventTypes });
   }
 
   render() {
@@ -139,6 +190,7 @@ class App extends React.PureComponent {
       alignByIndex,
       alignByEventType,
       orderBy,
+      hiddenEventTypes,
       graph,
       scales,
       showControls,
@@ -180,7 +232,9 @@ class App extends React.PureComponent {
             onChangeAlignByIndex={this.handleAlignByIndex}
             onChangeXScale={(type) => { this.setState({ xScaleType: type }); }}
             onChangeOrderBy={(value) => { this.setState({ orderBy: value }); }}
+            onClickLegendShape={this.handleClickLegend}
             metaData={graph.metaData}
+            hiddenEventTypes={hiddenEventTypes}
             width={width - visualizationWidth}
           />
         </SplitPane>

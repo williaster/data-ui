@@ -45,13 +45,16 @@ function eventSortComparator(a, b) {
 /*
  * Bins events by entity Id. Note that this method shallow copies all events
  */
-export function binEventsByEntityId(events) {
+export function binEventsByEntityId(events, ignoreEventTypes = {}) {
   const eventsByEntityId = {};
 
   events.forEach((event) => {
-    const id = event[ENTITY_ID];
-    eventsByEntityId[id] = eventsByEntityId[id] || [];
-    eventsByEntityId[id].push({ ...event });
+    const type = event[EVENT_NAME];
+    if (!ignoreEventTypes[type]) {
+      const id = event[ENTITY_ID];
+      eventsByEntityId[id] = eventsByEntityId[id] || [];
+      eventsByEntityId[id].push({ ...event });
+    }
   });
 
   return eventsByEntityId;
@@ -139,7 +142,9 @@ function recursivelyCountEvents(nodes, eventCounts = {}) {
   });
 }
 
-// Recursively traverses the graph fro the starting node, counting events by type along the way
+/*
+ * Recursively traverses the graph from the starting node, counting events by type along the way
+ */
 export function getEventCountsFromNode(nodes) {
   const eventLookup = {};
   recursivelyCountEvents(nodes, eventLookup);

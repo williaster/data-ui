@@ -103,6 +103,8 @@ const propTypes = {
   onChangeAlignByEventType: PropTypes.func,
   onChangeOrderBy: PropTypes.func,
   showControls: PropTypes.bool.isRequired,
+  onClickLegendShape: PropTypes.func,
+  hiddenEventTypes: PropTypes.objectOf(PropTypes.bool),
   metaData: PropTypes.shape({
     countLookup: PropTypes.object,
     countArray: PropTypes.array,
@@ -117,10 +119,12 @@ const defaultProps = {
   onChangeAlignByIndex: () => {},
   onChangeAlignByEventType: () => {},
   onChangeOrderBy: () => {},
+  onClickLegendShape: () => {},
   metaData: {
     countLookup: {},
     countArray: [],
   },
+  hiddenEventTypes: {},
 };
 
 function ControlPanel({
@@ -135,19 +139,14 @@ function ControlPanel({
   onChangeAlignByIndex,
   onChangeXScale,
   onChangeOrderBy,
+  onClickLegendShape,
   metaData,
+  hiddenEventTypes,
 }) {
   const eventTypeOptions = [
     { value: ANY_EVENT_TYPE, label: 'event' },
     ...colorScale.scale.domain().map(value => ({ value, label: value })),
   ];
-
-  // Sort the scale by count
-  const eventTypeScale = colorScale.scale.copy();
-  eventTypeScale.domain(eventTypeScale.domain().sort((a, b) => (
-    (metaData.countLookup[b] || 0) - (metaData.countLookup[a] || 0)
-  )));
-  eventTypeScale.range(eventTypeScale.domain().map(eventType => colorScale.scale(eventType)));
 
   // option renderer
   const valueRenderer = (option) => {
@@ -236,16 +235,18 @@ function ControlPanel({
                 data={metaData.countArray}
                 width={0.7 * width}
                 height={0.7 * width}
-                colorScale={eventTypeScale}
+                colorScale={colorScale.scale}
               />
               <EventTypeLegend
-                scale={eventTypeScale}
+                scale={colorScale.scale}
                 labelFormat={(label) => {
                   const count = metaData.countLookup[label];
                   const percentage = (count / metaData.countTotal) * 100;
-                  const text = label === FILTERED_EVENTS ? 'filtered' : label;
+                  const text = label === FILTERED_EVENTS ? 'filtered by alignment' : label;
                   return !isNaN(percentage) ? `${text} (${percentage.toFixed(1)}%)` : text;
                 }}
+                onClick={onClickLegendShape}
+                hiddenEventTypes={hiddenEventTypes}
               />
             </div>
           </div>
