@@ -25,7 +25,7 @@ export const width = 300;
 const unit = 8;
 const padding = 3 * unit;
 const styles = StyleSheet.create({
-  container: {
+  outerContainer: {
     position: 'relative',
     display: 'flex',
     flexDirection: 'column',
@@ -36,6 +36,10 @@ const styles = StyleSheet.create({
     height: '100%',
     padding,
     background: '#fff',
+  },
+
+  innerContainer: {
+    overflowY: 'auto',
   },
 
   flexRow: {
@@ -151,7 +155,7 @@ function ControlPanel({
   };
 
   return (
-    <div className={css(styles.container)}>
+    <div className={css(styles.outerContainer)}>
 
       <div className={css(styles.header)}>
         <Button onClick={onToggleShowControls}>
@@ -162,7 +166,7 @@ function ControlPanel({
       </div>
 
       {showControls &&
-        <div>
+        <div className={css(styles.innerContainer)}>
           <div className={css(styles.input)}>
             <div className={css(styles.title)}>
               X-axis
@@ -230,8 +234,8 @@ function ControlPanel({
               <EventTypeLegend
                 scale={eventTypeScale}
                 labelFormat={(label) => {
-                  const count = metaData.eventCountLookup[label];
-                  const percentage = (count / metaData.totalCount) * 100;
+                  const count = metaData.countLookup[label];
+                  const percentage = (count / metaData.countTotal) * 100;
                   const text = label === FILTERED_EVENTS ? 'filtered' : label;
                   return !isNaN(percentage) ? `${text} (${percentage.toFixed(1)}%)` : text;
                 }}

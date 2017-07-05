@@ -70,11 +70,11 @@ export function generateEventsForUsers({
 }
 
 export default {
-  fiveUsers: generateEventsForUsers({ nUsers: 5 }),
   tenUsers: generateEventsForUsers({ nUsers: 10 }),
   twentyUsers: generateEventsForUsers({ nUsers: 20 }),
+  fiftyUsers: generateEventsForUsers({ nUsers: 50 }),
   hundredUsers: generateEventsForUsers({ nUsers: 100 }),
-  variableLength: generateEventsForUsers({ nUsers: 20, maxElapsedMs: 5 * 1000 * 60 * 60 * 24 }),
-  manyEvents: generateEventsForUsers({ nUsers: 10, minEvents: 10, maxEvents: 30 }),
-  manyEventTypes: generateEventsForUsers({ eventCardinality: 15 }),
+  variableLength: generateEventsForUsers({ nUsers: 50, maxElapsedMs: 5 * 1000 * 60 * 60 * 24 }),
+  manyEvents: generateEventsForUsers({ nUsers: 50, minEvents: 10, maxEvents: 30 }),
+  manyEventTypes: generateEventsForUsers({ nUsers: 50, eventCardinality: 15 }),
 };
