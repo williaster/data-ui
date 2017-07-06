@@ -4,6 +4,7 @@ import {
   TS,
   EVENT_NAME,
   ENTITY_ID,
+  META,
 
   ELAPSED_TIME_SCALE,
   EVENT_COUNT_SCALE,
@@ -15,6 +16,7 @@ export const datumShape = PropTypes.shape({
   [TS]: PropTypes.instanceOf(Date).isRequired,
   [EVENT_NAME]: PropTypes.string.isRequired,
   [ENTITY_ID]: PropTypes.string.isRequired,
+  [META]: PropTypes.object,
 });
 
 export const dataShape = PropTypes.arrayOf(datumShape);

@@ -1,5 +1,6 @@
 import { Group } from '@vx/group';
 import React from 'react';
+import { RectClipPath } from '@vx/clip-path';
 import PropTypes from 'prop-types';
 
 import { event as d3Event, select as d3Select } from 'd3-selection';
@@ -7,7 +8,7 @@ import { zoom as d3Zoom, zoomIdentity } from 'd3-zoom';
 
 import { graphShape, scaleShape } from '../propShapes';
 
-import AggregatePanelClipPath, { CLIP_ID } from './AggregatePanelClipPath';
+import { CLIP_ID } from '../constants';
 import FilteredEventsPattern from './FilteredEventsPattern';
 import NodeDetails from './NodeDetails';
 import SubTree from './SubTree';
@@ -162,8 +163,10 @@ class AggregatePanel extends React.PureComponent {
             top={margin.top}
             left={margin.left}
           >
-            <AggregatePanelClipPath
+            <RectClipPath
+              id={CLIP_ID}
               x={-2}
+              y={0}
               width={innerWidth + margin.right + 2}
               height={innerHeight}
             />

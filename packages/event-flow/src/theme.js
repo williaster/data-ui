@@ -1,5 +1,7 @@
 import { color, svgLabel, unit, font } from '@data-ui/theme';
 
+export { unit, font } from '@data-ui/theme';
+
 export const colors = color;
 
 export const fontFamily = font.fontFamily;

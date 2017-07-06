@@ -60,6 +60,11 @@ class Visualization extends React.PureComponent {
         selectedNode: null,
         selectedSequences: null,
       });
+    } else if (nextProps.height !== this.props.height) {
+      const { paneHeight } = this.state;
+      const { height } = this.props;
+      const currDelta = height - paneHeight;
+      this.setState({ paneHeight: nextProps.height - currDelta });
     }
   }
 

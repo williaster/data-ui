@@ -3,11 +3,10 @@ import React from 'react';
 
 import { Bar, Line } from '@vx/shape';
 import { Point } from '@vx/point';
-import { GlyphDot } from '@vx/glyph';
+import { GlyphCircle } from '@vx/glyph';
 import { Group } from '@vx/group';
 
 import { scaleShape } from '../propShapes';
-
 
 import {
   ENTITY_ID,
@@ -23,17 +22,19 @@ const MAX_NAME_LENGTH = 12;
 
 const propTypes = {
   sequence: PropTypes.arrayOf(PropTypes.object),
-  xScale: PropTypes.func.isRequired,
-  yScale: PropTypes.func.isRequired,
+  xScale: scaleShape.isRequired,
+  yScale: scaleShape.isRequired,
   colorScale: scaleShape.isRequired,
-  showEventLabels: PropTypes.bool,
   emphasisIndex: PropTypes.number,
+  onMouseEnter: PropTypes.func,
+  onMouseLeave: PropTypes.func,
 };
 
 const defaultProps = {
   sequence: [],
-  showEventLabels: true,
   emphasisIndex: NaN,
+  onMouseEnter: () => {},
+  onMouseLeave: () => {},
 };
 
 function EventSequence({
@@ -41,25 +42,27 @@ function EventSequence({
   xScale,
   yScale,
   colorScale,
-  showEventLabels,
   emphasisIndex,
+  onMouseEnter,
+  onMouseLeave,
 }) {
-  const entityId = (sequence[0] || {})[ENTITY_ID];
+  const firstEvent = sequence[0];
+  const entityId = yScale.accessor(firstEvent || {});
   const zeroIndex = sequence.zeroIndex;
-  const y = yScale(entityId);
-  const [xMin, xMax] = xScale.range();
+  const y = yScale.scale(entityId);
+  const [xMin, xMax] = xScale.scale.range();
   const innerWidth = Math.max(xMin, xMax);
   const emphasizeBounds = [];
 
   const events = sequence.map((event, index) => {
-    const x = xScale(event[ELAPSED_MS_ROOT]);
+    const x = xScale.scale(xScale.accessor(event));
     const color = colorScale.scale(colorScale.accessor(event));
     const relativeIndex = index - zeroIndex;
     if (relativeIndex === 0) emphasizeBounds[0] = x;
     if (relativeIndex === emphasisIndex) emphasizeBounds[1] = x;
 
     return (
-      <GlyphDot
+      <GlyphCircle
         key={`${event[EVENT_UUID]}`}
         left={x}
         top={y}
@@ -70,16 +73,9 @@ function EventSequence({
         fill={color}
         stroke={relativeIndex === 0 ? '#000' : '#fff'}
         strokeWidth={1}
-      >
-        {showEventLabels &&
-          <text
-            {...yTickStyles.label.right}
-            y={10}
-            fill={color}
-          >
-            {event[EVENT_NAME]}
-          </text>}
-      </GlyphDot>
+        onMouseEnter={() => () => { onMouseEnter(event); }}
+        onMouseLeave={() => () => { onMouseLeave(event); }}
+      />
     );
   });
 
@@ -87,6 +83,7 @@ function EventSequence({
   const emphasisMax = Math.max(...emphasizeBounds);
   const entityLabel = entityId.length > MAX_NAME_LENGTH ?
     `${entityId.slice(0, MAX_NAME_LENGTH + 1)}…` : entityId;
+
   return (
     <Group>
       <Line

@@ -25,35 +25,6 @@ import {
 
 import { colors } from '../theme';
 
-export function computeEntityNameScale(sequences, heightPerEntity = 30) {
-  const domain = sequences.map(sequence => sequence[0] && sequence[0][ENTITY_ID]);
-  const height = sequences.length * heightPerEntity;
-
-  return scalePoint({
-    clamp: true,
-    range: [0, height],
-    padding: 0.2,
-    domain,
-  });
-}
-
-export function computeTimeScaleForSequences(sequences, width) {
-  let domain = null;
-  sequences.forEach((sequence) => {
-    const [min, max] = d3Extent(sequence, n => n[ELAPSED_MS_ROOT]);
-    if (!domain) domain = [min, max];
-    domain[0] = Math.min(min, domain[0]);
-    domain[1] = Math.max(max, domain[1]);
-  });
-
-  return scaleLinear({
-    nice: true,
-    clamp: true,
-    range: [0, width],
-    domain,
-  });
-}
-
 export function computeElapsedTimeScale(nodesArray, width) {
   const domain = d3Extent(nodesArray, n => n[ELAPSED_MS_ROOT]);
   return scaleLinear({
@@ -194,6 +165,10 @@ export function timeUnitFromTimeExtent(extent) {
   return 'second';
 }
 
+/*
+ * returns a time formatter which tries to set an appropriate unit
+ * based on the extent of the passed scale
+ */
 export function getTimeFormatter(scale) {
   const unit = timeUnitFromTimeExtent(scale.domain());
   return (ms => formatInterval(ms, unit));
@@ -245,5 +220,47 @@ export function buildAllScales(graph, width, height) {
       accessor: n => n.name || n[EVENT_NAME],
       label: 'Event name',
     },
+  };
+}
+
+export function computeEntityNameScale(sequences, heightPerEntity = 30) {
+  const domain = sequences.map(sequence => sequence[0] && sequence[0][ENTITY_ID]);
+  const height = sequences.length * heightPerEntity;
+
+  const scale = scalePoint({
+    clamp: true,
+    range: [0, height],
+    padding: 0.2,
+    domain,
+  });
+
+  return {
+    scale,
+    accessor: d => d[ENTITY_ID],
+    label: 'Entity id',
+  };
+}
+
+export function computeTimeScaleForSequences(sequences, width) {
+  let domain = null;
+  sequences.forEach((sequence) => {
+    const [min, max] = d3Extent(sequence, n => n[ELAPSED_MS_ROOT]);
+    if (!domain) domain = [min, max];
+    domain[0] = Math.min(min, domain[0]);
+    domain[1] = Math.max(max, domain[1]);
+  });
+
+  const scale = scaleLinear({
+    nice: true,
+    clamp: true,
+    range: [0, width],
+    domain,
+  });
+
+  return {
+    scale,
+    accessor: d => d[ELAPSED_MS_ROOT],
+    label: 'Elapsed time',
+    format: getTimeFormatter(scale),
   };
 }

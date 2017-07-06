@@ -20,29 +20,37 @@ const styles = StyleSheet.create({
 });
 
 const propTypes = {
-  parentRef: PropTypes.object.isRequired,
+  parentRef: PropTypes.object,
   x: PropTypes.number.isRequired,
   y: PropTypes.number.isRequired,
   children: PropTypes.node,
 };
 
 const defaultProps = {
+  parentRef: null,
   children: null,
 };
 
 // @TODO detect actual size of tooltip for overflow
 //  this should prob live within a @vx tooltip
+//      could do with an initial invisible render w opacity to 0, then detect size and render child
+//      so child isn't rendered without height?
 function Tooltip({
   parentRef,
   x,
   y,
   children,
 }) {
-  const rect = parentRef.getBoundingClientRect();
-  const parentWidth = rect.width;
-  const parentHeight = rect.height;
-  const left = x + WIDTH > parentWidth ? (x - WIDTH) + 30 : x + 50;
-  const top = y + 170 > parentHeight ? (y - 110) : y + 60;
+  let left = x + 50;
+  let top = y + 60;
+
+  if (parentRef) {
+    const rect = parentRef.getBoundingClientRect();
+    const parentWidth = rect.width;
+    const parentHeight = rect.height;
+    left = x + WIDTH > parentWidth ? (x - WIDTH) + 30 : x + 50;
+    top = y + 170 > parentHeight ? (y - 110) : y + 60;
+  }
 
   return (
     <div

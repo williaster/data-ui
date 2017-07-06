@@ -50,6 +50,7 @@ export function binEventsByEntityId(events, ignoreEventTypes = {}) {
 
   events.forEach((event) => {
     const type = event[EVENT_NAME];
+
     if (!ignoreEventTypes[type]) {
       const id = event[ENTITY_ID];
       eventsByEntityId[id] = eventsByEntityId[id] || [];
