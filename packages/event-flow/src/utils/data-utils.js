@@ -7,13 +7,6 @@ import {
   FILTERED_EVENTS,
 } from '../constants';
 
-// import {
-//   mean as d3Mean,
-//   median as d3Median,
-//   min as d3Min,
-//   max as d3Max,
-// } from 'd3-array';
-
 /*
  * Creates an event with standard shape from a raw record/event object
  */

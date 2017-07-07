@@ -131,7 +131,7 @@ class SubTree extends React.PureComponent {
           yOffset[offset] += height;
 
           return (
-            <g key={node.id} style={{ cursor: 'pointer' }}>
+            <Group key={node.id} style={{ cursor: 'pointer' }}>
               {hasChildren &&
                 <SubTree
                   {...this.props}
@@ -163,7 +163,7 @@ class SubTree extends React.PureComponent {
                 onMouseOut={this.onMouseOut}
                 data-node={node.id}
               />
-            </g>
+            </Group>
           );
         })}
       </Group>

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import { withBoundingRects, withBoundingRectsProps } from '@vx/bounds';
 
-const WIDTH = 200;
+const DEFAULT_WIDTH = 200;
 
 const styles = StyleSheet.create({
   tooltip: {
@@ -17,7 +17,6 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     fontFamily: 'BlinkMacSystemFont,Roboto,Helvetica Neue,sans-serif',
     fontSize: 12,
-    width: WIDTH,
   },
 });
 
@@ -25,16 +24,25 @@ const propTypes = {
   ...withBoundingRectsProps,
   left: PropTypes.number.isRequired,
   top: PropTypes.number.isRequired,
+  detectOverflowX: PropTypes.bool,
+  detectOverflowY: PropTypes.bool,
+  width: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   children: PropTypes.node,
 };
 
 const defaultProps = {
+  width: DEFAULT_WIDTH,
+  detectOverflowX: true,
+  detectOverflowY: true,
   children: null,
 };
 
 function Tooltip({
   left: initialLeft,
   top: initialTop,
+  width,
+  detectOverflowX,
+  detectOverflowY,
   rect,
   parentRect,
   children,
@@ -43,14 +51,14 @@ function Tooltip({
   let top = initialTop;
 
   if (rect && parentRect) {
-    left = rect.right > parentRect.right ? (left - rect.width) : left;
-    top = rect.bottom > parentRect.bottom ? (top - rect.height) : top;
+    left = detectOverflowX && rect.right > parentRect.right ? (left - rect.width) : left;
+    top = detectOverflowY && rect.bottom > parentRect.bottom ? (top - rect.height) : top;
   }
 
   return (
     <div
       className={css(styles.tooltip)}
-      style={{ top, left }}
+      style={{ top, left, width }}
     >
       {children}
     </div>

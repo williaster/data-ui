@@ -1,11 +1,11 @@
 import React from 'react';
 import { withScreenSize } from '@vx/responsive';
 
-import {
-  App,
-  sampleEvents,
-} from '@data-ui/event-flow';
+import { App } from '@data-ui/event-flow';
+import sampleEvents from '@data-ui/event-flow/build/sampleEvents';
 
+// forms require this import
+import '@data-ui/forms/build/react-select.min.css';
 
 const ResponsiveVis = withScreenSize(({ screenWidth, screenHeight, ...rest }) => (
   <App

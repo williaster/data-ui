@@ -19,6 +19,7 @@ const propTypes = {
   yScale: scaleShape.isRequired,
   colorScale: scaleShape.isRequired,
   emphasisIndex: PropTypes.number,
+  onClick: PropTypes.func,
   onMouseEnter: PropTypes.func,
   onMouseLeave: PropTypes.func,
 };
@@ -26,6 +27,7 @@ const propTypes = {
 const defaultProps = {
   sequence: [],
   emphasisIndex: NaN,
+  onClick: () => {}, // ({ event, events, index })
   onMouseEnter: () => {}, // ({ event, events, index })
   onMouseLeave: () => {}, // ({ event, events, index })
 };
@@ -36,6 +38,7 @@ function EventSequence({
   yScale,
   colorScale,
   emphasisIndex,
+  onClick,
   onMouseEnter,
   onMouseLeave,
 }) {
@@ -57,6 +60,7 @@ function EventSequence({
     return (
       <GlyphCircle
         key={`${event[EVENT_UUID]}`}
+        style={{ cursor: 'pointer' }}
         left={x}
         top={y}
         r={CIRCLE_RADIUS}
@@ -66,6 +70,7 @@ function EventSequence({
         fill={color}
         stroke={relativeIndex === 0 ? '#000' : '#fff'}
         strokeWidth={1}
+        onClick={() => () => { onClick({ event, index, events: sequence }); }}
         onMouseEnter={() => () => { onMouseEnter({ event, index, events: sequence }); }}
         onMouseLeave={() => () => { onMouseLeave({ event, index, events: sequence }); }}
       />

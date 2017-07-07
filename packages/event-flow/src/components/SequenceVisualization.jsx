@@ -89,6 +89,14 @@ function SequenceVisualization({
               yScale={yScale}
               colorScale={colorScale}
               emphasisIndex={emphasisIndex}
+              onClick={({ event, events, index }) => {
+                if (tooltipTimeout) clearTimeout(tooltipTimeout);
+                showTooltip({
+                  tooltipLeft: xScale.scale(xScale.accessor(event)) + margin.left,
+                  tooltipTop: yScale.scale(yScale.accessor(event)) + margin.top,
+                  tooltipData: { event, events, index, fromClick: true },
+                });
+              }}
               onMouseEnter={({ event, events, index }) => {
                 if (tooltipTimeout) clearTimeout(tooltipTimeout);
                 showTooltip({
@@ -98,9 +106,11 @@ function SequenceVisualization({
                 });
               }}
               onMouseLeave={() => {
-                tooltipTimeout = setTimeout(() => {
-                  hideTooltip();
-                }, 200);
+                if (!tooltipData.fromClick) {
+                  tooltipTimeout = setTimeout(() => {
+                    hideTooltip();
+                  }, 200);
+                }
               }}
             />
           ))}
@@ -108,7 +118,12 @@ function SequenceVisualization({
       </svg>
 
       {tooltipOpen &&
-        <Tooltip left={tooltipLeft} top={tooltipTop} rect={null}>
+        <Tooltip
+          left={tooltipLeft}
+          top={tooltipTop}
+          width="auto"
+          detectOverflowY={false}
+        >
           <EventDetails
             xScale={xScale}
             colorScale={colorScale}

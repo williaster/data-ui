@@ -88,8 +88,8 @@ class AggregatePanel extends React.PureComponent {
     this.setState({
       tooltip: {
         node: node || link.target,
-        x: xScaleZoomed ? xScaleZoomed(xScale.scale.invert(coords.x)) : coords.x,
-        y: yScaleZoomed ? yScaleZoomed(yScale.scale.invert(coords.y)) : coords.y,
+        left: xScaleZoomed ? xScaleZoomed(xScale.scale.invert(coords.x)) : coords.x,
+        top: yScaleZoomed ? yScaleZoomed(yScale.scale.invert(coords.y)) : coords.y,
       },
     });
   }
@@ -206,8 +206,8 @@ class AggregatePanel extends React.PureComponent {
         </svg>
         {tooltip &&
           <Tooltip
-            left={tooltip.x + margin.left}
-            top={tooltip.y + margin.top}
+            left={tooltip.left + margin.left}
+            top={tooltip.top + margin.top}
           >
             <NodeDetails
               node={tooltip.node}

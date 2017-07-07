@@ -23,7 +23,7 @@ import {
 export const width = 300;
 
 const unit = 8;
-const padding = 3 * unit;
+const padding = 2 * unit;
 const styles = StyleSheet.create({
   outerContainer: {
     position: 'relative',
@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
     fontColor: '#767676',
     width: `calc(100% - ${padding}px)`,
     height: '100%',
-    padding,
+    padding: padding,
     background: '#fff',
   },
 
