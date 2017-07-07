@@ -205,7 +205,10 @@ class AggregatePanel extends React.PureComponent {
           </Group>
         </svg>
         {tooltip &&
-          <Tooltip parentRef={this.svg} x={tooltip.x} y={tooltip.y}>
+          <Tooltip
+            left={tooltip.x + margin.left}
+            top={tooltip.y + margin.top}
+          >
             <NodeDetails
               node={tooltip.node}
               root={graph.root}

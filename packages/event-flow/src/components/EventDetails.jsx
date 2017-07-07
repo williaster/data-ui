@@ -40,18 +40,21 @@ function EventDetails({
   const prettyMeta = JSON.stringify(event[META], null, 2);
   return (
     <div>
-      <div style={{ ...font.medium, ...font.bold }}>
-        <strong>event</strong> <span style={{ color }}>{eventName}</span>
+      <div style={{ color, ...font.medium, ...font.bold }}>
+        {eventName}
       </div>
       <div style={{ ...font.small, ...font.light }}>
-        <strong>entity id</strong> {entity}
+        <div>
+          <strong>entity</strong> {entity}
+        </div>
+        <div>
+          <strong>{xScale.label}</strong> {xScale.format ? xScale.format(xValue) : xValue}
+        </div>
       </div>
-      <div style={{ ...font.small, ...font.light }}>
-        <strong>{xScale.label}</strong> {xScale.format ? xScale.format(xValue) : xValue}
-      </div>
-      <pre>
-        {prettyMeta}
-      </pre>
+      {prettyMeta &&
+        <pre>
+          {prettyMeta}
+        </pre>}
     </div>
   );
 }

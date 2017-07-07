@@ -93,8 +93,8 @@ function SequenceVisualization({
               onMouseEnter={(datum) => {
                 if (tooltipTimeout) clearTimeout(tooltipTimeout);
                 showTooltip({
-                  tooltipLeft: margin.left + xScale.scale(xScale.accessor(datum)),
-                  tooltipTop: margin.top + yScale.scale(yScale.accessor(datum)),
+                  tooltipLeft: xScale.scale(xScale.accessor(datum)) + margin.left,
+                  tooltipTop: yScale.scale(yScale.accessor(datum)) + margin.top,
                   tooltipData: datum,
                 });
               }}
@@ -109,7 +109,7 @@ function SequenceVisualization({
       </svg>
 
       {tooltipOpen &&
-        <Tooltip x={tooltipLeft} y={tooltipTop}>
+        <Tooltip left={tooltipLeft} top={tooltipTop}>
           <EventDetails
             event={tooltipData}
             xScale={xScale}
