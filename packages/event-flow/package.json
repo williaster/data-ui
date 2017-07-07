@@ -12,8 +12,8 @@
   ],
   "main": "build/index.js",
   "scripts": {
-    "build": "webpack -p --env prod",
-    "dev": "webpack --progress --colors --watch --env dev",
+    "build": "webpack -p --optimize-minimize",
+    "dev": "webpack --progress --colors --watch",
     "test": "jest --colors --verbose --coverage"
   },
   "repository": "https://github.com/williaster/data-ui.git",
