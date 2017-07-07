@@ -8,7 +8,7 @@ import '../splitpane.css';
 import ControlPanel, { width as CONTROLS_WIDTH } from './ControlPanel';
 import Visualization, { margin as VIS_MARGIN } from './Visualization';
 
-import { findNthIndexOfX } from '../utils/data-utils';
+import { findNthIndexOfX, getMetaDataFromNodes } from '../utils/data-utils';
 import { buildGraph } from '../utils/graph-utils';
 import { buildAllScales, nodeSorters } from '../utils/scale-utils';
 import { dataShape } from '../propShapes';
@@ -61,6 +61,7 @@ class App extends React.PureComponent {
       visualizationWidth,
       graph,
       scales,
+      selectedNode: null,
     };
   }
 
@@ -93,6 +94,7 @@ class App extends React.PureComponent {
       }
     }
     if (Object.keys(nextState).length > 0) {
+      nextState.selectedNode = null;
       this.setState(nextState);
     }
   }
@@ -197,10 +199,16 @@ class App extends React.PureComponent {
       xScaleType,
       yScaleType,
       visualizationWidth,
+      selectedNode,
     } = this.state;
 
     console.log('graph', graph);
     const { width, height } = this.props;
+
+    let metaData = graph.metaData;
+    if (selectedNode) {
+      metaData = getMetaDataFromNodes({ [selectedNode.id]: selectedNode });
+    }
 
     return (
       <div style={{ position: 'relative', width, height }}>
@@ -211,6 +219,7 @@ class App extends React.PureComponent {
           split="vertical"
         >
           <Visualization
+            onClickNode={(selectedNode) => { this.setState({ selectedNode }); }}
             width={visualizationWidth}
             height={height}
             graph={graph}
@@ -233,7 +242,7 @@ class App extends React.PureComponent {
             onChangeXScale={(type) => { this.setState({ xScaleType: type }); }}
             onChangeOrderBy={(value) => { this.setState({ orderBy: value }); }}
             onClickLegendShape={this.handleClickLegend}
-            metaData={graph.metaData}
+            metaData={metaData}
             hiddenEventTypes={hiddenEventTypes}
             width={width - visualizationWidth}
           />

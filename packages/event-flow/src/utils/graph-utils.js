@@ -4,7 +4,7 @@ import { mean as d3Mean } from 'd3-array';
 import {
   binEventsByEntityId,
   getEventUuid,
-  getEventCountsFromNode,
+  getMetaDataFromNodes,
 } from './data-utils';
 
 import {
@@ -215,7 +215,7 @@ export function buildGraph({ cleanedEvents, getStartIndex = () => 0, ignoreEvent
   root[EVENT_COUNT] = Object.keys(root.children)
     .reduce((sum, curr) => sum + nodes[curr][EVENT_COUNT], 0);
 
-  const metaData = getEventCountsFromNode(root.children);
+  const metaData = getMetaDataFromNodes(root.children);
 
   console.timeEnd('buildGraph');
 

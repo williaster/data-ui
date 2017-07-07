@@ -144,7 +144,7 @@ function recursivelyCountEvents(nodes, eventCounts = {}) {
 /*
  * Recursively traverses the graph from the starting node, counting events by type along the way
  */
-export function getEventCountsFromNode(nodes) {
+export function getMetaDataFromNodes(nodes) {
   const eventLookup = {};
   recursivelyCountEvents(nodes, eventLookup);
   const countTotal = Object.values(eventLookup).reduce((sum, curr) => sum + curr, 0);

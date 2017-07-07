@@ -32,6 +32,7 @@ const propTypes = {
   nodeSorter: PropTypes.func.isRequired,
   width: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired,
+  onClickNode: PropTypes.func.isRequired,
 };
 
 const defaultProps = {};
@@ -71,7 +72,7 @@ class Visualization extends React.PureComponent {
   onClickNode({ node }) {
     if (node.id === FILTERED_EVENTS) return;
 
-    const { height, graph } = this.props;
+    const { height, graph, onClickNode } = this.props;
     const { selectedNode } = this.state;
     const isSelected = selectedNode && selectedNode.id === node.id;
     const sequences = isSelected ? null : collectSequencesFromNode(node, graph.entityEvents);
@@ -86,6 +87,8 @@ class Visualization extends React.PureComponent {
           height - SingleSequencesPanel.getEstimatedHeight(sequences.length),
         ),
     });
+
+    onClickNode(isSelected ? null : node);
   }
 
   onDragStart() {
@@ -105,6 +108,8 @@ class Visualization extends React.PureComponent {
       selectedSequences: null,
       paneHeight: this.props.height - MIN_PANE_SIZE,
     });
+
+    this.props.onClickNode(null);
   }
 
   render() {
@@ -128,6 +133,23 @@ class Visualization extends React.PureComponent {
 
     if (width < 100 || height < 100) return null;
 
+    // if a node is selected, make it the root node + hide others
+    const adjustedGraph = selectedNode ? ({
+      ...graph,
+      root: {
+        ...graph.root,
+        [EVENT_COUNT]: selectedNode[EVENT_COUNT],
+        children: {
+          [selectedNode.id]: selectedNode,
+        },
+      },
+    }) : graph;
+
+    const adjustedYScale = selectedNode ? ({
+      ...yScale,
+      scale: yScale.scale.copy().domain([0, selectedNode[EVENT_COUNT]]),
+    }) : yScale;
+
     return (
       <div style={{ width, height }}>
         <SplitPane
@@ -145,18 +167,9 @@ class Visualization extends React.PureComponent {
             )}
           >
             <AggregatePanel
-              graph={selectedNode ? // if a node is selected, make it the root node / hide others
-                ({ ...graph,
-                  root: {
-                    ...graph.root,
-                    [EVENT_COUNT]: selectedNode[EVENT_COUNT],
-                    children: {
-                      [selectedNode.id]: selectedNode,
-                    },
-                  },
-                }) : graph}
+              graph={adjustedGraph}
               xScale={xScale}
-              yScale={yScale}
+              yScale={adjustedYScale}
               timeScale={timeScale}
               colorScale={colorScale}
               onClickNode={this.onClickNode}
