@@ -1,4 +1,5 @@
 const path = require('path');
+const webpack = require('webpack');
 
 const dist = path.resolve(__dirname, './build');
 const src = path.resolve(__dirname, './src');
@@ -32,6 +33,9 @@ const config = {
       },
     ],
   },
+  plugins: [
+    new webpack.DefinePlugin({ 'process.env.NODE_ENV': '"production"' }),
+  ],
 };
 
 module.exports = config;

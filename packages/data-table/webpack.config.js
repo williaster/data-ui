@@ -1,5 +1,5 @@
 const path = require('path');
-const DashboardPlugin = require('webpack-dashboard/plugin');
+const webpack = require('webpack');
 
 const dist = path.resolve(__dirname, './build');
 const src = path.resolve(__dirname, './src');
@@ -30,8 +30,7 @@ const config = {
     ],
   },
   plugins: [
-    // make the port diff from other packages to run simultaneously
-    new DashboardPlugin({ port: 3001 }),
+    new webpack.DefinePlugin({ 'process.env.NODE_ENV': '"production"' }),
   ],
 };
 
