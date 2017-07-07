@@ -41,10 +41,10 @@ function Tooltip({
   left: initialLeft,
   top: initialTop,
   width,
-  detectOverflowX,
-  detectOverflowY,
   rect,
   parentRect,
+  detectOverflowX,
+  detectOverflowY,
   children,
 }) {
   let left = initialLeft;

@@ -32,9 +32,9 @@ const styles = StyleSheet.create({
     fontFamily,
     fontSize: 12,
     fontColor: '#767676',
-    width: `calc(100% - ${padding}px)`,
+    width: `calc(100% - ${2 * padding}px)`,
     height: '100%',
-    padding: padding,
+    padding: `${1 * unit}px ${padding}px`,
     background: '#fff',
   },
 
@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
   },
 
   input: {
-    paddingBottom: 3 * unit,
+    paddingBottom: padding,
   },
 
   option: {

@@ -15,9 +15,14 @@ export function createEvent(rawEvent, accessors) {
     [TS]: accessors[TS](rawEvent),
     [EVENT_NAME]: accessors[EVENT_NAME](rawEvent),
     [ENTITY_ID]: accessors[ENTITY_ID](rawEvent),
-    [META]: {
-      ...rawEvent,
-    },
+    [META]: Object.entries(rawEvent).reduce((result, [key, value]) => {
+      try { // try to parse json for ease of parsing downstream
+        result[key] = JSON.parse(value);
+      } catch (e) {
+        result[key] = value;
+      }
+      return result;
+    }, {}),
   };
 }
 
