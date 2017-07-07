@@ -26,12 +26,14 @@ import {
 
 const propTypes = {
   data: dataShape,
+  initialShowControls: PropTypes.bool,
   width: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired,
 };
 
 const defaultProps = {
   data: [],
+  initialShowControls: false,
 };
 
 class App extends React.PureComponent {
@@ -42,8 +44,8 @@ class App extends React.PureComponent {
     this.handleAlignByEventType = this.handleAlignByEventType.bind(this);
     this.handleClickLegend = this.handleClickLegend.bind(this);
 
-    const { width, height, data } = props;
-    const visualizationWidth = this.getVisualizationWidth(width, true);
+    const { width, height, data, initialShowControls } = props;
+    const visualizationWidth = this.getVisualizationWidth(width, initialShowControls);
     const alignByEventType = ANY_EVENT_TYPE;
     const alignByIndex = 1;
     const hiddenEventTypes = {};
@@ -56,7 +58,7 @@ class App extends React.PureComponent {
       xScaleType: ELAPSED_TIME_SCALE,
       yScaleType: EVENT_COUNT_SCALE,
       orderBy: ORDER_BY_EVENT_COUNT,
-      showControls: true,
+      showControls: initialShowControls,
       hiddenEventTypes,
       visualizationWidth,
       graph,

@@ -6,15 +6,8 @@ import { Point } from '@vx/point';
 import { GlyphCircle } from '@vx/glyph';
 import { Group } from '@vx/group';
 
+import { EVENT_UUID } from '../constants';
 import { scaleShape } from '../propShapes';
-
-import {
-  ENTITY_ID,
-  ELAPSED_MS_ROOT,
-  EVENT_UUID,
-  EVENT_NAME,
-} from '../constants';
-
 import { yTickStyles } from '../theme';
 
 const CIRCLE_RADIUS = 5;
@@ -33,8 +26,8 @@ const propTypes = {
 const defaultProps = {
   sequence: [],
   emphasisIndex: NaN,
-  onMouseEnter: () => {},
-  onMouseLeave: () => {},
+  onMouseEnter: () => {}, // ({ event, events, index })
+  onMouseLeave: () => {}, // ({ event, events, index })
 };
 
 function EventSequence({
@@ -73,8 +66,8 @@ function EventSequence({
         fill={color}
         stroke={relativeIndex === 0 ? '#000' : '#fff'}
         strokeWidth={1}
-        onMouseEnter={() => () => { onMouseEnter(event); }}
-        onMouseLeave={() => () => { onMouseLeave(event); }}
+        onMouseEnter={() => () => { onMouseEnter({ event, index, events: sequence }); }}
+        onMouseLeave={() => () => { onMouseLeave({ event, index, events: sequence }); }}
       />
     );
   });
@@ -86,12 +79,15 @@ function EventSequence({
 
   return (
     <Group>
+      {/* gridline for this sequence */}
       <Line
         from={new Point({ x: xMin, y })}
         to={new Point({ x: xMax, y })}
         strokeWidth={1}
         stroke="#DBDBDB"
       />
+
+      {/* label for this sequence */}
       <text
         x={innerWidth + 8}
         y={y}
@@ -99,6 +95,8 @@ function EventSequence({
       >
         {entityLabel}
       </text>
+
+      {/* a mark that emphasizes the selected sequence */}
       <Bar
         fill="#DBDBDB"
         rx={CIRCLE_RADIUS}
@@ -108,6 +106,7 @@ function EventSequence({
         width={emphasisMax - emphasisMin}
         height={CIRCLE_RADIUS + 1}
       />
+
       {events}
     </Group>
   );

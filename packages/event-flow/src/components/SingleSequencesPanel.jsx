@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import NodeSequence from './NodeSequence';
-import SingleSequenceVisualization, { margin } from './SequenceVisualization';
+import SequenceVisualization, { margin } from './SequenceVisualization';
 
 import { computeTimeScaleForSequences, computeEntityNameScale } from '../utils/scale-utils';
 import { ancestorsFromNode } from '../utils/graph-utils';
@@ -14,7 +14,6 @@ import { unit } from '../theme';
 const styles = StyleSheet.create({
   container: {
     fontFamily: 'BlinkMacSystemFont,Roboto,Helvetica Neue,sans-serif', // @todo port to withStyles
-    position: 'relative',
     background: '#fff',
     width: '100%',
     borderTop: '1px solid #ddd',
@@ -67,7 +66,7 @@ const defaultProps = {
 class SingleSequencePanel extends React.PureComponent {
   // given a sequence count, returns an estimate of the panel height
   static getEstimatedHeight(numSequences) {
-    return (numSequences * 30) + margin.top + 50;
+    return (numSequences * 30) + margin.top + 75;
   }
 
   constructor(props) {
@@ -96,7 +95,7 @@ class SingleSequencePanel extends React.PureComponent {
   }
 
   render() {
-    const { node, sequences, colorScale, clearSelection, height, width } = this.props;
+    const { node, sequences, colorScale, clearSelection, height } = this.props;
     const { xScale, yScale } = this.state;
     const hasSequences = sequences && sequences.length > 0;
     const nodeSequence = ancestorsFromNode(node);
@@ -124,9 +123,8 @@ class SingleSequencePanel extends React.PureComponent {
             </Button>
           </div>
         </div>
-        <SingleSequenceVisualization
+        <SequenceVisualization
           sequences={sequences}
-          width={width}
           xScale={xScale}
           yScale={yScale}
           colorScale={colorScale}

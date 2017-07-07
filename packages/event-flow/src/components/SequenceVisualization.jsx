@@ -22,7 +22,6 @@ export const margin = {
 };
 
 const propTypes = {
-  width: PropTypes.number.isRequired,
   xScale: scaleShape.isRequired,
   yScale: scaleShape.isRequired,
   colorScale: scaleShape.isRequired,
@@ -50,7 +49,6 @@ const defaultProps = {
 let tooltipTimeout;
 
 function SequenceVisualization({
-  width,
   xScale,
   yScale,
   colorScale,
@@ -63,13 +61,14 @@ function SequenceVisualization({
   tooltipLeft,
   tooltipOpen,
 }) {
+  const innerWidth = Math.max(...xScale.scale.range());
   const innerHeight = Math.max(...yScale.scale.range());
   return (
     <div>
       <svg
         role="img"
         aria-label="Single event sequences"
-        width={width}
+        width={innerWidth + margin.left + margin.right}
         height={innerHeight + margin.top + margin.bottom}
       >
         <Group left={margin.left} top={margin.top}>
@@ -90,18 +89,18 @@ function SequenceVisualization({
               yScale={yScale}
               colorScale={colorScale}
               emphasisIndex={emphasisIndex}
-              onMouseEnter={(datum) => {
+              onMouseEnter={({ event, events, index }) => {
                 if (tooltipTimeout) clearTimeout(tooltipTimeout);
                 showTooltip({
-                  tooltipLeft: xScale.scale(xScale.accessor(datum)) + margin.left,
-                  tooltipTop: yScale.scale(yScale.accessor(datum)) + margin.top,
-                  tooltipData: datum,
+                  tooltipLeft: xScale.scale(xScale.accessor(event)) + margin.left,
+                  tooltipTop: yScale.scale(yScale.accessor(event)) + margin.top,
+                  tooltipData: { event, events, index },
                 });
               }}
               onMouseLeave={() => {
                 tooltipTimeout = setTimeout(() => {
                   hideTooltip();
-                }, 300);
+                }, 200);
               }}
             />
           ))}
@@ -109,11 +108,13 @@ function SequenceVisualization({
       </svg>
 
       {tooltipOpen &&
-        <Tooltip left={tooltipLeft} top={tooltipTop}>
+        <Tooltip left={tooltipLeft} top={tooltipTop} rect={null}>
           <EventDetails
-            event={tooltipData}
             xScale={xScale}
             colorScale={colorScale}
+            event={tooltipData.event}
+            events={tooltipData.events}
+            index={tooltipData.index}
           />
         </Tooltip>}
     </div>

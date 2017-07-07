@@ -13,7 +13,6 @@ const styles = StyleSheet.create({
   fillParent: {
     width: '100%',
     height: '100%',
-    position: 'relative',
     background: '#fff',
   },
 
@@ -127,8 +126,10 @@ class Visualization extends React.PureComponent {
       dragging,
     } = this.state;
 
+    if (width < 100 || height < 100) return null;
+
     return (
-      <div style={{ position: 'relative', width, height }}>
+      <div style={{ width, height }}>
         <SplitPane
           split="horizontal"
           size={dragging ? undefined : paneHeight}

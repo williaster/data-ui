@@ -141,8 +141,18 @@ const minute = second * 60;
 const hour = minute * 60;
 const day = hour * 24;
 
-export function formatInterval(ms, unit) {
+export function timeUnitFromTimeExtent(extent) {
+  const maxMs = Math.max(...(extent.map(Math.abs)));
+  if (maxMs / day >= 3) return 'day';
+  if (maxMs / hour >= 3) return 'hour';
+  if (maxMs / minute >= 3) return 'minute';
+  return 'second';
+}
+
+export function formatInterval(ms, optionalUnit) {
   const num = typeof ms === 'string' ? parseInt(ms, 10) : ms;
+  let unit = optionalUnit;
+  if (!unit) unit = timeUnitFromTimeExtent([num]);
   switch (unit) {
     case 'second':
       return `${zeroDecimals(num / second)}sec`;
@@ -155,14 +165,6 @@ export function formatInterval(ms, unit) {
     default:
       return zeroDecimals(num);
   }
-}
-
-export function timeUnitFromTimeExtent(extent) {
-  const maxMs = Math.max(...(extent.map(Math.abs)));
-  if (maxMs / day >= 3) return 'day';
-  if (maxMs / hour >= 3) return 'hour';
-  if (maxMs / minute >= 3) return 'minute';
-  return 'second';
 }
 
 /*

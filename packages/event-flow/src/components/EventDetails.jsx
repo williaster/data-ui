@@ -1,10 +1,7 @@
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import React from 'react';
-
-import {
-  datumShape,
-  scaleShape,
-} from '../propShapes';
+import { formatInterval } from '../utils/scale-utils';
+import { datumShape, scaleShape } from '../propShapes';
 
 import { font } from '../theme';
 
@@ -16,28 +13,39 @@ import {
 
 const propTypes = {
   event: datumShape,
+  events: PropTypes.arrayOf(datumShape),
+  index: PropTypes.number,
   xScale: scaleShape,
   colorScale: scaleShape,
 };
 
 const defaultProps = {
   event: {},
+  events: [],
+  index: -1,
   xScale: null,
   colorScale: null,
 };
 
 function EventDetails({
   event,
+  events,
+  index,
   xScale,
   colorScale,
 }) {
   if (!xScale || !colorScale) return null;
-
-  const color = colorScale.scale(colorScale.accessor(event));
   const eventName = event[EVENT_NAME];
   const entity = event[ENTITY_ID];
-  const xValue = xScale.accessor(event);
   const prettyMeta = JSON.stringify(event[META], null, 2);
+
+  const prevEvent = index - 1 > 0 ? events[index - 1] : null;
+  const color = colorScale.scale(colorScale.accessor(event));
+  const rootColor = colorScale.scale(colorScale.accessor(events[0]));
+  const prevColor = prevEvent ? colorScale.scale(colorScale.accessor(prevEvent)) : null;
+  const elapsedToRoot = xScale.accessor(event);
+  const elapsedToPrev = prevEvent ? (elapsedToRoot - xScale.accessor(prevEvent)) : null;
+
   return (
     <div>
       <div style={{ color, ...font.medium, ...font.bold }}>
@@ -45,16 +53,29 @@ function EventDetails({
       </div>
       <div style={{ ...font.small, ...font.light }}>
         <div>
-          <strong>entity</strong> {entity}
+          <strong>Entity</strong> {entity}
         </div>
-        <div>
-          <strong>{xScale.label}</strong> {xScale.format ? xScale.format(xValue) : xValue}
-        </div>
+
+        {index > 0 &&
+          <div>
+            <strong>Time </strong>
+            <span style={{ color: rootColor }}>
+              {formatInterval(elapsedToRoot)} (root)
+            </span>
+
+            {prevEvent && ', '}
+            {prevEvent &&
+              <span style={{ color: prevColor }}>
+                {formatInterval(elapsedToPrev)} (prev)
+              </span>}
+
+          </div>}
+        {prettyMeta &&
+          <pre style={{ ...font.small, ...font.light }}>
+            <strong>Meta </strong>
+            {prettyMeta}
+          </pre>}
       </div>
-      {prettyMeta &&
-        <pre>
-          {prettyMeta}
-        </pre>}
     </div>
   );
 }
