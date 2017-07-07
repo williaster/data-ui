@@ -199,7 +199,7 @@ class App extends React.PureComponent {
       visualizationWidth,
     } = this.state;
 
-    console.log(graph);
+    console.log('graph', graph);
     const { width, height } = this.props;
 
     return (

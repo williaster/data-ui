@@ -14,6 +14,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     position: 'relative',
+    background: '#fff',
   },
 
   noPointerEvents: {
@@ -143,7 +144,7 @@ class Visualization extends React.PureComponent {
             )}
           >
             <AggregatePanel
-              graph={selectedNode ?
+              graph={selectedNode ? // if a node is selected, make it the root node / hide others
                 ({ ...graph,
                   root: {
                     ...graph.root,
