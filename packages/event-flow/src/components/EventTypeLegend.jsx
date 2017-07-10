@@ -1,9 +1,22 @@
 /* eslint jsx-a11y/no-static-element-interactions: 0 */
+import { css, StyleSheet } from 'aphrodite';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { LegendOrdinal } from '@vx/legend';
 
 import { FILTERED_EVENTS } from '../constants';
+
+const styles = StyleSheet.create({
+  legendItem: {
+    cursor: 'pointer',
+    ':before': {
+      content: '"✓"',
+      color: '#fff',
+      position: 'absolute',
+      paddingLeft: 1,
+    },
+  },
+});
 
 const propTypes = {
   scale: PropTypes.func.isRequired,
@@ -43,14 +56,14 @@ function EventTypeLegend({
           </svg>
         ) : (
           <div
+            className={css(styles.legendItem)}
+            onClick={() => { onClick(value); }}
             style={{
               width,
               height,
-              cursor: 'pointer',
               background: isHidden ? 'transparent' : fill,
               boxShadow: isHidden ? `inset 0 0 0 2px ${fill}` : 'none',
             }}
-            onClick={() => { onClick(value); }}
           />
         );
       }}

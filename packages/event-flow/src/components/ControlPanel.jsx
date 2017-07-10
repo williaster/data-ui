@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
     textAlign: 'right',
   },
 
-  input: {
+  padBottom: {
     paddingBottom: padding,
   },
 
@@ -160,6 +160,17 @@ function ControlPanel({
     );
   };
 
+  // remove filter from color scale if no items are filtered
+  let legendScale = colorScale.scale;
+  if (!metaData.countLookup[FILTERED_EVENTS]) {
+    legendScale = colorScale.scale.copy().domain(
+      colorScale.scale.domain().slice(1),
+    );
+    legendScale.range(
+      colorScale.scale.range().slice(1),
+    );
+  }
+
   return (
     <div className={css(styles.outerContainer)}>
 
@@ -173,21 +184,7 @@ function ControlPanel({
 
       {showControls &&
         <div className={css(styles.innerContainer)}>
-          <div className={css(styles.input)}>
-            <div className={css(styles.title)}>
-              X-axis
-            </div>
-            <Select
-              value={xScaleType}
-              options={[
-                { label: 'Elapsed time', value: ELAPSED_TIME_SCALE },
-                { label: 'Event sequence', value: EVENT_SEQUENCE_SCALE },
-              ]}
-              onChange={({ value }) => onChangeXScale(value)}
-            />
-          </div>
-
-          <div className={css(styles.input)}>
+          <div className={css(styles.padBottom)}>
             <div className={css(styles.title)}>
               Align sequences by
             </div>
@@ -212,21 +209,7 @@ function ControlPanel({
             </div>
           </div>
 
-          <div className={css(styles.input)}>
-            <div className={css(styles.title)}>
-              Sort nodes with the same parent by
-            </div>
-            <Select
-              value={orderBy}
-              options={[
-                { label: 'Event count', value: ORDER_BY_EVENT_COUNT },
-                { label: 'Time to next event', value: ORDER_BY_ELAPSED_MS },
-              ]}
-              onChange={({ value }) => onChangeOrderBy(value)}
-            />
-          </div>
-
-          <div className={css(styles.flexColumn)}>
+          <div className={css(styles.flexColumn, styles.padBottom)}>
             <div className={css(styles.title)}>
               {`Event type summary (n = ${metaData.countTotal})`}
             </div>
@@ -235,10 +218,10 @@ function ControlPanel({
                 data={metaData.countArray}
                 width={0.7 * width}
                 height={0.7 * width}
-                colorScale={colorScale.scale}
+                colorScale={legendScale}
               />
               <EventTypeLegend
-                scale={colorScale.scale}
+                scale={legendScale}
                 labelFormat={(label) => {
                   const count = metaData.countLookup[label];
                   const percentage = (count / metaData.countTotal) * 100;
@@ -251,6 +234,33 @@ function ControlPanel({
             </div>
           </div>
 
+          <div className={css(styles.padBottom)}>
+            <div className={css(styles.title)}>
+              X-axis
+            </div>
+            <Select
+              value={xScaleType}
+              options={[
+                { label: 'Elapsed time', value: ELAPSED_TIME_SCALE },
+                { label: 'Event sequence', value: EVENT_SEQUENCE_SCALE },
+              ]}
+              onChange={({ value }) => onChangeXScale(value)}
+            />
+          </div>
+
+          <div className={css(styles.padBottom)}>
+            <div className={css(styles.title)}>
+              Sort nodes with the same parent by
+            </div>
+            <Select
+              value={orderBy}
+              options={[
+                { label: 'Event count', value: ORDER_BY_EVENT_COUNT },
+                { label: 'Time to next event', value: ORDER_BY_ELAPSED_MS },
+              ]}
+              onChange={({ value }) => onChangeOrderBy(value)}
+            />
+          </div>
         </div>}
     </div>
   );
