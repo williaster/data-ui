@@ -125,7 +125,8 @@ export function buildNodesFromEntityEvents(events, startIndex, nodes) {
  *  ELAPSED_MS_ROOT (mean)
  */
 export function addMetaDataToNodes(nodes, allNodes) {
-  if (!nodes) return;
+  if (!nodes || !Object.keys(nodes).length) return;
+
   Object.keys(nodes).forEach((id) => {
     const node = nodes[id];
     node[EVENT_COUNT] = Object.keys(node.events || {}).length;
@@ -243,7 +244,7 @@ export function buildGraph({
   });
 
   console.log(
-    'trimmed',
+    'hidden',
     Object.keys(hiddenNodes).length, 'nodes',
     Object.keys(hiddenEvents).length, 'events',
   );
@@ -297,7 +298,7 @@ export function buildGraph({
 export function ancestorsFromNode(node) {
   let curr = node;
   const ancestors = [];
-  while (curr) {
+  while (curr && curr.id !== 'root') {
     ancestors.push(curr);
     curr = curr.parent;
   }

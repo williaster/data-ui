@@ -113,10 +113,17 @@ export function computeColorScale(array, accessor = d => d.name || d[EVENT_NAME]
       names[key] = true;
     }
   });
-
+  // sort to make color assignment deterministic
+  const sortedNames = Object.keys(names).sort();
+  if (sortedNames.length > colors.categories.length) {
+    console.warn(
+      `Unique color values ${sortedNames.length} exceeds the number of unique colors
+      (${colors.categories.length}). Consider filtering event types.`,
+    );
+  }
   return scaleOrdinal({
     range: [`url(#${FILTERED_EVENTS})`, ...colors.categories],
-    domain: [FILTERED_EVENTS, ...(Object.keys(names).sort())],
+    domain: [FILTERED_EVENTS, ...sortedNames],
   });
 }
 

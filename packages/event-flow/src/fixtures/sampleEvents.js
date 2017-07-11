@@ -8,7 +8,7 @@ function intBetween(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
-const eventNames = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+const eventNames = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 const startDate = Number(new Date('2017-01-05'));
 
 export function generateEvents({
@@ -18,6 +18,7 @@ export function generateEvents({
   maxEvents = 20,
   minElapsedMs = 5000,
   maxElapsedMs = 1000 * 60 * 60 * 24, // 1 day
+  eventNameLength = 10,
 }) {
   const nEvents = intBetween(minEvents, maxEvents);
   const events = [];
@@ -25,7 +26,7 @@ export function generateEvents({
   for (let i = 0; i < nEvents; i += 1) {
     const elapsedMs = intBetween(minElapsedMs, maxElapsedMs);
     const eventIndex = intBetween(0, eventCardinality);
-    const event = eventNames.slice(eventIndex, 10);
+    const event = eventNames.slice(eventIndex, eventIndex + eventNameLength);
 
     currDate += elapsedMs;
 

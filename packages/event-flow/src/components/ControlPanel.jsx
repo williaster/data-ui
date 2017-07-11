@@ -175,19 +175,19 @@ function ControlPanel({
     );
   };
 
-  // remove filter from color scale if no items are filtered
-  // @TODO sort by count?
-  let legendScale = colorScale.scale;
-  if (!metaData.eventCountLookup[FILTERED_EVENTS]) {
-    legendScale = colorScale.scale.copy().domain(
-      colorScale.scale.domain().slice(1),
-    );
-    legendScale.range(
-      colorScale.scale.range().slice(1),
-    );
-  }
+  // sort legend by value and remove filter from color scale if no items are filtered
+  const legendScale = colorScale.scale.copy();
+  const removeFiltered = !metaData.eventCountLookup[FILTERED_EVENTS];
+  const domain = (removeFiltered
+    ? legendScale.domain().slice(1)
+    : legendScale.domain()).sort((a, b) => (
+      metaData.eventCountLookup[b] - metaData.eventCountLookup[a]
+    ));
+  const range = domain.map(eventName => legendScale(eventName));
+  legendScale.domain(domain).range(range);
 
   const hiddenEventCount = Object.keys(metaData.hiddenEvents).length;
+  const hiddenEventPerc = (hiddenEventCount / (hiddenEventCount + metaData.eventCountTotal)) * 100;
 
   return (
     <div className={css(styles.outerContainer)}>
@@ -232,7 +232,8 @@ function ControlPanel({
               Event type summary
               <div className={css(styles.subTitle)}>
                 {`${metaData.eventCountTotal} events`}
-                {hiddenEventCount > 0 && ` (${hiddenEventCount} hidden)`}
+                {hiddenEventCount > 0 &&
+                  ` (${hiddenEventPerc.toFixed(1)}% [n=${hiddenEventCount}] hidden)`}
               </div>
             </div>
             <div className={css(styles.flexColumn)}>
