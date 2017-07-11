@@ -33,6 +33,7 @@ const propTypes = {
   separator: PropTypes.node,
   colorScale: scaleShape.isRequired,
   maxNameLength: PropTypes.number,
+  maxNodeLength: PropTypes.number,
 };
 
 const defaultProps = {
@@ -40,6 +41,7 @@ const defaultProps = {
   currNodeIndex: -1,
   separator: ' > ',
   maxNameLength: 10,
+  maxNodeLength: 5,
 };
 
 function NodeSequence({
@@ -48,21 +50,30 @@ function NodeSequence({
   separator,
   colorScale,
   maxNameLength,
+  maxNodeLength,
 }) {
+  let nodes = nodeArray;
+  if (nodes.length > maxNodeLength) {
+    nodes = [...nodeArray.slice(0, 2), null, ...nodeArray.slice(-(maxNodeLength - 3))];
+  }
   return nodeArray.length ? (
     <div className={css(styles.container)}>
-      {nodeArray.map((node, index) => {
-        const name = node.name.length > maxNameLength ?
-          `${node.name.slice(0, maxNameLength + 1)}…` : node.name;
+      {nodes.map((node, index) => {
+        let name = `+${nodeArray.length - nodes.length} more...`;
+        if (node) {
+          name = node.name.length > maxNameLength
+            ? `${node.name.slice(0, maxNameLength + 1)}…`
+            : node.name;
+        }
         return (
-          <span key={node.id}>
+          <span key={(node && node.id) || '...'}>
             {index !== 0 &&
               <span className={css(styles.separator)}>
                 {separator}
               </span>}
             <span
               className={css(styles.node, index === currNodeIndex && styles.currNode)}
-              style={{ color: colorScale.scale(colorScale.accessor(node)) }}
+              style={{ color: node && colorScale.scale(colorScale.accessor(node)) }}
             >
               {name}
             </span>

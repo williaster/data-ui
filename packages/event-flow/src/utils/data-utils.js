@@ -143,14 +143,19 @@ function recursivelyCountEvents(nodes, eventCounts = {}) {
 
 /*
  * Recursively traverses the graph from the starting node, counting events by type along the way
+ * Returns the following meta data:
+ *    countLookup: {Object} EVENT_NAME: count
+ *    countArray: {Array<Object>} array of { label, value }
+ *    countTotal: {Number}
+ *
+}
  */
-export function getMetaDataFromNodes(nodes) {
-  const eventLookup = {};
-  recursivelyCountEvents(nodes, eventLookup);
-  const countTotal = Object.values(eventLookup).reduce((sum, curr) => sum + curr, 0);
+export function getEventCountLookup(nodes) {
+  const eventCountLookup = {};
+  recursivelyCountEvents(nodes, eventCountLookup);
+  const eventCountTotal = Object.values(eventCountLookup).reduce((sum, curr) => sum + curr, 0);
   return {
-    countLookup: eventLookup,
-    countArray: Object.entries(eventLookup).map(([label, value]) => ({ label, value })),
-    countTotal,
+    eventCountTotal,
+    eventCountLookup,
   };
 }

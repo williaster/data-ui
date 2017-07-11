@@ -41,13 +41,21 @@ class App extends React.PureComponent {
     this.handleAlignByIndex = this.handleAlignByIndex.bind(this);
     this.handleAlignByEventType = this.handleAlignByEventType.bind(this);
     this.handleClickLegend = this.handleClickLegend.bind(this);
+    this.handleMinEventCountChange = this.handleMinEventCountChange.bind(this);
 
     const { width, height, data, initialShowControls } = props;
     const visualizationWidth = this.getVisualizationWidth(width, initialShowControls);
     const alignByEventType = ANY_EVENT_TYPE;
     const alignByIndex = 1;
+    const minEventCount = 3;
     const hiddenEventTypes = {};
-    const graph = this.getGraph({ data, alignByIndex, alignByEventType, hiddenEventTypes });
+    const graph = this.getGraph({
+      data,
+      alignByIndex,
+      alignByEventType,
+      hiddenEventTypes,
+      minEventCount,
+    });
     const scales = this.getScales(graph, visualizationWidth, height);
 
     this.state = {
@@ -62,6 +70,7 @@ class App extends React.PureComponent {
       graph,
       scales,
       selectedNode: null,
+      minEventCount,
     };
   }
 
@@ -120,7 +129,7 @@ class App extends React.PureComponent {
     return width - (showControls ? CONTROLS_WIDTH + VIS_MARGIN.right : 0);
   }
 
-  getGraph({ data, alignByIndex, alignByEventType, hiddenEventTypes }) {
+  getGraph({ data, alignByIndex, alignByEventType, hiddenEventTypes, minEventCount }) {
     // the graph is built from a root event derived from event type + index
     return buildGraph({
       cleanedEvents: data,
@@ -130,6 +139,7 @@ class App extends React.PureComponent {
         ))
       ),
       ignoreEventTypes: hiddenEventTypes,
+      minEventCount,
     });
   }
 
@@ -144,8 +154,14 @@ class App extends React.PureComponent {
 
   handleAlignByIndex(alignByIndex) {
     const { data, height } = this.props;
-    const { alignByEventType, visualizationWidth, hiddenEventTypes } = this.state;
-    const graph = this.getGraph({ data, alignByIndex, alignByEventType, hiddenEventTypes });
+    const { alignByEventType, visualizationWidth, hiddenEventTypes, minEventCount } = this.state;
+    const graph = this.getGraph({
+      data,
+      alignByIndex,
+      alignByEventType,
+      hiddenEventTypes,
+      minEventCount,
+    });
     const scales = { // use the previous color scale in case event types are hidden
       ...this.getScales(graph, visualizationWidth, height),
       [NODE_COLOR_SCALE]: this.state.scales[NODE_COLOR_SCALE],
@@ -155,8 +171,14 @@ class App extends React.PureComponent {
 
   handleAlignByEventType(alignByEventType) {
     const { data, height } = this.props;
-    const { alignByIndex, visualizationWidth, hiddenEventTypes } = this.state;
-    const graph = this.getGraph({ data, alignByIndex, alignByEventType, hiddenEventTypes });
+    const { alignByIndex, visualizationWidth, hiddenEventTypes, minEventCount } = this.state;
+    const graph = this.getGraph({
+      data,
+      alignByIndex,
+      alignByEventType,
+      hiddenEventTypes,
+      minEventCount,
+    });
     const scales = { // use the previous color scale in case event types are hidden
       ...this.getScales(graph, visualizationWidth, height),
       [NODE_COLOR_SCALE]: this.state.scales[NODE_COLOR_SCALE],
@@ -166,7 +188,14 @@ class App extends React.PureComponent {
 
   handleClickLegend(eventType) {
     const { data, height } = this.props;
-    const { alignByIndex, visualizationWidth, alignByEventType, hiddenEventTypes } = this.state;
+    const {
+      alignByIndex,
+      visualizationWidth,
+      alignByEventType,
+      hiddenEventTypes,
+      minEventCount,
+    } = this.state;
+
     const nextHiddenEventTypes = {
       ...hiddenEventTypes,
       [eventType]: !hiddenEventTypes[eventType],
@@ -177,6 +206,7 @@ class App extends React.PureComponent {
       alignByIndex,
       alignByEventType,
       hiddenEventTypes: nextHiddenEventTypes,
+      minEventCount,
     });
 
     const scales = { // use the previous color scale in case event types are hidden
@@ -185,6 +215,22 @@ class App extends React.PureComponent {
     };
 
     this.setState({ graph, scales, hiddenEventTypes: nextHiddenEventTypes });
+  }
+
+  handleMinEventCountChange(minEventCount) {
+    const { data, height } = this.props;
+    const { alignByIndex, visualizationWidth, alignByEventType, hiddenEventTypes } = this.state;
+
+    const graph = this.getGraph({
+      data,
+      alignByIndex,
+      alignByEventType,
+      hiddenEventTypes,
+      minEventCount,
+    });
+
+    const scales = this.getScales(graph, visualizationWidth, height);
+    this.setState({ graph, scales, minEventCount });
   }
 
   render() {
@@ -196,6 +242,7 @@ class App extends React.PureComponent {
       graph,
       scales,
       showControls,
+      minEventCount,
       xScaleType,
       yScaleType,
       visualizationWidth,
@@ -219,7 +266,7 @@ class App extends React.PureComponent {
           split="vertical"
         >
           <Visualization
-            onClickNode={(selectedNode) => { this.setState({ selectedNode }); }}
+            onClickNode={(node) => { this.setState({ selectedNode: node }); }}
             width={visualizationWidth}
             height={height}
             graph={graph}
@@ -233,15 +280,17 @@ class App extends React.PureComponent {
             showControls={showControls}
             alignByIndex={alignByIndex}
             alignByEventType={alignByEventType}
+            minEventCount={minEventCount}
             orderBy={orderBy}
             colorScale={scales[NODE_COLOR_SCALE]}
             xScaleType={xScaleType}
             onToggleShowControls={this.onToggleShowControls}
             onChangeAlignByEventType={this.handleAlignByEventType}
             onChangeAlignByIndex={this.handleAlignByIndex}
+            onChangeMinEventCount={this.handleMinEventCountChange}
+            onClickLegendShape={this.handleClickLegend}
             onChangeXScale={(type) => { this.setState({ xScaleType: type }); }}
             onChangeOrderBy={(value) => { this.setState({ orderBy: value }); }}
-            onClickLegendShape={this.handleClickLegend}
             metaData={metaData}
             hiddenEventTypes={hiddenEventTypes}
             width={width - visualizationWidth}

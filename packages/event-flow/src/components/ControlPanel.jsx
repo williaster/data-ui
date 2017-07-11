@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
     fontColor: '#767676',
     width: `calc(100% - ${2 * padding}px)`,
     height: '100%',
-    padding: `${1 * unit}px ${padding}px`,
+    padding: `${0}px ${padding}px`,
     background: '#fff',
   },
 
@@ -89,6 +89,11 @@ const styles = StyleSheet.create({
     fontWeight: 700,
     fontSize: 14,
   },
+
+  subTitle: {
+    fontWeight: 200,
+    fontSize: 12,
+  },
 });
 
 const propTypes = {
@@ -97,18 +102,25 @@ const propTypes = {
   orderBy: PropTypes.string.isRequired,
   colorScale: scaleShape.isRequired,
   xScaleType: xScaleTypeShape.isRequired,
+  minEventCount: PropTypes.number.isRequired,
   onChangeXScale: PropTypes.func,
   onToggleShowControls: PropTypes.func,
   onChangeAlignByIndex: PropTypes.func,
   onChangeAlignByEventType: PropTypes.func,
   onChangeOrderBy: PropTypes.func,
+  onChangeMinEventCount: PropTypes.func,
   showControls: PropTypes.bool.isRequired,
   onClickLegendShape: PropTypes.func,
   hiddenEventTypes: PropTypes.objectOf(PropTypes.bool),
   metaData: PropTypes.shape({
-    countLookup: PropTypes.object,
-    countArray: PropTypes.array,
-    countTotal: PropTypes.number,
+    hiddenNodes: PropTypes.object,
+    hiddenEvents: PropTypes.object,
+    eventCountLookup: PropTypes.object,
+    eventCountTotal: PropTypes.number,
+    eventCountArray: PropTypes.arrayOf(PropTypes.shape({
+      label: PropTypes.string.isRequired,
+      value: PropTypes.number.isRequired,
+    })),
   }),
 };
 
@@ -119,9 +131,10 @@ const defaultProps = {
   onChangeAlignByIndex: () => {},
   onChangeAlignByEventType: () => {},
   onChangeOrderBy: () => {},
+  onChangeMinEventCount: () => {},
   onClickLegendShape: () => {},
   metaData: {
-    countLookup: {},
+    eventCounts: {},
     countArray: [],
   },
   hiddenEventTypes: {},
@@ -134,11 +147,13 @@ function ControlPanel({
   orderBy,
   xScaleType,
   colorScale,
+  minEventCount,
   onToggleShowControls,
   onChangeAlignByEventType,
   onChangeAlignByIndex,
   onChangeXScale,
   onChangeOrderBy,
+  onChangeMinEventCount,
   onClickLegendShape,
   metaData,
   hiddenEventTypes,
@@ -161,8 +176,9 @@ function ControlPanel({
   };
 
   // remove filter from color scale if no items are filtered
+  // @TODO sort by count?
   let legendScale = colorScale.scale;
-  if (!metaData.countLookup[FILTERED_EVENTS]) {
+  if (!metaData.eventCountLookup[FILTERED_EVENTS]) {
     legendScale = colorScale.scale.copy().domain(
       colorScale.scale.domain().slice(1),
     );
@@ -170,6 +186,8 @@ function ControlPanel({
       colorScale.scale.range().slice(1),
     );
   }
+
+  const hiddenEventCount = Object.keys(metaData.hiddenEvents).length;
 
   return (
     <div className={css(styles.outerContainer)}>
@@ -211,11 +229,15 @@ function ControlPanel({
 
           <div className={css(styles.flexColumn, styles.padBottom)}>
             <div className={css(styles.title)}>
-              {`Event type summary (n = ${metaData.countTotal})`}
+              Event type summary
+              <div className={css(styles.subTitle)}>
+                {`${metaData.eventCountTotal} events`}
+                {hiddenEventCount > 0 && ` (${hiddenEventCount} hidden)`}
+              </div>
             </div>
             <div className={css(styles.flexColumn)}>
               <EventTypeRadialChart
-                data={metaData.countArray}
+                data={metaData.eventCountArray}
                 width={0.7 * width}
                 height={0.7 * width}
                 colorScale={legendScale}
@@ -223,8 +245,8 @@ function ControlPanel({
               <EventTypeLegend
                 scale={legendScale}
                 labelFormat={(label) => {
-                  const count = metaData.countLookup[label];
-                  const percentage = (count / metaData.countTotal) * 100;
+                  const count = metaData.eventCountLookup[label];
+                  const percentage = (count / metaData.eventCountTotal) * 100;
                   const text = label === FILTERED_EVENTS ? 'filtered by alignment' : label;
                   return !isNaN(percentage) ? `${text} (${percentage.toFixed(1)}%)` : text;
                 }}
@@ -232,6 +254,16 @@ function ControlPanel({
                 hiddenEventTypes={hiddenEventTypes}
               />
             </div>
+          </div>
+
+          <div className={css(styles.padBottom)}>
+            <StepIncrementer
+              min={1}
+              max={10}
+              value={minEventCount}
+              onChange={onChangeMinEventCount}
+              formatValue={val => `Hide nodes with < ${val} event${val > 1 ? 's' : ''}`}
+            />
           </div>
 
           <div className={css(styles.padBottom)}>
@@ -248,7 +280,7 @@ function ControlPanel({
             />
           </div>
 
-          <div className={css(styles.padBottom)}>
+          <div>
             <div className={css(styles.title)}>
               Sort nodes with the same parent by
             </div>

@@ -4,7 +4,7 @@ import { mean as d3Mean } from 'd3-array';
 import {
   binEventsByEntityId,
   getEventUuid,
-  getMetaDataFromNodes,
+  getEventCountLookup,
 } from './data-utils';
 
 import {
@@ -119,7 +119,10 @@ export function buildNodesFromEntityEvents(events, startIndex, nodes) {
 }
 
 /*
- * Recursively adds metadata attributes to the passed nodes, recurses on node.children
+ * Recursively adds metadata attributes to the passed nodes, recurses on node.children:
+ *  EVENT_COUNT
+ *  ELAPSED_MS (mean)
+ *  ELAPSED_MS_ROOT (mean)
  */
 export function addMetaDataToNodes(nodes, allNodes) {
   if (!nodes) return;
@@ -149,17 +152,50 @@ export function addMetaDataToNodes(nodes, allNodes) {
 
 export function getRoot(nodes) {
   const children = Object.keys(nodes).filter(n => nodes[n] && nodes[n].depth === 0);
-  return {
+  const root = {};
+  return Object.assign(root, {
     name: 'root',
     id: 'root',
     parent: null,
     depth: NaN,
     events: {},
-    children: children.reduce((ret, curr) => {
-      ret[curr] = nodes[curr];
-      return ret;
+    ELAPSED_MS_ROOT: 0,
+    ELAPSED_MS: 0,
+    children: children.reduce((result, currNodeKey) => {
+      nodes[currNodeKey].parent = root;
+      result[currNodeKey] = nodes[currNodeKey];
+      return result;
     }, {}),
-  };
+  });
+}
+
+/*
+ * Iterates over all nodes and trims the graph of nodes with fewer
+ * than the min specified event count.  * Specifically this function deletes all references to
+ * such nodes in allNodes + and in node.childrenThis is useful for simplifying the vis + DOM perf.
+ */
+export function trimNodesByEventCount({
+  allNodes,
+  minEventCount = 1,
+  metaData = {
+    hiddenEvents: {},
+    hiddenNodes: {},
+  },
+}) {
+  if (!allNodes || Object.keys(allNodes).length === 0) return metaData;
+
+  Object.entries(allNodes).forEach(([nodeName, node]) => {
+    const count = node.events ? Object.keys(node.events).length : 0;
+    if (count < minEventCount) {
+      metaData.hiddenNodes[nodeName] = node;
+      Object.assign(metaData.hiddenEvents, node.events);
+
+      delete allNodes[nodeName];
+      if (node.parent) delete node.parent.children[nodeName];
+    }
+  });
+
+  return metaData;
 }
 
 /*
@@ -168,7 +204,12 @@ export function getRoot(nodes) {
  *    *cleaned* meaning they have ts, entity id, and event name keys
  *    in no particular order, they are binned by entity id and sorted by TS
  */
-export function buildGraph({ cleanedEvents, getStartIndex = () => 0, ignoreEventTypes = {} }) {
+export function buildGraph({
+  cleanedEvents,
+  getStartIndex = () => 0,
+  ignoreEventTypes = {},
+  minEventCount,
+}) {
   console.time('buildGraph');
   const nodes = {};
   const filteredEvents = {};
@@ -196,6 +237,17 @@ export function buildGraph({ cleanedEvents, getStartIndex = () => 0, ignoreEvent
   const root = getRoot(nodes);
   addMetaDataToNodes(root.children, nodes);
 
+  const { hiddenNodes, hiddenEvents } = trimNodesByEventCount({
+    allNodes: nodes,
+    minEventCount,
+  });
+
+  console.log(
+    'trimmed',
+    Object.keys(hiddenNodes).length, 'nodes',
+    Object.keys(hiddenEvents).length, 'events',
+  );
+
   // given that a node size respresents an event count, the "filtered" node should
   // contain only one event / the root event for the filtered sequence
   const numFiltered = Object.keys(filteredEvents).length;
@@ -207,6 +259,7 @@ export function buildGraph({ cleanedEvents, getStartIndex = () => 0, ignoreEvent
       [ELAPSED_MS]: 0,
       [ELAPSED_MS_ROOT]: 0,
       events: filteredEvents,
+      parent: root,
     };
 
     root.children[FILTERED_EVENTS] = nodes[FILTERED_EVENTS];
@@ -215,7 +268,7 @@ export function buildGraph({ cleanedEvents, getStartIndex = () => 0, ignoreEvent
   root[EVENT_COUNT] = Object.keys(root.children)
     .reduce((sum, curr) => sum + nodes[curr][EVENT_COUNT], 0);
 
-  const metaData = getMetaDataFromNodes(root.children);
+  const { eventCountLookup, eventCountTotal } = getEventCountLookup(root.children);
 
   console.timeEnd('buildGraph');
 
@@ -224,7 +277,17 @@ export function buildGraph({ cleanedEvents, getStartIndex = () => 0, ignoreEvent
     nodes,
     entityEvents,
     filtered: numFiltered,
-    metaData,
+    metaData: {
+      hiddenNodes,
+      hiddenEvents,
+      eventCountLookup,
+      eventCountTotal,
+      eventCountArray: Object.entries(eventCountLookup)
+        .map(([label, value]) => ({
+          label,
+          value,
+        })),
+    },
   };
 }
 

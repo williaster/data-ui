@@ -8,12 +8,13 @@ import { FILTERED_EVENTS } from '../constants';
 
 const styles = StyleSheet.create({
   legendItem: {
+    position: 'relative',
     cursor: 'pointer',
     ':before': {
       content: '"✓"',
       color: '#fff',
       position: 'absolute',
-      paddingLeft: 1,
+      paddingLeft: 2,
     },
   },
 });

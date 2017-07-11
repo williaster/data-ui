@@ -125,6 +125,7 @@ class SubTree extends React.PureComponent {
           const top = yOffset[offset];
           const left = xScale(getX(node));
           const parentLeft = hasParent && xScale(getX(node.parent));
+
           const height = yScale(getY(node));
           const nodeColor = colorScale(getColor(node));
 
