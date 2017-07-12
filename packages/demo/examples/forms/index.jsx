@@ -31,7 +31,7 @@ export default [
       <StepIncrementer
         min={-1}
         max={5}
-        formatValue={(val) => formatLookup[val]}
+        formatValue={val => formatLookup[val]}
         disableZero
       />
     ),
@@ -61,8 +61,8 @@ export default [
             { value: 'c', label: 'c' },
           ]}
         />
-      )
-    ))
+      ),
+    )),
   },
   {
     description: 'Button -- text',
