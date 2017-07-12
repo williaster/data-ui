@@ -97,20 +97,13 @@ const styles = StyleSheet.create({
 });
 
 const propTypes = {
-  alignByIndex: PropTypes.number.isRequired,
+  alignByIndex: PropTypes.number,
   alignByEventType: PropTypes.string.isRequired,
   orderBy: PropTypes.string.isRequired,
   colorScale: scaleShape.isRequired,
   xScaleType: xScaleTypeShape.isRequired,
-  minEventCount: PropTypes.number.isRequired,
-  onChangeXScale: PropTypes.func,
-  onToggleShowControls: PropTypes.func,
-  onChangeAlignByIndex: PropTypes.func,
-  onChangeAlignByEventType: PropTypes.func,
-  onChangeOrderBy: PropTypes.func,
-  onChangeMinEventCount: PropTypes.func,
-  showControls: PropTypes.bool.isRequired,
-  onClickLegendShape: PropTypes.func,
+  minEventCount: PropTypes.number,
+  showControls: PropTypes.bool,
   hiddenEventTypes: PropTypes.objectOf(PropTypes.bool),
   metaData: PropTypes.shape({
     hiddenNodes: PropTypes.object,
@@ -122,6 +115,13 @@ const propTypes = {
       value: PropTypes.number.isRequired,
     })),
   }),
+  onChangeXScale: PropTypes.func,
+  onToggleShowControls: PropTypes.func,
+  onChangeAlignByIndex: PropTypes.func,
+  onChangeAlignByEventType: PropTypes.func,
+  onChangeOrderBy: PropTypes.func,
+  onChangeMinEventCount: PropTypes.func,
+  onClickLegendShape: PropTypes.func,
 };
 
 const defaultProps = {
@@ -133,11 +133,17 @@ const defaultProps = {
   onChangeOrderBy: () => {},
   onChangeMinEventCount: () => {},
   onClickLegendShape: () => {},
+  alignByIndex: 0,
+  minEventCount: 1,
   metaData: {
-    eventCounts: {},
-    countArray: [],
+    hiddenNodes: {},
+    hiddenEvents: {},
+    eventCountLookup: {},
+    eventCountTotal: 0,
+    eventCountArray: [],
   },
   hiddenEventTypes: {},
+  showControls: true,
 };
 
 function ControlPanel({
@@ -233,7 +239,7 @@ function ControlPanel({
               <div className={css(styles.subTitle)}>
                 {`${metaData.eventCountTotal} events`}
                 {hiddenEventCount > 0 &&
-                  ` (${hiddenEventPerc.toFixed(1)}% [n=${hiddenEventCount}] hidden)`}
+                  ` (${hiddenEventCount} hidden [${hiddenEventPerc.toFixed(1)}%])`}
               </div>
             </div>
             <div className={css(styles.flexColumn)}>

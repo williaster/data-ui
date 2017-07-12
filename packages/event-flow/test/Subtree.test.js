@@ -6,11 +6,12 @@ import Node from '../src/components/Node';
 import Link from '../src/components/Link';
 
 import { graph, scales } from '../src/fixtures/testFixtures';
+import { ELAPSED_TIME_SCALE, EVENT_COUNT_SCALE, NODE_COLOR_SCALE } from '../src/constants';
 
-const xScale = scales.ELAPSED_TIME_SCALE;
-const yScale = scales.EVENT_COUNT_SCALE;
-const colorScale = scales.NODE_COLOR_SCALE;
-const rootNode = Object.values(graph.nodes).filter(n => n.depth === 0)[0];
+const xScale = scales[ELAPSED_TIME_SCALE];
+const yScale = scales[EVENT_COUNT_SCALE];
+const colorScale = scales[NODE_COLOR_SCALE];
+const rootNode = graph.root;
 const middleNode = Object.values(graph.nodes).filter(n => n.depth === 1)[0];
 const leafNode = Object.values(graph.nodes).filter(n => Object.keys(n.children).length === 0)[0];
 
@@ -49,8 +50,15 @@ describe('<SubTree />', () => {
     expect(wrapper.find(Link).length).toBe(1);
   });
 
-  test('it should not render a Link for root nodes', () => {
-    const wrapper = shallow(<SubTree {...props} nodes={{ [rootNode.id]: rootNode }} />);
+  test('it should not render a Link for nodes with no parent', () => {
+    const wrapper = shallow(
+      <SubTree
+        {...props}
+        nodes={{
+          [rootNode.id]: { ...rootNode, parent: null },
+        }}
+      />,
+    );
     expect(wrapper.find(Node).length).toBe(1);
     expect(wrapper.find(Link).length).toBe(0);
   });

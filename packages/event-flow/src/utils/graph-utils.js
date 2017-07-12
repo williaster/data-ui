@@ -216,7 +216,7 @@ export function buildGraph({
   const filteredEvents = {};
 
   // note this shallow copies
-  const entityEvents = binEventsByEntityId(cleanedEvents, ignoreEventTypes);
+  const { entityEvents, ignoredEvents } = binEventsByEntityId(cleanedEvents, ignoreEventTypes);
 
   Object.keys(entityEvents).forEach((id) => {
     const events = entityEvents[id];
@@ -280,7 +280,10 @@ export function buildGraph({
     filtered: numFiltered,
     metaData: {
       hiddenNodes,
-      hiddenEvents,
+      hiddenEvents: {
+        ...hiddenEvents,
+        ...ignoredEvents,
+      },
       eventCountLookup,
       eventCountTotal,
       eventCountArray: Object.entries(eventCountLookup)

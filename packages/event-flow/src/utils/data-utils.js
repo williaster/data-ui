@@ -41,22 +41,29 @@ function eventSortComparator(a, b) {
 }
 
 /*
- * Bins events by entity Id. Note that this method shallow copies all events
+ * Bins all events in the passed array by entity Id.
+ * **note** that this method shallow copies all events
+ *
+ * @param {Array} array of events
+ *
  */
 export function binEventsByEntityId(events, ignoreEventTypes = {}) {
-  const eventsByEntityId = {};
+  const entityEvents = {};
+  const ignoredEvents = {};
 
   events.forEach((event) => {
     const type = event[EVENT_NAME];
+    const id = event[ENTITY_ID];
 
     if (!ignoreEventTypes[type]) {
-      const id = event[ENTITY_ID];
-      eventsByEntityId[id] = eventsByEntityId[id] || [];
-      eventsByEntityId[id].push({ ...event });
+      entityEvents[id] = entityEvents[id] || [];
+      entityEvents[id].push({ ...event });
+    } else {
+      ignoredEvents[id] = event;
     }
   });
 
-  return eventsByEntityId;
+  return { entityEvents, ignoredEvents };
 }
 
 /*

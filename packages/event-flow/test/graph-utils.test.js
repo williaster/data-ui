@@ -184,7 +184,7 @@ describe('getRoot', () => {
       2: { depth: 0 },
       3: { depth: 1 },
     };
-    expect(getRoot(nodes).children).toEqual({ 2: { depth: 0 } });
+    expect(getRoot(nodes).children).toMatchObject({ 2: { depth: 0 } });
   });
 });
 

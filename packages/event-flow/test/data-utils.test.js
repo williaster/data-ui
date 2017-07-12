@@ -72,31 +72,32 @@ describe('binEventsByEntityId', () => {
   });
 
   test('it should bin events based on the `ENTITY_ID key`', () => {
-    const result = binEventsByEntityId(events);
-    expect(Object.keys(result).length).toBe(3);
-    expect(result.u1).toEqual(u1);
-    expect(result.u2).toEqual(u2);
-    expect(result.u3).toEqual(u3);
+    const { entityEvents } = binEventsByEntityId(events);
+    expect(Object.keys(entityEvents).length).toBe(3);
+    expect(entityEvents.u1).toEqual(u1);
+    expect(entityEvents.u2).toEqual(u2);
+    expect(entityEvents.u3).toEqual(u3);
   });
 
-  test('it should return an object', () => {
-    expect(typeof binEventsByEntityId([])).toBe('object');
+  test('it should return an object with keys entityEvents and ignoredEvents', () => {
+    const result = binEventsByEntityId([]);
+    expect(result).toEqual(expect.objectContaining({ entityEvents: {}, ignoredEvents: {} }));
   });
 
   test('it should return events for each unique entity', () => {
-    const result = binEventsByEntityId([
+    const { entityEvents } = binEventsByEntityId([
       { [ENTITY_ID]: 1 },
       { [ENTITY_ID]: 1 },
       { [ENTITY_ID]: 2 },
       { [ENTITY_ID]: 4 },
     ]);
-    expect(Object.keys(result).length).toBe(3);
+    expect(Object.keys(entityEvents).length).toBe(3);
   });
 
-  test('it should return an object of arrays', () => {
-    const result = binEventsByEntityId([{ [ENTITY_ID]: 1 }, { [ENTITY_ID]: 2 }]);
-    expect(Array.isArray(result[1])).toBe(true);
-    expect(Array.isArray(result[2])).toBe(true);
+  test('entityEvents should be an object of arrays', () => {
+    const { entityEvents } = binEventsByEntityId([{ [ENTITY_ID]: 1 }, { [ENTITY_ID]: 2 }]);
+    expect(Array.isArray(entityEvents[1])).toBe(true);
+    expect(Array.isArray(entityEvents[2])).toBe(true);
   });
 
   test('it should ignore the specified event types', () => {
@@ -112,17 +113,17 @@ describe('binEventsByEntityId', () => {
     const filterBs = binEventsByEntityId(testEvents, { b: true });
     const filtered = binEventsByEntityId(testEvents, { a: true, b: true });
 
-    expect(unfiltered[1].length).toBe(2);
-    expect(unfiltered[2].length).toBe(2);
+    expect(unfiltered.entityEvents[1].length).toBe(2);
+    expect(unfiltered.entityEvents[2].length).toBe(2);
 
-    expect(filterAs[1].length).toBe(1);
-    expect(filterAs[2].length).toBe(2);
+    expect(filterAs.entityEvents[1].length).toBe(1);
+    expect(filterAs.entityEvents[2].length).toBe(2);
 
-    expect(filterBs[1].length).toBe(1);
-    expect(filterBs[2]).toBeUndefined();
+    expect(filterBs.entityEvents[1].length).toBe(1);
+    expect(filterBs.entityEvents[2]).toBeUndefined();
 
-    expect(filtered[1]).toBeUndefined();
-    expect(filtered[2]).toBeUndefined();
+    expect(filtered.entityEvents[1]).toBeUndefined();
+    expect(filtered.entityEvents[2]).toBeUndefined();
   });
 });
 

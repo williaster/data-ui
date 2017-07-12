@@ -14,6 +14,7 @@ describe('<ControlPanel />', () => {
     alignByEventType: 'ANY_EVENT_TYPE',
     orderBy: 'EVENT_COUNT',
     colorScale: scales[NODE_COLOR_SCALE],
+    minEventCount: 1,
     xScaleType: ELAPSED_TIME_SCALE,
     yScaleType: EVENT_COUNT_SCALE,
     showControls: true,
@@ -33,9 +34,9 @@ describe('<ControlPanel />', () => {
     expect(wrapper.find(Select).length).toBe(3);
   });
 
-  test('It should render a stepper', () => {
+  test('It should render a stepper for alignment and for min event count)', () => {
     const wrapper = shallow(<ControlPanel {...props} />);
-    expect(wrapper.find(StepIncrementer).length).toBe(1);
+    expect(wrapper.find(StepIncrementer).length).toBe(2);
   });
 
   test('It should hide controls when showControls=false', () => {
