@@ -22,6 +22,14 @@ const config = {
         include: src,
         loader: 'babel-loader',
       },
+      {
+        test: /\.svg$/,
+        loader: 'babel!react-svg',
+      },
+      {
+        test: /\.css$/,
+        loader: 'style-loader!css-loader',
+      },
     ],
   },
 };

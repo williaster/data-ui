@@ -1,43 +1,48 @@
 {
-  "name": "@data-ui/data-table",
-  "version": "0.0.18",
-  "description": "Table components that can handle a lot of data",
+  "name": "@data-ui/forms",
+  "version": "0.0.0",
+  "description": "A package of form elements for data-rich UIs. https://williaster.github.io/data-ui",
   "main": "build/index.js",
   "scripts": {
     "build": "webpack -p --optimize-minimize && npm run copy-styles",
-    "copy-styles": "cp ./node_modules/react-virtualized/styles.css ./build/styles.css",
+    "copy-styles": "cp ./node_modules/react-select/dist/react-select.min.css ./build/react-select.min.css",
     "dev": "webpack --progress --colors --watch",
     "test": "jest --colors --verbose --coverage"
   },
   "repository": "https://github.com/williaster/data-ui",
   "keywords": [
-    "data",
-    "table",
+    "react virtualized",
     "react",
-    "react-virtualized"
+    "data"
   ],
   "author": "Chris Williams <chris.williams@airbnb.com>",
   "license": "MIT",
-  "homepage": "https://github.com/williaster/data-ui#readme",
   "dependencies": {
-    "immutable": "^3.8.1",
     "prop-types": "^15.5.10",
-    "react-virtualized": "^9.7.3"
+    "react-select": "^1.0.0-rc.5"
   },
   "devDependencies": {
+    "aphrodite": "^1.2.0",
     "babel-core": "^6.24.1",
     "babel-jest": "^20.0.3",
     "babel-loader": "^6.4.1",
+    "babel-plugin-inline-react-svg": "^0.4.0",
     "babel-plugin-syntax-jsx": "^6.18.0",
     "babel-preset-airbnb": "^2.2.3",
-    "css-loader": "^0.28.0",
+    "css-loader": "^0.28.4",
+    "enzyme": "^2.8.2",
     "jest": "^20.0.3",
-    "react": "^15.6.1",
-    "react-dom": "^15.6.1",
-    "react-test-renderer": "^15.6.1",
+    "react": "^15.5.4",
+    "react-dom": "^15.5.4",
+    "react-test-renderer": "^15.5.4",
+    "style-loader": "^0.18.2",
     "webpack": "^2.4.1"
   },
   "peerDependencies": {
+    "aphrodite": "^1.2.0",
     "react": "^15.4.0"
+  },
+  "jest": {
+    "setupTestFrameworkScriptFile": "./test/testsSetup.js"
   }
 }
