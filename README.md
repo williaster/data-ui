@@ -15,6 +15,7 @@ demo at [williaster.github.io/data-ui](https://williaster.github.io/data-ui) :ch
 ## Packages
 - [@data-ui/xy-chart](https://github.com/williaster/data-ui/tree/master/packages/xy-chart) [![Version](https://img.shields.io/npm/v/@data-ui/xy-chart.svg?style=flat)](https://img.shields.io/npm/v/@data-ui/xy-chart.svg?style=flat)
 - [@data-ui/radial-chart](https://github.com/williaster/data-ui/tree/master/packages/radial-chart) [![Version](https://img.shields.io/npm/v/@data-ui/radial-chart.svg?style=flat)](https://img.shields.io/npm/v/@data-ui/radial-chart.svg?style=flat)
+- [@data-ui/event-flow](https://github.com/williaster/data-ui/tree/master/packages/event-flow) [![Version](https://img.shields.io/npm/v/@data-ui/event-flow.svg?style=flat)](https://img.shields.io/npm/v/@data-ui/event-flow.svg?style=flat)
 - [@data-ui/data-table](https://github.com/williaster/data-ui/tree/master/packages/data-table) [![Version](https://img.shields.io/npm/v/@data-ui/data-table.svg?style=flat)](https://img.shields.io/npm/v/@data-ui/data-table.svg?style=flat)
 - [@data-ui/theme](https://github.com/williaster/data-ui/tree/master/packages/theme) [![Version](https://img.shields.io/npm/v/@data-ui/theme.svg?style=flat)](https://img.shields.io/npm/v/@data-ui/theme.svg?style=flat)
 - [@data-ui/demo](https://github.com/williaster/data-ui/tree/master/packages/demo)
@@ -31,16 +32,18 @@ To run that demo on your own computer:
 ```sh
 git clone ...data-ui && cd data-ui
 
-# bootstrap all packages
-npm install --global lerna@^2.0.0-beta.0
-npm install
+# instal root dependencies including lerna
+npm install 
+# bootstrap (symlink inter-dependencies) all packages
 lerna bootstrap
 
 # alternatively install just the demo package
 # cd packages/demo
 # npm install
 
-npm run storybook
+# go to the demo package and start storybook
+cd packages/demo
+npm run dev
 # visit http://localhost:9001/
 ```
 
@@ -62,17 +65,17 @@ data-ui/
     ...
 ```
 
-For easiest development, clone this repo, install `lerna` globally and the root npm modules,
+For easiest development, clone this repo, install the root npm modules including lerna,
 then have lerna install package dependencies and manage the symlinking between packages for you
 ```sh
 git clone ...data-ui && cd data-ui
-npm install --global lerna@^2.0.0-beta.0
 npm install
 lerna bootstrap
 ```
 
 Enzyme and jest are used for testing. Each package defines its own tests, which you can run from within a `packages/package-name` directory using
 ```sh
+cd packages/my-package
 npm run test
 ```
 
@@ -81,7 +84,7 @@ for a single test or subset of tests run
 npm run test -t regex
 ```
 
-To run tests in all packages run `npm run test` from the root @data-ui directory.
+To run all tests in all packages run `npm run test` from the root @data-ui directory or alternatively `lerna run test`.
 
 ## License
 [MIT](./LICENSE)
