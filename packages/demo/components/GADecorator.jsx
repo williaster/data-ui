@@ -20,5 +20,5 @@ export default function GADecorator(Story, { kind, story }) {
     });
     ReactGA.pageview(`?selectedKind=${kind}&selectedStory=${story}`);
   }
-  return <Story />;
+  return Story();
 }
