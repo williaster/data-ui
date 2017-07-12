@@ -5,9 +5,10 @@ module.exports = (storybookConfig) => {
     plugin.constructor.name !== 'UglifyJsPlugin' // filter out UglifyJS
   ));
 
-  storybookConfig.module.loaders.push(
-    { test: /\.css$/, loader: 'style-loader!css-loader' } // eslint-disable-line comma-dangle
-  );
+  storybookConfig.module.rules.push({
+    test: /\.css$/,
+    use: ['style-loader', 'css-loader'],
+  });
 
   return storybookConfig;
 };

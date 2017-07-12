@@ -26,7 +26,6 @@
     "@data-ui/radial-chart": "^0.0.3",
     "@data-ui/theme": "^0.0.4",
     "@data-ui/xy-chart": "^0.0.13",
-    "@kadira/storybook": "^2.35.3",
     "@vx/mock-data": "0.0.95",
     "@vx/responsive": "0.0.115",
     "aphrodite": "^1.2.0",
@@ -41,7 +40,8 @@
     "react-dom": "^15.6.1",
     "react-with-styles": "^1.3.0",
     "react-with-styles-interface-aphrodite": "^1.2.0",
-    "style-loader": "^0.18.2"
+    "style-loader": "^0.18.2",
+    "@storybook/react": "3.1.8"
   },
   "peerDependencies": {
     "aphrodite": "^1.2.0",

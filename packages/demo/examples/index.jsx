@@ -1,5 +1,5 @@
 import path from 'path';
-import { storiesOf } from '@kadira/storybook';
+import { storiesOf } from '@storybook/react';
 
 const requireContext = require.context('./', /* subdirs= */true, /index\.jsx?$/);
 

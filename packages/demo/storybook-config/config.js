@@ -1,5 +1,5 @@
 /* eslint global-require: 0 */
-import { configure } from '@kadira/storybook';
+import { configure } from '@storybook/react';
 
 function loadStories() {
   require('../examples/index');
