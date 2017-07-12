@@ -46,7 +46,7 @@
     "@data-ui/radial-chart": "0.0.1",
     "@data-ui/theme": "^0.0.2",
     "@vx/axis": "0.0.120",
-    "@vx/bounds": "0.0.128",
+    "@vx/bounds": "0.0.129",
     "@vx/clip-path": "0.0.126",
     "@vx/glyph": "0.0.126",
     "@vx/gradient": "0.0.120",
