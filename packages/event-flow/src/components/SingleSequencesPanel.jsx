@@ -118,6 +118,7 @@ class SingleSequencePanel extends React.PureComponent {
             <Button
               onClick={clearSelection}
               disabled={!hasSequences}
+              small
             >
               Clear Selection ({sequences.length})
             </Button>

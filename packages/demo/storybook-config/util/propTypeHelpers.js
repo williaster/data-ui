@@ -1,6 +1,7 @@
 /* eslint no-underscore-dangle: 0 */
 import PropTypes from 'prop-types';
 
+// hash the propType functions for lookup
 const PropTypesLookup = new Map();
 
 Object.keys(PropTypes).forEach((typeName) => {
@@ -8,8 +9,6 @@ Object.keys(PropTypes).forEach((typeName) => {
   PropTypesLookup.set(type, typeName);
   PropTypesLookup.set(type.isRequired, typeName);
 });
-
-console.log(PropTypesLookup);
 
 const HOC_PROP_TYPES = { styles: true, theme: true };
 
