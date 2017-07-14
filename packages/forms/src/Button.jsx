@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
   },
 
   container_sizeSmall: {
-    padding: `${0.5 * unit}px ${1 * unit}px`,
+    padding: 1 * unit,
   },
 
   container_sizeRegular: {
