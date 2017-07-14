@@ -25,7 +25,9 @@ requireContext.keys().forEach((packageName) => {
     const packageExport = requireContext(packageName);
     if (packageExport && packageExport.default && !Array.isArray(packageExport.default)) {
       const { examples, usage } = packageExport.default;
-      const name = path.dirname(packageName).slice(2); // no './'
+      let name = path.dirname(packageName).slice(2); // no './'
+      if ((/^\d\d-/).test(name)) name = name.slice(3); // no 'XX-'
+
       const stories = storiesOf(name, module);
 
       // log story views + events
