@@ -1,14 +1,24 @@
+/* eslint no-param-reassign: 0 */
 // Export a function instead of an object, the function will accept the base config:
 module.exports = (storybookConfig) => {
-  // eslint-disable-next-line no-param-reassign
   storybookConfig.plugins = storybookConfig.plugins.filter(plugin => (
-    plugin.constructor.name !== 'UglifyJsPlugin' // filter out UglifyJS
+    !(/uglifyjs/i).test(plugin.constructor.name) // filter out UglifyJS
   ));
 
-  storybookConfig.module.rules.push({
-    test: /\.css$/,
-    use: ['style-loader', 'css-loader'],
-  });
+  storybookConfig.module.rules.push(
+    {
+      test: /\.css$/,
+      use: ['style-loader', 'css-loader'],
+    },
+    {
+      test: /\.md$/,
+      use: 'raw-loader',
+    } // eslint-disable-line comma-dangle
+  );
+
+  storybookConfig.node = {
+    fs: 'empty',
+  };
 
   return storybookConfig;
 };

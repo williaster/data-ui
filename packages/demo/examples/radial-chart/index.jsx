@@ -10,6 +10,8 @@ import {
   multiHueScaleFactory,
 } from '@data-ui/radial-chart';
 
+import readme from '../../node_modules/@data-ui/radial-chart/README.md';
+
 const { browserUsage } = mockData;
 
 const browsersLast = browserUsage[browserUsage.length - 1];
@@ -67,60 +69,66 @@ const CategoryLegend = (
   />
 );
 
-export default [
-  {
-    description: '<RadialChart /> -- pie 🍰',
-    example: () => (
-      <div style={wrapperStyles}>
-        <RadialChart {...chartProps}>
-          <ArcSeries
-            {...seriesProps}
-            labelComponent={<ArcLabel stroke="#222" fill="#fff" fontSize={10} />}
-            innerRadius={0}
-            fill={arc => categoryColorScale(arc.data.label)}
-          />
-        </RadialChart>
-        {CategoryLegend}
-      </div>
-    ),
-  },
-  {
-    description: '<RadialChart /> -- outer label donut 🍩',
-    example: () => (
-      <div style={wrapperStyles}>
-        <RadialChart {...chartProps}>
-          <ArcSeries
-            {...seriesProps}
-            fill={arc => pinkColorScale(arc.data.label)}
-            fillOpacity={0.5}
-            stroke={arc => pinkColorScale(arc.data.label)}
-            strokeWidth={2}
-            padAngle={0.03}
-            cornerRadius={5}
-            labelComponent={
-              <ArcLabel
-                fontSize={10}
-                textAnchor={arc => (
-                  ((arc.endAngle + arc.startAngle) / 2) > 3.14 ? 'end' : 'start'
-                )}
-                fill={arc => pinkColorScale(arc.data.label)}
-              />
-            }
-            labelRadius={radius => 0.65 * radius}
-          />
-        </RadialChart>
-        {PinkLegend}
-      </div>
-    ),
-  },
-  {
-    description: '<RadialChart /> -- default colors 🍩',
-    example: () => (
-      <div style={wrapperStyles}>
-        <RadialChart {...chartProps}>
-          <ArcSeries {...seriesProps} />
-        </RadialChart>
-      </div>
-    ),
-  },
-];
+export default {
+  usage: readme,
+  examples: [
+    {
+      description: '<RadialChart /> -- pie 🍰',
+      components: [RadialChart, ArcSeries, LegendOrdinal],
+      example: () => (
+        <div style={wrapperStyles}>
+          <RadialChart {...chartProps}>
+            <ArcSeries
+              {...seriesProps}
+              labelComponent={<ArcLabel stroke="#222" fill="#fff" fontSize={10} />}
+              innerRadius={0}
+              fill={arc => categoryColorScale(arc.data.label)}
+            />
+          </RadialChart>
+          {CategoryLegend}
+        </div>
+      ),
+    },
+    {
+      description: '<RadialChart /> -- outer label donut 🍩',
+      components: [ArcSeries, ArcLabel],
+      example: () => (
+        <div style={wrapperStyles}>
+          <RadialChart {...chartProps}>
+            <ArcSeries
+              {...seriesProps}
+              fill={arc => pinkColorScale(arc.data.label)}
+              fillOpacity={0.5}
+              stroke={arc => pinkColorScale(arc.data.label)}
+              strokeWidth={2}
+              padAngle={0.03}
+              cornerRadius={5}
+              labelComponent={
+                <ArcLabel
+                  fontSize={10}
+                  textAnchor={arc => (
+                    ((arc.endAngle + arc.startAngle) / 2) > 3.14 ? 'end' : 'start'
+                  )}
+                  fill={arc => pinkColorScale(arc.data.label)}
+                />
+              }
+              labelRadius={radius => 0.65 * radius}
+            />
+          </RadialChart>
+          {PinkLegend}
+        </div>
+      ),
+    },
+    {
+      description: '<RadialChart /> -- default colors 🍩',
+      components: [RadialChart, ArcSeries],
+      example: () => (
+        <div style={wrapperStyles}>
+          <RadialChart {...chartProps}>
+            <ArcSeries {...seriesProps} />
+          </RadialChart>
+        </div>
+      ),
+    },
+  ],
+};

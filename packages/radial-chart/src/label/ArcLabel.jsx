@@ -7,6 +7,7 @@ import additionalProps from '../util/additionalProps';
 const propTypes = {
   x: PropTypes.number,
   y: PropTypes.number,
+  paintOrder: PropTypes.string,
   arc: PropTypes.object, // if passed, will be passed to any restprops
   children: PropTypes.node,
 };

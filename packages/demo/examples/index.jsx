@@ -1,20 +1,45 @@
+/*
+ * Iterates over folders in the current directory and renders stories for each example
+ * exported by that folder.
+ * Example exports should have the following shape:
+ *  {
+ *    usage: {String},
+ *    examples: [
+ *      {
+ *        description: {String} name of the story
+ *        components: {Array<{func}>} array of component funcs for which proptables will be shown
+ *        example: {func} () => story,
+ *        usage: {String}, overrides top-level usage if passed
+ *      }
+ *    ],
+ *  }
+ */
 import path from 'path';
 import { storiesOf } from '@storybook/react';
-import GADecorator from '../components/GADecorator';
+import GoogleAnalyticsDecorator from '../storybook-config/components/GoogleAnalytics';
 
 const requireContext = require.context('./', /* subdirs= */true, /index\.jsx?$/);
 
 requireContext.keys().forEach((packageName) => {
   if (packageName !== 'shared') {
-    const examples = requireContext(packageName);
-    if (examples && examples.default) {
+    const packageExport = requireContext(packageName);
+    if (packageExport && packageExport.default && !Array.isArray(packageExport.default)) {
+      const { examples, usage } = packageExport.default;
       const name = path.dirname(packageName).slice(2); // no './'
       const stories = storiesOf(name, module);
 
-      stories.addDecorator(GADecorator);
+      // log story views + events
+      stories.addDecorator(GoogleAnalyticsDecorator);
 
-      examples.default.forEach((example) => {
-        stories.add(example.description, example.example);
+      // wrap stories
+      examples.forEach((example) => {
+        stories.addWithInfo({
+          storyName: example.description,
+          storyFn: example.example,
+          components: example.components,
+          usage: example.usage || usage,
+          useHOC: example.useHOC,
+        });
       });
     }
   }
