@@ -73,7 +73,7 @@ export default {
   usage: readme,
   examples: [
     {
-      description: '<RadialChart /> -- pie 🍰',
+      description: 'RadialChart -- pie 🍰',
       components: [RadialChart, ArcSeries, LegendOrdinal],
       example: () => (
         <div style={wrapperStyles}>
@@ -90,7 +90,7 @@ export default {
       ),
     },
     {
-      description: '<RadialChart /> -- outer label donut 🍩',
+      description: 'RadialChart -- outer label donut 🍩',
       components: [ArcSeries, ArcLabel],
       example: () => (
         <div style={wrapperStyles}>
@@ -120,7 +120,7 @@ export default {
       ),
     },
     {
-      description: '<RadialChart /> -- default colors 🍩',
+      description: 'RadialChart -- default colors 🍩',
       components: [RadialChart, ArcSeries],
       example: () => (
         <div style={wrapperStyles}>

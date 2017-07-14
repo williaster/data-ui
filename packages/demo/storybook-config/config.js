@@ -4,7 +4,7 @@ import { configure, setAddon } from '@storybook/react';
 import { setOptions } from '@storybook/addon-options';
 
 import ExampleWithInfo from './components/ExampleWithInfo';
-import { googleAnalytics } from '../storybook-config/components/GoogleAnalytics';
+import { analytics } from '../storybook-config/components/GoogleAnalytics';
 
 // Customize the UI
 setOptions({
@@ -20,14 +20,16 @@ setOptions({
 
 // add WithInfo addon which exposes proptables, usage, and source code for examples
 setAddon({
-  addWithInfo({ storyName, storyFn, components, usage, useHOC }) {
-    return this.add(storyName, () => (
+  addWithInfo({ kind, story, storyFn, components, usage, useHOC }) {
+    return this.add(story, () => (
       <ExampleWithInfo
+        kind={kind}
+        story={story}
+        storyFn={storyFn}
         components={components}
         usage={usage}
-        storyFn={storyFn}
-        googleAnalytics={googleAnalytics}
         useHOC={useHOC}
+        analytics={analytics}
       />
     ));
   },

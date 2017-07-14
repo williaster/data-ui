@@ -8,18 +8,20 @@ if (typeof window !== 'undefined' && window.location.hostname !== 'localhost') {
   ReactGA.pageview(window.location.pathname);
 }
 
-export const googleAnalytics = ReactGA;
+export function analytics({ story, kind, tab = 'demo' }) {
+  if (typeof window !== 'undefined' && window.location.hostname !== 'localhost') {
+    ReactGA.set({
+      page: window.location.pathname,
+      title: `${kind} > ${story} > ${tab}`,
+    });
+    ReactGA.pageview(`?selectedKind=${kind}&selectedStory=${story}&tab=${tab}`);
+  }
+}
 
 /*
  * Decorator that logs the current kind + story before calling the passed storyFn
  */
 export default function GoogleAnalyticsDecorator(storyFn, { kind, story }) {
-  if (typeof window !== 'undefined' && window.location.hostname !== 'localhost') {
-    ReactGA.set({
-      page: window.location.pathname,
-      title: kind,
-    });
-    ReactGA.pageview(`?selectedKind=${kind}&selectedStory=${story}`);
-  }
+  analytics({ story, kind });
   return storyFn();
 }

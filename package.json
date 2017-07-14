@@ -6,7 +6,7 @@
   "scripts": {
     "lint": "eslint --ignore-path=.eslintignore --ext .js,.jsx ./packages/",
     "publish": "npm run test && lerna publish && lerna run gh-pages",
-    "test": "lerna exec npm install && npm run lint && lerna run test"
+    "test": "lerna exec npm install && npm run lint && jest"
   },
   "repository": "https://github.com/williaster/data-ui.git",
   "keywords": [
@@ -30,11 +30,10 @@
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-jsx-a11y": "^4.0.0",
     "eslint-plugin-react": "^6.10.3",
-    "jest": "^19.0.0",
+    "jest": "^20.0.0",
     "lerna": "^2.0.0-rc.2",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
-    "react-ga": "^2.2.0",
     "react-test-renderer": "^15.6.1"
   },
   "peerDependencies": {

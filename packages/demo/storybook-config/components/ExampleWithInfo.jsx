@@ -9,17 +9,19 @@ import { css, withStyles, withStylesPropTypes } from '../../themes/withStyles';
 
 const propTypes = {
   ...withStylesPropTypes,
+  kind: PropTypes.string.isRequired,
+  story: PropTypes.string.isRequired,
   storyFn: PropTypes.func.isRequired,
   components: PropTypes.arrayOf(PropTypes.func),
   usage: PropTypes.string,
   useHOC: PropTypes.bool,
-  googleAnalytics: PropTypes.func,
+  analytics: PropTypes.func,
 };
 
 const defaultProps = {
   usage: null,
   components: [],
-  googleAnalytics() {},
+  analytics() {},
   useHOC: false,
 };
 
@@ -35,8 +37,9 @@ class ExampleWithInfo extends React.Component {
   }
 
   handlePressTab(activeTab) {
+    const { kind, story, analytics } = this.props;
     this.setState({ activeTab });
-    // @TODO log events
+    analytics({ kind, story, tab: activeTab });
   }
 
   render() {

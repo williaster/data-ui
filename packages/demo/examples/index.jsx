@@ -10,6 +10,8 @@
  *        components: {Array<{func}>} array of component funcs for which proptables will be shown
  *        example: {func} () => story,
  *        usage: {String}, overrides top-level usage if passed
+ *        useHOC: {Boolean} if true and a component is an HOC,
+ *                will not break through to underlying wrapped component for prop tables + source
  *      }
  *    ],
  *  }
@@ -36,7 +38,8 @@ requireContext.keys().forEach((packageName) => {
       // wrap stories
       examples.forEach((example) => {
         stories.addWithInfo({
-          storyName: example.description,
+          kind: name,
+          story: example.description,
           storyFn: example.example,
           components: example.components,
           usage: example.usage || usage,
