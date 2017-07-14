@@ -30,12 +30,18 @@ function withFiltering(WrappedComponent, pureComponent = true) {
   class EnhancedComponent extends BaseClass {
     constructor(props) {
       super(props);
+      this.onChangeFilterText = this.onChangeFilterText.bind(this);
       this.state = {
         filterText: this.props.initialFilterText,
         filteredDataList: this.props.dataList,
         debounce: null,
       };
-      this.onChangeFilterText = this.onChangeFilterText.bind(this);
+    }
+
+    componentWillMount() {
+      if (this.state.filterText) {
+        this.onChangeFilterText(this.state.filterText, this.props);
+      }
     }
 
     componentWillReceiveProps(nextProps) {
