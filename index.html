@@ -4,8 +4,9 @@
       <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="storybook-version" content="2.35.3">
-        <title>React Storybook</title>
+        <meta name="storybook-version" content="3.1.8">
+        <meta content="IE=edge" http-equiv="X-UA-Compatible" />
+        <title>Storybook</title>
         <style>
           /*
             When resizing panels, the drag event breaks if the cursor
@@ -35,10 +36,25 @@
             background-color: #eee
           }
         </style>
+        <script>
+  /* this is a work-around to customize the storybook document title until a hook exists */
+  var title = document && document.querySelector('title');
+  if (title) title.innerText = 'data-ui';
+</script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta char-set="utf-8" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="@williaster" />
+<meta name="twitter:title" content="@data-ui | visualization and components for data-rich UIs" />
+<meta name="twitter:description" content="components and visualization for data-rich UIs" />
+<meta name="twitter:image" content="https://raw.githubusercontent.com/williaster/data-ui/master/assets/favicon.ico" />
+<meta name="twitter:image:alt" content="data-ui logo consists of overlapping offset triangle shapes" />
+
       </head>
       <body style="margin: 0;">
         <div id="root"></div>
-        <script src="static/manager.0c0dbbde579ac2b0700c.bundle.js"></script>
+        <script src="static/manager.34af6c1da2d5f1709571.bundle.js"></script>
       </body>
     </html>
   
