@@ -7,6 +7,7 @@
     "build": "webpack -p --optimize-minimize && npm run copy-styles",
     "copy-styles": "cp ./node_modules/react-virtualized/styles.css ./build/styles.css",
     "dev": "webpack --progress --colors --watch",
+    "dev:nowatch": "webpack -d --progress --colors",
     "test": "jest --colors --verbose --coverage"
   },
   "repository": "https://github.com/williaster/data-ui",
@@ -29,8 +30,10 @@
     "babel-jest": "^20.0.3",
     "babel-loader": "^6.4.1",
     "babel-plugin-syntax-jsx": "^6.18.0",
+    "babel-polyfill": "^6.23.0",
     "babel-preset-airbnb": "^2.2.3",
     "css-loader": "^0.28.0",
+    "enzyme": "^2.9.1",
     "jest": "^20.0.3",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
@@ -39,5 +42,8 @@
   },
   "peerDependencies": {
     "react": "^15.4.0"
+  },
+  "jest": {
+    "setupTestFrameworkScriptFile": "./test/testsSetup.js"
   }
 }

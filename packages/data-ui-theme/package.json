@@ -9,6 +9,7 @@
   "scripts": {
     "build": "babel src/ -d build/",
     "dev": "babel src/ -d build/ --watch",
+    "dev:nowatch": "babel src/ -d build/",
     "test": "jest --colors --verbose --coverage"
   },
   "repository": "https://github.com/williaster/data-ui.git",
@@ -26,6 +27,6 @@
     "babel-jest": "^20.0.3",
     "babel-plugin-syntax-jsx": "^6.18.0",
     "babel-preset-airbnb": "^2.2.3",
-    "jest": "^19.0.0"
+    "jest": "^20.0.3"
   }
 }

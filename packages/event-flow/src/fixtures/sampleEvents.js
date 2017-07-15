@@ -25,7 +25,12 @@ export function generateEvents({
   let currDate = startDate;
   for (let i = 0; i < nEvents; i += 1) {
     const elapsedMs = intBetween(minElapsedMs, maxElapsedMs);
-    const eventIndex = intBetween(0, eventCardinality);
+    const eventIndex = intBetween(
+      0,
+      Math.random() < 0.7
+        ? eventCardinality - (intBetween(1, eventCardinality))
+        : eventCardinality,
+    );
     const event = eventNames.slice(eventIndex, eventIndex + eventNameLength);
 
     currDate += elapsedMs;
@@ -71,7 +76,6 @@ export function generateEventsForUsers({
 }
 
 export default {
-  tenUsers: generateEventsForUsers({ nUsers: 10 }),
   twentyUsers: generateEventsForUsers({ nUsers: 20 }),
   fiftyUsers: generateEventsForUsers({ nUsers: 50 }),
   hundredUsers: generateEventsForUsers({ nUsers: 100 }),

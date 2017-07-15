@@ -8,7 +8,6 @@ const styles = StyleSheet.create({
   container: {
     cursor: 'pointer',
     transition: 'background 0.3s, border-color 0.3s',
-    boxShadow: 'inset 0 0 0 1px #ddd',
     border: 0,
     borderRadius: 1,
     background: '#fff',
@@ -25,18 +24,28 @@ const styles = StyleSheet.create({
     },
   },
 
+  border: {
+    boxShadow: 'inset 0 0 0 1px #ddd',
+  },
+
   text: {
     pointerEvents: 'none',
   },
 
-  sizeSmall: {
+  text_sizeSmall: {
     fontSize: 12,
-    width: 12,
-    height: 12,
   },
 
-  sizeRegular: {
+  text_sizeRegular: {
     fontSize: 14,
+  },
+
+  container_sizeSmall: {
+    padding: 1 * unit,
+  },
+
+  container_sizeRegular: {
+    padding: `${1.5 * unit}px ${2 * unit}px`,
   },
 
   container_block: {
@@ -96,6 +105,7 @@ const propTypes = {
   wrapText: PropTypes.bool,
   rounded: PropTypes.bool,
   round: PropTypes.bool,
+  noBorder: PropTypes.bool,
 };
 
 const defaultProps = {
@@ -103,10 +113,11 @@ const defaultProps = {
   children: null,
   onClick: () => {},
   disabled: false,
-  small: true,
+  small: false,
   wrapText: false,
   rounded: false,
   round: false,
+  noBorder: false,
 };
 
 function Button({
@@ -117,6 +128,7 @@ function Button({
   small,
   round,
   rounded,
+  noBorder,
   wrapText,
 }) {
   return (
@@ -126,6 +138,7 @@ function Button({
       onClick={onClick}
       className={css(
         styles.container,
+        !noBorder && styles.border,
         block ? styles.container_block : styles.container_notBlock,
         small ? styles.container_sizeSmall : styles.container_sizeRegular,
         rounded && styles.rounded,

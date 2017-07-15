@@ -199,7 +199,7 @@ function ControlPanel({
     <div className={css(styles.outerContainer)}>
 
       <div className={css(styles.header)}>
-        <Button onClick={onToggleShowControls}>
+        <Button onClick={onToggleShowControls} small>
           {showControls
             ? <span>{'Hide >'}</span>
             : <span>{'< Controls'}</span>}

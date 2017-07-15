@@ -110,6 +110,7 @@ class StepIncrementer extends React.Component {
             onClick={this.decrementValue}
             disabled={value <= min}
             round
+            small
           >
             -
           </Button>
@@ -118,6 +119,7 @@ class StepIncrementer extends React.Component {
             onClick={this.incrementValue}
             disabled={value >= max}
             round
+            small
           >
             +
           </Button>
