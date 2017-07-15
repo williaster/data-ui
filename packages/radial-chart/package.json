@@ -5,7 +5,8 @@
   "main": "build/index.js",
   "scripts": {
     "build": "webpack -p --optimize-minimize",
-    "dev": "webpack --progress --colors --watch",
+    "dev": "webpack -d --progress --colors --watch",
+    "dev:nowatch": "webpack -d --progress --colors",
     "test": "jest --colors --verbose --coverage"
   },
   "repository": "https://github.com/williaster/data-ui",

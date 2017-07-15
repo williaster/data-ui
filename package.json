@@ -4,7 +4,7 @@
   "description": "A collection of components for data-rich user interfaces https://williaster.github.io/data-ui",
   "main": "index.js",
   "scripts": {
-    "jest": "jest --colors --verbose --coverage",
+    "jest": "lerna run test",
     "lint": "eslint --ignore-path=.eslintignore --ext .js,.jsx ./packages/",
     "prepare-release": "git checkout master && git pull --rebase origin master && npm run test && lerna updated",
     "release": "npm run prepare-release && lerna publish --exact && lerna run gh-pages",
@@ -23,6 +23,7 @@
   "author": "Chris Williams <chris.williams@airbnb.com>",
   "license": "MIT",
   "devDependencies": {
+    "aphrodite": "^1.2.0",
     "babel-jest": "^20.0.3",
     "babel-polyfill": "^6.23.0",
     "babel-register": "^6.24.1",

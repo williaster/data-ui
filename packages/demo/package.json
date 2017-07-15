@@ -3,7 +3,7 @@
   "version": "0.0.27",
   "description": "data-ui demo",
   "scripts": {
-    "gh-pages:clean": "rm -rf _gh-pages",
+    "gh-pages:clean": "rm -rf _gh-pages && lerna run dev:nowatch",
     "gh-pages:build": "build-storybook -o _gh-pages -c ./storybook-config -s ../../assets/",
     "gh-pages:publish": "git-directory-deploy --directory _gh-pages",
     "gh-pages": "npm run gh-pages:clean && npm run gh-pages:build && npm run gh-pages:publish && npm run gh-pages:clean",
