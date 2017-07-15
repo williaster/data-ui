@@ -2,9 +2,9 @@
 
 demo at [williaster.github.io/data-ui](https://williaster.github.io/data-ui)
 
-<img 
+<img
   width="700"
-  src="https://user-images.githubusercontent.com/4496521/28103495-d58b2c34-668a-11e7-86c3-3b33d853153a.gif" 
+  src="https://user-images.githubusercontent.com/4496521/28103495-d58b2c34-668a-11e7-86c3-3b33d853153a.gif"
 />
 
 ### A detailed description of features + usage + interpretation coming soon :v:
