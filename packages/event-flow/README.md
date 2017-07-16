@@ -12,7 +12,7 @@ This visualization is inspired by a <a href="https://www.cs.umd.edu/~ben/papers/
 
 <img
   width="500"
-  src"https://user-images.githubusercontent.com/4496521/28243463-9fef9734-697f-11e7-959b-027544c8f6e0.png"
+  src="https://user-images.githubusercontent.com/4496521/28243463-9fef9734-697f-11e7-959b-027544c8f6e0.png"
 />
 
 ### Features
