@@ -18,26 +18,26 @@ This visualization is inspired by a <a href="https://www.cs.umd.edu/~ben/papers/
 ### Features
 The visualization has a variety of features to facilitate exploratory analysis:
 
-#### Event alignment
-Users can align event sequences by an arbitrary event _index_ and event _type_ (e.g., the 2nd click event). This operation can actually filter out event sequences, e.g., if you align by th 3rd event and a sequence only has 2 events or if you align by the first event type "x" and a specific sequence has no events of that type. Filtered nodes are shown visually with a pattern line root node, and in the legend.
+- #### Event alignment
+  Users can align event sequences by an arbitrary event _index_ and event _type_ (e.g., the 2nd click event). This operation can actually filter out event sequences, e.g., if you align by th 3rd event and a sequence only has 2 events or if you align by the first event type "x" and a specific sequence has no events of that type. Filtered nodes are shown visually with a pattern line root node, and in the legend.
 
-#### Event type filtering
-Users can filter to / filter out specific types of events by clicking on the legend in the right panel. This operation still aligns the fully unfiltered sequences, but then hides relevant event types from view. The number of hidden events is shown in the right panel.
+- #### Event type filtering
+  Users can filter to / filter out specific types of events by clicking on the legend in the right panel. This operation still aligns the fully unfiltered sequences, but then hides relevant event types from view. The number of hidden events is shown in the right panel.
 
-#### Raw sequence view
-By clicking on any node or edge in the aggregate view, the aggregate panel will filter to the selected subtree and users can view the raw sequences captured by that selection in the bottom panel. You can hide the panel to explore the aggregate view, or clear the selection to return to the unfiltered view.
+- #### Raw sequence view
+  By clicking on any node or edge in the aggregate view, the aggregate panel will filter to the selected subtree and users can view the raw sequences captured by that selection in the bottom panel. You can hide the panel to explore the aggregate view, or clear the selection to return to the unfiltered view.
 
-#### Event type breakdown
-A breakdown of event type counts is displayed as a pie chart in the right pane. This breakdown also displays the number of filtered or hidden events depending on the vis state.
+- #### Event type breakdown
+  A breakdown of event type counts is displayed as a pie chart in the right pane. This breakdown also displays the number of filtered or hidden events depending on the vis state.
 
-#### X-axis -- elapsed time vs sequence
-By default, aggregate nodes are positioned according to the mean elapsed time from the _previous_ node. It can be hard to differentiate closely-spaced events, so the vis also supports positioning nodes by sequence number (1st, 2nd, 3rd, etc) with equal spacing between events.
+- #### X-axis -- elapsed time vs sequence
+  By default, aggregate nodes are positioned according to the mean elapsed time from the _previous_ node. It can be hard to differentiate closely-spaced events, so the vis also supports positioning nodes by sequence number (1st, 2nd, 3rd, etc) with equal spacing between events.
 
-#### Node sorting (vertical)
-By default nodes are ordered top -> bottom based on high -> low event count, meaning that the most common nodes appear at the top. Users can also order by short -> long elapsed time to the next event.
+- #### Node sorting (vertical)
+  By default nodes are ordered top -> bottom based on high -> low event count, meaning that the most common nodes appear at the top. Users can also order by short -> long elapsed time to the next event.
 
-#### Trimming
-To improve visualization / web app performance and to reduce visual noise, nodes which represent less than a minimum number of events can be hidden. Again, all events are considered for sequence alignment, but 'leaf' nodes are hidden from view.
+- #### Trimming
+  To improve visualization / web app performance and to reduce visual noise, nodes which represent less than a minimum number of events can be hidden. Again, all events are considered for sequence alignment, but 'leaf' nodes are hidden from view.
 
-#### Zooming
-X- and Y-axis zoom + Panning is supported with common mouse movements.
+- #### Zooming
+  X- and Y-axis zoom + Panning is supported with common mouse movements.
