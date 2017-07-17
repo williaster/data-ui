@@ -233,7 +233,11 @@ class App extends React.PureComponent {
       minEventCount,
     });
 
-    const scales = this.getScales(graph, visualizationWidth, height);
+    const scales = { // use the previous color scale in case event types are hidden
+      ...this.getScales(graph, visualizationWidth, height),
+      [NODE_COLOR_SCALE]: this.state.scales[NODE_COLOR_SCALE],
+    };
+
     this.setState({ graph, scales, minEventCount });
   }
 
@@ -253,7 +257,6 @@ class App extends React.PureComponent {
       selectedNode,
     } = this.state;
 
-    console.log('graph', graph);
     const { width, height } = this.props;
 
     let metaData = graph.metaData;
