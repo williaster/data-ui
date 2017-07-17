@@ -1,6 +1,6 @@
 {
   "name": "@data-ui/event-flow",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "A visualization to explore sequences of events",
   "keywords": [
     "d3",
