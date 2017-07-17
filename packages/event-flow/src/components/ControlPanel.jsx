@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
     fontFamily,
     fontSize: 12,
     fontColor: '#767676',
-    width: `calc(100% - ${2 * padding}px)`,
+    width: 'auto',
     height: '100%',
     padding: `${0}px ${padding}px`,
     background: '#fff',
@@ -40,6 +40,7 @@ const styles = StyleSheet.create({
 
   innerContainer: {
     overflowY: 'auto',
+    height: 'inherit',
   },
 
   flexRow: {
