@@ -1,6 +1,11 @@
-import { color, svgLabel, unit } from '@data-ui/theme';
+import { color, svgLabel, unit, font } from '@data-ui/theme';
 
 export const colors = color;
+
+export const labelStyles = {
+  ...font.light,
+  ...font.regular,
+};
 
 export const gridStyles = {
   stroke: colors.grid,
@@ -66,4 +71,5 @@ export default {
   xTickStyles,
   yAxisStyles,
   yTickStyles,
+  labelStyles: svgLabel,
 };

@@ -16,6 +16,8 @@ const propTypes = {
   // these will likely be injected by the parent xychart
   xScale: PropTypes.func,
   yScale: PropTypes.func,
+  onMouseMove: PropTypes.func,
+  onMouseLeave: PropTypes.func,
 };
 
 const defaultProps = {
@@ -24,18 +26,22 @@ const defaultProps = {
   strokeWidth: 1,
   xScale: null,
   yScale: null,
+  onMouseMove: null,
+  onMouseLeave: null,
 };
 
 const x = d => d.x;
 
 export default function StackedBarSeries({
-  data,
+  data: allData,
   stackKeys,
   stackFills,
   stroke,
   strokeWidth,
   xScale,
   yScale,
+  onMouseMove,
+  onMouseLeave,
 }) {
   if (!xScale || !yScale) return null;
   if (!xScale.bandwidth) { // @todo figure this out/be more graceful
@@ -45,7 +51,7 @@ export default function StackedBarSeries({
   const zScale = scaleTypeToScale.ordinal({ range: stackFills, domain: stackKeys });
   return (
     <BarStack
-      data={data}
+      data={allData}
       keys={stackKeys}
       height={maxHeight}
       x={x}
@@ -54,6 +60,10 @@ export default function StackedBarSeries({
       zScale={zScale}
       stroke={stroke}
       strokeWidth={strokeWidth}
+      onMouseMove={onMouseMove && (d => (event) => {
+        onMouseMove({ event, data: allData, datum: d, color: zScale(d.key) });
+      })}
+      onMouseLeave={onMouseLeave && (() => onMouseLeave)}
     />
   );
 }

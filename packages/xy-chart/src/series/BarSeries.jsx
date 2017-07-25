@@ -20,6 +20,8 @@ const propTypes = {
   barWidth: PropTypes.number,
   xScale: PropTypes.func,
   yScale: PropTypes.func,
+  onMouseMove: PropTypes.func,
+  onMouseLeave: PropTypes.func,
 };
 
 const defaultProps = {
@@ -30,6 +32,9 @@ const defaultProps = {
   strokeWidth: 1,
   xScale: null,
   yScale: null,
+  onMouseOver: null,
+  onMouseMove: null,
+  onMouseLeave: null,
 };
 
 const x = d => d.x;
@@ -44,6 +49,8 @@ export default function BarSeries({
   label,
   xScale,
   yScale,
+  onMouseMove,
+  onMouseLeave,
 }) {
   if (!xScale || !yScale || !barWidth) return null;
 
@@ -53,6 +60,7 @@ export default function BarSeries({
     <Group key={label}>
       {data.map((d, i) => {
         const barHeight = maxHeight - yScale(y(d));
+        const color = d.fill || callOrValue(fill, d, i);
         return isDefined(d.y) && (
           <Bar
             key={`bar-${label}-${xScale(x(d))}`}
@@ -60,9 +68,13 @@ export default function BarSeries({
             y={maxHeight - barHeight}
             width={barWidth}
             height={barHeight}
-            fill={d.fill || callOrValue(fill, d, i)}
+            fill={color}
             stroke={d.stroke || callOrValue(stroke, d, i)}
             strokeWidth={d.strokeWidth || callOrValue(strokeWidth, d, i)}
+            onMouseMove={onMouseMove && (() => (event) => {
+              onMouseMove({ event, data, datum: d, color });
+            })}
+            onMouseLeave={onMouseLeave && (() => onMouseLeave)}
           />
         );
       })}

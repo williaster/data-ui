@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 
 import { Grid } from '@vx/grid';
 import { Group } from '@vx/group';
+import { withTooltip, TooltipWithBounds, withTooltipPropTypes } from '@vx/tooltip';
+import HoverStyles from '../series/HoverStyles';
 
 import {
   collectDataFromChildSeries,
@@ -20,6 +22,7 @@ import {
 import { scaleShape, themeShape } from '../utils/propShapes';
 
 const propTypes = {
+  ...withTooltipPropTypes,
   ariaLabel: PropTypes.string.isRequired,
   children: PropTypes.node,
   width: PropTypes.number.isRequired,
@@ -35,6 +38,8 @@ const propTypes = {
   showXGrid: PropTypes.bool,
   showYGrid: PropTypes.bool,
   theme: themeShape,
+  TooltipComponent: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
+  renderTooltip: PropTypes.func,
 };
 
 const defaultProps = {
@@ -48,6 +53,8 @@ const defaultProps = {
   showXGrid: false,
   showYGrid: false,
   theme: {},
+  TooltipComponent: TooltipWithBounds,
+  renderTooltip: null,
 };
 
 // accessors
@@ -56,6 +63,13 @@ const y = d => d.y;
 const xString = d => d.x.toString();
 
 class XYChart extends React.PureComponent {
+  constructor(props) {
+    super(props);
+    this.handleMouseMove = this.handleMouseMove.bind(this);
+    this.handleMouseLeave = this.handleMouseLeave.bind(this);
+    this.tooltipTimeout = null;
+  }
+
   getDimmensions() {
     const { margin, width, height } = this.props;
     const completeMargin = { ...defaultProps.margin, ...margin };
@@ -116,6 +130,25 @@ class XYChart extends React.PureComponent {
     return scales;
   }
 
+  handleMouseMove({ event, data, datum, ...rest }) {
+    if (this.tooltipTimeout) clearTimeout(this.tooltipTimeout);
+    const { margin } = this.props;
+    this.props.showTooltip({
+      tooltipTop: event.clientY - margin.top,
+      tooltipLeft: event.clientX,
+      tooltipData: {
+        event,
+        data,
+        datum,
+        ...rest,
+      },
+    });
+  }
+
+  handleMouseLeave() {
+    this.tooltipTimeout = setTimeout(() => this.props.hideTooltip(), 300);
+  }
+
   render() {
     const {
       ariaLabel,
@@ -125,52 +158,77 @@ class XYChart extends React.PureComponent {
       theme,
       height,
       width,
+      tooltipOpen,
+      tooltipData,
+      tooltipLeft,
+      tooltipTop,
+      renderTooltip,
+      TooltipComponent,
     } = this.props;
 
     const { margin, innerWidth, innerHeight } = this.getDimmensions();
     const { numXTicks, numYTicks } = this.getNumTicks(innerWidth, innerHeight);
-    const { xScale, yScale } = this.collectScalesFromProps();
+    const { xScale, yScale } = this.collectScalesFromProps(); // @TODO cache this in state
+
+    const seriesProps = {
+      xScale,
+      yScale,
+      barWidth: xScale.barWidth || (xScale.bandwidth && xScale.bandwidth()) || 0,
+      onMouseMove: renderTooltip && this.handleMouseMove,
+      onMouseLeave: renderTooltip && this.handleMouseLeave,
+    };
+
     return innerWidth > 0 && innerHeight > 0 && (
-      <svg
-        aria-label={ariaLabel}
-        role="img"
-        width={width}
-        height={height}
-      >
-        <Group left={margin.left} top={margin.top}>
-          {(showXGrid || showYGrid) && (numXTicks || numYTicks) &&
-            <Grid
-              xScale={xScale}
-              yScale={yScale}
-              width={innerWidth}
-              height={innerHeight}
-              numTicksRows={showYGrid && numYTicks}
-              numTicksColumns={showXGrid && numXTicks}
-              stroke={theme.gridStyles && theme.gridStyles.stroke}
-              strokeWidth={theme.gridStyles && theme.gridStyles.strokeWidth}
-            />}
-          {React.Children.map(children, (Child) => {
-            const name = componentName(Child);
-            if (isAxis(name)) {
-              const styleKey = name[0].toLowerCase();
-              return React.cloneElement(Child, {
-                innerHeight,
-                innerWidth,
-                labelOffset: name === 'YAxis' ? 0.7 * margin.right : 0,
-                numTicks: name === 'XAxis' ? numXTicks : numYTicks,
-                scale: name === 'XAxis' ? xScale : yScale,
-                rangePadding: name === 'XAxis' ? xScale.offset : null,
-                axisStyles: { ...theme[`${styleKey}AxisStyles`], ...Child.props.axisStyles },
-                tickStyles: { ...theme[`${styleKey}TickStyles`], ...Child.props.tickStyles },
-              });
-            } else if (isSeries(name)) {
-              const barWidth = (isBarSeries(name) && (xScale.barWidth || xScale.bandwidth())) || 0;
-              return React.cloneElement(Child, { xScale, yScale, barWidth });
-            }
-            return Child;
-          })}
-        </Group>
-      </svg>
+      <div style={{ position: 'relative', width: `${width}px`, height: `${height}px` }}>
+        <svg
+          aria-label={ariaLabel}
+          role="img"
+          width={width}
+          height={height}
+        >
+          <Group left={margin.left} top={margin.top}>
+            {(showXGrid || showYGrid) && (numXTicks || numYTicks) &&
+              <Grid
+                xScale={xScale}
+                yScale={yScale}
+                width={innerWidth}
+                height={innerHeight}
+                numTicksRows={showYGrid && numYTicks}
+                numTicksColumns={showXGrid && numXTicks}
+                stroke={theme.gridStyles && theme.gridStyles.stroke}
+                strokeWidth={theme.gridStyles && theme.gridStyles.strokeWidth}
+              />}
+            {React.Children.map(children, (Child) => {
+              const name = componentName(Child);
+              if (isAxis(name)) {
+                const styleKey = name[0].toLowerCase();
+                return React.cloneElement(Child, {
+                  innerHeight,
+                  innerWidth,
+                  labelOffset: name === 'YAxis' ? 0.7 * margin.right : 0,
+                  numTicks: name === 'XAxis' ? numXTicks : numYTicks,
+                  scale: name === 'XAxis' ? xScale : yScale,
+                  rangePadding: name === 'XAxis' ? xScale.offset : null,
+                  axisStyles: { ...theme[`${styleKey}AxisStyles`], ...Child.props.axisStyles },
+                  tickStyles: { ...theme[`${styleKey}TickStyles`], ...Child.props.tickStyles },
+                });
+              } else if (isSeries(name)) {
+                return React.cloneElement(Child, seriesProps);
+              }
+              return Child;
+            })}
+          </Group>
+        </svg>
+        {tooltipOpen && TooltipComponent && renderTooltip &&
+          <TooltipComponent
+            key={Math.random()}
+            top={tooltipTop}
+            left={tooltipLeft}
+          >
+            {renderTooltip(tooltipData)}
+          </TooltipComponent>}
+        <HoverStyles />
+      </div>
     );
   }
 }
@@ -178,4 +236,4 @@ class XYChart extends React.PureComponent {
 XYChart.propTypes = propTypes;
 XYChart.defaultProps = defaultProps;
 
-export default XYChart;
+export default withTooltip(XYChart);

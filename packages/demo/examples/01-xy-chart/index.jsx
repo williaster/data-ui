@@ -42,6 +42,16 @@ const ResponsiveXYChart = withScreenSize(({ screenWidth, children, ...rest }) =>
     theme={theme}
     width={screenWidth / 1.5}
     height={screenWidth / 1.5 / 2}
+    renderTooltip={({ datum, color }) => (
+      <div>
+        <div>
+          <strong style={{ color }}>x </strong>{formatDate(datum.x)}
+        </div>
+        <div>
+          <strong style={{ color }}>y </strong>{(datum.y || datum.value).toFixed(1)}
+        </div>
+      </div>
+    )}
     {...rest}
   >
     {children}
