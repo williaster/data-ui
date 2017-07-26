@@ -7,6 +7,7 @@ import {
   XAxis,
   YAxis,
 
+  AreaSeries,
   BarSeries,
   IntervalSeries,
   LineSeries,
@@ -54,7 +55,7 @@ export default {
   usage: readme,
   examples: [
     {
-      description: 'XYChart, BarSeries, PatternLines, Gradient',
+      description: 'BarSeries -- no axes',
       components: [XYChart, BarSeries, LinearGradient, PatternLines],
       example: () => (
         <ResponsiveXYChart
@@ -69,15 +70,16 @@ export default {
           />
           <PatternLines
             id="lines"
-            height={5}
-            width={5}
-            stroke={colors.default}
+            height={8}
+            width={8}
+            stroke={colors.categories[2]}
             strokeWidth={1}
-            orientation={['diagonal']}
+            orientation={['horizontal', 'vertical']}
           />
           <BarSeries
             data={timeSeriesData.map((d, i) => ({
-              ...d, fill: `url(#${i === 2 ? 'lines' : 'gradient'})`,
+              ...d,
+              fill: `url(#${i === 2 ? 'lines' : 'gradient'})`,
             }))}
             label="Apple Stock"
             fill="url(#aqua_lightaqua_gradient)"
@@ -86,60 +88,7 @@ export default {
       ),
     },
     {
-      description: 'BarSeries, LineSeries, XAxis, YAxis',
-      components: [BarSeries, LineSeries, XAxis, YAxis],
-      example: () => (
-        <ResponsiveXYChart
-          ariaLabel="Required label"
-          xScale={{ type: 'time' }}
-          yScale={{ type: 'linear' }}
-        >
-          <YAxis label="Price ($)" numTicks={4} />
-          <LinearGradient
-            id="aqua_lightaqua_gradient"
-            from={colors.default}
-            to={colors.dark}
-          />
-          <BarSeries
-            data={timeSeriesData}
-            label="Apple Stock"
-            fill="url(#aqua_lightaqua_gradient)"
-          />
-          <LineSeries
-            data={timeSeriesData}
-            label="Apple Stock"
-            stroke={colors.text}
-          />
-          <XAxis label="Time" numTicks={5} />
-        </ResponsiveXYChart>
-      ),
-    },
-    {
-      description: 'XAxis, YAxis -- orientation',
-      components: [XAxis, YAxis],
-      example: () => (
-        <ResponsiveXYChart
-          ariaLabel="Required label"
-          xScale={{ type: 'time' }}
-          yScale={{ type: 'linear' }}
-        >
-          <YAxis label="Price ($)" numTicks={4} orientation="left" />
-          <LinearGradient
-            id="aqua_lightaqua_gradient"
-            from={colors.default}
-            to={colors.dark}
-          />
-          <BarSeries
-            data={timeSeriesData}
-            label="Apple Stock"
-            fill="url(#aqua_lightaqua_gradient)"
-          />
-          <XAxis label="Time" numTicks={5} orientation="top" />
-        </ResponsiveXYChart>
-      ),
-    },
-    {
-      description: 'Multiple <LineSeries />',
+      description: 'LineSeries',
       components: [LineSeries],
       example: () => (
         <ResponsiveXYChart
@@ -158,6 +107,45 @@ export default {
             label="Apple Stock 2"
             stroke={colors.black}
             strokeDasharray="3 3"
+            strokeLinecap="butt"
+          />
+          <XAxis label="Time" numTicks={5} />
+        </ResponsiveXYChart>
+      ),
+    },
+    {
+      description: 'AreaSeries',
+      components: [AreaSeries],
+      example: () => (
+        <ResponsiveXYChart
+          ariaLabel="Required label"
+          xScale={{ type: 'time' }}
+          yScale={{ type: 'linear' }}
+        >
+          <LinearGradient
+            id="area_gradient"
+            from={colors.categories[2]}
+            to="#fff"
+          />
+          <PatternLines
+            id="area_pattern"
+            height={12}
+            width={12}
+            stroke={colors.categories[2]}
+            strokeWidth={1}
+            orientation={['diagonal']}
+          />
+          <AreaSeries
+            data={timeSeriesData}
+            label="Apple Stock"
+            fill="url(#area_gradient)"
+            strokeWidth={null}
+          />
+          <AreaSeries
+            data={timeSeriesData}
+            label="Apple Stock 2"
+            fill="url(#area_pattern)"
+            stroke={colors.categories[2]}
           />
           <XAxis label="Time" numTicks={5} />
         </ResponsiveXYChart>
@@ -224,7 +212,7 @@ export default {
       ),
     },
     {
-      description: 'Categorical <BarSeries />',
+      description: 'Categorical BarSeries',
       components: [XYChart, BarSeries],
       example: () => (
         <ResponsiveXYChart
@@ -247,7 +235,7 @@ export default {
       ),
     },
     {
-      description: '<IntervalSeries />',
+      description: 'IntervalSeries',
       components: [IntervalSeries, LineSeries],
       example: () => (
         <ResponsiveXYChart
@@ -275,6 +263,59 @@ export default {
             showPoints
           />
           <XAxis />
+        </ResponsiveXYChart>
+      ),
+    },
+    {
+      description: 'Mixed series',
+      components: [BarSeries, LineSeries, XAxis, YAxis],
+      example: () => (
+        <ResponsiveXYChart
+          ariaLabel="Required label"
+          xScale={{ type: 'time' }}
+          yScale={{ type: 'linear' }}
+        >
+          <YAxis label="Price ($)" numTicks={4} />
+          <LinearGradient
+            id="aqua_lightaqua_gradient"
+            to="#faa2c1"
+            from="#e64980"
+          />
+          <BarSeries
+            data={timeSeriesData}
+            label="Apple Stock"
+            fill="url(#aqua_lightaqua_gradient)"
+          />
+          <LineSeries
+            data={timeSeriesData}
+            label="Apple Stock"
+            stroke={colors.text}
+          />
+          <XAxis label="Time" numTicks={5} />
+        </ResponsiveXYChart>
+      ),
+    },
+    {
+      description: 'XAxis, YAxis -- orientation',
+      components: [XAxis, YAxis],
+      example: () => (
+        <ResponsiveXYChart
+          ariaLabel="Required label"
+          xScale={{ type: 'time' }}
+          yScale={{ type: 'linear' }}
+        >
+          <YAxis label="Price ($)" numTicks={4} orientation="left" />
+          <LinearGradient
+            id="aqua_lightaqua_gradient"
+            from={colors.default}
+            to={colors.dark}
+          />
+          <BarSeries
+            data={timeSeriesData}
+            label="Apple Stock"
+            fill="url(#aqua_lightaqua_gradient)"
+          />
+          <XAxis label="Time" numTicks={5} orientation="top" />
         </ResponsiveXYChart>
       ),
     },
