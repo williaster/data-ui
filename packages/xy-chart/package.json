@@ -30,7 +30,7 @@
     "@vx/pattern": "0.0.120",
     "@vx/responsive": "0.0.120",
     "@vx/scale": "0.0.117",
-    "@vx/shape": "0.0.120",
+    "@vx/shape": "0.0.131",
     "d3-array": "^1.2.0",
     "prop-types": "^15.5.10"
   },

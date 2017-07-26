@@ -18,7 +18,7 @@ const propTypes = {
   stroke: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   strokeDasharray: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   strokeWidth: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
-
+  strokeLinecap: PropTypes.oneOf(['butt', 'square', 'round', 'inherit']),
   // these will likely be injected by the parent chart
   xScale: PropTypes.func,
   yScale: PropTypes.func,
@@ -30,12 +30,14 @@ const defaultProps = {
   stroke: colors.default,
   strokeDasharray: null,
   strokeWidth: 3,
+  strokeLinecap: 'round',
   xScale: null,
   yScale: null,
 };
 
 const x = d => d.x;
 const y = d => d.y;
+const defined = d => isDefined(y(d));
 
 export default function LineSeries({
   data,
@@ -45,6 +47,7 @@ export default function LineSeries({
   stroke,
   strokeDasharray,
   strokeWidth,
+  strokeLinecap,
   xScale,
   yScale,
 }) {
@@ -61,7 +64,9 @@ export default function LineSeries({
       stroke={callOrValue(stroke)}
       strokeWidth={callOrValue(strokeWidth)}
       strokeDasharray={callOrValue(strokeDasharray)}
+      strokeLinecap={strokeLinecap}
       curve={interpolation === 'linear' ? curveLinear : curveCardinal}
+      defined={defined}
       glyph={showPoints && ((d, i) => (
         isDefined(x(d)) && isDefined(y(d)) &&
           <GlyphDot
