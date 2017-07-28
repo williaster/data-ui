@@ -23,6 +23,7 @@
     "@data-ui/data-table": "0.0.21",
     "@data-ui/event-flow": "0.0.4",
     "@data-ui/forms": "0.0.3",
+    "@data-ui/histogram": "0.0.0",
     "@data-ui/radial-chart": "0.0.4",
     "@data-ui/theme": "0.0.5",
     "@data-ui/xy-chart": "0.0.15",
@@ -59,5 +60,8 @@
     "aphrodite": "^1.2.0",
     "react": "^15.4.0"
   },
-  "private": true
+  "private": true,
+  "dependencies": {
+    "d3-random": "^1.1.0"
+  }
 }
