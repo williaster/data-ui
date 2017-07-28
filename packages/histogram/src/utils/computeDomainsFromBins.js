@@ -31,7 +31,7 @@ export default function computeDomainsFromBins({ binsByIndex, binType, valueKey,
   });
 
   if (!Array.isArray(binDomain)) {
-    binDomain = Object.values(binDomain).sort(caseInsensitiveSort);
+    binDomain = Object.keys(binDomain).sort(caseInsensitiveSort);
   }
 
   return { binDomain, valueDomain };

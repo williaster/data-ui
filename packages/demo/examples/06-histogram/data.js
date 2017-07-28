@@ -1,6 +1,10 @@
 import { range } from 'd3-array';
 import { randomNormal, randomLogNormal } from 'd3-random';
 
+function intBetween(min, max) {
+  return Math.floor(Math.random() * (max - min)) + min;
+}
+
 const n = 500;
 
 export const mus = [0, 5, 10];
@@ -19,3 +23,7 @@ mus.forEach((mu) => {
     logNormal[mu].push(range(n).map(logNormalGen));
   });
 });
+
+const letters = 'abcdefghijklmnopqrstuvwxyz';
+
+export const categorical = range(n).map(() => letters[intBetween(0, letters.length - 1)]);

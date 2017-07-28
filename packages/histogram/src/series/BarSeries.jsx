@@ -10,6 +10,7 @@ const propTypes = {
   binnedData: PropTypes.array,
   fill: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   fillOpacity: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
+  horizontal: PropTypes.bool,
   stroke: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   strokeWidth: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
   valueKey: PropTypes.string,
@@ -22,45 +23,51 @@ const propTypes = {
 
 const defaultProps = {
   binnedData: [],
+  binScale: null,
   fill: '#008489',
+  fillOpacity: 0.7,
+  horizontal: false,
   stroke: '#FFFFFF',
   strokeWidth: 1,
-  binScale: null,
-  valueScale: null,
   valueKey: 'count',
-  fillOpacity: 0.7,
+  valueScale: null,
 };
 
 function BarSeries({
   binnedData,
   binScale,
-  valueScale,
-  valueKey,
   fill,
   fillOpacity,
+  horizontal,
   stroke,
   strokeWidth,
+  valueKey,
+  valueScale,
 }) {
   if (!binScale || !valueScale || !binnedData || binnedData.length === 0) return null;
 
-  const maxHeight = (valueScale.range() || [0])[0];
+  const maxBarLength = Math.max(...valueScale.range());
+  const barWidth = binScale.bandwidth
+      ? binScale.bandwidth() // categorical
+      : Math.abs(binScale(binnedData[0].bin1) - binScale(binnedData[0].bin0)); // numeric
+
+  console.log('bar data', binnedData);
 
   return (
     <Group>
       {binnedData.map((d, i) => {
-        const barHeight = maxHeight - valueScale(d[valueKey]);
-        const x = binScale(d.bin || d.bin0);
-        const barWidth = binScale.bandwidth
-          ? binScale.bandwidth()
-          : binScale(d.bin1) - binScale(d.bin0) - 1;
-
+        const binPosition = binScale(d.bin || d.bin0);
+        const barLength = horizontal
+          ? valueScale(d[valueKey])
+          : maxBarLength - valueScale(d[valueKey]);
+        debugger;
         return (
           <Bar
-            key={`bar-${x}`}
-            x={x}
-            y={maxHeight - barHeight}
-            width={barWidth}
-            height={barHeight}
+            key={`bar-${binPosition}`}
+            x={horizontal ? 0 : binPosition}
+            y={horizontal ? binPosition : (maxBarLength - barLength)}
+            width={horizontal ? barLength : barWidth}
+            height={horizontal ? barWidth : barLength}
             fill={d.fill || callOrValue(fill, d, i)}
             fillOpacity={
               typeof fillOpacity !== 'undefined' ? fillOpacity : callOrValue(fillOpacity, d, i)

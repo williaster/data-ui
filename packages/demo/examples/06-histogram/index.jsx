@@ -12,15 +12,18 @@ import {
 
 import readme from '../../node_modules/@data-ui/histogram/README.md';
 
-import { normal, logNormal, mus } from './data';
+import { normal, logNormal, mus, categorical } from './data';
 
 console.log('normal', normal);
 console.log('logNormal', logNormal);
+console.log('categorical', categorical);
 
 const ResponsiveHistogram = withScreenSize(({ screenWidth, children, ...rest }) => (
   <Histogram
     width={screenWidth / 1.5}
     height={screenWidth / 1.5 / 1.8}
+    ariaLabel="Histogram showing ..."
+    binCount={15}
     {...rest}
   >
     {children}
@@ -31,7 +34,7 @@ export default {
   usage: readme,
   examples: [
     {
-      description: 'Normal',
+      description: 'normal',
       components: [Histogram, BarSeries],
       example: () => (
         <ResponsiveHistogram ariaLabel="test">
@@ -40,12 +43,21 @@ export default {
       ),
     },
     {
-      description: 'Lognormal',
+      description: 'lognormal',
       components: [Histogram, BarSeries],
       example: () => (
-        <ResponsiveHistogram ariaLabel="test">
+        <ResponsiveHistogram ariaLabel="test" >
           <BarSeries rawData={logNormal[mus[1]][0]} />
-          <BarSeries fill="pink" rawData={logNormal[mus[1]][1]} />
+          <BarSeries fill="pink" rawData={logNormal[mus[1]][2]} />
+        </ResponsiveHistogram>
+      ),
+    },
+    {
+      description: 'categorical',
+      components: [Histogram, BarSeries],
+      example: () => (
+        <ResponsiveHistogram ariaLabel="test" binType="categorical" >
+          <BarSeries rawData={categorical} />
         </ResponsiveHistogram>
       ),
     },
@@ -65,6 +77,24 @@ export default {
       example: () => (
         <ResponsiveHistogram ariaLabel="test" normalized>
           <BarSeries rawData={normal[mus[1]][0]} />
+        </ResponsiveHistogram>
+      ),
+    },
+    {
+      description: 'horizontal normal',
+      components: [Histogram, BarSeries],
+      example: () => (
+        <ResponsiveHistogram ariaLabel="test" horizontal>
+          <BarSeries rawData={normal[mus[1]][0]} />
+        </ResponsiveHistogram>
+      ),
+    },
+    {
+      description: 'horizontal lognormal',
+      components: [Histogram, BarSeries],
+      example: () => (
+        <ResponsiveHistogram ariaLabel="test" horizontal>
+          <BarSeries rawData={logNormal[mus[1]][2]} />
         </ResponsiveHistogram>
       ),
     },

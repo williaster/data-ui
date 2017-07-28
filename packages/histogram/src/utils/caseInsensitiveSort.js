@@ -1,1 +1,5 @@
-export default (a, b) => a.toLowerCase() - b.toLowerCase();
+export default (a, b) => (
+  a.toLowerCase && b.toLowerCase
+  ? a.toLowerCase() - b.toLowerCase()
+  : a - b
+);

@@ -18,6 +18,7 @@ const propTypes = {
   children: PropTypes.node.isRequired,
   cumulative: PropTypes.bool,
   height: PropTypes.number.isRequired,
+  horizontal: PropTypes.bool,
   limits: PropTypes.array, // values outside the limits are ignored
   margin: PropTypes.shape({
     top: PropTypes.number,
@@ -34,10 +35,11 @@ const propTypes = {
 };
 
 const defaultProps = {
-  binCount: null,
+  binCount: 10,
   binType: 'numeric',
   binValues: null,
   cumulative: false,
+  horizontal: false,
   limits: null,
   margin: {
     top: 32,
@@ -117,9 +119,9 @@ class Histogram extends React.PureComponent {
   }
 
   render() {
-    const { ariaLabel, children, width, height } = this.props;
+    const { ariaLabel, children, width, height, horizontal } = this.props;
     const { margin, binsByIndex, binScale, valueScale, valueKey } = this.state;
-    debugger;
+
     return (
       <svg
         aria-label={ariaLabel}
@@ -132,7 +134,13 @@ class Histogram extends React.PureComponent {
             const name = componentName(Child);
             if (isSeries(name)) {
               const binnedData = binsByIndex[index];
-              return React.cloneElement(Child, { binScale, valueScale, valueKey, binnedData });
+              return React.cloneElement(Child, {
+                binScale,
+                binnedData,
+                horizontal,
+                valueKey,
+                valueScale,
+              });
             } else if (isAxis(name)) {
               return React.cloneElement(Child, { binScale, valueScale });
             }

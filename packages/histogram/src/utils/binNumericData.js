@@ -1,4 +1,5 @@
-import { histogram as d3Histogram } from 'd3-array';
+import { histogram as d3Histogram, extent as d3Extent } from 'd3-array';
+import { scaleLinear } from 'd3-scale';
 
 /*
  * handles binning of numeric data by series index
@@ -17,24 +18,14 @@ export default function binNumericData({
   binCount,
   binValues,
 }) {
-  const seriesCount = Object.keys(rawDataByIndex).length;
-  let bins = binValues;
-
-  // if there is more than one series and no pre-specified bins, we compute the histogram
-  // for all data to find optimal buckets, then bin again individually
-  if (seriesCount > 1 && !bins) {
-    const allDataHistogram = d3Histogram();
-    if (limits) allDataHistogram.domain(limits);
-    if (binCount) allDataHistogram.thresholds(binCount);
-    const allValues = allData.map(valueAccessor);
-    bins = allDataHistogram(allValues).map(bin => bin.x0);
-  }
-
-  // now bin individual series data, using the same histogram
   const binsByIndex = {};
   const histogram = d3Histogram();
-  if (limits) histogram.domain(limits);
-  if (bins || binCount) histogram.thresholds(bins || binCount);
+  const extent = d3Extent(allData, valueAccessor);
+  const scale = scaleLinear().domain(extent).nice(binCount);
+
+  histogram
+    .domain(limits || scale.domain())
+    .thresholds(binValues || scale.ticks(binCount));
 
   Object.keys(rawDataByIndex).forEach((index) => {
     const data = rawDataByIndex[index];
