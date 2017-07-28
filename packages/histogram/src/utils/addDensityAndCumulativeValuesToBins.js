@@ -12,5 +12,6 @@ export default function addDensityAndCumulativeValuesToBins(bins) {
   const total = cumulative;
   bins.forEach((bin) => {
     bin.density = bin.count / total;
+    bin.cumulativeDensity = bin.cumulative / total;
   });
 }

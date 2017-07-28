@@ -56,11 +56,11 @@ function BarSeries({
   return (
     <Group>
       {binnedData.map((d, i) => {
-        const binPosition = binScale(d.bin || d.bin0);
+        const binPosition = binScale(d.bin || (horizontal ? d.bin1 : d.bin0));
         const barLength = horizontal
           ? valueScale(d[valueKey])
           : maxBarLength - valueScale(d[valueKey]);
-        debugger;
+
         return (
           <Bar
             key={`bar-${binPosition}`}

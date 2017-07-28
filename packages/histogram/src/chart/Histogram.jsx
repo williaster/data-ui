@@ -44,8 +44,8 @@ const defaultProps = {
   margin: {
     top: 32,
     right: 32,
-    bottom: 32,
-    left: 32,
+    bottom: 64,
+    left: 64,
   },
   normalized: false,
   valueAccessor: d => d,
@@ -111,6 +111,10 @@ class Histogram extends React.PureComponent {
     const binRange = horizontal ? [innerHeight, 0] : [0, innerWidth];
     const valueRange = horizontal ? [0, innerWidth] : [innerHeight, 0];
 
+    // when viewing categorical data horizontally it is more natural to
+    // read alphabetical from top down
+    if (horizontal && binType === 'categorical') binRange.reverse();
+
     return {
       binScale: binScaleFunc({ range: binRange, domain: binDomain }),
       valueScale: scaleLinear({ range: valueRange, domain: valueDomain }),
@@ -120,7 +124,16 @@ class Histogram extends React.PureComponent {
 
   render() {
     const { ariaLabel, children, width, height, horizontal } = this.props;
-    const { margin, binsByIndex, binScale, valueScale, valueKey } = this.state;
+
+    const {
+      binsByIndex,
+      binScale,
+      innerHeight,
+      innerWidth,
+      margin,
+      valueKey,
+      valueScale,
+    } = this.state;
 
     return (
       <svg
@@ -142,7 +155,17 @@ class Histogram extends React.PureComponent {
                 valueScale,
               });
             } else if (isAxis(name)) {
-              return React.cloneElement(Child, { binScale, valueScale });
+              const binOrValue =
+                (name === 'XAxis' && !horizontal) || (name === 'YAxis' && horizontal)
+                ? 'bin'
+                : 'value';
+
+              return React.cloneElement(Child, {
+                top: name === 'YAxis' || Child.props.orientation === 'top' ? 0 : innerHeight,
+                left: name === 'XAxis' || Child.props.orientation === 'left' ? 0 : innerWidth,
+                label: binOrValue === 'value' ? valueKey : null,
+                scale: binOrValue === 'value' ? valueScale : binScale,
+              });
             }
             return Child;
           })}

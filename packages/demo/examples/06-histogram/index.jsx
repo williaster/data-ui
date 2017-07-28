@@ -6,8 +6,8 @@ import {
   BarSeries,
   // DensitySeries,
   // CircleSeries,
-  // XAxis,
-  // YAxis,
+  XAxis,
+  YAxis,
 } from '@data-ui/histogram';
 
 import readme from '../../node_modules/@data-ui/histogram/README.md';
@@ -20,10 +20,9 @@ console.log('categorical', categorical);
 
 const ResponsiveHistogram = withScreenSize(({ screenWidth, children, ...rest }) => (
   <Histogram
-    width={screenWidth / 1.5}
-    height={screenWidth / 1.5 / 1.8}
+    width={screenWidth / 1.3}
+    height={screenWidth / 1.3 / 1.8}
     ariaLabel="Histogram showing ..."
-    binCount={15}
     {...rest}
   >
     {children}
@@ -39,6 +38,8 @@ export default {
       example: () => (
         <ResponsiveHistogram ariaLabel="test">
           <BarSeries rawData={normal[mus[1]][0]} />
+          <XAxis />
+          <YAxis />
         </ResponsiveHistogram>
       ),
     },
@@ -46,9 +47,12 @@ export default {
       description: 'lognormal',
       components: [Histogram, BarSeries],
       example: () => (
-        <ResponsiveHistogram ariaLabel="test" >
-          <BarSeries rawData={logNormal[mus[1]][0]} />
-          <BarSeries fill="pink" rawData={logNormal[mus[1]][2]} />
+        <ResponsiveHistogram binCount={25}>
+          <BarSeries fillOpacity={0.2} rawData={logNormal[mus[1]][0]} />
+          <BarSeries fill="#FC642D" fillOpacity={0.2} rawData={logNormal[mus[1]][1]} />
+          <BarSeries fill="'#A61D55" fillOpacity={0.2} rawData={logNormal[mus[1]][2]} />
+          <XAxis />
+          <YAxis />
         </ResponsiveHistogram>
       ),
     },
@@ -56,8 +60,10 @@ export default {
       description: 'categorical',
       components: [Histogram, BarSeries],
       example: () => (
-        <ResponsiveHistogram ariaLabel="test" binType="categorical" >
+        <ResponsiveHistogram binType="categorical" >
           <BarSeries rawData={categorical} />
+          <XAxis />
+          <YAxis />
         </ResponsiveHistogram>
       ),
     },
@@ -66,8 +72,10 @@ export default {
       components: [Histogram, BarSeries],
       // @TODO cumulative should be a property of the series, histogram has to account for it
       example: () => (
-        <ResponsiveHistogram ariaLabel="test" cumulative>
+        <ResponsiveHistogram cumulative>
           <BarSeries rawData={normal[mus[1]][0]} />
+          <XAxis />
+          <YAxis />
         </ResponsiveHistogram>
       ),
     },
@@ -75,8 +83,10 @@ export default {
       description: 'normalized',
       components: [Histogram, BarSeries],
       example: () => (
-        <ResponsiveHistogram ariaLabel="test" normalized>
+        <ResponsiveHistogram normalized>
           <BarSeries rawData={normal[mus[1]][0]} />
+          <XAxis />
+          <YAxis />
         </ResponsiveHistogram>
       ),
     },
@@ -84,8 +94,10 @@ export default {
       description: 'horizontal normal',
       components: [Histogram, BarSeries],
       example: () => (
-        <ResponsiveHistogram ariaLabel="test" horizontal>
+        <ResponsiveHistogram horizontal>
           <BarSeries rawData={normal[mus[1]][0]} />
+          <XAxis />
+          <YAxis />
         </ResponsiveHistogram>
       ),
     },
@@ -93,8 +105,21 @@ export default {
       description: 'horizontal lognormal',
       components: [Histogram, BarSeries],
       example: () => (
-        <ResponsiveHistogram ariaLabel="test" horizontal>
+        <ResponsiveHistogram horizontal>
           <BarSeries rawData={logNormal[mus[1]][2]} />
+          <XAxis />
+          <YAxis />
+        </ResponsiveHistogram>
+      ),
+    },
+    {
+      description: 'horizontal categories',
+      components: [Histogram, BarSeries],
+      example: () => (
+        <ResponsiveHistogram binType="categorical" horizontal>
+          <BarSeries rawData={categorical} />
+          <XAxis />
+          <YAxis />
         </ResponsiveHistogram>
       ),
     },
