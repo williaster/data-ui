@@ -4,19 +4,17 @@ import { withScreenSize } from '@vx/responsive';
 import {
   Histogram,
   BarSeries,
-  // DensitySeries,
+  DensitySeries,
   // CircleSeries,
   XAxis,
   YAxis,
+  PatternLines,
+  LinearGradient,
 } from '@data-ui/histogram';
 
 import readme from '../../node_modules/@data-ui/histogram/README.md';
 
 import { normal, logNormal, mus, categorical } from './data';
-
-console.log('normal', normal);
-console.log('logNormal', logNormal);
-console.log('categorical', categorical);
 
 const ResponsiveHistogram = withScreenSize(({ screenWidth, children, ...rest }) => (
   <Histogram
@@ -37,7 +35,24 @@ export default {
       components: [Histogram, BarSeries],
       example: () => (
         <ResponsiveHistogram ariaLabel="test">
-          <BarSeries rawData={normal[mus[1]][0]} />
+          <LinearGradient
+            id="normal_pattern"
+            from="#008489"
+            to="#008489"
+            fromOpacity={0.6}
+            rotate={45}
+            vertical={false}
+          />
+          <DensitySeries
+            showArea={false}
+            smoothing={0.01}
+            kernel="parabolic"
+            rawData={normal[mus[2]][2]}
+          />
+          <BarSeries
+            fill="url(#normal_pattern)"
+            rawData={normal[mus[2]][2]}
+          />
           <XAxis />
           <YAxis />
         </ResponsiveHistogram>
@@ -48,9 +63,30 @@ export default {
       components: [Histogram, BarSeries],
       example: () => (
         <ResponsiveHistogram binCount={25}>
-          <BarSeries fillOpacity={0.2} rawData={logNormal[mus[1]][0]} />
-          <BarSeries fill="#FC642D" fillOpacity={0.2} rawData={logNormal[mus[1]][1]} />
-          <BarSeries fill="'#A61D55" fillOpacity={0.2} rawData={logNormal[mus[1]][2]} />
+          <BarSeries
+            fill="#FF5A5F"
+            fillOpacity={0.2}
+            strokeWidth={0}
+            rawData={logNormal[mus[1]][1]}
+          />
+          <BarSeries
+            fill="#A61D55"
+            strokeWidth={0}
+            fillOpacity={0.2}
+            rawData={logNormal[mus[1]][2]}
+          />
+          <DensitySeries
+            stroke="#A61D55"
+            showArea={false}
+            smoothing={1}
+            rawData={logNormal[mus[1]][2]}
+          />
+          <DensitySeries
+            stroke="#FF5A5F"
+            showArea={false}
+            smoothing={5}
+            rawData={logNormal[mus[1]][1]}
+          />
           <XAxis />
           <YAxis />
         </ResponsiveHistogram>
@@ -61,6 +97,10 @@ export default {
       components: [Histogram, BarSeries],
       example: () => (
         <ResponsiveHistogram binType="categorical" >
+          <DensitySeries
+            showLine={false}
+            rawData={categorical}
+          />
           <BarSeries rawData={categorical} />
           <XAxis />
           <YAxis />
@@ -95,7 +135,26 @@ export default {
       components: [Histogram, BarSeries],
       example: () => (
         <ResponsiveHistogram horizontal>
-          <BarSeries rawData={normal[mus[1]][0]} />
+          <PatternLines
+            id="area_pattern"
+            height={6}
+            width={6}
+            stroke="#FF5A5F"
+            strokeWidth={1}
+            orientation={['diagonal']}
+          />
+          <DensitySeries
+            fill="url(#area_pattern)"
+            showLine={false}
+            smoothing={0.01}
+            kernel="parabolic"
+            rawData={normal[mus[1]][0]}
+          />
+          <BarSeries
+            fill="transparent"
+            stroke="#FF5A5F"
+            rawData={normal[mus[1]][0]}
+          />
           <XAxis />
           <YAxis />
         </ResponsiveHistogram>

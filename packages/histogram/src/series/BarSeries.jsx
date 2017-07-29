@@ -7,6 +7,7 @@ import { Bar } from '@vx/shape';
 import callOrValue from '../utils/callOrValue';
 
 const propTypes = {
+  rawData: PropTypes.array, // eslint-disable-line react/no-unused-prop-types
   binnedData: PropTypes.array,
   fill: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   fillOpacity: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
@@ -22,6 +23,7 @@ const propTypes = {
 };
 
 const defaultProps = {
+  rawData: [],
   binnedData: [],
   binScale: null,
   fill: '#008489',

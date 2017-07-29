@@ -35,7 +35,6 @@ export default function binNumericData({
     // we remove the last bin because n bin thresholds give gives n+1 bins
     // our last threshold is the upper bound of the data so the final bin should
     // always be zero
-    if (seriesBins[seriesBins.length - 1].length > 0) console.warn('threw away non-zero bin');
     binsByIndex[index] = seriesBins.slice(0, -1).map(bin => ({
       // d3 bins are arrays of data with x0 and x1 properties added
       bin0: bin.x0,
@@ -43,6 +42,8 @@ export default function binNumericData({
       data: bin,
       count: bin.length,
     }));
+
+    if (seriesBins[seriesBins.length - 1].length > 0) console.warn('threw away non-zero bin');
   });
 
   return binsByIndex;
