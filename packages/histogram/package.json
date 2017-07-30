@@ -47,6 +47,7 @@
     "react": "^15.0.0 || 15.x"
   },
   "dependencies": {
+    "@data-ui/theme": "0.0.5",
     "@vx/axis": "0.0.131",
     "@vx/curve": "0.0.127",
     "@vx/glyph": "0.0.127",

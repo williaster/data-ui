@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import { chartTheme } from '@data-ui/theme';
 import { Group } from '@vx/group';
 import { Bar } from '@vx/shape';
 
@@ -26,7 +27,7 @@ const defaultProps = {
   rawData: [],
   binnedData: [],
   binScale: null,
-  fill: '#008489',
+  fill: chartTheme.colors.default,
   fillOpacity: 0.7,
   horizontal: false,
   stroke: '#FFFFFF',

@@ -20,14 +20,11 @@ const propTypes = {
 };
 
 const defaultProps = {
-  axisStyles: {
-    stroke: '#222',
-    strokeWidth: 1,
-  },
+  axisStyles: {},
   innerHeight: null,
   label: null,
   left: 0,
-  numTicks: null,
+  numTicks: 5,
   orientation: 'left',
   scale: null,
   tickFormat: null,

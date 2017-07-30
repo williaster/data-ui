@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { extent, max } from 'd3-array';
 
+import { chartTheme } from '@data-ui/theme';
 import { AreaClosed, LinePath } from '@vx/shape';
 import { curveBasis } from '@vx/curve';
 import { Group } from '@vx/group';
@@ -42,14 +43,14 @@ const defaultProps = {
   binnedData: [],
   binScale: null,
   binType: null,
-  fill: '#008489',
+  fill: chartTheme.colors.default,
   fillOpacity: 0.3,
   horizontal: false,
   kernel: 'gaussian',
   showArea: true,
   showLine: true,
   smoothing: 1,
-  stroke: '#008489',
+  stroke: chartTheme.colors.default,
   strokeWidth: 2,
   strokeDasharray: null,
   strokeLinecap: 'round',

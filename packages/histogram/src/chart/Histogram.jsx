@@ -30,6 +30,7 @@ const propTypes = {
   // showMean: PropTypes.bool,
   // showMedian: PropTypes.bool,
   // showQuartiles: PropTypes.bool,
+  theme: PropTypes.object,
   width: PropTypes.number.isRequired,
   valueAccessor: PropTypes.func,
 };
@@ -48,6 +49,7 @@ const defaultProps = {
     left: 64,
   },
   normalized: false,
+  theme: {},
   valueAccessor: d => d,
 };
 
@@ -123,7 +125,16 @@ class Histogram extends React.PureComponent {
   }
 
   render() {
-    const { ariaLabel, binType, children, width, height, horizontal, valueAccessor } = this.props;
+    const {
+      ariaLabel,
+      binType,
+      children,
+      height,
+      horizontal,
+      theme,
+      valueAccessor,
+      width,
+    } = this.props;
 
     const {
       binsByIndex,
@@ -157,6 +168,7 @@ class Histogram extends React.PureComponent {
                 valueScale,
               });
             } else if (isAxis(name)) {
+              const styleKey = name[0].toLowerCase();
               const binOrValue =
                 (name === 'XAxis' && !horizontal) || (name === 'YAxis' && horizontal)
                 ? 'bin'
@@ -167,6 +179,8 @@ class Histogram extends React.PureComponent {
                 left: name === 'XAxis' || Child.props.orientation === 'left' ? 0 : innerWidth,
                 label: binOrValue === 'value' ? valueKey : null,
                 scale: binOrValue === 'value' ? valueScale : binScale,
+                axisStyles: { ...theme[`${styleKey}AxisStyles`], ...Child.props.axisStyles },
+                tickStyles: { ...theme[`${styleKey}TickStyles`], ...Child.props.tickStyles },
               });
             }
             return Child;
