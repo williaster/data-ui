@@ -32,7 +32,7 @@ export default {
   examples: [
     {
       description: 'normal',
-      components: [Histogram, BarSeries],
+      components: [Histogram, BarSeries, DensitySeries],
       example: () => (
         <ResponsiveHistogram ariaLabel="test">
           <LinearGradient
@@ -60,31 +60,29 @@ export default {
     },
     {
       description: 'lognormal',
-      components: [Histogram, BarSeries],
+      components: [BarSeries, DensitySeries],
       example: () => (
         <ResponsiveHistogram binCount={25}>
           <BarSeries
             fill="#FF5A5F"
-            fillOpacity={0.2}
+            fillOpacity={0.3}
             strokeWidth={0}
             rawData={logNormal[mus[1]][1]}
           />
           <BarSeries
             fill="#A61D55"
             strokeWidth={0}
-            fillOpacity={0.2}
+            fillOpacity={0.3}
             rawData={logNormal[mus[1]][2]}
           />
           <DensitySeries
             stroke="#A61D55"
             showArea={false}
-            smoothing={1}
             rawData={logNormal[mus[1]][2]}
           />
           <DensitySeries
             stroke="#FF5A5F"
             showArea={false}
-            smoothing={5}
             rawData={logNormal[mus[1]][1]}
           />
           <XAxis />
@@ -94,7 +92,7 @@ export default {
     },
     {
       description: 'categorical',
-      components: [Histogram, BarSeries],
+      components: [BarSeries, DensitySeries],
       example: () => (
         <ResponsiveHistogram binType="categorical" >
           <DensitySeries
@@ -109,11 +107,18 @@ export default {
     },
     {
       description: 'cumulative',
-      components: [Histogram, BarSeries],
+      components: [BarSeries, DensitySeries],
       // @TODO cumulative should be a property of the series, histogram has to account for it
       example: () => (
         <ResponsiveHistogram cumulative>
-          <BarSeries rawData={normal[mus[1]][0]} />
+          <BarSeries fillOpacity={0.2} rawData={normal[mus[1]][0]} />
+          <DensitySeries
+            fill="#008489"
+            showArea={false}
+            smoothing={0.01}
+            kernel="parabolic"
+            rawData={normal[mus[1]][0]}
+          />
           <XAxis />
           <YAxis />
         </ResponsiveHistogram>
@@ -132,27 +137,29 @@ export default {
     },
     {
       description: 'horizontal normal',
-      components: [Histogram, BarSeries],
+      components: [Histogram, BarSeries, DensitySeries],
       example: () => (
         <ResponsiveHistogram horizontal>
           <PatternLines
-            id="area_pattern"
-            height={6}
-            width={6}
-            stroke="#FF5A5F"
+            id="horizontal_normal"
+            height={8}
+            width={8}
+            stroke="#c2255c"
             strokeWidth={1}
             orientation={['diagonal']}
           />
           <DensitySeries
-            fill="url(#area_pattern)"
-            showLine={false}
-            smoothing={0.01}
+            fill="url(#horizontal_normal)"
+            stroke="#c2255c"
+            storkeWidth={1}
+            smoothing={0.005}
             kernel="parabolic"
             rawData={normal[mus[1]][0]}
           />
           <BarSeries
-            fill="transparent"
-            stroke="#FF5A5F"
+            fill="#FFF"
+            fillOpacity={0.9}
+            stroke="#c2255c"
             rawData={normal[mus[1]][0]}
           />
           <XAxis />
@@ -165,7 +172,21 @@ export default {
       components: [Histogram, BarSeries],
       example: () => (
         <ResponsiveHistogram horizontal>
-          <BarSeries rawData={logNormal[mus[1]][2]} />
+          <PatternLines
+            id="horizontal_lognormal"
+            height={8}
+            width={8}
+            stroke="#fff"
+            background="#c2255c"
+            strokeWidth={1}
+            orientation={['horizontal', 'vertical']}
+          />
+          <BarSeries
+            fill="url(#horizontal_lognormal)"
+            fillOpacity={0.2}
+            stroke="#c2255c"
+            rawData={logNormal[mus[1]][2]}
+          />
           <XAxis />
           <YAxis />
         </ResponsiveHistogram>
@@ -176,7 +197,20 @@ export default {
       components: [Histogram, BarSeries],
       example: () => (
         <ResponsiveHistogram binType="categorical" horizontal>
-          <BarSeries rawData={categorical} />
+          <PatternLines
+            id="horizontal_cat"
+            height={8}
+            width={8}
+            stroke="#484848"
+            strokeWidth={1}
+            orientation={['diagonal']}
+          />
+          <BarSeries
+            fill="url(#horizontal_cat)"
+            stroke="#484848"
+            fillOpacity={0.3}
+            rawData={categorical}
+          />
           <XAxis />
           <YAxis />
         </ResponsiveHistogram>

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { extent } from 'd3-array';
+import { extent, max } from 'd3-array';
 
 import { AreaClosed, LinePath } from '@vx/shape';
 import { curveBasis } from '@vx/curve';
@@ -15,6 +15,7 @@ import kernelGaussian from '../utils/kernels/gaussian';
 const propTypes = {
   rawData: PropTypes.array, // eslint-disable-line react/no-unused-prop-types
   binnedData: PropTypes.array,
+  binType: PropTypes.oneOf(['numeric', 'categorical']),
   fill: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   fillOpacity: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
   horizontal: PropTypes.bool,
@@ -26,6 +27,8 @@ const propTypes = {
   strokeDasharray: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   strokeLinecap: PropTypes.oneOf(['butt', 'square', 'round', 'inherit']),
   strokeWidth: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
+  useEntireScale: PropTypes.bool,
+  valueAccessor: PropTypes.func,
   valueKey: PropTypes.string,
 
   // likely injected by parent Histogram
@@ -38,6 +41,7 @@ const defaultProps = {
   rawData: [],
   binnedData: [],
   binScale: null,
+  binType: null,
   fill: '#008489',
   fillOpacity: 0.3,
   horizontal: false,
@@ -49,12 +53,15 @@ const defaultProps = {
   strokeWidth: 2,
   strokeDasharray: null,
   strokeLinecap: 'round',
+  useEntireScale: false,
+  valueAccessor: d => d,
   valueKey: 'count',
   valueScale: null,
 };
 
-const getBin = d => d.bin;
+const getBin = d => d.bin || d.bin0;
 const densityAccessor = d => d.value;
+const cumulativeAccessor = d => d.cumulative;
 
 function DensitySeries({
   rawData,
@@ -72,42 +79,69 @@ function DensitySeries({
   strokeWidth,
   strokeDasharray,
   strokeLinecap,
+  useEntireScale,
+  valueAccessor,
   valueKey,
   valueScale,
 }) {
   if ((!showArea && !showLine)) return null;
 
-  const binOffset =
-    (horizontal ? -1 : +1) * 0.5 * (binScale.bandwidth
-      ? binScale.bandwidth() // categorical
-      : Math.abs(binScale(binnedData[0].bin1) - binScale(binnedData[0].bin0))); // numeric
+  const binWidth = binScale.bandwidth
+    ? binScale.bandwidth() // categorical
+    : Math.abs(binScale(binnedData[0].bin1) - binScale(binnedData[0].bin0)); // numeric
 
+  const binOffset = 0.5 * binWidth * (horizontal ? -1 : 1);
+
+  // all density estimators require numeric data, so if we're passed categorical data
+  // we just draw an area curve using the binned data
   let densityScale = valueScale;
   let getDensity = d => d[valueKey];
   let densityData = binnedData;
 
   if (binType === 'numeric') {
-    const bins = binnedData.map(d => d.bin || d.bin0);
-    const kernelFunc = kernel === 'gaussian' ? kernelGaussian() : kernelParabolic(smoothing);
-    const kde = kernelDensityEstimator(kernelFunc, bins);
+    // @TODO cache this with a non-functional component
+    const cumulative = valueKey === 'cumulative';
+    const bins = binnedData.map(getBin);
+    const kernelFunc = kernel === 'gaussian'
+      ? kernelGaussian()
+      : kernelParabolic(smoothing);
+    const estimator = kernelDensityEstimator(kernelFunc, bins);
 
-    densityData = kde(rawData); // @TODO valueAccessor
+    densityData = estimator(rawData.map(valueAccessor));
+
+    // area fills become inverted when the last value is less than the first value.
+    // padding with 0s ensures this never happens
+    densityData.unshift({ ...densityData[0], value: 0 });
+    densityData.push({ ...densityData[densityData.length - 1], value: 0 });
+
+    const densityRange = valueScale.range();
+    if (!useEntireScale) {
+      // set the range of the density scale to match the maximum data value
+      const maxVal = max(binnedData, d => d[valueKey]);
+      densityRange[1] = valueScale(maxVal);
+    }
 
     densityScale = scaleLinear({
-      domain: extent(densityData, d => d.value),
-      range: valueScale.range(),
+      domain: extent(densityData, (d, i) => {
+        const val = densityAccessor(d);// compute cumulative in this loop
+        // eslint-disable-next-line no-param-reassign
+        d.cumulative = val + (i > 0 ? densityData[i - 1].cumulative : 0);
+        return cumulative ? d.cumulative : val;
+      }),
+      range: densityRange,
     });
 
-    getDensity = densityAccessor;
+    getDensity = cumulative ? cumulativeAccessor : densityAccessor;
   }
 
-  const offSetBinScale = binScale.copy()
+  const offSetBinScale = binScale.copy();
   offSetBinScale.range(binScale.range().map(v => v + binOffset));
 
   const getX = horizontal ? getDensity : getBin;
   const getY = horizontal ? getBin : getDensity;
   const xScale = horizontal ? densityScale : offSetBinScale;
   const yScale = horizontal ? offSetBinScale : densityScale;
+  console.log('densityData', densityData);
 
   return (
     <Group>

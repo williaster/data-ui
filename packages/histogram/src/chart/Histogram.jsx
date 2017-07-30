@@ -123,7 +123,7 @@ class Histogram extends React.PureComponent {
   }
 
   render() {
-    const { ariaLabel, binType, children, width, height, horizontal } = this.props;
+    const { ariaLabel, binType, children, width, height, horizontal, valueAccessor } = this.props;
 
     const {
       binsByIndex,
@@ -149,11 +149,12 @@ class Histogram extends React.PureComponent {
               const binnedData = binsByIndex[index];
               return React.cloneElement(Child, {
                 binScale,
+                binType,
                 binnedData,
                 horizontal,
+                valueAccessor,
                 valueKey,
                 valueScale,
-                binType,
               });
             } else if (isAxis(name)) {
               const binOrValue =
