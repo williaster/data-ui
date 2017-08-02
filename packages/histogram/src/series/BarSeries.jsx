@@ -73,16 +73,16 @@ function BarSeries({
         data={binnedData}
         keyAccessor={d => d.id}
         start={d => ({
-          x: xScale(getX(d)),
-          y: horizontal ? 0 : maxBarLength,
-          // bin: binScale(horizontal ? getBin1(d) : getBin(d)),
-          // value: horizontal ? 0 : maxBarLength,
+          x: horizontal ? 0 : xScale(getX(d)),
+          y: horizontal ? yScale(getY(d)) : maxBarLength,
+          width: horizontal ? 0 : barWidth,
+          height: horizontal ? barWidth : 0,
         })}
         enter={(d, i) => ({
           x: [horizontal ? 0 : xScale(getX(d))],
           y: [yScale(getY(d))],
-          // bin: [binScale(horizontal ? getBin1(d) : getBin(d))],
-          // value: [valueScale(d[valueKey])],
+          width: [horizontal ? xScale(getX(d)) : barWidth],
+          height: [horizontal ? barWidth : maxBarLength - yScale(getY(d))],
           fill: [d.fill || callOrValue(fill, d, i)],
           stroke: [d.stroke || callOrValue(stroke, d, i)],
           timing: { duration: 300, delay: 10 * i },
@@ -90,17 +90,17 @@ function BarSeries({
         update={(d, i) => ({
           x: [horizontal ? 0 : xScale(getX(d))],
           y: [yScale(getY(d))],
-          // bin: [binScale(horizontal ? getBin1(d) : getBin(d))],
-          // value: [valueScale(d[valueKey])],
+          width: [horizontal ? xScale(getX(d)) : barWidth],
+          height: [horizontal ? barWidth : maxBarLength - yScale(getY(d))],
           fill: [d.fill || callOrValue(fill, d, i)],
           stroke: [d.stroke || callOrValue(stroke, d, i)],
           timing: { duration: 300, delay: 10 * i },
         })}
         leave={(d, i) => ({
-          x: xScale.invert ? xScale(getX(d)) : getX(d),
-          y: horizontal ? 0 : maxBarLength,
-          // bin: [binScale(horizontal ? getBin1(d) : getBin(d))],
-          // value: [horizontal ? 0 : maxBarLength],
+          x: horizontal ? 0 : xScale(getX(d)),
+          y: horizontal ? yScale(getY(d)) : maxBarLength,
+          width: horizontal ? 0 : barWidth,
+          height: horizontal ? barWidth : 0,
           timing: { duration: 300, delay: 5 * i },
         })}
       >
@@ -114,8 +114,8 @@ function BarSeries({
                   key={`bar-${key}`}
                   x={d.x}
                   y={d.y}
-                  width={Math.max(0, horizontal ? d.x : barWidth)}
-                  height={Math.max(0, horizontal ? barWidth : maxBarLength - d.y)}
+                  width={d.width}
+                  height={d.height}
                   fill={d.fill}
                   stroke={d.stroke}
                   fillOpacity={

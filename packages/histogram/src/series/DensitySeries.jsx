@@ -107,6 +107,7 @@ function DensitySeries({
     const kernelFunc = kernel === 'gaussian'
       ? kernelGaussian()
       : kernelParabolic(smoothing);
+      
     const estimator = kernelDensityEstimator(kernelFunc, bins);
 
     densityData = estimator(rawData.map(valueAccessor));
@@ -153,8 +154,8 @@ function DensitySeries({
         data={densityData}
         keyAccessor={d => d.id}
         start={d => ({
-          x: xScale.invert ? maxX : getX(d),
-          y: horizontal ? 0 : maxY,
+          x: horizontal ? 0 : (xScale.invert ? maxX : getX(d)),
+          y: horizontal ? (yScale.invert ? yScale(getY(d)) : getY(d)) : maxY,
         })}
         enter={(d, i) => ({
           x: [xScale.invert ? xScale(getX(d)) : getX(d)],
