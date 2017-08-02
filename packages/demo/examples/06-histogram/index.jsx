@@ -6,7 +6,7 @@ import {
   Histogram,
   BarSeries,
   DensitySeries,
-  // CircleSeries,
+
   XAxis,
   YAxis,
   PatternLines,
@@ -15,6 +15,7 @@ import {
 
 import readme from '../../node_modules/@data-ui/histogram/README.md';
 
+import HistogramPlayground from './HistogramPlayground';
 import { normal, logNormal, mus, categorical } from './data';
 
 const ResponsiveHistogram = withScreenSize(({ screenWidth, children, ...rest }) => (
@@ -32,6 +33,13 @@ const ResponsiveHistogram = withScreenSize(({ screenWidth, children, ...rest }) 
 export default {
   usage: readme,
   examples: [
+    {
+      description: 'Playground',
+      components: [Histogram, BarSeries, DensitySeries, XAxis, YAxis],
+      example: () => (
+        <HistogramPlayground HistogramComponent={ResponsiveHistogram} />
+      ),
+    },
     {
       description: 'normal',
       components: [Histogram, BarSeries, DensitySeries],

@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { extent, max } from 'd3-array';
+import { NodeGroup } from 'resonance';
 
 import { chartTheme } from '@data-ui/theme';
 import { AreaClosed, LinePath } from '@vx/shape';
@@ -60,7 +61,7 @@ const defaultProps = {
   valueScale: null,
 };
 
-const getBin = d => d.bin || d.bin0;
+const getBin = d => (typeof d.bin !== 'undefined' ? d.bin : d.bin0);
 const densityAccessor = d => d.value;
 const cumulativeAccessor = d => d.cumulative;
 
@@ -127,6 +128,7 @@ function DensitySeries({
         const val = densityAccessor(d);// compute cumulative in this loop
         // eslint-disable-next-line no-param-reassign
         d.cumulative = val + (i > 0 ? densityData[i - 1].cumulative : 0);
+        d.id = i;
         return cumulative ? d.cumulative : val;
       }),
       range: densityRange,
@@ -142,37 +144,70 @@ function DensitySeries({
   const getY = horizontal ? getBin : getDensity;
   const xScale = horizontal ? densityScale : offSetBinScale;
   const yScale = horizontal ? offSetBinScale : densityScale;
-  console.log('densityData', densityData);
+  const maxY = Math.max(...yScale.range());
+  const maxX = Math.max(...xScale.range());
 
   return (
     <Group>
-      {showArea &&
-        <AreaClosed
-          data={densityData}
-          x={getX}
-          y={getY}
-          xScale={xScale}
-          yScale={yScale}
-          fill={fill}
-          fillOpacity={fillOpacity}
-          stroke="transparent"
-          strokeWidth={strokeWidth}
-          curve={curveBasis}
-        />}
-      {showLine && strokeWidth > 0 &&
-        <LinePath
-          data={densityData}
-          x={getX}
-          y={getY}
-          xScale={xScale}
-          yScale={yScale}
-          stroke={stroke}
-          strokeWidth={strokeWidth}
-          strokeDasharray={strokeDasharray}
-          strokeLinecap={strokeLinecap}
-          curve={curveBasis}
-          glyph={null}
-        />}
+      <NodeGroup
+        data={densityData}
+        keyAccessor={d => d.id}
+        start={d => ({
+          x: xScale.invert ? maxX : getX(d),
+          y: horizontal ? 0 : maxY,
+        })}
+        enter={(d, i) => ({
+          x: [xScale.invert ? xScale(getX(d)) : getX(d)],
+          y: [yScale.invert ? yScale(getY(d)) : getY(d)],
+          fill: [d.fill || callOrValue(fill, d, i)],
+          stroke: [d.stroke || callOrValue(stroke, d, i)],
+          timing: { duration: 300, delay: 10 * i },
+        })}
+        update={(d, i) => ({
+          x: [xScale.invert ? xScale(getX(d)) : getX(d)],
+          y: [yScale.invert ? yScale(getY(d)) : getY(d)],
+          fill: [d.fill || callOrValue(fill, d, i)],
+          stroke: [d.stroke || callOrValue(stroke, d, i)],
+          timing: { duration: 300, delay: 10 * i },
+        })}
+        leave={(d, i) => ({
+          x: xScale.invert ? xScale(getX(d)) : getX(d),
+          y: horizontal ? 0 : maxY,
+          timing: { duration: 300, delay: 5 * i },
+        })}
+      >
+        {modifiedData => (
+          <Group>
+            {showArea &&
+              <AreaClosed
+                data={modifiedData}
+                x={d => (xScale.invert ? xScale.invert(d.state.x) : d.state.x)}
+                y={d => (yScale.invert ? yScale.invert(d.state.y) : d.state.y)}
+                xScale={xScale}
+                yScale={yScale}
+                fill={fill}
+                fillOpacity={fillOpacity}
+                stroke="transparent"
+                strokeWidth={strokeWidth}
+                curve={curveBasis}
+              />}
+            {showLine && strokeWidth > 0 &&
+              <LinePath
+                data={modifiedData}
+                x={d => (xScale.invert ? xScale.invert(d.state.x) : d.state.x)}
+                y={d => (yScale.invert ? yScale.invert(d.state.y) : d.state.y)}
+                xScale={xScale}
+                yScale={yScale}
+                stroke={stroke}
+                strokeWidth={strokeWidth}
+                strokeDasharray={strokeDasharray}
+                strokeLinecap={strokeLinecap}
+                curve={curveBasis}
+                glyph={null}
+              />}
+          </Group>
+        )}
+      </NodeGroup>
     </Group>
   );
 }

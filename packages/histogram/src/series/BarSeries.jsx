@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { NodeGroup } from 'resonance';
 
 import { chartTheme } from '@data-ui/theme';
 import { Group } from '@vx/group';
@@ -36,6 +37,9 @@ const defaultProps = {
   valueScale: null,
 };
 
+const getBin = d => (typeof d.bin !== 'undefined' ? d.bin : d.bin0);
+const getBin1 = d => (typeof d.bin !== 'undefined' ? d.bin : d.bin1);
+
 function BarSeries({
   binnedData,
   binScale,
@@ -50,36 +54,82 @@ function BarSeries({
   if (!binScale || !valueScale || !binnedData || binnedData.length === 0) return null;
 
   const maxBarLength = Math.max(...valueScale.range());
+
   const barWidth = binScale.bandwidth
       ? binScale.bandwidth() // categorical
       : Math.abs(binScale(binnedData[0].bin1) - binScale(binnedData[0].bin0)); // numeric
 
-  console.log('bar data', binnedData);
+  console.log('render bar');
+  const getValue = d => d[valueKey];
+
+  const getX = horizontal ? getValue : getBin;
+  const getY = horizontal ? getBin1 : getValue;
+  const xScale = horizontal ? valueScale : binScale;
+  const yScale = horizontal ? binScale : valueScale;
 
   return (
     <Group>
-      {binnedData.map((d, i) => {
-        const binPosition = binScale(d.bin || (horizontal ? d.bin1 : d.bin0));
-        const barLength = horizontal
-          ? valueScale(d[valueKey])
-          : maxBarLength - valueScale(d[valueKey]);
-
-        return (
-          <Bar
-            key={`bar-${binPosition}`}
-            x={horizontal ? 0 : binPosition}
-            y={horizontal ? binPosition : (maxBarLength - barLength)}
-            width={horizontal ? barLength : barWidth}
-            height={horizontal ? barWidth : barLength}
-            fill={d.fill || callOrValue(fill, d, i)}
-            fillOpacity={
-              typeof fillOpacity !== 'undefined' ? fillOpacity : callOrValue(fillOpacity, d, i)
-            }
-            stroke={d.stroke || callOrValue(stroke, d, i)}
-            strokeWidth={d.strokeWidth || callOrValue(strokeWidth, d, i)}
-          />
-        );
-      })}
+      <NodeGroup
+        data={binnedData}
+        keyAccessor={d => d.id}
+        start={d => ({
+          x: xScale(getX(d)),
+          y: horizontal ? 0 : maxBarLength,
+          // bin: binScale(horizontal ? getBin1(d) : getBin(d)),
+          // value: horizontal ? 0 : maxBarLength,
+        })}
+        enter={(d, i) => ({
+          x: [horizontal ? 0 : xScale(getX(d))],
+          y: [yScale(getY(d))],
+          // bin: [binScale(horizontal ? getBin1(d) : getBin(d))],
+          // value: [valueScale(d[valueKey])],
+          fill: [d.fill || callOrValue(fill, d, i)],
+          stroke: [d.stroke || callOrValue(stroke, d, i)],
+          timing: { duration: 300, delay: 10 * i },
+        })}
+        update={(d, i) => ({
+          x: [horizontal ? 0 : xScale(getX(d))],
+          y: [yScale(getY(d))],
+          // bin: [binScale(horizontal ? getBin1(d) : getBin(d))],
+          // value: [valueScale(d[valueKey])],
+          fill: [d.fill || callOrValue(fill, d, i)],
+          stroke: [d.stroke || callOrValue(stroke, d, i)],
+          timing: { duration: 300, delay: 10 * i },
+        })}
+        leave={(d, i) => ({
+          x: xScale.invert ? xScale(getX(d)) : getX(d),
+          y: horizontal ? 0 : maxBarLength,
+          // bin: [binScale(horizontal ? getBin1(d) : getBin(d))],
+          // value: [horizontal ? 0 : maxBarLength],
+          timing: { duration: 300, delay: 5 * i },
+        })}
+      >
+        {data => (
+          <Group>
+            {data.map((modifiedDatum, i) => {
+              // debugger;
+              const { key, data: rawDatum, state: d } = modifiedDatum;
+              return (
+                <Bar
+                  key={`bar-${key}`}
+                  x={d.x}
+                  y={d.y}
+                  width={Math.max(0, horizontal ? d.x : barWidth)}
+                  height={Math.max(0, horizontal ? barWidth : maxBarLength - d.y)}
+                  fill={d.fill}
+                  stroke={d.stroke}
+                  fillOpacity={
+                    typeof fillOpacity !== 'undefined'
+                    ? fillOpacity
+                    : callOrValue(fillOpacity, rawDatum, i)
+                  }
+                  strokeWidth={rawDatum.strokeWidth || callOrValue(strokeWidth, rawDatum, i)}
+                />
+              );
+            })}
+          </Group>
+        )}
+      </NodeGroup>
     </Group>
   );
 }

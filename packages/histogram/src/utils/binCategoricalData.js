@@ -20,7 +20,7 @@ export default function binCategoricalData({ rawDataByIndex, valueAccessor, binV
 
     data.forEach((datum) => {
       const bin = valueAccessor(datum);
-      bins[bin] = bins[bin] || { bin, data: [], count: 0 };
+      bins[bin] = bins[bin] || { bin, data: [], count: 0, id: bin };
       bins[bin].data.push(datum);
       bins[bin].count += 1;
     });
