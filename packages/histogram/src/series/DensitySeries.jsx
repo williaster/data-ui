@@ -10,6 +10,7 @@ import { Group } from '@vx/group';
 import { scaleLinear } from '@vx/scale';
 
 import AnimatedDensitySeries from './animated/AnimatedDensitySeries';
+import { binnedDataShape } from '../utils/propShapes';
 import kernelDensityEstimator from '../utils/kernelDensityEstimator';
 import kernelParabolic from '../utils/kernels/epanechnikov';
 import kernelGaussian from '../utils/kernels/gaussian';
@@ -17,7 +18,7 @@ import kernelGaussian from '../utils/kernels/gaussian';
 const propTypes = {
   animated: PropTypes.bool,
   rawData: PropTypes.array, // eslint-disable-line react/no-unused-prop-types
-  binnedData: PropTypes.array,
+  binnedData: binnedDataShape,
   binType: PropTypes.oneOf(['numeric', 'categorical']),
   fill: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   fillOpacity: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
@@ -104,7 +105,7 @@ function DensitySeries({
 
   if (binType === 'numeric') {
     // @TODO cache this with a non-functional component
-    const cumulative = valueKey === 'cumulative';
+    const cumulative = (/cumulative/gi).test(valueKey);
     const bins = binnedData.map(getBin);
     const kernelFunc = kernel === 'gaussian'
       ? kernelGaussian()

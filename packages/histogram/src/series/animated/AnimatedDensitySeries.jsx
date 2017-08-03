@@ -57,14 +57,13 @@ function AnimatedDensitySeries({
   yScale,
 }) {
   const maxY = Math.max(...yScale.range());
-  const maxX = Math.max(...xScale.range());
   return (
     <NodeGroup
       data={densityData}
       keyAccessor={keyAccessor}
       start={(d) => {
         if (horizontal) return { x: 0, y: yScale.invert ? yScale(getY(d)) : getY(d) };
-        return { x: xScale.invert ? maxX : getX(d), y: maxY };
+        return { x: xScale.invert ? xScale(getX(d)) : getX(d), y: maxY };
       }}
       enter={(d, i) => ({
         x: [xScale.invert ? xScale(getX(d)) : getX(d)],

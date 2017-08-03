@@ -11,8 +11,6 @@ export default function collectBinnedDataFromChildSeries({
   limits,
   valueAccessor,
 }) {
-  console.time('bin data');
-
   const {
     allRawData,
     rawDataByIndex,
@@ -37,8 +35,6 @@ export default function collectBinnedDataFromChildSeries({
   Object.values(result).forEach((bins) => {
     addDensityAndCumulativeValuesToBins(bins);
   });
-
-  console.timeEnd('bin data');
 
   return result;
 }

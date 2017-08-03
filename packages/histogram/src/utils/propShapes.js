@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 
-export const numericBinnedDatum = PropTypes.shape({
+export const numericBinnedDatumShape = PropTypes.shape({
   id: PropTypes.string.isRequired,
   bin0: PropTypes.number.isRequired,
   bin1: PropTypes.number.isRequired,
@@ -10,7 +10,7 @@ export const numericBinnedDatum = PropTypes.shape({
   cumulativeDensity: PropTypes.number.isRequired,
 });
 
-export const categoricalBinnedDatum = PropTypes.shape({
+export const categoricalBinnedDatumShape = PropTypes.shape({
   id: PropTypes.string.isRequired,
   bin: PropTypes.string.isRequired,
   count: PropTypes.number.isRequired,
@@ -19,9 +19,9 @@ export const categoricalBinnedDatum = PropTypes.shape({
   cumulativeDensity: PropTypes.number.isRequired,
 });
 
-export const binnedData = PropTypes.arrayOf(
+export const binnedDataShape = PropTypes.arrayOf(
   PropTypes.oneOfType([
-    numericBinnedDatum,
-    categoricalBinnedDatum,
+    numericBinnedDatumShape,
+    categoricalBinnedDatumShape,
   ]),
 );

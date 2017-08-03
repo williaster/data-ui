@@ -7,11 +7,12 @@ import { Bar } from '@vx/shape';
 
 import AnimatedBarSeries from './animated/AnimatedBarSeries';
 import callOrValue from '../utils/callOrValue';
+import { binnedDataShape } from '../utils/propShapes';
 
 export const propTypes = {
   animated: PropTypes.bool,
   rawData: PropTypes.array, // eslint-disable-line react/no-unused-prop-types
-  binnedData: PropTypes.array,
+  binnedData: binnedDataShape,
   fill: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   fillOpacity: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
   horizontal: PropTypes.bool,
