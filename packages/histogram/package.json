@@ -10,7 +10,7 @@
     "build": "make build SRC=./src",
     "dev": "make watch src/index.js -p browserify-hmr -o build/index.js -dv",
     "prepublish": "make build SRC=./src",
-    "test": "jest"
+    "test": "jest --verbose --coverage --color"
   },
   "repository": {
     "type": "git",
@@ -35,6 +35,7 @@
   "homepage": "https://github.com/williaster/data-ui#readme",
   "devDependencies": {
     "babel-jest": "^20.0.3",
+    "babel-polyfill": "^6.23.0",
     "enzyme": "^2.8.2",
     "jest": "^20.0.3",
     "react": "^15.0.0 || 15.x",
@@ -62,5 +63,8 @@
     "lodash": "^4.17.4",
     "prop-types": "^15.5.10",
     "resonance": "^0.9.5"
+  },
+  "jest": {
+    "setupTestFrameworkScriptFile": "./test/testsSetup.js"
   }
 }

@@ -1,7 +1,7 @@
 /* eslint no-param-reassign: 0 */
 
-// bins should have the shape
-// Array<Object{ bin: String, data: Array<datum>, count: Number }>
+// bins should minimally have the shape
+// Array<Object{ count: Number }>
 export default function addDensityAndCumulativeValuesToBins(bins) {
   let cumulative = 0;
   bins.forEach((bin) => {

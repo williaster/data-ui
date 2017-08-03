@@ -21,7 +21,6 @@ const propTypes = {
 
 const defaultProps = {
   axisStyles: {},
-  innerHeight: null,
   label: null,
   left: 0,
   numTicks: null,
@@ -45,7 +44,7 @@ export default function XAxis({
   tickLabelComponent,
   tickStyles,
 }) {
-  if (!scale || !innerHeight) return null;
+  if (!scale) return null;
   const Axis = orientation === 'bottom' ? AxisBottom : AxisTop;
   return (
     <Axis

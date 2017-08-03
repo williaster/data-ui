@@ -1,14 +1,15 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { NodeGroup } from 'resonance';
 
 import { chartTheme } from '@data-ui/theme';
 import { Group } from '@vx/group';
 import { Bar } from '@vx/shape';
 
+import AnimatedBarSeries from './animated/AnimatedBarSeries';
 import callOrValue from '../utils/callOrValue';
 
-const propTypes = {
+export const propTypes = {
+  animated: PropTypes.bool,
   rawData: PropTypes.array, // eslint-disable-line react/no-unused-prop-types
   binnedData: PropTypes.array,
   fill: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
@@ -24,7 +25,8 @@ const propTypes = {
   // renderLabel: PropTypes.func,
 };
 
-const defaultProps = {
+export const defaultProps = {
+  animated: true,
   rawData: [],
   binnedData: [],
   binScale: null,
@@ -37,10 +39,8 @@ const defaultProps = {
   valueScale: null,
 };
 
-const getBin = d => (typeof d.bin !== 'undefined' ? d.bin : d.bin0);
-const getBin1 = d => (typeof d.bin !== 'undefined' ? d.bin : d.bin1);
-
 function BarSeries({
+  animated,
   binnedData,
   binScale,
   fill,
@@ -59,77 +59,43 @@ function BarSeries({
       ? binScale.bandwidth() // categorical
       : Math.abs(binScale(binnedData[0].bin1) - binScale(binnedData[0].bin0)); // numeric
 
-  console.log('render bar');
-  const getValue = d => d[valueKey];
-
-  const getX = horizontal ? getValue : getBin;
-  const getY = horizontal ? getBin1 : getValue;
-  const xScale = horizontal ? valueScale : binScale;
-  const yScale = horizontal ? binScale : valueScale;
-
   return (
     <Group>
-      <NodeGroup
-        data={binnedData}
-        keyAccessor={d => d.id}
-        start={d => ({
-          x: horizontal ? 0 : xScale(getX(d)),
-          y: horizontal ? yScale(getY(d)) : maxBarLength,
-          width: horizontal ? 0 : barWidth,
-          height: horizontal ? barWidth : 0,
-        })}
-        enter={(d, i) => ({
-          x: [horizontal ? 0 : xScale(getX(d))],
-          y: [yScale(getY(d))],
-          width: [horizontal ? xScale(getX(d)) : barWidth],
-          height: [horizontal ? barWidth : maxBarLength - yScale(getY(d))],
-          fill: [d.fill || callOrValue(fill, d, i)],
-          stroke: [d.stroke || callOrValue(stroke, d, i)],
-          timing: { duration: 300, delay: 10 * i },
-        })}
-        update={(d, i) => ({
-          x: [horizontal ? 0 : xScale(getX(d))],
-          y: [yScale(getY(d))],
-          width: [horizontal ? xScale(getX(d)) : barWidth],
-          height: [horizontal ? barWidth : maxBarLength - yScale(getY(d))],
-          fill: [d.fill || callOrValue(fill, d, i)],
-          stroke: [d.stroke || callOrValue(stroke, d, i)],
-          timing: { duration: 300, delay: 10 * i },
-        })}
-        leave={(d, i) => ({
-          x: horizontal ? 0 : xScale(getX(d)),
-          y: horizontal ? yScale(getY(d)) : maxBarLength,
-          width: horizontal ? 0 : barWidth,
-          height: horizontal ? barWidth : 0,
-          timing: { duration: 300, delay: 5 * i },
-        })}
-      >
-        {data => (
-          <Group>
-            {data.map((modifiedDatum, i) => {
-              // debugger;
-              const { key, data: rawDatum, state: d } = modifiedDatum;
-              return (
-                <Bar
-                  key={`bar-${key}`}
-                  x={d.x}
-                  y={d.y}
-                  width={d.width}
-                  height={d.height}
-                  fill={d.fill}
-                  stroke={d.stroke}
-                  fillOpacity={
-                    typeof fillOpacity !== 'undefined'
-                    ? fillOpacity
-                    : callOrValue(fillOpacity, rawDatum, i)
-                  }
-                  strokeWidth={rawDatum.strokeWidth || callOrValue(strokeWidth, rawDatum, i)}
-                />
-              );
-            })}
-          </Group>
-        )}
-      </NodeGroup>
+      {animated &&
+        <AnimatedBarSeries
+          binnedData={binnedData}
+          binScale={binScale}
+          horizontal={horizontal}
+          fill={fill}
+          fillOpacity={fillOpacity}
+          stroke={stroke}
+          strokeWidth={strokeWidth}
+          valueKey={valueKey}
+          valueScale={valueScale}
+        />}
+
+      {!animated && binnedData.map((d, i) => {
+        const binPosition = binScale(d.bin || (horizontal ? d.bin1 : d.bin0));
+        const barLength = horizontal
+          ? valueScale(d[valueKey])
+          : maxBarLength - valueScale(d[valueKey]);
+
+        return (
+          <Bar
+            key={`bar-${binPosition}`}
+            x={horizontal ? 0 : binPosition}
+            y={horizontal ? binPosition : (maxBarLength - barLength)}
+            width={horizontal ? barLength : barWidth}
+            height={horizontal ? barWidth : barLength}
+            fill={d.fill || callOrValue(fill, d, i)}
+            fillOpacity={
+              typeof fillOpacity !== 'undefined' ? fillOpacity : callOrValue(fillOpacity, d, i)
+            }
+            stroke={d.stroke || callOrValue(stroke, d, i)}
+            strokeWidth={d.strokeWidth || callOrValue(strokeWidth, d, i)}
+          />
+        );
+      })}
     </Group>
   );
 }

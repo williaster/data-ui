@@ -1,7 +1,7 @@
 export function isAxis(name) {
-  return name.match(/axis/gi);
+  return (/axis/gi).test(name);
 }
 
 export function isSeries(name) {
-  return name.match(/series/gi);
+  return (/series/gi).test(name);
 }

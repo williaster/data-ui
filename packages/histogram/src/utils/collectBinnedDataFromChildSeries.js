@@ -11,31 +11,34 @@ export default function collectBinnedDataFromChildSeries({
   limits,
   valueAccessor,
 }) {
-  console.time('binning data');
+  console.time('bin data');
 
-  let result;
-  const { allData, rawDataByIndex, binnedDataByIndex } = collectDataFromChildSeries(children);
-  result = binnedDataByIndex;
+  const {
+    allRawData,
+    rawDataByIndex,
+    binnedDataByIndex,
+  } = collectDataFromChildSeries(children);
 
-  if (!result) {
+  let result = binnedDataByIndex;
+
+  if (Object.keys(binnedDataByIndex).length === 0) {
     const binningFunc = binType === 'numeric' ? binNumericData : binCategoricalData;
 
     result = binningFunc({
-      allData,
+      allData: allRawData,
       rawDataByIndex,
       valueAccessor,
       limits,
       binCount,
       binValues,
     });
-
   }
 
   Object.values(result).forEach((bins) => {
     addDensityAndCumulativeValuesToBins(bins);
   });
 
-  console.timeEnd('binning data');
+  console.timeEnd('bin data');
 
   return result;
 }

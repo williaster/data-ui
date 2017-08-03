@@ -9,6 +9,7 @@ import { isAxis, isSeries } from '../utils/componentIsX';
 import collectBinnedDataFromChildSeries from '../utils/collectBinnedDataFromChildSeries';
 import componentName from '../utils/componentName';
 import computeDomainsFromBins from '../utils/computeDomainsFromBins';
+import getValueKey from '../utils/getValueKey';
 
 const propTypes = {
   ariaLabel: PropTypes.string.isRequired,
@@ -27,9 +28,6 @@ const propTypes = {
     left: PropTypes.number,
   }),
   normalized: PropTypes.bool,
-  // showMean: PropTypes.bool,
-  // showMedian: PropTypes.bool,
-  // showQuartiles: PropTypes.bool,
   theme: PropTypes.object,
   width: PropTypes.number.isRequired,
   valueAccessor: PropTypes.func,
@@ -60,7 +58,6 @@ class Histogram extends React.PureComponent {
   }
 
   componentWillReceiveProps(nextProps) {
-    // @TODO be more intelligent about updates
     this.setState(this.getStateFromProps(nextProps));
   }
 
@@ -102,7 +99,7 @@ class Histogram extends React.PureComponent {
     const { binType, binValues, cumulative, horizontal, normalized } = props || this.props;
 
     const binScaleFunc = binType === 'numeric' ? scaleLinear : scaleBand;
-    const valueKey = (cumulative && 'cumulative') || (normalized && 'density') || 'count';
+    const valueKey = getValueKey({ normalized, cumulative });
     const { binDomain, valueDomain } = computeDomainsFromBins({
       binsByIndex,
       binType,

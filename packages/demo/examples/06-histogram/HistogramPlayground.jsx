@@ -42,7 +42,7 @@ function getDataset({ n, mu, sigma, distribution, ...rest }) {
 const valueAccessor = d => d.value;
 
 const propTypes = {
-  HistogramComponent: PropTypes.element,
+  HistogramComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
 };
 
 const defaultProps = {
@@ -82,14 +82,14 @@ class HistogramPlayground extends React.PureComponent {
   onChangeMu(datasetKey, nextMu) {
     const dataset = this.state[datasetKey];
     this.setState({
-      [datasetKey]: getDataset({ ...dataset, mu: nextMu }),
+      [datasetKey]: getDataset({ ...dataset, mu: Number(nextMu) }),
     });
   }
 
   onChangeSigma(datasetKey, nextSigma) {
     const dataset = this.state[datasetKey];
     this.setState({
-      [datasetKey]: getDataset({ ...dataset, sigma: nextSigma }),
+      [datasetKey]: getDataset({ ...dataset, sigma: Number(nextSigma) }),
     });
   }
 
@@ -134,7 +134,9 @@ class HistogramPlayground extends React.PureComponent {
         <Spacer>
           <select
             name="distribution"
-            onChange={(e) => { this.handleChangeDistribution(datasetKey, e.target && e.target.value); }}
+            onChange={(e) => {
+              this.handleChangeDistribution(datasetKey, e.target.value);
+            }}
             value={distribution}
           >
             <option value="normal">normal</option>

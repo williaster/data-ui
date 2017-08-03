@@ -1,7 +1,7 @@
+/* eslint no-param-reassign: 0 */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { extent, max } from 'd3-array';
-import { NodeGroup } from 'resonance';
 
 import { chartTheme } from '@data-ui/theme';
 import { AreaClosed, LinePath } from '@vx/shape';
@@ -9,12 +9,13 @@ import { curveBasis } from '@vx/curve';
 import { Group } from '@vx/group';
 import { scaleLinear } from '@vx/scale';
 
-import callOrValue from '../utils/callOrValue';
+import AnimatedDensitySeries from './animated/AnimatedDensitySeries';
 import kernelDensityEstimator from '../utils/kernelDensityEstimator';
 import kernelParabolic from '../utils/kernels/epanechnikov';
 import kernelGaussian from '../utils/kernels/gaussian';
 
 const propTypes = {
+  animated: PropTypes.bool,
   rawData: PropTypes.array, // eslint-disable-line react/no-unused-prop-types
   binnedData: PropTypes.array,
   binType: PropTypes.oneOf(['numeric', 'categorical']),
@@ -36,10 +37,10 @@ const propTypes = {
   // likely injected by parent Histogram
   binScale: PropTypes.func,
   valueScale: PropTypes.func,
-  // renderLabel: PropTypes.func,
 };
 
 const defaultProps = {
+  animated: true,
   rawData: [],
   binnedData: [],
   binScale: null,
@@ -66,6 +67,7 @@ const densityAccessor = d => d.value;
 const cumulativeAccessor = d => d.cumulative;
 
 function DensitySeries({
+  animated,
   rawData,
   binnedData,
   binScale,
@@ -107,7 +109,7 @@ function DensitySeries({
     const kernelFunc = kernel === 'gaussian'
       ? kernelGaussian()
       : kernelParabolic(smoothing);
-      
+
     const estimator = kernelDensityEstimator(kernelFunc, bins);
 
     densityData = estimator(rawData.map(valueAccessor));
@@ -127,7 +129,6 @@ function DensitySeries({
     densityScale = scaleLinear({
       domain: extent(densityData, (d, i) => {
         const val = densityAccessor(d);// compute cumulative in this loop
-        // eslint-disable-next-line no-param-reassign
         d.cumulative = val + (i > 0 ? densityData[i - 1].cumulative : 0);
         d.id = i;
         return cumulative ? d.cumulative : val;
@@ -145,70 +146,53 @@ function DensitySeries({
   const getY = horizontal ? getBin : getDensity;
   const xScale = horizontal ? densityScale : offSetBinScale;
   const yScale = horizontal ? offSetBinScale : densityScale;
-  const maxY = Math.max(...yScale.range());
-  const maxX = Math.max(...xScale.range());
 
   return (
     <Group>
-      <NodeGroup
-        data={densityData}
-        keyAccessor={d => d.id}
-        start={d => ({
-          x: horizontal ? 0 : (xScale.invert ? maxX : getX(d)),
-          y: horizontal ? (yScale.invert ? yScale(getY(d)) : getY(d)) : maxY,
-        })}
-        enter={(d, i) => ({
-          x: [xScale.invert ? xScale(getX(d)) : getX(d)],
-          y: [yScale.invert ? yScale(getY(d)) : getY(d)],
-          fill: [d.fill || callOrValue(fill, d, i)],
-          stroke: [d.stroke || callOrValue(stroke, d, i)],
-          timing: { duration: 300, delay: 10 * i },
-        })}
-        update={(d, i) => ({
-          x: [xScale.invert ? xScale(getX(d)) : getX(d)],
-          y: [yScale.invert ? yScale(getY(d)) : getY(d)],
-          fill: [d.fill || callOrValue(fill, d, i)],
-          stroke: [d.stroke || callOrValue(stroke, d, i)],
-          timing: { duration: 300, delay: 10 * i },
-        })}
-        leave={(d, i) => ({
-          x: xScale.invert ? xScale(getX(d)) : getX(d),
-          y: horizontal ? 0 : maxY,
-          timing: { duration: 300, delay: 5 * i },
-        })}
-      >
-        {modifiedData => (
-          <Group>
-            {showArea &&
-              <AreaClosed
-                data={modifiedData}
-                x={d => (xScale.invert ? xScale.invert(d.state.x) : d.state.x)}
-                y={d => (yScale.invert ? yScale.invert(d.state.y) : d.state.y)}
-                xScale={xScale}
-                yScale={yScale}
-                fill={fill}
-                fillOpacity={fillOpacity}
-                stroke="transparent"
-                strokeWidth={strokeWidth}
-                curve={curveBasis}
-              />}
-            {showLine && strokeWidth > 0 &&
-              <LinePath
-                data={modifiedData}
-                x={d => (xScale.invert ? xScale.invert(d.state.x) : d.state.x)}
-                y={d => (yScale.invert ? yScale.invert(d.state.y) : d.state.y)}
-                xScale={xScale}
-                yScale={yScale}
-                stroke={stroke}
-                strokeWidth={strokeWidth}
-                strokeDasharray={strokeDasharray}
-                strokeLinecap={strokeLinecap}
-                curve={curveBasis}
-                glyph={null}
-              />}
-          </Group>
-        )}
-      </NodeGroup>
+      {animated &&
+        <AnimatedDensitySeries
+          densityData={densityData}
+          fill={fill}
+          fillOpacity={fillOpacity}
+          horizontal={horizontal}
+          getX={getX}
+          getY={getY}
+          showArea={showArea}
+          showLine={showLine}
+          stroke={stroke}
+          strokeWidth={strokeWidth}
+          strokeDasharray={strokeDasharray}
+          strokeLinecap={strokeLinecap}
+          xScale={xScale}
+          yScale={yScale}
+        />}
+      {!animated && showArea &&
+        <AreaClosed
+          data={densityData}
+          x={getX}
+          y={getY}
+          xScale={xScale}
+          yScale={yScale}
+          fill={fill}
+          fillOpacity={fillOpacity}
+          stroke="transparent"
+          strokeWidth={strokeWidth}
+          curve={curveBasis}
+        />}
+      {!animated && showLine && strokeWidth > 0 &&
+        <LinePath
+          data={densityData}
+          x={getX}
+          y={getY}
+          xScale={xScale}
+          yScale={yScale}
+          stroke={stroke}
+          strokeWidth={strokeWidth}
+          strokeDasharray={strokeDasharray}
+          strokeLinecap={strokeLinecap}
+          curve={curveBasis}
+          glyph={null}
+        />}
     </Group>
   );
 }
