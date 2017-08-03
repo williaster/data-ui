@@ -8,3 +8,4 @@ export { default as YAxis } from './axis/YAxis';
 
 export { LinearGradient } from '@vx/gradient';
 export { PatternLines } from '@vx/pattern';
+export { withScreenSize, withParentSize } from '@vx/responsive';

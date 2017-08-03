@@ -20,8 +20,8 @@ import { normal, logNormal, mus, categorical } from './data';
 
 const ResponsiveHistogram = withScreenSize(({ screenWidth, children, ...rest }) => (
   <Histogram
-    width={screenWidth / 1.3}
-    height={screenWidth / 1.3 / 1.8}
+    width={Math.min(1000, screenWidth / 1.3)}
+    height={Math.min(1000 / 1.8, screenWidth / 1.3 / 1.8)}
     ariaLabel="Histogram showing ..."
     theme={chartTheme}
     {...rest}

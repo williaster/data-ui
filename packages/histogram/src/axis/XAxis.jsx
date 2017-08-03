@@ -2,8 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { AxisBottom, AxisTop } from '@vx/axis';
 
-// import { axisStylesShape, tickStylesShape } from '../utils/propShapes';
-
 const propTypes = {
   axisStyles: PropTypes.object,
   label: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),

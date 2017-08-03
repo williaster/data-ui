@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 
 import { AreaClosed, LinePath } from '@vx/shape';
 import { Group } from '@vx/group';
+import { color } from '@data-ui/theme';
 
 import interpolatorLookup from '../utils/interpolatorLookup';
 import { callOrValue, isDefined } from '../utils/chartUtils';
-import { colors } from '../theme';
 import { lineSeriesDataShape } from '../utils/propShapes';
 
 const propTypes = {
@@ -26,11 +26,11 @@ const propTypes = {
 
 const defaultProps = {
   interpolation: 'cardinal',
-  stroke: colors.default,
+  stroke: color.default,
   strokeWidth: 3,
   strokeDasharray: null,
   strokeLinecap: 'round',
-  fill: colors.default,
+  fill: color.default,
   fillOpacity: 0.3,
   xScale: null,
   yScale: null,

@@ -15,4 +15,4 @@ export { PatternLines } from '@vx/pattern';
 export { withScreenSize, withParentSize } from '@vx/responsive';
 
 export { default as withTheme } from './enhancer/withTheme';
-export { default as theme } from './theme';
+export { chartTheme as theme } from '@data-ui/theme';

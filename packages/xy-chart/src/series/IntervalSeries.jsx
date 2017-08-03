@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+
 import { Group } from '@vx/group';
 import { Bar } from '@vx/shape';
+import { color } from '@data-ui/theme';
 
 import { intervalSeriesDataShape } from '../utils/propShapes';
 import { callOrValue } from '../utils/chartUtils';
-import { colors } from '../theme';
 
 const propTypes = {
   data: intervalSeriesDataShape.isRequired,
@@ -22,7 +23,7 @@ const propTypes = {
 };
 
 const defaultProps = {
-  fill: colors.default,
+  fill: color.default,
   stroke: 'none',
   strokeWidth: 1,
   xScale: null,

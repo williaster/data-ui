@@ -4,9 +4,9 @@ import PropTypes from 'prop-types';
 import { curveCardinal, curveLinear } from '@vx/curve';
 import { GlyphDot } from '@vx/glyph';
 import { LinePath } from '@vx/shape';
+import { color } from '@data-ui/theme';
 
 import { callOrValue, isDefined } from '../utils/chartUtils';
-import { colors } from '../theme';
 import { lineSeriesDataShape } from '../utils/propShapes';
 
 const propTypes = {
@@ -27,7 +27,7 @@ const propTypes = {
 const defaultProps = {
   interpolation: 'cardinal',
   showPoints: false,
-  stroke: colors.default,
+  stroke: color.default,
   strokeDasharray: null,
   strokeWidth: 3,
   strokeLinecap: 'round',
