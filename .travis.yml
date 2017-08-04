@@ -5,11 +5,15 @@ cache:
   directories:
     - node_modules
 env:
+  - LINT=true
   - PACKAGE=xy-chart
   - PACKAGE=histogram
   - PACKAGE=radial-chart
   - PACKAGE=data-table
   - PACKAGE=data-ui-theme
   - PACKAGE=forms
-script: cd packages/$PACKAGE && npm install && npm run lint && npm run test
-after_script: "cat ./packages/$PACKAGE/coverage/lcov.info | ./node_modules/.bin/coveralls"
+script:
+  - 'if [ -n "${LINT}" ]; then npm run lint; fi'
+  - 'if [ -n "${PACKAGE}" ]; then cd packages/$PACKAGE && npm install && npm run test; fi'
+after_script:
+  - "cat ./packages/$PACKAGE/coverage/lcov.info | ./node_modules/.bin/coveralls"
