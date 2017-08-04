@@ -1,11 +1,10 @@
 language: node_js
 node_js:
-  - "6"
+  - '6'
 cache:
   directories:
     - node_modules
 env:
-  - LINT=true
   - PACKAGE=xy-chart
   - PACKAGE=histogram
   - PACKAGE=radial-chart
@@ -13,7 +12,8 @@ env:
   - PACKAGE=data-ui-theme
   - PACKAGE=forms
 script:
-  - 'if [ -n "${LINT}" ]; then npm run lint; fi'
-  - 'if [ -n "${PACKAGE}" ]; then cd packages/$PACKAGE && npm install && npm run test; fi'
+  - cd ./packages/$PACKAGE && npm install && npm run test;
+  - cd ../../
+  - eslint --ignore-path=.eslintignore --ext .js,.jsx ./packages/$PACKAGE'
 after_script:
-  - "cat ./packages/$PACKAGE/coverage/lcov.info | ./node_modules/.bin/coveralls"
+  - 'cat ./packages/$PACKAGE/coverage/lcov.info | ./node_modules/.bin/coveralls'
