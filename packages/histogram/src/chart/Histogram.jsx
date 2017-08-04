@@ -173,6 +173,11 @@ class Histogram extends React.PureComponent {
                 ? 'bin'
                 : 'value';
 
+              const tickValues = (
+                Child.props.tickValues ||
+                (binOrValue === 'bin' && binValues ? binValues : null)
+              );
+
               return React.cloneElement(Child, {
                 top: name === 'YAxis' || Child.props.orientation === 'top' ? 0 : innerHeight,
                 left: name === 'XAxis' || Child.props.orientation === 'left' ? 0 : innerWidth,
@@ -180,7 +185,7 @@ class Histogram extends React.PureComponent {
                 scale: binOrValue === 'value' ? valueScale : binScale,
                 axisStyles: { ...theme[`${styleKey}AxisStyles`], ...Child.props.axisStyles },
                 tickStyles: { ...theme[`${styleKey}TickStyles`], ...Child.props.tickStyles },
-                tickValues: Child.props.tickValues || (binOrValue === 'bin' && binValues),
+                tickValues,
               });
             }
             return Child;
