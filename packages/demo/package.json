@@ -1,6 +1,6 @@
 {
   "name": "@data-ui/demo",
-  "version": "0.0.31",
+  "version": "0.0.32",
   "description": "data-ui demo",
   "scripts": {
     "gh-pages:clean": "rm -rf _gh-pages && lerna run dev:nowatch",
@@ -23,7 +23,7 @@
     "@data-ui/data-table": "0.0.21",
     "@data-ui/event-flow": "0.0.5",
     "@data-ui/forms": "0.0.3",
-    "@data-ui/histogram": "0.0.1",
+    "@data-ui/histogram": "0.0.2",
     "@data-ui/radial-chart": "0.0.5",
     "@data-ui/theme": "0.0.6",
     "@data-ui/xy-chart": "0.0.16",
