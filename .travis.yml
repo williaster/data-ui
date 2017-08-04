@@ -12,8 +12,8 @@ env:
   - PACKAGE=data-ui-theme
   - PACKAGE=forms
 script:
-  - cd ./packages/$PACKAGE && npm install && npm run test;
-  - cd ../../
-  - eslint --ignore-path=.eslintignore --ext .js,.jsx ./packages/$PACKAGE'
+  - 'cd ./packages/$PACKAGE && npm install && npm run test'
+  - 'cd ../../'
+  - 'eslint --ignore-path=.eslintignore --ext .js,.jsx ./packages/$PACKAGE'
 after_script:
   - 'cat ./packages/$PACKAGE/coverage/lcov.info | ./node_modules/.bin/coveralls'
