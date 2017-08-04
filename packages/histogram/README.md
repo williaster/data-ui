@@ -64,6 +64,7 @@ Demo with the <a href="https://williaster.github.io/data-ui" target="_blank">His
 Check out the example source code and PropTable tabs in the Storybook <a href="https://williaster.github.io/data-ui" target="_blank">williaster.github.io/data-ui</a>.
 
 ### <Histogram />
+
 Name | Type | Default | Description 
 ------------ | ------------- | ------- | ---- 
 ariaLabel | PropTypes.string.isRequired | - | Accessibility label
@@ -102,6 +103,7 @@ export const categoricalBinnedDatumShape = PropTypes.shape({
 If both `rawData` and `binnnedData` are provided, `rawData` is ignored.
 
 ### <BarSeries />
+
 Name | Type | Default | Description 
 ------------ | ------------- | ------- | ---- 
 animated | PropTypes.bool | true | whether to animate updates to the data in the series
@@ -112,7 +114,9 @@ fillOpacity | PropTypes.oneOfType([PropTypes.func, PropTypes.number]) | 0.7 | op
 stroke | PropTypes.oneOfType([PropTypes.func, PropTypes.string]) | 'white' | determines bar stroke color
 strokeWidth | PropTypes.oneOfType([PropTypes.func, PropTypes.number]) | 1 | determines width of bar outline
 
+
 ### <DensitySeries />
+
 For _raw data_ that is _numeric_, the `<DensitySeries />` plots an estimates of the probability density function, i.e., a kernel density estimate. If pre-aggregated and/or categorical data is passed to the Series, it plots an Area graph of values based on the data counts.
 
 Name | Type | Default | Description 
@@ -131,6 +135,7 @@ strokeWidth | PropTypes.oneOfType([PropTypes.func, PropTypes.number]) | 2 | dete
 strokeDasharray | PropTypes.oneOfType([PropTypes.func, PropTypes.string]) | '' | determines dash pattern of line if shown
 strokeLinecap | PropTypes.oneOf(['butt', 'square', 'round', 'inherit']) | 'round' | style of line path stroke
 useEntireScale | PropTypes.bool | false | if true, density plots will scale to fill the entire y-range of the plot. if false, the maximum value is scaled to the count of the series
+
 
 ### <*Axis />
 
