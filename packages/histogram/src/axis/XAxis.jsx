@@ -69,7 +69,7 @@ export default function XAxis({
       tickLength={tickStyles.tickLength}
       tickStroke={tickStyles.stroke}
       tickLabelComponent={tickLabelComponent || (tickStyles.label &&
-        <text {...(tickStyles.tickLabel || {})[orientation]} />
+        <text {...(tickStyles.label || {})[orientation]} />
       )}
       tickValues={tickValues}
     />
