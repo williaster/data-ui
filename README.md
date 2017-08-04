@@ -14,6 +14,7 @@ demo at [williaster.github.io/data-ui](https://williaster.github.io/data-ui) :ch
 
 ## Packages
 - [@data-ui/xy-chart](https://github.com/williaster/data-ui/tree/master/packages/xy-chart) [![Version](https://img.shields.io/npm/v/@data-ui/xy-chart.svg?style=flat)](https://img.shields.io/npm/v/@data-ui/xy-chart.svg?style=flat)
+- [@data-ui/histogram](https://github.com/williaster/data-ui/tree/master/packages/histogram) [![Version](https://img.shields.io/npm/v/@data-ui/histogram.svg?style=flat)](https://img.shields.io/npm/v/@data-ui/histogram.svg?style=flat)
 - [@data-ui/radial-chart](https://github.com/williaster/data-ui/tree/master/packages/radial-chart) [![Version](https://img.shields.io/npm/v/@data-ui/radial-chart.svg?style=flat)](https://img.shields.io/npm/v/@data-ui/radial-chart.svg?style=flat)
 - [@data-ui/event-flow](https://github.com/williaster/data-ui/tree/master/packages/event-flow) [![Version](https://img.shields.io/npm/v/@data-ui/event-flow.svg?style=flat)](https://img.shields.io/npm/v/@data-ui/event-flow.svg?style=flat)
 - [@data-ui/data-table](https://github.com/williaster/data-ui/tree/master/packages/data-table) [![Version](https://img.shields.io/npm/v/@data-ui/data-table.svg?style=flat)](https://img.shields.io/npm/v/@data-ui/data-table.svg?style=flat)
@@ -84,7 +85,7 @@ for a single test or subset of tests run
 npm run test -t regex
 ```
 
-To run all tests in all packages run `npm run test` from the root @data-ui directory or alternatively `lerna run test`.
+To run all tests in all packages run `lerna run test` from the root @data-ui directory.
 
 ## License
 [MIT](./LICENSE)
