@@ -95,15 +95,15 @@ function DensitySeries({
     ? binScale.bandwidth() // categorical
     : Math.abs(binScale(binnedData[0].bin1) - binScale(binnedData[0].bin0)); // numeric
 
-  const binOffset = 0.5 * binWidth * (horizontal ? -1 : 1);
+  const binOffset = 0.5 * binWidth * (horizontal && binType === 'numeric' ? -1 : 1);
 
   // all density estimators require numeric data, so if we're passed categorical data
-  // we just draw an area curve using the binned data
+  // or pre-aggregated data, we just draw an area curve using the binned data
   let densityScale = valueScale;
   let getDensity = d => d[valueKey];
   let densityData = binnedData;
 
-  if (binType === 'numeric') {
+  if (binType === 'numeric' && rawData.length > 0) {
     // @TODO cache this with a non-functional component
     const cumulative = (/cumulative/gi).test(valueKey);
     const bins = binnedData.map(getBin);

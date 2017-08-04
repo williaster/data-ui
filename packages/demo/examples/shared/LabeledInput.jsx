@@ -6,9 +6,10 @@ import { css, withStyles, withStylesProps } from '../../themes/withStyles';
 const propTypes = {
   ...withStylesProps,
   disabled: PropTypes.bool,
-  label: PropTypes.string.isRequired,
+  label: PropTypes.string,
   name: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
+  onKeyDown: PropTypes.func,
   placeholder: PropTypes.string,
   value: PropTypes.any,
 };
@@ -17,6 +18,7 @@ const defaultProps = {
   disabled: false,
   placeholder: null,
   value: null,
+  onKeyDown: null,
 };
 
 function LabeledInput({
@@ -24,24 +26,27 @@ function LabeledInput({
   label,
   name,
   onChange,
+  onKeyDown,
   placeholder,
   styles,
   value,
 }) {
   return (
     <div {...(css(styles.container))}>
-      <label
-        title={label}
-        htmlFor={name}
-      >
-        {label}
-      </label>
+      {label &&
+        <label
+          title={label}
+          htmlFor={name}
+        >
+          {label}
+        </label>}
       <input
         {...(css(styles.input))}
         aria-label={label}
         name={name}
         placeholder={placeholder}
         onChange={onChange}
+        onKeyDown={onKeyDown}
         value={value}
         disabled={disabled}
       />

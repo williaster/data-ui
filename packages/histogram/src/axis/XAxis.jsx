@@ -10,6 +10,7 @@ const propTypes = {
   tickStyles: PropTypes.object,
   tickLabelComponent: PropTypes.element,
   tickFormat: PropTypes.func,
+  tickValues: PropTypes.arrayOf(PropTypes.number),
 
   // probably injected by parent
   top: PropTypes.number,
@@ -28,6 +29,7 @@ const defaultProps = {
   tickLabelComponent: null,
   tickStyles: {},
   top: 0,
+  tickValues: undefined,
 };
 
 export default function XAxis({
@@ -41,6 +43,7 @@ export default function XAxis({
   tickFormat,
   tickLabelComponent,
   tickStyles,
+  tickValues,
 }) {
   if (!scale) return null;
   const Axis = orientation === 'bottom' ? AxisBottom : AxisTop;
@@ -66,6 +69,7 @@ export default function XAxis({
       tickLabelComponent={tickLabelComponent || (tickStyles.label &&
         <text {...(tickStyles.label || {})[orientation]} />
       )}
+      tickValues={tickValues}
     />
   );
 }

@@ -12,6 +12,7 @@ const propTypes = {
   tickStyles: PropTypes.object,
   tickLabelComponent: PropTypes.element,
   tickFormat: PropTypes.func,
+  tickValues: PropTypes.arrayOf(PropTypes.number),
 
   // probably injected by parent
   top: PropTypes.number,
@@ -30,6 +31,7 @@ const defaultProps = {
   tickFormat: null,
   tickLabelComponent: null,
   tickStyles: {},
+  tickValues: undefined,
   top: 0,
 };
 
@@ -44,6 +46,7 @@ export default function YAxis({
   tickFormat,
   tickLabelComponent,
   tickStyles,
+  tickValues,
 }) {
   if (!scale || !innerHeight) return null;
   const Axis = orientation === 'left' ? AxisLeft : AxisRight;
@@ -69,6 +72,7 @@ export default function YAxis({
       tickLabelComponent={tickLabelComponent || (tickStyles.label &&
         <text {...(tickStyles.label || {})[orientation]} />
       )}
+      tickValues={tickValues}
     />
   );
 }

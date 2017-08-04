@@ -5,18 +5,18 @@ export const numericBinnedDatumShape = PropTypes.shape({
   bin0: PropTypes.number.isRequired,
   bin1: PropTypes.number.isRequired,
   count: PropTypes.number.isRequired,
-  cumulative: PropTypes.number.isRequired,
-  density: PropTypes.number.isRequired,
-  cumulativeDensity: PropTypes.number.isRequired,
+  cumulative: PropTypes.number,
+  density: PropTypes.number,
+  cumulativeDensity: PropTypes.number,
 });
 
 export const categoricalBinnedDatumShape = PropTypes.shape({
   id: PropTypes.string.isRequired,
   bin: PropTypes.string.isRequired,
   count: PropTypes.number.isRequired,
-  cumulative: PropTypes.number.isRequired,
-  density: PropTypes.number.isRequired,
-  cumulativeDensity: PropTypes.number.isRequired,
+  cumulative: PropTypes.number,
+  density: PropTypes.number,
+  cumulativeDensity: PropTypes.number,
 });
 
 export const binnedDataShape = PropTypes.arrayOf(

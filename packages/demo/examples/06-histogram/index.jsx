@@ -16,7 +16,7 @@ import {
 import readme from '../../node_modules/@data-ui/histogram/README.md';
 
 import HistogramPlayground from './HistogramPlayground';
-import { normal, logNormal, mus, categorical } from './data';
+import { normal, logNormal, mus, categorical, binnedCategorical, binnedNumeric } from './data';
 
 const ResponsiveHistogram = withScreenSize(({ screenWidth, children, ...rest }) => (
   <Histogram
@@ -137,7 +137,6 @@ export default {
     {
       description: 'cumulative',
       components: [BarSeries, DensitySeries],
-      // @TODO cumulative should be a property of the series, histogram has to account for it
       example: () => (
         <ResponsiveHistogram cumulative>
           <BarSeries
@@ -237,10 +236,10 @@ export default {
       ),
     },
     {
-      description: 'horizontal categories',
+      description: 'horizontal pre-binned categories',
       components: [Histogram, BarSeries],
       example: () => (
-        <ResponsiveHistogram binType="categorical" horizontal height={500}>
+        <ResponsiveHistogram binType="categorical" horizontal normalized height={500}>
           <PatternLines
             id="horizontal_cat"
             height={8}
@@ -253,7 +252,40 @@ export default {
             fill="url(#horizontal_cat)"
             stroke={chartTheme.colors.darkGray}
             fillOpacity={0.3}
-            rawData={categorical}
+            binnedData={binnedCategorical}
+          />
+          <DensitySeries
+            binnedData={binnedCategorical}
+          />
+          <XAxis label="Letter frequency" />
+          <YAxis />
+        </ResponsiveHistogram>
+      ),
+    },
+    {
+      description: 'pre-binned numeric',
+      components: [BarSeries, DensitySeries],
+      example: () => (
+        <ResponsiveHistogram cumulative>
+          <PatternLines
+            id="categorical"
+            height={8}
+            width={8}
+            background="#fff"
+            stroke={chartTheme.colors.default}
+            strokeWidth={0.5}
+            orientation={['diagonal']}
+          />
+          <BarSeries
+            binnedData={binnedNumeric}
+            stroke={chartTheme.colors.default}
+            fill="url(#categorical)"
+            fillOpacity={0.7}
+          />
+          <DensitySeries
+            showLine={false}
+            binnedData={binnedNumeric}
+            fillOpacity={0.2}
           />
           <XAxis />
           <YAxis />
