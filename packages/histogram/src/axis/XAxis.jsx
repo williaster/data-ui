@@ -2,15 +2,17 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { AxisBottom, AxisTop } from '@vx/axis';
 
+import { axisStylesShape, tickStylesShape } from '../utils/propShapes';
+
 const propTypes = {
-  axisStyles: PropTypes.object,
+  axisStyles: axisStylesShape,
   label: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
   numTicks: PropTypes.number,
   orientation: PropTypes.oneOf(['bottom', 'top']),
-  tickStyles: PropTypes.object,
+  tickStyles: tickStylesShape,
   tickLabelComponent: PropTypes.element,
   tickFormat: PropTypes.func,
-  tickValues: PropTypes.arrayOf(PropTypes.number),
+  tickValues: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.number, PropTypes.string])),
 
   // probably injected by parent
   top: PropTypes.number,
@@ -67,7 +69,7 @@ export default function XAxis({
       tickLength={tickStyles.tickLength}
       tickStroke={tickStyles.stroke}
       tickLabelComponent={tickLabelComponent || (tickStyles.label &&
-        <text {...(tickStyles.label || {})[orientation]} />
+        <text {...(tickStyles.tickLabel || {})[orientation]} />
       )}
       tickValues={tickValues}
     />

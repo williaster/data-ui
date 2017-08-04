@@ -16,6 +16,7 @@ const propTypes = {
 
 const defaultProps = {
   disabled: false,
+  label: null,
   placeholder: null,
   value: null,
   onKeyDown: null,

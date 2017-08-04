@@ -15,7 +15,7 @@ The React `<XYChart />` container coordinates scales across its children and is 
 
 Note that the order of children passed to `<XYChart />` determines their rendering order, for example the a `<LineSeries />` passed after a `<BarSeries />` will overlay the line on the bars. The same applies to axes.
 
-```js
+```javascript
 import { XYPlot, BarSeries, XAxis, YAxis, LinearGradient } from '@data-ui/xy-chart';
 
 /// ...

@@ -10,6 +10,7 @@ import collectBinnedDataFromChildSeries from '../utils/collectBinnedDataFromChil
 import componentName from '../utils/componentName';
 import computeDomainsFromBins from '../utils/computeDomainsFromBins';
 import getValueKey from '../utils/getValueKey';
+import { themeShape } from '../utils/propShapes';
 
 const propTypes = {
   ariaLabel: PropTypes.string.isRequired,
@@ -28,7 +29,7 @@ const propTypes = {
     left: PropTypes.number,
   }),
   normalized: PropTypes.bool,
-  theme: PropTypes.object,
+  theme: themeShape,
   width: PropTypes.number.isRequired,
   valueAccessor: PropTypes.func,
 };

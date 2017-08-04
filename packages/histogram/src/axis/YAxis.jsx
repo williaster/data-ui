@@ -2,17 +2,17 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { AxisLeft, AxisRight } from '@vx/axis';
 
-// import { axisStylesShape, tickStylesShape } from '../utils/propShapes';
+import { axisStylesShape, tickStylesShape } from '../utils/propShapes';
 
 const propTypes = {
-  axisStyles: PropTypes.object,
+  axisStyles: axisStylesShape,
   label: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
   numTicks: PropTypes.number,
   orientation: PropTypes.oneOf(['left', 'right']),
-  tickStyles: PropTypes.object,
+  tickStyles: tickStylesShape,
   tickLabelComponent: PropTypes.element,
   tickFormat: PropTypes.func,
-  tickValues: PropTypes.arrayOf(PropTypes.number),
+  tickValues: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.number, PropTypes.string])),
 
   // probably injected by parent
   top: PropTypes.number,
