@@ -4,4 +4,12 @@ node_js:
 cache:
   directories:
     - node_modules
-after_script: "cat ./coverage/lcov.info | ./node_modules/.bin/coveralls"
+env:
+  - PACKAGE=xy-chart
+  - PACKAGE=histogram
+  - PACKAGE=radial-chart
+  - PACKAGE=data-table
+  - PACKAGE=data-ui-theme
+  - PACKAGE=forms
+script: cd packages/$PACKAGE && npm install && npm run lint && npm test
+after_script: "cat ./packages/$PACKAGE/coverage/lcov.info | ./node_modules/.bin/coveralls"
