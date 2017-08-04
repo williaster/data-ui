@@ -3,8 +3,9 @@
  * const XYChartWithTheme = withTheme(theme)(XYChart);
  */
 import React from 'react';
+import { chartTheme as defaultTheme } from '@data-ui/theme';
+
 import updateDisplayName from '../utils/updateDisplayName';
-import defaultTheme from '../theme';
 
 function withTheme(theme = defaultTheme) {
   return function withThemeHOC(WrappedComponent) {

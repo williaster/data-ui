@@ -41,8 +41,8 @@ const dateFormatter = date => formatDate(parseDate(date));
 const ResponsiveXYChart = withScreenSize(({ screenWidth, children, ...rest }) => (
   <XYChart
     theme={theme}
-    width={screenWidth / 1.5}
-    height={screenWidth / 1.5 / 2}
+    width={Math.min(1000, screenWidth / 1.5)}
+    height={Math.min(1000 / 2, screenWidth / 1.5 / 2)}
     {...rest}
   >
     {children}

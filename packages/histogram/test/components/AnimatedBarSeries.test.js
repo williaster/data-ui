@@ -1,0 +1,66 @@
+import React from 'react';
+import { shallow, mount } from 'enzyme';
+import { Bar } from '@vx/shape';
+import { NodeGroup } from 'resonance';
+
+import { BarSeries, Histogram } from '../../src/';
+import AnimatedBarSeries from '../../src/series/animated/AnimatedBarSeries';
+
+describe('<AnimatedBarSeries />', () => {
+  const histogramProps = {
+    ariaLabel: 'Histogram of ...',
+    width: 200,
+    height: 200,
+  };
+
+  const categoricalBinnedData = [
+    { bin: 'a', count: 1, id: '0' },
+    { bin: 'b', count: 4, id: '1' },
+    { bin: 'c', count: 6, id: '2' },
+    { bin: 'd', count: 2, id: '3' },
+    { bin: 'e', count: 10, id: '4' },
+  ];
+
+  const numericBinnedData = [
+    { bin0: 0, bin1: 1, count: 1, id: '0' },
+    { bin0: 1, bin1: 2, count: 4, id: '1' },
+    { bin0: 2, bin1: 3, count: 6, id: '2' },
+    { bin0: 3, bin1: 4, count: 2, id: '3' },
+    { bin0: 4, bin1: 5, count: 10, id: '4' },
+  ];
+
+  test('it should be defined', () => {
+    expect(AnimatedBarSeries).toBeDefined();
+  });
+
+  test('it should render a resonance <NodeGroup />', () => {
+    const wrapper = shallow(
+      <Histogram {...histogramProps}>
+        <BarSeries animated binnedData={numericBinnedData} />
+      </Histogram>,
+    );
+    const barWrapper = wrapper.find(BarSeries).dive();
+    const animatedDensityWrapper = barWrapper.find(AnimatedBarSeries).dive();
+    expect(animatedDensityWrapper.find(NodeGroup).length).toBe(1);
+  });
+
+  test('it should render one <Bar/> per numeric bin', () => {
+    // resonance doesn't compute data without mounting
+    const wrapper = mount(
+      <Histogram {...histogramProps}>
+        <BarSeries animated binnedData={numericBinnedData} />
+      </Histogram>,
+    );
+    expect(wrapper.find(Bar).length).toBe(numericBinnedData.length);
+  });
+
+  test('it should render one <Bar/> per categorical bin', () => {
+    // resonance doesn't compute data without mounting
+    const wrapper = mount(
+      <Histogram {...histogramProps} binType="categorical">
+        <BarSeries animated binnedData={categoricalBinnedData} />
+      </Histogram>,
+    );
+    expect(wrapper.find(Bar).length).toBe(categoricalBinnedData.length);
+  });
+});

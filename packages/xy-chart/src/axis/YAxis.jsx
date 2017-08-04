@@ -15,6 +15,7 @@ const propTypes = {
   tickStyles: tickStylesShape,
   tickLabelComponent: PropTypes.element,
   tickFormat: PropTypes.func,
+  tickValues: PropTypes.array,
 
   // probably injected by parent
   innerWidth: PropTypes.number,
@@ -34,6 +35,7 @@ const defaultProps = {
   tickFormat: null,
   tickLabelComponent: undefined,
   tickStyles: {},
+  tickValues: undefined,
 };
 
 export default function YAxis({
@@ -49,6 +51,7 @@ export default function YAxis({
   tickFormat,
   tickLabelComponent,
   tickStyles,
+  tickValues,
 }) {
   if (!scale || !innerWidth) return null;
 
@@ -77,6 +80,7 @@ export default function YAxis({
       tickLabelComponent={tickLabelComponent || (tickStyles.label &&
         <text {...(tickStyles.label || {})[orientation]} />
       )}
+      tickValues={tickValues}
     />
   );
 }

@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+
 import { Group } from '@vx/group';
 import { Bar } from '@vx/shape';
+import { color } from '@data-ui/theme';
 
 import { barSeriesDataShape } from '../utils/propShapes';
 import { callOrValue, isDefined } from '../utils/chartUtils';
-import { colors } from '../theme';
 
 const propTypes = {
   data: barSeriesDataShape.isRequired,
@@ -24,7 +25,7 @@ const propTypes = {
 
 const defaultProps = {
   barWidth: null,
-  fill: colors.default,
+  fill: color.default,
   stackBy: null,
   stroke: '#FFFFFF',
   strokeWidth: 1,

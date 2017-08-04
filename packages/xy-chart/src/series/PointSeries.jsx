@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 
 import { Group } from '@vx/group';
 import { GlyphDot } from '@vx/glyph';
+import { chartTheme, color } from '@data-ui/theme';
 
 import { callOrValue, isDefined } from '../utils/chartUtils';
-import { labelStyles, colors } from '../theme';
 import { pointSeriesDataShape } from '../utils/propShapes';
 
 const propTypes = {
@@ -26,9 +26,9 @@ const propTypes = {
 };
 
 const defaultProps = {
-  labelComponent: <text {...labelStyles} />,
+  labelComponent: <text {...chartTheme.labelStyles} />,
   size: 4,
-  fill: colors.default,
+  fill: color.default,
   stroke: '#FFFFFF',
   strokeDasharray: null,
   strokeWidth: 1,

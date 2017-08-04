@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+
 import { BarGroup } from '@vx/shape';
+import { color } from '@data-ui/theme';
 
 import { groupedBarSeriesDataShape } from '../utils/propShapes';
 import { scaleTypeToScale } from '../utils/chartUtils';
-import { colors } from '../theme';
 
 const propTypes = {
   data: groupedBarSeriesDataShape.isRequired,
@@ -21,7 +22,7 @@ const propTypes = {
 
 const defaultProps = {
   groupKeys: null,
-  groupFills: colors.categories,
+  groupFills: color.categories,
   groupPadding: 0.1,
   stroke: 'none',
   strokeWidth: 1,

@@ -1,6 +1,14 @@
-import { color, svgLabel, unit } from '@data-ui/theme';
+import color from './color';
+import font from './font';
+import { tickLabels, baseLabel } from './svgLabel';
+import unit from './size';
 
 export const colors = color;
+
+export const labelStyles = {
+  ...baseLabel,
+  ...font.light,
+};
 
 export const gridStyles = {
   stroke: colors.grid,
@@ -12,10 +20,10 @@ export const xAxisStyles = {
   strokeWidth: 2,
   label: {
     bottom: {
-      ...svgLabel.baseLabel,
+      ...baseLabel,
     },
     top: {
-      ...svgLabel.baseLabel,
+      ...baseLabel,
     },
   },
 };
@@ -25,10 +33,10 @@ export const yAxisStyles = {
   strokeWidth: 1,
   label: {
     left: {
-      ...svgLabel.baseLabel,
+      ...baseLabel,
     },
     right: {
-      ...svgLabel.baseLabel,
+      ...baseLabel,
     },
   },
 };
@@ -38,10 +46,10 @@ export const xTickStyles = {
   length: 1 * unit,
   label: {
     bottom: {
-      ...svgLabel.tickLabels.bottom,
+      ...tickLabels.bottom,
     },
     top: {
-      ...svgLabel.tickLabels.top,
+      ...tickLabels.top,
     },
   },
 };
@@ -51,16 +59,17 @@ export const yTickStyles = {
   length: 1 * unit,
   label: {
     left: {
-      ...svgLabel.tickLabels.left,
+      ...tickLabels.left,
     },
     right: {
-      ...svgLabel.tickLabels.right,
+      ...tickLabels.right,
     },
   },
 };
 
 export default {
   colors,
+  labelStyles,
   gridStyles,
   xAxisStyles,
   xTickStyles,
