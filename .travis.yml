@@ -11,5 +11,5 @@ env:
   - PACKAGE=data-table
   - PACKAGE=data-ui-theme
   - PACKAGE=forms
-script: cd packages/$PACKAGE && npm install && npm run lint && npm test
+script: cd packages/$PACKAGE && npm install && npm run lint && npm run test
 after_script: "cat ./packages/$PACKAGE/coverage/lcov.info | ./node_modules/.bin/coveralls"
