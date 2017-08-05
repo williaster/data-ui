@@ -1,5 +1,4 @@
 import React from 'react';
-import { withScreenSize } from '@vx/responsive';
 import { chartTheme } from '@data-ui/theme';
 
 import {
@@ -11,6 +10,8 @@ import {
   YAxis,
   PatternLines,
   LinearGradient,
+
+  withScreenSize,
 } from '@data-ui/histogram';
 
 import readme from '../../node_modules/@data-ui/histogram/README.md';
