@@ -19,18 +19,7 @@ import {
 
 import readme from '../../node_modules/@data-ui/sparkline/README.md';
 
-let updatingData = [];
-
-window.setInterval(() => {
-  if (updatingData.length < 20) {
-    updatingData.push(Math.random());
-  } else {
-    updatingData = updatingData.slice(1);
-    updatingData.push(Math.random());
-  }
-}, 500);
-
-
+// @TODO separate file if we keep this
 class DataProvider extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -72,7 +61,7 @@ export default {
   examples: [
     {
       description: 'Sparkline',
-      components: [Sparkline, LineSeries],
+      components: [Sparkline, BarSeries, LineSeries, PointSeries, ReferenceLine, BandLine],
       example: () => (
         <div>
           <Sparkline

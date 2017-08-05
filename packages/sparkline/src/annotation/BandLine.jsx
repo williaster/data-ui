@@ -49,20 +49,22 @@ function BandLine({
   const [x0, x1] = xScale.range();
 
   let bandExtent = band;
-  if (band === 'midspread') {
+  if (band === 'midspread') { // @TODO check bugginess upon animating
     const sortedData = [...data].sort((a, b) => parseFloat(getY(a)) - parseFloat(getY(b)));
     bandExtent = [
       quantile(sortedData, 0.25, getY),
       quantile(sortedData, 0.75, getY),
     ];
   }
+
   if (bandExtent.length !== 2) {
-    console.warn('Expected band of two numbers');
+    console.warn('Expected band of two numbers'); // @TODO add with PropTypes
     return null;
   }
+
   const y0 = yScale(bandExtent[0]);
   const y1 = yScale(bandExtent[1]);
-  console.log('band', data.map(d => d.y), bandExtent)
+
   return (
     <Bar
       x={0}
