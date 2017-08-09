@@ -20,6 +20,8 @@ const propTypes = {
   // likely be injected by the parent xychart
   xScale: PropTypes.func,
   yScale: PropTypes.func,
+  onMouseMove: PropTypes.func,
+  onMouseLeave: PropTypes.func,
 };
 
 const defaultProps = {
@@ -28,6 +30,8 @@ const defaultProps = {
   strokeWidth: 1,
   xScale: null,
   yScale: null,
+  onMouseMove: null,
+  onMouseLeave: null,
 };
 
 const x0 = d => d.x0;
@@ -41,6 +45,8 @@ export default function IntervalSeries({
   strokeWidth,
   xScale,
   yScale,
+  onMouseMove,
+  onMouseLeave,
 }) {
   if (!xScale || !yScale) return null;
 
@@ -60,6 +66,10 @@ export default function IntervalSeries({
             fill={d.fill || callOrValue(fill, d, i)}
             stroke={d.stroke || callOrValue(stroke, d, i)}
             strokeWidth={d.strokeWidth || callOrValue(strokeWidth, d, i)}
+            onMouseMove={onMouseMove && (() => (event) => {
+              onMouseMove({ event, datum: d });
+            })}
+            onMouseLeave={onMouseLeave && (() => onMouseLeave)}
           />
         );
       })}

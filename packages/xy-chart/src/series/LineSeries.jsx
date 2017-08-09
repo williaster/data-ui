@@ -7,6 +7,7 @@ import { LinePath } from '@vx/shape';
 import { color } from '@data-ui/theme';
 
 import { callOrValue, isDefined } from '../utils/chartUtils';
+import findClosestDatum from '../utils/findClosestDatum';
 import { lineSeriesDataShape } from '../utils/propShapes';
 
 const propTypes = {
@@ -19,9 +20,12 @@ const propTypes = {
   strokeDasharray: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   strokeWidth: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
   strokeLinecap: PropTypes.oneOf(['butt', 'square', 'round', 'inherit']),
+
   // these will likely be injected by the parent chart
   xScale: PropTypes.func,
   yScale: PropTypes.func,
+  onMouseMove: PropTypes.func,
+  onMouseLeave: PropTypes.func,
 };
 
 const defaultProps = {
@@ -33,6 +37,8 @@ const defaultProps = {
   strokeLinecap: 'round',
   xScale: null,
   yScale: null,
+  onMouseMove: null,
+  onMouseLeave: null,
 };
 
 const x = d => d.x;
@@ -50,6 +56,8 @@ export default function LineSeries({
   strokeLinecap,
   xScale,
   yScale,
+  onMouseMove,
+  onMouseLeave,
 }) {
   if (!xScale || !yScale) return null;
 
@@ -67,6 +75,11 @@ export default function LineSeries({
       strokeLinecap={strokeLinecap}
       curve={interpolation === 'linear' ? curveLinear : curveCardinal}
       defined={defined}
+      onMouseMove={onMouseMove && (() => (event) => {
+        const d = findClosestDatum({ data, getX: x, event, xScale });
+        onMouseMove({ event, datum: d, color });
+      })}
+      onMouseLeave={onMouseLeave && (() => onMouseLeave)}
       glyph={showPoints && ((d, i) => (
         isDefined(x(d)) && isDefined(y(d)) &&
           <GlyphDot
@@ -77,6 +90,7 @@ export default function LineSeries({
             fill={d.stroke || callOrValue(stroke, d, i)}
             stroke="#FFFFFF"
             strokeWidth={1}
+            style={{ pointerEvents: 'none' }}
           >
             {d.label &&
               <text

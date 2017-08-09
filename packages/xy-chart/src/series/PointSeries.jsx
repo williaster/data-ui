@@ -23,6 +23,8 @@ const propTypes = {
   // likely be injected by the parent chart
   xScale: PropTypes.func,
   yScale: PropTypes.func,
+  onMouseMove: PropTypes.func,
+  onMouseLeave: PropTypes.func,
 };
 
 const defaultProps = {
@@ -34,6 +36,8 @@ const defaultProps = {
   strokeWidth: 1,
   xScale: null,
   yScale: null,
+  onMouseMove: null,
+  onMouseLeave: null,
 };
 
 const x = d => d.x;
@@ -50,6 +54,8 @@ export default function PointSeries({
   strokeDasharray,
   xScale,
   yScale,
+  onMouseMove,
+  onMouseLeave,
 }) {
   if (!xScale || !yScale) return null;
 
@@ -76,6 +82,10 @@ export default function PointSeries({
             stroke={d.stroke || callOrValue(stroke, d, i)}
             strokeWidth={d.strokeWidth || callOrValue(strokeWidth, d, i)}
             strokeDasharray={d.strokeDasharray || callOrValue(strokeDasharray, d, i)}
+            onMouseMove={onMouseMove && ((event) => {
+              onMouseMove({ event, datum: d, color });
+            })}
+            onMouseLeave={onMouseLeave}
           />
         );
       })}

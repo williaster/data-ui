@@ -1,8 +1,8 @@
 import React from 'react';
-import { timeParse, timeFormat } from 'd3-time-format';
 
 import {
   XYChart,
+  CrossHair,
 
   XAxis,
   YAxis,
@@ -17,11 +17,12 @@ import {
 
   PatternLines,
   LinearGradient,
-  withScreenSize,
   theme,
 } from '@data-ui/xy-chart';
 
 import readme from '../../node_modules/@data-ui/xy-chart/README.md';
+
+import ResponsiveXYChart, { dateFormatter } from './ResponsiveXYChart';
 
 import {
   timeSeriesData,
@@ -34,20 +35,7 @@ import {
   intervalData,
 } from './data';
 
-const parseDate = timeParse('%Y%m%d');
-const formatDate = timeFormat('%b %d');
-const dateFormatter = date => formatDate(parseDate(date));
-
-const ResponsiveXYChart = withScreenSize(({ screenWidth, children, ...rest }) => (
-  <XYChart
-    theme={theme}
-    width={Math.min(1000, screenWidth / 1.5)}
-    height={Math.min(1000 / 2, screenWidth / 1.5 / 2)}
-    {...rest}
-  >
-    {children}
-  </XYChart>
-));
+import WithToggle from '../shared/WithToggle';
 
 const { colors } = theme;
 
@@ -89,29 +77,42 @@ export default {
     },
     {
       description: 'LineSeries',
-      components: [LineSeries],
-      example: () => (
-        <ResponsiveXYChart
-          ariaLabel="Required label"
-          xScale={{ type: 'time' }}
-          yScale={{ type: 'linear' }}
-        >
-          <YAxis label="Price ($)" numTicks={4} />
-          <LineSeries
-            data={timeSeriesData}
-            label="Apple Stock"
-            showPoints
-          />
-          <LineSeries
-            data={timeSeriesData.map(d => ({ ...d, y: Math.random() > 0.5 ? d.y * 2 : d.y / 2 }))}
-            label="Apple Stock 2"
-            stroke={colors.black}
-            strokeDasharray="3 3"
-            strokeLinecap="butt"
-          />
-          <XAxis label="Time" numTicks={5} />
-        </ResponsiveXYChart>
-      ),
+      components: [LineSeries, CrossHair],
+      example: () => {
+        const data2 = timeSeriesData.map(d => ({
+          ...d,
+          y: Math.random() > 0.5 ? d.y * 2 : d.y / 2,
+        }));
+        return (
+          <WithToggle id="lineseries_toggle" label="Show voronoi" initialChecked>
+            {showVoronoi => (
+              <ResponsiveXYChart
+                ariaLabel="Required label"
+                xScale={{ type: 'time' }}
+                yScale={{ type: 'linear' }}
+                useVoronoi
+                showVoronoi={showVoronoi}
+              >
+                <YAxis label="Price ($)" numTicks={4} />
+                <LineSeries
+                  data={timeSeriesData}
+                  label="Apple Stock"
+                  showPoints
+                />
+                <LineSeries
+                  data={data2}
+                  label="Apple Stock 2"
+                  stroke={colors.categories[2]}
+                  strokeDasharray="3 3"
+                  strokeLinecap="butt"
+                />
+                <CrossHair />
+                <XAxis label="Time" numTicks={5} />
+              </ResponsiveXYChart>
+            )}
+          </WithToggle>
+        );
+      },
     },
     {
       description: 'AreaSeries',
@@ -147,6 +148,12 @@ export default {
             fill="url(#area_pattern)"
             stroke={colors.categories[2]}
           />
+          <CrossHair
+            showHorizontalLine={false}
+            fullHeight
+            stroke={colors.categories[2]}
+            circleFill={colors.categories[2]}
+          />
           <XAxis label="Time" numTicks={5} />
         </ResponsiveXYChart>
       ),
@@ -155,21 +162,28 @@ export default {
       description: 'PointSeries',
       components: [PointSeries],
       example: () => (
-        <ResponsiveXYChart
-          ariaLabel="Required label"
-          xScale={{ type: 'linear', nice: true }}
-          yScale={{ type: 'linear', nice: true }}
-          showXGrid={false}
-          showYGrid={false}
-        >
-          <YAxis label="Y" numTicks={4} />
-          <XAxis label="X" numTicks={4} />
-          <PointSeries
-            data={pointData}
-            label="Random"
-            size={d => d.size}
-          />
-        </ResponsiveXYChart>
+        <WithToggle id="pointseries_toggle" label="Show voronoi" initialChecked>
+          {showVoronoi => (
+            <ResponsiveXYChart
+              ariaLabel="Required label"
+              xScale={{ type: 'linear', nice: true }}
+              yScale={{ type: 'linear', nice: true }}
+              showXGrid={false}
+              showYGrid={false}
+              useVoronoi
+              showVoronoi={showVoronoi}
+            >
+              <YAxis label="Y" numTicks={4} />
+              <XAxis label="X" numTicks={4} />
+              <PointSeries
+                data={pointData}
+                label="Random"
+                size={d => d.size}
+              />
+              <CrossHair fullWidth fullHeight showCircle={false} />
+            </ResponsiveXYChart>
+          )}
+        </WithToggle>
       ),
     },
     {
@@ -213,7 +227,7 @@ export default {
     },
     {
       description: 'Categorical BarSeries',
-      components: [XYChart, BarSeries],
+      components: [XYChart, BarSeries, CrossHair],
       example: () => (
         <ResponsiveXYChart
           ariaLabel="Required label"
@@ -231,17 +245,25 @@ export default {
             fill="url(#aqua_lightaqua_gradient)"
           />
           <XAxis numTicks={categoricalData.length} />
+          <CrossHair
+            stroke={colors.dark}
+            circleFill={colors.dark}
+            showVerticalLine={false}
+            fullWidth
+          />
         </ResponsiveXYChart>
       ),
     },
     {
       description: 'IntervalSeries',
-      components: [IntervalSeries, LineSeries],
+      components: [IntervalSeries, LineSeries, CrossHair],
       example: () => (
         <ResponsiveXYChart
           ariaLabel="Required label"
           xScale={{ type: 'time' }}
           yScale={{ type: 'linear', domain: [40, 80] }}
+          useVoronoi
+          showVoronoi
         >
           <YAxis label="Temperature (°F)" numTicks={4} />
           <PatternLines
@@ -262,13 +284,14 @@ export default {
             label="Line interval"
             showPoints
           />
+          <CrossHair />
           <XAxis />
         </ResponsiveXYChart>
       ),
     },
     {
       description: 'Mixed series',
-      components: [BarSeries, LineSeries, XAxis, YAxis],
+      components: [BarSeries, LineSeries, XAxis, YAxis, CrossHair],
       example: () => (
         <ResponsiveXYChart
           ariaLabel="Required label"
@@ -292,6 +315,7 @@ export default {
             stroke={colors.text}
           />
           <XAxis label="Time" numTicks={5} />
+          <CrossHair />
         </ResponsiveXYChart>
       ),
     },
@@ -345,7 +369,7 @@ export default {
     },
     {
       description: 'No theme',
-      components: [XYChart],
+      components: [XYChart, CrossHair],
       example: () => (
         <ResponsiveXYChart
           theme={{}}
@@ -365,6 +389,7 @@ export default {
             fill="#767676"
           />
           <XAxis label="Time" numTicks={5} />
+          <CrossHair />
         </ResponsiveXYChart>
       ),
     },

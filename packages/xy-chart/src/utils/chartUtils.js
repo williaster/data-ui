@@ -33,6 +33,10 @@ export function isBarSeries(name) {
   return name.match(/Bar/g);
 }
 
+export function isCrossHair(name) {
+  return name.match(/crosshair/gi);
+}
+
 export function isSeries(name) {
   return name.match(/series/gi);
 }

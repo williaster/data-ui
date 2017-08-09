@@ -7,6 +7,7 @@ import { color } from '@data-ui/theme';
 
 import interpolatorLookup from '../utils/interpolatorLookup';
 import { callOrValue, isDefined } from '../utils/chartUtils';
+import findClosestDatum from '../utils/findClosestDatum';
 import { lineSeriesDataShape } from '../utils/propShapes';
 
 const propTypes = {
@@ -22,6 +23,8 @@ const propTypes = {
   // these will likely be injected by the parent chart
   xScale: PropTypes.func,
   yScale: PropTypes.func,
+  onMouseMove: PropTypes.func,
+  onMouseLeave: PropTypes.func,
 };
 
 const defaultProps = {
@@ -34,6 +37,8 @@ const defaultProps = {
   fillOpacity: 0.3,
   xScale: null,
   yScale: null,
+  onMouseMove: null,
+  onMouseLeave: null,
 };
 
 const x = d => d.x;
@@ -52,12 +57,20 @@ export default function AreaSeries({
   fillOpacity,
   interpolation,
   label,
+  onMouseMove,
+  onMouseLeave,
 }) {
   if (!xScale || !yScale) return null;
   const strokeWidthValue = callOrValue(strokeWidth, data);
   const curve = interpolatorLookup[interpolation] || interpolatorLookup.cardinal;
   return (
-    <Group>
+    <Group
+      onMouseMove={onMouseMove && ((event) => {
+        const d = findClosestDatum({ data, getX: x, event, xScale });
+        onMouseMove({ event, datum: d, color });
+      })}
+      onMouseLeave={onMouseLeave}
+    >
       <AreaClosed
         key={`${label}-area`}
         data={data}

@@ -4,10 +4,14 @@ import PropTypes from 'prop-types';
 import { Grid } from '@vx/grid';
 import { Group } from '@vx/group';
 
+import Voronoi from './Voronoi';
+import WithTooltip from '../enhancer/WithTooltip';
+
 import {
   collectDataFromChildSeries,
   componentName,
   isAxis,
+  isCrossHair,
   isBarSeries,
   isSeries,
   getChildWithName,
@@ -30,11 +34,14 @@ const propTypes = {
     bottom: PropTypes.number,
     left: PropTypes.number,
   }),
+  renderTooltip: PropTypes.func,
   xScale: scaleShape.isRequired,
   yScale: scaleShape.isRequired,
   showXGrid: PropTypes.bool,
   showYGrid: PropTypes.bool,
   theme: themeShape,
+  useVoronoi: PropTypes.bool,
+  showVoronoi: PropTypes.bool,
 };
 
 const defaultProps = {
@@ -45,14 +52,17 @@ const defaultProps = {
     bottom: 64,
     left: 64,
   },
+  renderTooltip: null,
   showXGrid: false,
   showYGrid: false,
   theme: {},
+  useVoronoi: false,
+  showVoronoi: false,
 };
 
 // accessors
-const x = d => d.x;
-const y = d => d.y;
+const getX = d => d.x;
+const getY = d => d.y;
 const xString = d => d.x.toString();
 
 class XYChart extends React.PureComponent {
@@ -79,18 +89,18 @@ class XYChart extends React.PureComponent {
     const { xScale, yScale, children } = this.props;
     const { innerWidth, innerHeight } = this.getDimmensions();
     const { allData, dataBySeriesType } = collectDataFromChildSeries(children);
-    const scales = {};
+    const result = { allData };
 
-    scales.xScale = getScaleForAccessor({
+    result.xScale = getScaleForAccessor({
       allData,
-      accessor: x,
+      accessor: getX,
       range: [0, innerWidth],
       ...xScale,
     });
 
-    scales.yScale = getScaleForAccessor({
+    result.yScale = getScaleForAccessor({
       allData,
-      accessor: y,
+      accessor: getY,
       range: [innerHeight, 0],
       ...yScale,
     });
@@ -107,70 +117,114 @@ class XYChart extends React.PureComponent {
         });
 
         const offset = dummyBand.bandwidth() / 2;
-        scales.xScale.range([offset, innerWidth - offset]);
-        scales.xScale.barWidth = dummyBand.bandwidth();
-        scales.xScale.offset = offset;
+        result.xScale.range([offset, innerWidth - offset]);
+        result.xScale.barWidth = dummyBand.bandwidth();
+        result.xScale.offset = offset;
       }
     });
 
-    return scales;
+    return result;
   }
 
   render() {
     const {
       ariaLabel,
       children,
+      renderTooltip,
       showXGrid,
       showYGrid,
       theme,
       height,
       width,
+      showVoronoi,
+      useVoronoi,
     } = this.props;
 
     const { margin, innerWidth, innerHeight } = this.getDimmensions();
     const { numXTicks, numYTicks } = this.getNumTicks(innerWidth, innerHeight);
-    const { xScale, yScale } = this.collectScalesFromProps();
+    const { xScale, yScale, allData } = this.collectScalesFromProps(); // @TODO cache these?
+    const barWidth = xScale.barWidth || (xScale.bandwidth && xScale.bandwidth()) || 0;
+
+    const voronoiX = d => xScale(getX(d) || 0);
+    const voronoiY = d => yScale(getY(d) || 0);
+    let CrossHair; // ensure this is the top-most layer
+
     return innerWidth > 0 && innerHeight > 0 && (
-      <svg
-        aria-label={ariaLabel}
-        role="img"
-        width={width}
-        height={height}
-      >
-        <Group left={margin.left} top={margin.top}>
-          {(showXGrid || showYGrid) && (numXTicks || numYTicks) &&
-            <Grid
-              xScale={xScale}
-              yScale={yScale}
-              width={innerWidth}
-              height={innerHeight}
-              numTicksRows={showYGrid && numYTicks}
-              numTicksColumns={showXGrid && numXTicks}
-              stroke={theme.gridStyles && theme.gridStyles.stroke}
-              strokeWidth={theme.gridStyles && theme.gridStyles.strokeWidth}
-            />}
-          {React.Children.map(children, (Child) => {
-            const name = componentName(Child);
-            if (isAxis(name)) {
-              const styleKey = name[0].toLowerCase();
-              return React.cloneElement(Child, {
-                innerHeight,
-                innerWidth,
-                labelOffset: name === 'YAxis' ? 0.7 * margin.right : 0,
-                numTicks: name === 'XAxis' ? numXTicks : numYTicks,
-                scale: name === 'XAxis' ? xScale : yScale,
-                rangePadding: name === 'XAxis' ? xScale.offset : null,
-                axisStyles: { ...theme[`${styleKey}AxisStyles`], ...Child.props.axisStyles },
-                tickStyles: { ...theme[`${styleKey}TickStyles`], ...Child.props.tickStyles },
-              });
-            } else if (isSeries(name)) {
-              const barWidth = (isBarSeries(name) && (xScale.barWidth || xScale.bandwidth())) || 0;
-              return React.cloneElement(Child, { xScale, yScale, barWidth });
-            }
-            return Child;
-          })}
-        </Group>
-      </svg>
+      <WithTooltip renderTooltip={renderTooltip}>
+        {({ onMouseLeave, onMouseMove, tooltipData }) => (
+          <svg
+            aria-label={ariaLabel}
+            role="img"
+            width={width}
+            height={height}
+          >
+            <Group left={margin.left} top={margin.top}>
+              {(showXGrid || showYGrid) && (numXTicks || numYTicks) &&
+                <Grid
+                  xScale={xScale}
+                  yScale={yScale}
+                  width={innerWidth}
+                  height={innerHeight}
+                  numTicksRows={showYGrid && numYTicks}
+                  numTicksColumns={showXGrid && numXTicks}
+                  stroke={theme.gridStyles && theme.gridStyles.stroke}
+                  strokeWidth={theme.gridStyles && theme.gridStyles.strokeWidth}
+                />}
+
+              {React.Children.map(children, (Child) => {
+                const name = componentName(Child);
+                if (isAxis(name)) {
+                  const styleKey = name[0].toLowerCase();
+                  return React.cloneElement(Child, {
+                    innerHeight,
+                    innerWidth,
+                    labelOffset: name === 'YAxis' ? 0.7 * margin.right : 0,
+                    numTicks: name === 'XAxis' ? numXTicks : numYTicks,
+                    scale: name === 'XAxis' ? xScale : yScale,
+                    rangePadding: name === 'XAxis' ? xScale.offset : null,
+                    axisStyles: { ...theme[`${styleKey}AxisStyles`], ...Child.props.axisStyles },
+                    tickStyles: { ...theme[`${styleKey}TickStyles`], ...Child.props.tickStyles },
+                  });
+                } else if (isSeries(name)) {
+                  return React.cloneElement(Child, {
+                    xScale,
+                    yScale,
+                    barWidth,
+                    onMouseLeave: useVoronoi ? null : onMouseLeave,
+                    onMouseMove: useVoronoi ? null : onMouseMove,
+                  });
+                } else if (isCrossHair(name)) {
+                  CrossHair = Child;
+                  return null;
+                }
+                return Child;
+              })}
+              {useVoronoi &&
+                <Voronoi
+                  data={allData}
+                  x={voronoiX}
+                  y={voronoiY}
+                  width={innerWidth}
+                  height={innerHeight}
+                  onMouseMove={onMouseMove}
+                  onMouseLeave={onMouseLeave}
+                  showVoronoi={showVoronoi}
+                />}
+
+              {CrossHair && tooltipData &&
+                React.cloneElement(CrossHair, {
+                  left: (
+                    xScale(getX(tooltipData.datum))
+                    + (xScale.bandwidth ? xScale.bandwidth() / 2 : 0)
+                  ),
+                  top: yScale(getY(tooltipData.datum)),
+                  xScale,
+                  yScale,
+                })}
+            </Group>
+          </svg>
+        )}
+      </WithTooltip>
     );
   }
 }

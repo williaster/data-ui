@@ -10,6 +10,8 @@ export { default as LineSeries } from './series/LineSeries';
 export { default as PointSeries } from './series/PointSeries';
 export { default as StackedBarSeries } from './series/StackedBarSeries';
 
+export { default as CrossHair } from './chart/CrossHair';
+
 export { LinearGradient } from '@vx/gradient';
 export { PatternLines } from '@vx/pattern';
 export { withScreenSize, withParentSize } from '@vx/responsive';

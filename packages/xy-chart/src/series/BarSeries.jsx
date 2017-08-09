@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { Group } from '@vx/group';
 import { Bar } from '@vx/shape';
-import { color } from '@data-ui/theme';
+import { color as themeColors } from '@data-ui/theme';
 
 import { barSeriesDataShape } from '../utils/propShapes';
 import { callOrValue, isDefined } from '../utils/chartUtils';
@@ -21,16 +21,20 @@ const propTypes = {
   barWidth: PropTypes.number,
   xScale: PropTypes.func,
   yScale: PropTypes.func,
+  onMouseMove: PropTypes.func,
+  onMouseLeave: PropTypes.func,
 };
 
 const defaultProps = {
   barWidth: null,
-  fill: color.default,
+  fill: themeColors.default,
   stackBy: null,
   stroke: '#FFFFFF',
   strokeWidth: 1,
   xScale: null,
   yScale: null,
+  onMouseMove: null,
+  onMouseLeave: null,
 };
 
 const x = d => d.x;
@@ -45,6 +49,8 @@ export default function BarSeries({
   label,
   xScale,
   yScale,
+  onMouseMove,
+  onMouseLeave,
 }) {
   if (!xScale || !yScale || !barWidth) return null;
 
@@ -54,6 +60,7 @@ export default function BarSeries({
     <Group key={label}>
       {data.map((d, i) => {
         const barHeight = maxHeight - yScale(y(d));
+        const color = d.fill || callOrValue(fill, d, i);
         return isDefined(d.y) && (
           <Bar
             key={`bar-${label}-${xScale(x(d))}`}
@@ -61,9 +68,13 @@ export default function BarSeries({
             y={maxHeight - barHeight}
             width={barWidth}
             height={barHeight}
-            fill={d.fill || callOrValue(fill, d, i)}
+            fill={color}
             stroke={d.stroke || callOrValue(stroke, d, i)}
             strokeWidth={d.strokeWidth || callOrValue(strokeWidth, d, i)}
+            onMouseMove={onMouseMove && (() => (event) => {
+              onMouseMove({ event, datum: d, color });
+            })}
+            onMouseLeave={onMouseLeave && (() => onMouseLeave)}
           />
         );
       })}
