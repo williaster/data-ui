@@ -23,6 +23,8 @@ export const propTypes = {
   // likely injected by parent Histogram
   binScale: PropTypes.func,
   valueScale: PropTypes.func,
+  onMouseMove: PropTypes.func,
+  onMouseLeave: PropTypes.func,
   // renderLabel: PropTypes.func,
 };
 
@@ -34,6 +36,8 @@ export const defaultProps = {
   fill: chartTheme.colors.default,
   fillOpacity: 0.7,
   horizontal: false,
+  onMouseMove: null,
+  onMouseLeave: null,
   stroke: '#FFFFFF',
   strokeWidth: 1,
   valueKey: 'count',
@@ -47,6 +51,8 @@ function BarSeries({
   fill,
   fillOpacity,
   horizontal,
+  onMouseMove,
+  onMouseLeave,
   stroke,
   strokeWidth,
   valueKey,
@@ -70,6 +76,8 @@ function BarSeries({
           horizontal={horizontal}
           fill={fill}
           fillOpacity={fillOpacity}
+          onMouseMove={onMouseMove}
+          onMouseLeave={onMouseLeave}
           stroke={stroke}
           strokeWidth={strokeWidth}
           valueKey={valueKey}
@@ -82,6 +90,7 @@ function BarSeries({
           ? valueScale(d[valueKey])
           : maxBarLength - valueScale(d[valueKey]);
 
+        const color = d.fill || callOrValue(fill, d, i);
         return (
           <Bar
             key={`bar-${binPosition}`}
@@ -89,12 +98,16 @@ function BarSeries({
             y={horizontal ? binPosition : (maxBarLength - barLength)}
             width={horizontal ? barLength : barWidth}
             height={horizontal ? barWidth : barLength}
-            fill={d.fill || callOrValue(fill, d, i)}
+            fill={color}
             fillOpacity={
               typeof fillOpacity !== 'undefined' ? fillOpacity : callOrValue(fillOpacity, d, i)
             }
             stroke={d.stroke || callOrValue(stroke, d, i)}
             strokeWidth={d.strokeWidth || callOrValue(strokeWidth, d, i)}
+            onMouseMove={onMouseMove && (() => (event) => {
+              onMouseMove({ event, datum: d, color });
+            })}
+            onMouseLeave={onMouseLeave && (() => onMouseLeave)}
           />
         );
       })}

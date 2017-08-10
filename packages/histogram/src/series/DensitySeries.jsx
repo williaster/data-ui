@@ -149,7 +149,7 @@ function DensitySeries({
   const yScale = horizontal ? offSetBinScale : densityScale;
 
   return (
-    <Group>
+    <Group style={{ pointerEvents: 'none' }}>
       {animated &&
         <AnimatedDensitySeries
           densityData={densityData}

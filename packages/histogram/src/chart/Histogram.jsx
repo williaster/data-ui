@@ -11,6 +11,7 @@ import componentName from '../utils/componentName';
 import computeDomainsFromBins from '../utils/computeDomainsFromBins';
 import getValueKey from '../utils/getValueKey';
 import { themeShape } from '../utils/propShapes';
+import WithTooltip from '../enhancer/WithTooltip';
 
 const propTypes = {
   ariaLabel: PropTypes.string.isRequired,
@@ -29,6 +30,7 @@ const propTypes = {
     left: PropTypes.number,
   }),
   normalized: PropTypes.bool,
+  renderTooltip: PropTypes.func,
   theme: themeShape,
   width: PropTypes.number.isRequired,
   valueAccessor: PropTypes.func,
@@ -48,6 +50,7 @@ const defaultProps = {
     left: 64,
   },
   normalized: false,
+  renderTooltip: null,
   theme: {},
   valueAccessor: d => d,
 };
@@ -130,6 +133,7 @@ class Histogram extends React.PureComponent {
       children,
       height,
       horizontal,
+      renderTooltip,
       theme,
       valueAccessor,
       width,
@@ -146,52 +150,58 @@ class Histogram extends React.PureComponent {
     } = this.state;
 
     return (
-      <svg
-        aria-label={ariaLabel}
-        role="img"
-        width={width}
-        height={height}
-      >
-        <Group left={margin.left} top={margin.top}>
-          {React.Children.map(children, (Child, index) => {
-            const name = componentName(Child);
-            if (isSeries(name)) {
-              const binnedData = binsByIndex[index];
-              return React.cloneElement(Child, {
-                binScale,
-                binType,
-                binnedData,
-                horizontal,
-                valueAccessor,
-                valueKey,
-                valueScale,
-              });
-            } else if (isAxis(name)) {
-              const styleKey = name[0].toLowerCase();
-              const binOrValue =
-                (name === 'XAxis' && !horizontal) || (name === 'YAxis' && horizontal)
-                ? 'bin'
-                : 'value';
+      <WithTooltip renderTooltip={renderTooltip}>
+        {({ onMouseLeave, onMouseMove }) => (
+          <svg
+            aria-label={ariaLabel}
+            role="img"
+            width={width}
+            height={height}
+          >
+            <Group left={margin.left} top={margin.top}>
+              {React.Children.map(children, (Child, index) => {
+                const name = componentName(Child);
+                if (isSeries(name)) {
+                  const binnedData = binsByIndex[index];
+                  return React.cloneElement(Child, {
+                    binScale,
+                    binType,
+                    binnedData,
+                    horizontal,
+                    valueAccessor,
+                    valueKey,
+                    valueScale,
+                    onMouseLeave,
+                    onMouseMove,
+                  });
+                } else if (isAxis(name)) {
+                  const styleKey = name[0].toLowerCase();
+                  const binOrValue =
+                    (name === 'XAxis' && !horizontal) || (name === 'YAxis' && horizontal)
+                    ? 'bin'
+                    : 'value';
 
-              const tickValues = (
-                Child.props.tickValues ||
-                (binOrValue === 'bin' && binValues ? binValues : null)
-              );
+                  const tickValues = (
+                    Child.props.tickValues ||
+                    (binOrValue === 'bin' && binValues ? binValues : null)
+                  );
 
-              return React.cloneElement(Child, {
-                top: name === 'YAxis' || Child.props.orientation === 'top' ? 0 : innerHeight,
-                left: name === 'XAxis' || Child.props.orientation === 'left' ? 0 : innerWidth,
-                label: Child.props.label || (binOrValue === 'value' ? valueKey : null),
-                scale: binOrValue === 'value' ? valueScale : binScale,
-                axisStyles: { ...theme[`${styleKey}AxisStyles`], ...Child.props.axisStyles },
-                tickStyles: { ...theme[`${styleKey}TickStyles`], ...Child.props.tickStyles },
-                tickValues,
-              });
-            }
-            return Child;
-          })}
-        </Group>
-      </svg>
+                  return React.cloneElement(Child, {
+                    top: name === 'YAxis' || Child.props.orientation === 'top' ? 0 : innerHeight,
+                    left: name === 'XAxis' || Child.props.orientation === 'left' ? 0 : innerWidth,
+                    label: Child.props.label || (binOrValue === 'value' ? valueKey : null),
+                    scale: binOrValue === 'value' ? valueScale : binScale,
+                    axisStyles: { ...theme[`${styleKey}AxisStyles`], ...Child.props.axisStyles },
+                    tickStyles: { ...theme[`${styleKey}TickStyles`], ...Child.props.tickStyles },
+                    tickValues,
+                  });
+                }
+                return Child;
+              })}
+            </Group>
+          </svg>
+        )}
+      </WithTooltip>
     );
   }
 }

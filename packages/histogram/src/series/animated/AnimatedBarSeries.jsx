@@ -33,6 +33,8 @@ function AnimatedBarSeries({
   keyAccessor,
   fill,
   fillOpacity,
+  onMouseMove,
+  onMouseLeave,
   stroke,
   strokeWidth,
   valueKey,
@@ -105,6 +107,10 @@ function AnimatedBarSeries({
                   : callOrValue(fillOpacity, rawDatum, i)
                 }
                 strokeWidth={rawDatum.strokeWidth || callOrValue(strokeWidth, rawDatum, i)}
+                onMouseMove={onMouseMove && (() => (event) => {
+                  onMouseMove({ event, datum: rawDatum, color: d.fill });
+                })}
+                onMouseLeave={onMouseLeave && (() => onMouseLeave)}
               />
             );
           })}

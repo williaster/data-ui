@@ -86,7 +86,7 @@ function AnimatedDensitySeries({
       })}
     >
       {modifiedData => (
-        <Group>
+        <Group style={{ pointerEvents: 'none' }}>
           {showArea &&
             <AreaClosed
               data={modifiedData}

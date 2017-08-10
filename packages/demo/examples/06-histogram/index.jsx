@@ -24,6 +24,29 @@ const ResponsiveHistogram = withScreenSize(({ screenWidth, children, ...rest }) 
     height={Math.min(1000 / 1.8, screenWidth / 1.3 / 1.8)}
     ariaLabel="Histogram showing ..."
     theme={chartTheme}
+    renderTooltip={({ datum, color }) => {
+      const { bin, bin0, bin1, count, cumulative, density } = datum;
+      return (
+        <div>
+          <div>
+            <strong style={{ color }}>
+              {typeof bin !== 'undefined' ? bin : `${bin0} to ${bin1}`}
+            </strong>
+          </div>
+          <br />
+          <div>
+            <strong>count </strong>{count}
+          </div>
+          <div>
+            <strong>cumulative </strong>{cumulative}
+          </div>
+          <div>
+            <strong>percentage </strong>
+            {(density * 100).toFixed(2)}%
+          </div>
+        </div>
+      );
+    }}
     {...rest}
   >
     {children}
