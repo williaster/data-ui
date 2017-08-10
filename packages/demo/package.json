@@ -29,7 +29,7 @@
     "@data-ui/xy-chart": "0.0.16",
     "@storybook/addon-options": "^3.1.6",
     "@storybook/react": "3.1.8",
-    "@vx/legend": "0.0.121",
+    "@vx/legend": "0.0.127",
     "@vx/mock-data": "0.0.95",
     "@vx/responsive": "0.0.115",
     "@vx/scale": "0.0.121",

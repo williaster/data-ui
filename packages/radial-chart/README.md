@@ -3,7 +3,7 @@
 demo at <a href="https://williaster.github.io/data-ui" target="_blank">williaster.github.io/data-ui</a>
 
 ## Overview
-This package exports declarative react `<RadialChart />`s implemented with <a href="vx-demo.now.sh" target="_blank">@vx</a> which (for the time being) can be used to render both donut and pie charts depending on props. As demonstrated in the demo, in combination with [@vx/legend](https://vx-demo.now.sh/legends) and
+This package exports declarative react `<RadialChart />`s implemented with <a href="vx-demo.now.sh" target="_blank">@vx</a> which can be used to render both donut and pie charts depending on props. As demonstrated in the demo, in combination with [@vx/legend](https://vx-demo.now.sh/legends) and
 <a href="https://github.com/hshoff/vx/tree/master/packages/vx-scale" target="_blank">@vx/scale</a> these can be used to create re-usable radial charts.
 
 ### Usage

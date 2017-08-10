@@ -35,6 +35,14 @@ const chartProps = {
   margin: { top: 0, left: 0, bottom: 0, right: 0 },
   width,
   height,
+  renderTooltip: ({ datum, fraction }) => ( // eslint-disable-line
+    <div>
+      <div>
+        <strong>{datum.label}</strong>
+      </div>
+      <div>{(fraction * 100).toFixed()}%</div>
+    </div>
+  ),
 };
 
 const seriesProps = {
@@ -77,7 +85,21 @@ export default {
       components: [RadialChart, ArcSeries, LegendOrdinal],
       example: () => (
         <div style={wrapperStyles}>
-          <RadialChart {...chartProps}>
+          <RadialChart
+            {...chartProps}
+            renderTooltip={({ datum, fraction }) => {
+              const { label } = datum;
+              const style = { color: categoryColorScale(label) };
+              return (
+                <div>
+                  <div>
+                    <strong style={style}>{label}</strong>
+                  </div>
+                  <div>{(fraction * 100).toFixed()}%</div>
+                </div>
+              );
+            }}
+          >
             <ArcSeries
               {...seriesProps}
               labelComponent={<ArcLabel stroke="#222" fill="#fff" fontSize={10} />}
@@ -94,7 +116,21 @@ export default {
       components: [ArcSeries, ArcLabel],
       example: () => (
         <div style={wrapperStyles}>
-          <RadialChart {...chartProps}>
+          <RadialChart
+            {...chartProps}
+            renderTooltip={({ datum, fraction }) => {
+              const { label } = datum;
+              const style = { color: pinkColorScale(label) };
+              return (
+                <div>
+                  <div>
+                    <strong style={style}>{label}</strong>
+                  </div>
+                  <div>{(fraction * 100).toFixed()}%</div>
+                </div>
+              );
+            }}
+          >
             <ArcSeries
               {...seriesProps}
               fill={arc => pinkColorScale(arc.data.label)}

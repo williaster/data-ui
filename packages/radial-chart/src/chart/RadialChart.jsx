@@ -2,6 +2,8 @@ import { Group } from '@vx/group';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import WithTooltip from '../enhancer/WithTooltip';
+
 const propTypes = {
   ariaLabel: PropTypes.string.isRequired,
   children: PropTypes.node.isRequired,
@@ -13,6 +15,7 @@ const propTypes = {
     bottom: PropTypes.number,
     left: PropTypes.number,
   }),
+  renderTooltip: PropTypes.func,
 };
 
 const defaultProps = {
@@ -22,6 +25,7 @@ const defaultProps = {
     right: 10,
     bottom: 10,
   },
+  renderTooltip: null,
 };
 
 export default function RadialChart({
@@ -30,6 +34,7 @@ export default function RadialChart({
   width,
   height,
   margin,
+  renderTooltip,
 }) {
   const completeMargin = { ...defaultProps.margin, ...margin };
   const innerWidth = width - completeMargin.left - completeMargin.right;
@@ -38,21 +43,29 @@ export default function RadialChart({
   if (innerWidth < 10 || innerHeight < 10) return null;
 
   return (
-    <svg
-      aria-label={ariaLabel}
-      role="img"
-      width={width}
-      height={height}
-    >
-      <Group
-        top={(height / 2) - completeMargin.top}
-        left={(width / 2) + margin.left}
-      >
-        {React.Children.map(children, Child => (
-          React.cloneElement(Child, { radius })
-        ))}
-      </Group>
-    </svg>
+    <WithTooltip renderTooltip={renderTooltip}>
+      {({ onMouseMove, onMouseLeave }) => (
+        <svg
+          aria-label={ariaLabel}
+          role="img"
+          width={width}
+          height={height}
+        >
+          <Group
+            top={(height / 2) - completeMargin.top}
+            left={(width / 2) + margin.left}
+          >
+            {React.Children.map(children, Child => (
+              React.cloneElement(Child, {
+                onMouseMove,
+                onMouseLeave,
+                radius,
+              })
+            ))}
+          </Group>
+        </svg>
+      )}
+    </WithTooltip>
   );
 }
 
