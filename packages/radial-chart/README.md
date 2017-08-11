@@ -9,7 +9,7 @@ This package exports declarative react `<RadialChart />`s implemented with <a hr
 ### Usage
 See the demo at <a href="https://williaster.github.io/data-ui" target="_blank">williaster.github.io/data-ui</a> for more example outputs.
 
-<img width="550" alt="Donut chart" src="https://user-images.githubusercontent.com/4496521/27712141-839c1adc-5cda-11e7-829e-af3b6abb1bdc.png">
+<img width="500" alt="Donut chart" src="https://user-images.githubusercontent.com/4496521/29235607-03a68b30-7eb5-11e7-8ccf-dec925ba2d28.gif">
 
 ```js
 import { scaleOrdinal } from '@vx/scale';
