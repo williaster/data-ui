@@ -60,7 +60,7 @@ export default function LineSeries({
   onMouseLeave,
 }) {
   if (!xScale || !yScale) return null;
-
+  const strokeValue = callOrValue(stroke);
   return (
     <LinePath
       key={label}
@@ -69,7 +69,7 @@ export default function LineSeries({
       yScale={yScale}
       x={x}
       y={y}
-      stroke={callOrValue(stroke)}
+      stroke={strokeValue}
       strokeWidth={callOrValue(strokeWidth)}
       strokeDasharray={callOrValue(strokeDasharray)}
       strokeLinecap={strokeLinecap}
@@ -77,7 +77,7 @@ export default function LineSeries({
       defined={defined}
       onMouseMove={onMouseMove && (() => (event) => {
         const d = findClosestDatum({ data, getX: x, event, xScale });
-        onMouseMove({ event, data, datum: d, color });
+        onMouseMove({ event, data, datum: d, color: strokeValue });
       })}
       onMouseLeave={onMouseLeave && (() => onMouseLeave)}
       glyph={showPoints && ((d, i) => (

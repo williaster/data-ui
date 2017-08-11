@@ -14,11 +14,11 @@ describe('<AnimatedDensitySeries />', () => {
   };
 
   const categoricalBinnedData = [
-    { bin: 'a', count: 1 },
-    { bin: 'b', count: 4 },
-    { bin: 'c', count: 6 },
-    { bin: 'd', count: 2 },
-    { bin: 'e', count: 10 },
+    { bin: 'a', count: 1, id: '0' },
+    { bin: 'b', count: 4, id: '1' },
+    { bin: 'c', count: 6, id: '2' },
+    { bin: 'd', count: 2, id: '3' },
+    { bin: 'e', count: 10, id: '4' },
   ];
 
   test('it should be defined', () => {

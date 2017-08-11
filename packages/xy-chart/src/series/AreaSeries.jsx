@@ -62,12 +62,13 @@ export default function AreaSeries({
 }) {
   if (!xScale || !yScale) return null;
   const strokeWidthValue = callOrValue(strokeWidth, data);
+  const fillValue = callOrValue(fill, data);
   const curve = interpolatorLookup[interpolation] || interpolatorLookup.cardinal;
   return (
     <Group
       onMouseMove={onMouseMove && ((event) => {
         const d = findClosestDatum({ data, getX: x, event, xScale });
-        onMouseMove({ event, data, datum: d });
+        onMouseMove({ event, data, datum: d, color: fillValue });
       })}
       onMouseLeave={onMouseLeave}
     >
@@ -78,7 +79,7 @@ export default function AreaSeries({
         y={y}
         xScale={xScale}
         yScale={yScale}
-        fill={callOrValue(fill, data)}
+        fill={fillValue}
         fillOpacity={callOrValue(fillOpacity, data)}
         stroke="transparent"
         strokeWidth={strokeWidthValue}

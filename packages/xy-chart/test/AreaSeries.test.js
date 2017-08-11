@@ -59,14 +59,14 @@ describe('<AreaSeries />', () => {
     expect(areaSeriesNoLinePath.find(LinePath).length).toBe(0);
   });
 
-  test('it should call onMouseMove({ datum, data, event }) and onMouseLeave() on trigger', () => {
+  test('it should call onMouseMove({ datum, data, event, color }) and onMouseLeave() on trigger', () => {
     const data = mockData.map(d => ({ ...d, x: d.date, y: d.num }));
     const onMouseMove = jest.fn();
     const onMouseLeave = jest.fn();
 
     const wrapper = mount(
       <XYChart {...mockProps} onMouseMove={onMouseMove} onMouseLeave={onMouseLeave}>
-        <AreaSeries label="l" data={data} />
+        <AreaSeries label="l" data={data} fill="hot-pink" />
       </XYChart>,
     );
 
@@ -78,6 +78,7 @@ describe('<AreaSeries />', () => {
     expect(args.data).toBe(data);
     expect(args.datum).toBeNull(); // @TODO depends on mocking out findClosestDatum
     expect(args.event).toBeDefined();
+    expect(args.color).toBe('hot-pink');
 
     area.simulate('mouseleave');
     expect(onMouseLeave).toHaveBeenCalledTimes(1);
