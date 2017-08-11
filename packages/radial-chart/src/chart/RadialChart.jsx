@@ -2,7 +2,10 @@ import { Group } from '@vx/group';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-const propTypes = {
+import WithTooltip, { withTooltipPropTypes } from '../enhancer/WithTooltip';
+
+export const propTypes = {
+  ...withTooltipPropTypes,
   ariaLabel: PropTypes.string.isRequired,
   children: PropTypes.node.isRequired,
   width: PropTypes.number.isRequired,
@@ -13,6 +16,7 @@ const propTypes = {
     bottom: PropTypes.number,
     left: PropTypes.number,
   }),
+  renderTooltip: PropTypes.func,
 };
 
 const defaultProps = {
@@ -22,15 +26,28 @@ const defaultProps = {
     right: 10,
     bottom: 10,
   },
+  renderTooltip: null,
 };
 
-export default function RadialChart({
-  ariaLabel,
-  children,
-  width,
-  height,
-  margin,
-}) {
+export default function RadialChart(props) {
+  if (props.renderTooltip) {
+    return (
+      <WithTooltip renderTooltip={props.renderTooltip}>
+        <RadialChart {...props} renderTooltip={null} />
+      </WithTooltip>
+    );
+  }
+
+  const {
+    ariaLabel,
+    children,
+    width,
+    height,
+    margin,
+    onMouseMove,
+    onMouseLeave,
+  } = props;
+
   const completeMargin = { ...defaultProps.margin, ...margin };
   const innerWidth = width - completeMargin.left - completeMargin.right;
   const innerHeight = height - completeMargin.top - completeMargin.bottom;
@@ -49,7 +66,11 @@ export default function RadialChart({
         left={(width / 2) + margin.left}
       >
         {React.Children.map(children, Child => (
-          React.cloneElement(Child, { radius })
+          React.cloneElement(Child, {
+            onMouseMove: Child.props.onMouseMove || onMouseMove,
+            onMouseLeave: Child.props.onMouseLeave || onMouseLeave,
+            radius,
+          })
         ))}
       </Group>
     </svg>

@@ -17,6 +17,7 @@ import readme from '../../node_modules/@data-ui/histogram/README.md';
 
 import HistogramPlayground from './HistogramPlayground';
 import { normal, logNormal, mus, categorical, binnedCategorical, binnedNumeric } from './data';
+import renderTooltip from './renderHistogramTooltip';
 
 const ResponsiveHistogram = withScreenSize(({ screenWidth, children, ...rest }) => (
   <Histogram
@@ -24,6 +25,7 @@ const ResponsiveHistogram = withScreenSize(({ screenWidth, children, ...rest }) 
     height={Math.min(1000 / 1.8, screenWidth / 1.3 / 1.8)}
     ariaLabel="Histogram showing ..."
     theme={chartTheme}
+    renderTooltip={renderTooltip}
     {...rest}
   >
     {children}

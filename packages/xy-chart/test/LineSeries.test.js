@@ -1,6 +1,6 @@
 import { GlyphDot } from '@vx/glyph';
 import React from 'react';
-import { shallow } from 'enzyme';
+import { shallow, mount } from 'enzyme';
 import { LinePath } from '@vx/shape';
 
 import { XYChart, LineSeries } from '../src/';
@@ -77,5 +77,30 @@ describe('<LineSeries />', () => {
     const series = wrapper.find(LineSeries).dive();
     const path = series.find(LinePath).dive();
     expect(path.find(GlyphDot).length).toBe(mockData.length - 2);
+  });
+
+  test('it should call onMouseMove({ datum, data, event, color }) and onMouseLeave() on trigger', () => {
+    const data = mockData.map(d => ({ ...d, x: d.date, y: d.num }));
+    const onMouseMove = jest.fn();
+    const onMouseLeave = jest.fn();
+
+    const wrapper = mount(
+      <XYChart {...mockProps} onMouseMove={onMouseMove} onMouseLeave={onMouseLeave}>
+        <LineSeries label="l" data={data} stroke="gray-or-grey?" />
+      </XYChart>,
+    );
+
+    const line = wrapper.find('path');
+    line.simulate('mousemove');
+
+    expect(onMouseMove).toHaveBeenCalledTimes(1);
+    const args = onMouseMove.mock.calls[0][0];
+    expect(args.data).toBe(data);
+    expect(args.datum).toBeNull(); // @TODO depends on mocking out findClosestDatum
+    expect(args.event).toBeDefined();
+    expect(args.color).toBe('gray-or-grey?');
+
+    line.simulate('mouseleave');
+    expect(onMouseLeave).toHaveBeenCalledTimes(1);
   });
 });

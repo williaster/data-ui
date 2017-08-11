@@ -30,6 +30,8 @@ const propTypes = {
   padAngle: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
   padRadius: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
   cornerRadius: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
+  onMouseMove: PropTypes.func,
+  onMouseLeave: PropTypes.func,
 };
 
 const defaultProps = {
@@ -49,6 +51,8 @@ const defaultProps = {
   label: null,
   padAngle: null,
   padRadius: null,
+  onMouseMove: null,
+  onMouseLeave: null,
 };
 
 export default function ArcSeries({
@@ -68,6 +72,8 @@ export default function ArcSeries({
   strokeWidth,
   label,
   labelComponent,
+  onMouseMove,
+  onMouseLeave,
   ...restProps
 }) {
   return (
@@ -85,6 +91,11 @@ export default function ArcSeries({
         cornerRadius={cornerRadius}
         padAngle={padAngle}
         padRadius={padRadius}
+        onMouseMove={datum => (event) => {
+          const fraction = Math.abs(datum.startAngle - datum.endAngle) / (2 * Math.PI);
+          onMouseMove({ event, data, datum: datum.data, fraction });
+        }}
+        onMouseLeave={() => () => { onMouseLeave(); }}
         {...restProps}
       />
       {label && labelComponent &&

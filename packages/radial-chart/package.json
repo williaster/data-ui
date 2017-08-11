@@ -22,9 +22,11 @@
   "license": "MIT",
   "dependencies": {
     "@data-ui/theme": "0.0.6",
-    "@vx/group": "0.0.120",
-    "@vx/scale": "0.0.121",
-    "@vx/shape": "0.0.120",
+    "@vx/event": "0.0.127",
+    "@vx/group": "0.0.127",
+    "@vx/scale": "0.0.127",
+    "@vx/shape": "0.0.131",
+    "@vx/tooltip": "0.0.134",
     "prop-types": "^15.5.10"
   },
   "devDependencies": {

@@ -18,6 +18,8 @@ const propTypes = {
   // these will likely be injected by the parent xychart
   xScale: PropTypes.func,
   yScale: PropTypes.func,
+  onMouseMove: PropTypes.func,
+  onMouseLeave: PropTypes.func,
 };
 
 const defaultProps = {
@@ -28,6 +30,8 @@ const defaultProps = {
   strokeWidth: 1,
   xScale: null,
   yScale: null,
+  onMouseMove: null,
+  onMouseLeave: null,
 };
 
 const x = d => d.x;
@@ -41,6 +45,8 @@ export default function GroupedBarSeries({
   strokeWidth,
   xScale,
   yScale,
+  onMouseMove,
+  onMouseLeave,
 }) {
   if (!xScale || !yScale) return null;
   if (!xScale.bandwidth) { // @todo figure this out/be more graceful
@@ -66,6 +72,11 @@ export default function GroupedBarSeries({
       rx={2}
       stroke={stroke}
       strokeWidth={strokeWidth}
+      onMouseMove={onMouseMove && (d => (event) => {
+        const { key, data: datum } = d;
+        onMouseMove({ event, data, datum, key, color: zScale(key) });
+      })}
+      onMouseLeave={onMouseLeave && (() => onMouseLeave)}
     />
   );
 }

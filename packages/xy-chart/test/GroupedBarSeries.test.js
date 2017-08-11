@@ -1,6 +1,6 @@
-import { BarGroup } from '@vx/shape';
+import { BarGroup, Bar } from '@vx/shape';
 import React from 'react';
-import { shallow } from 'enzyme';
+import { shallow, mount } from 'enzyme';
 import { XYChart, GroupedBarSeries } from '../src/';
 
 describe('<GroupedBarSeries />', () => {
@@ -68,5 +68,36 @@ describe('<GroupedBarSeries />', () => {
       const fill = rect.attribs.fill;
       expect(fills.some(f => f === fill)).toBe(true);
     });
+  });
+
+  test('it should call onMouseMove({ datum, data, event, key, color }) and onMouseLeave() on trigger', () => {
+    const fills = ['magenta', 'maplesyrup', 'banana'];
+    const stackKeys = ['a', 'b', 'c'];
+    const onMouseMove = jest.fn();
+    const onMouseLeave = jest.fn();
+
+    const wrapper = mount(
+      <XYChart {...mockProps} onMouseMove={onMouseMove} onMouseLeave={onMouseLeave}>
+        <GroupedBarSeries
+          groupKeys={['a', 'b', 'c']}
+          groupFills={fills}
+          data={mockData}
+        />
+      </XYChart>,
+    );
+
+    const bar = wrapper.find(Bar).first();
+    bar.simulate('mousemove');
+
+    expect(onMouseMove).toHaveBeenCalledTimes(1);
+    const args = onMouseMove.mock.calls[0][0];
+    expect(args.data).toBe(mockData);
+    expect(args.datum).toBe(mockData[0]);
+    expect(args.event).toBeDefined();
+    expect(stackKeys.includes(args.key)).toBe(true);
+    expect(fills.includes(args.color)).toBe(true);
+
+    bar.simulate('mouseleave');
+    expect(onMouseLeave).toHaveBeenCalledTimes(1);
   });
 });

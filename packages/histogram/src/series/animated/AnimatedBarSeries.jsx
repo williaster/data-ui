@@ -33,6 +33,8 @@ function AnimatedBarSeries({
   keyAccessor,
   fill,
   fillOpacity,
+  onMouseMove,
+  onMouseLeave,
   stroke,
   strokeWidth,
   valueKey,
@@ -54,9 +56,10 @@ function AnimatedBarSeries({
     <NodeGroup
       data={binnedData}
       keyAccessor={keyAccessor}
-      start={d => ({
+      start={(d, i) => ({
         x: horizontal ? 0 : xScale(getX(d)),
         y: horizontal ? yScale(getY(d)) : maxBarLength,
+        fill: d.fill || callOrValue(fill, d, i),
         width: horizontal ? 0 : barWidth,
         height: horizontal ? barWidth : 0,
       })}
@@ -105,6 +108,10 @@ function AnimatedBarSeries({
                   : callOrValue(fillOpacity, rawDatum, i)
                 }
                 strokeWidth={rawDatum.strokeWidth || callOrValue(strokeWidth, rawDatum, i)}
+                onMouseMove={onMouseMove && (() => (event) => {
+                  onMouseMove({ event, datum: rawDatum, data: binnedData, color: d.fill });
+                })}
+                onMouseLeave={onMouseLeave && (() => onMouseLeave)}
               />
             );
           })}

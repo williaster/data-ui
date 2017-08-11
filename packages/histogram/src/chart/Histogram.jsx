@@ -11,8 +11,10 @@ import componentName from '../utils/componentName';
 import computeDomainsFromBins from '../utils/computeDomainsFromBins';
 import getValueKey from '../utils/getValueKey';
 import { themeShape } from '../utils/propShapes';
+import WithTooltip, { withTooltipPropTypes } from '../enhancer/WithTooltip';
 
-const propTypes = {
+export const propTypes = {
+  ...withTooltipPropTypes,
   ariaLabel: PropTypes.string.isRequired,
   binValues: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.number, PropTypes.string])),
   binCount: PropTypes.number,
@@ -29,6 +31,7 @@ const propTypes = {
     left: PropTypes.number,
   }),
   normalized: PropTypes.bool,
+  renderTooltip: PropTypes.func,
   theme: themeShape,
   width: PropTypes.number.isRequired,
   valueAccessor: PropTypes.func,
@@ -48,6 +51,7 @@ const defaultProps = {
     left: 64,
   },
   normalized: false,
+  renderTooltip: null,
   theme: {},
   valueAccessor: d => d,
 };
@@ -123,6 +127,14 @@ class Histogram extends React.PureComponent {
   }
 
   render() {
+    if (this.props.renderTooltip) {
+      return (
+        <WithTooltip renderTooltip={this.props.renderTooltip}>
+          <Histogram {...this.props} renderTooltip={null} />
+        </WithTooltip>
+      );
+    }
+
     const {
       ariaLabel,
       binType,
@@ -130,6 +142,8 @@ class Histogram extends React.PureComponent {
       children,
       height,
       horizontal,
+      onMouseLeave,
+      onMouseMove,
       theme,
       valueAccessor,
       width,
@@ -165,6 +179,8 @@ class Histogram extends React.PureComponent {
                 valueAccessor,
                 valueKey,
                 valueScale,
+                onMouseLeave,
+                onMouseMove,
               });
             } else if (isAxis(name)) {
               const styleKey = name[0].toLowerCase();

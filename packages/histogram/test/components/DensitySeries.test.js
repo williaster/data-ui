@@ -11,27 +11,30 @@ describe('<DensitySeries />', () => {
     height: 200,
   };
 
+  const rawNumericData = [0, 1, 2, 2, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 5];
+  const rawCategoricalData = ['a', 'b', 'b', 'c', 'c', 'c'];
+
   const numericBinnedData = [
-    { bin0: 0, bin1: 1, count: 1 },
-    { bin0: 1, bin1: 2, count: 4 },
-    { bin0: 2, bin1: 3, count: 6 },
-    { bin0: 3, bin1: 4, count: 2 },
-    { bin0: 4, bin1: 5, count: 10 },
+    { bin0: 0, bin1: 1, count: 1, id: '0' },
+    { bin0: 1, bin1: 2, count: 4, id: '1' },
+    { bin0: 2, bin1: 3, count: 6, id: '2' },
+    { bin0: 3, bin1: 4, count: 2, id: '3' },
+    { bin0: 4, bin1: 5, count: 10, id: '4' },
   ];
 
   const categoricalBinnedData = [
-    { bin: 'a', count: 1 },
-    { bin: 'b', count: 4 },
-    { bin: 'c', count: 6 },
-    { bin: 'd', count: 2 },
-    { bin: 'e', count: 10 },
+    { bin: 'a', count: 1, id: '0' },
+    { bin: 'b', count: 4, id: '1' },
+    { bin: 'c', count: 6, id: '2' },
+    { bin: 'd', count: 2, id: '3' },
+    { bin: 'e', count: 10, id: '4' },
   ];
 
   test('it should be defined', () => {
     expect(DensitySeries).toBeDefined();
   });
 
-  test('it should render a <DensitySeries /> for categorical or numeric data', () => {
+  test('it should render a <DensitySeries /> for binned categorical or numeric data', () => {
     const numericWrapper = shallow(
       <Histogram {...histogramProps}>
         <DensitySeries animated={false} binnedData={numericBinnedData} showArea />
@@ -43,6 +46,24 @@ describe('<DensitySeries />', () => {
     const categoricalWrapper = shallow(
       <Histogram {...histogramProps}>
         <DensitySeries animated={false} binnedData={categoricalBinnedData} showArea />
+      </Histogram>,
+    );
+    const catetegoricalDensityWrapper = categoricalWrapper.find(DensitySeries).dive();
+    expect(catetegoricalDensityWrapper.find(AreaClosed).length).toBe(1);
+  });
+
+  test('it should render a <DensitySeries /> for raw categorical or numeric data', () => {
+    const numericWrapper = shallow(
+      <Histogram {...histogramProps}>
+        <DensitySeries animated={false} rawData={rawNumericData} showArea />
+      </Histogram>,
+    );
+    const numericDensityWrapper = numericWrapper.find(DensitySeries).dive();
+    expect(numericDensityWrapper.find(AreaClosed).length).toBe(1);
+
+    const categoricalWrapper = shallow(
+      <Histogram {...histogramProps} binType="categorical">
+        <DensitySeries animated={false} rawData={rawCategoricalData} showArea />
       </Histogram>,
     );
     const catetegoricalDensityWrapper = categoricalWrapper.find(DensitySeries).dive();

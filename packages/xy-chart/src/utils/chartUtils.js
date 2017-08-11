@@ -33,6 +33,10 @@ export function isBarSeries(name) {
   return name.match(/Bar/g);
 }
 
+export function isCrossHair(name) {
+  return name.match(/crosshair/gi);
+}
+
 export function isSeries(name) {
   return name.match(/series/gi);
 }
@@ -52,6 +56,7 @@ export function collectDataFromChildSeries(children) {
   let allData = [];
   const dataByIndex = {};
   const dataBySeriesType = {};
+
   Children.forEach(children, (Child, i) => {
     if (Child && Child.props && Child.props.data) {
       const name = componentName(Child);
@@ -68,7 +73,8 @@ export function collectDataFromChildSeries(children) {
 
 export function getScaleForAccessor({
   allData,
-  accessor,
+  minAccessor,
+  maxAccessor,
   type,
   includeZero = true,
   range,
@@ -76,10 +82,13 @@ export function getScaleForAccessor({
 }) {
   let domain;
   if (type === 'band' || type === 'ordinal') {
-    domain = allData.map(accessor);
+    domain = allData.map(minAccessor);
   }
   if (type === 'linear' || type === 'time') {
-    const [min, max] = extent(allData, accessor);
+    const [min, max] = extent([
+      ...extent(allData, minAccessor),
+      ...extent(allData, maxAccessor),
+    ]);
     domain = [
       type === 'linear' && includeZero ? Math.min(0, min) : min,
       type === 'linear' && includeZero ? Math.max(0, max) : max,
