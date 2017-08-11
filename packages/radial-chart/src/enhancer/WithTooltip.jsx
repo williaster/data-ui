@@ -2,17 +2,33 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { localPoint } from '@vx/event';
-import { withTooltip, TooltipWithBounds, withTooltipPropTypes } from '@vx/tooltip';
+
+import {
+  withTooltip,
+  TooltipWithBounds,
+  withTooltipPropTypes as vxTooltipPropTypes,
+} from '@vx/tooltip';
+
+export const withTooltipPropTypes = {
+  onMouseMove: PropTypes.func, // expects to be called like func({ event, datum })
+  onMouseLeave: PropTypes.func, // expects to be called like func({ event, datum })
+  tooltipData: PropTypes.any,
+  showTooltip: PropTypes.func,
+  hideTooltip: PropTypes.func,
+};
 
 const propTypes = {
-  ...withTooltipPropTypes,
-  children: PropTypes.func.isRequired,
+  ...vxTooltipPropTypes,
+  children: PropTypes.oneOfType([PropTypes.object, PropTypes.func]).isRequired,
+  className: PropTypes.string,
   HoverStyles: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
   renderTooltip: PropTypes.func,
+  styles: PropTypes.object,
   TooltipComponent: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
 };
 
 const defaultProps = {
+  className: null,
   HoverStyles: () => (
     <style type="text/css">{`
       .vx-arc:hover {
@@ -21,6 +37,7 @@ const defaultProps = {
     `}</style>
   ),
   renderTooltip: null,
+  styles: { display: 'inline-block', position: 'relative' },
   TooltipComponent: TooltipWithBounds,
   tooltipTimeout: 200,
 };
@@ -33,16 +50,19 @@ class WithTooltip extends React.PureComponent {
     this.tooltipTimeout = null;
   }
 
-  handleMouseMove({ event, data, datum, ...rest }) {
+  handleMouseMove({ event, datum, ...rest }) {
     if (this.tooltipTimeout) clearTimeout(this.tooltipTimeout);
-    const { x, y } = localPoint(event.target.ownerSVGElement, event);
+
+    let coords = { x: 0, y: 0 };
+    if (event && event.target && event.target.ownerSVGElement) {
+      coords = localPoint(event.target.ownerSVGElement, event);
+    }
 
     this.props.showTooltip({
-      tooltipLeft: x + 10,
-      tooltipTop: y + 10,
+      tooltipLeft: coords.x + 10,
+      tooltipTop: coords.y + 10,
       tooltipData: {
         event,
-        data,
         datum,
         ...rest,
       },
@@ -51,29 +71,36 @@ class WithTooltip extends React.PureComponent {
 
   handleMouseLeave() {
     const { tooltipTimeout, hideTooltip } = this.props;
-    this.tooltipTimeout = setTimeout(() => hideTooltip(), tooltipTimeout);
+    this.tooltipTimeout = setTimeout(() => { hideTooltip(); }, tooltipTimeout);
   }
 
   render() {
     const {
       children,
+      className,
       HoverStyles,
       tooltipData,
       tooltipOpen,
       tooltipLeft,
       tooltipTop,
       renderTooltip,
+      styles,
       TooltipComponent,
     } = this.props;
 
-    return (
-      <div style={{ display: 'inline-block', position: 'relative' }}>
+    const childProps = {
+      onMouseMove: this.handleMouseMove,
+      onMouseLeave: this.handleMouseLeave,
+      tooltipData,
+    };
 
-        {children({
-          onMouseMove: this.handleMouseMove,
-          onMouseLeave: this.handleMouseLeave,
-          tooltipData,
-        })}
+    return (
+      <div style={styles} className={className}>
+
+        {/* inject props or pass to a function depending on child */}
+        {typeof children === 'function'
+          ? children(childProps)
+          : React.cloneElement(React.Children.only(children), childProps)}
 
         {tooltipOpen && TooltipComponent && renderTooltip &&
           <TooltipComponent
@@ -84,8 +111,7 @@ class WithTooltip extends React.PureComponent {
             {renderTooltip(tooltipData)}
           </TooltipComponent>}
 
-        {HoverStyles &&
-          <HoverStyles />}
+        {HoverStyles && <HoverStyles />}
       </div>
     );
   }

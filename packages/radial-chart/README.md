@@ -27,6 +27,7 @@ export default () => (
       width={width}
       height={height}
       margin={{ top, right, bottom, left }}
+      renderTooltip={({ event, datum }) => <div>Tooltip contents!</div>}
     >
       <ArcSeries
         data={data}
@@ -53,9 +54,29 @@ export default () => (
 
 ```
 
+### Tooltips
+The easiest way to use tooltips out of the box is by passing a `renderTooltip` function to `<RadialChart />`. This function takes an object with the shape `{ event, datum }` as input and should return the inner contents of the tooltip (not the tooltip container!) as shown above. Under the covers this will wrap the `<RadialChart />` component in the exported `<WithTooltip />` HOC, which wraps the `svg` in a `<div />` and handles the positioning and rendering of an HTML-based tooltip with the contents returned by `renderTooltip()`. This tooltip is aware of the bounds of its container and should position itself "smartly".
+
+If you'd like more customizability over tooltip rendering you can do either of the following:
+
+1) Roll your own tooltip positioning logic and pass `onMouseMove` and `onMouseLeave` functions to `RadialChart`. These functions are passed to the `<ArcSeries />` children and are called with the signature `onMouseMove({ datum, event })` and `onMouseLeave()` upon appropriate trigger.
+
+2) Wrap `<RadialChart />` in `<WithTooltip />` yourself, which accepts props for additional customization:
+
+
+Name | Type | Default | Description
+------------ | ------------- | ------- | ----
+children | PropTypes.func or PropTypes.object | - | Child function (to call) or element (to clone) with onMouseMove, onMouseLeave, and tooltipData props/keys
+className | PropTypes.string | - | Class name to add to the `<div>` container wrapper
+renderTooltip | PropTypes.func.isRequired | - | Renders the _contents_ of the tooltip, signature of `({ event, datum }) => node`
+styles | PropTypes.object | {} | Styles to add to the `<div>` container wrapper
+TooltipComponent | PropTypes.func or PropTypes.object | `@vx`'s `TooltipWithBounds` | Component (not instance) to use as the tooltip container component. It is passed `top` and `left` numbers for positioning
+tooltipTimeout | PropTypes.number | 200 | Timeout in ms for the tooltip to hide upon calling `onMouseLeave`
+
+Note that currently this is implemented with `@vx/tooltips`'s `withTooltip` HOC, which adds an _additioinal_ div wrapper.
+
 ### Roadmap
 - more types of radial series
-- interactions (eg tooltips)
 - animations / transitions
 
 ### NOTE ‼️

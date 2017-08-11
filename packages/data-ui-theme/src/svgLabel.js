@@ -4,12 +4,14 @@ export const baseLabel = {
   ...font.small,
   ...font.bold,
   ...font.middle,
+  pointerEvents: 'none',
 };
 
 export const baseTickLabel = {
   ...font.small,
   ...font.light,
   ...font.middle,
+  pointerEvents: 'none',
 };
 
 export const tickLabels = {
