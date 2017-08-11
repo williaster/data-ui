@@ -1,6 +1,6 @@
 {
   "name": "@data-ui/histogram",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "React + d3 library for creating histograms",
   "main": "build/index.js",
   "files": [
@@ -48,7 +48,7 @@
     "react": "^15.0.0 || 15.x"
   },
   "dependencies": {
-    "@data-ui/theme": "0.0.6",
+    "@data-ui/theme": "0.0.7",
     "@vx/axis": "0.0.134",
     "@vx/curve": "0.0.127",
     "@vx/event": "0.0.127",
