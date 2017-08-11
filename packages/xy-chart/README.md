@@ -78,7 +78,7 @@ showVoronoi | PropTypes.bool | false | convenience prop for debugging to view th
 #### Scale config
 X and y-scales are configured using `xScale` and `yScale` config props which essentially configure d3/vx scales:
 
-```
+```javascript
 const scaleConfigShape = PropTypes.shape({
   type: PropTypes.oneOf([
     'time',
@@ -97,7 +97,7 @@ const scaleConfigShape = PropTypes.shape({
 A theme object with the following shape can be passed to `<XYChart />` to style the chart, axes, and series.
 See <a href="https://github.com/williaster/data-ui/blob/master/packages/data-ui-theme/src/chartTheme.js" target="_blank">`@data-ui/theme`</a> for an example.
 
-```
+```javascript
 export const themeShape = PropTypes.shape({
   gridStyles: PropTypes.shape({
     stroke: PropTypes.string,
@@ -157,13 +157,13 @@ Several types of series types are exported by the package, and can be used in co
 
 Series | supported x scale type | supported y scale types | data shape | voronoi recommended for tooltips?
 ------------ | ------------- | ------- | ----
-- `<AreaSeries />` | time, linear | linear | { x, y [, fill, stroke] } | yes
-- `<BarSeries />` | time, linear, band | linear | { x, y [, fill, stroke] } | no
-- `<LineSeries />` | time, linear | linear | { x, y [, stroke] } | yes
-- `<PointSeries />` | time, linear | time, linear | { x, y [, fill, stroke, label] } | yes
-- `<StackedBarSeries />` | band | linear | { x, y } (colors controlled with stackFills & stackKeys) | no
-- `<GroupedBarSeries />` | band | linear | { x, y } (colors controlled with groupFills & groupKeys) | no
-- `<IntervalSeries />` | time, linear | linear | { x0, x1 [, fill, stroke] } | no
+`<AreaSeries />` | time, linear | linear | `{ x, y [, fill, stroke] }` | yes
+`<BarSeries />` | time, linear, band | linear | `{ x, y [, fill, stroke] }` | no
+`<LineSeries />` | time, linear | linear | `{ x, y [, stroke] }` | yes
+`<PointSeries />` | time, linear | time, linear | `{ x, y [, fill, stroke, label] }` | yes
+`<StackedBarSeries />` | band | linear | `{ x, y }` (colors controlled with stackFills & stackKeys) | no
+`<GroupedBarSeries />` | band | linear | `{ x, y }` (colors controlled with groupFills & groupKeys) | no
+`<IntervalSeries />` | time, linear | linear | `{ x0, x1 [, fill, stroke] }` | no
 
 
 ### Tooltips
@@ -210,7 +210,7 @@ showCircle | PropTypes.bool | true | whether to show the circle
 showHorizontalLine | PropTypes.bool | true | whether to show the horizontal crosshair line
 showVerticalLine | PropTypes.bool | true | whether to show the vertical crosshair line
 stroke | PropTypes.oneOfType([PropTypes.func, PropTypes.string]) | data-ui/theme.colors.grays[7] | the stroke of both horizontal and vertical lines
-strokeDasharray | PropTypes.oneOfType([PropTypes.func, PropTypes.string]) | '3, 3' | The stroke-dash-array of both horizontal and vertical lines
+strokeDasharray | PropTypes.oneOfType([PropTypes.func, PropTypes.string]) | `3, 3` | The stroke-dash-array of both horizontal and vertical lines
 strokeWidth | PropTypes.oneOfType([PropTypes.func, PropTypes.number]) | 1 | The strokeWidth of both horizontal and vertical lines
 
 More on the way.
