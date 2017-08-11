@@ -7,6 +7,9 @@ A React + d3 library for creating histograms. Vertical or horizontal, raw data o
 <a title="package version" href="https://img.shields.io/npm/v/@data-ui/histogram.svg?style=flat-square">
   <img src="https://img.shields.io/npm/v/@data-ui/histogram.svg?style=flat-square" />
 </a>
+<p align="center">
+  <img width="600px" src="https://user-images.githubusercontent.com/4496521/28901809-a03e88a6-77af-11e7-9882-468d362289bd.gif" />
+</p>
 
 Demo it live at <a href="https://williaster.github.io/data-ui" target="_blank">williaster.github.io/data-ui</a>.
 
