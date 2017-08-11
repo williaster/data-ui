@@ -98,7 +98,7 @@ describe('<LineSeries />', () => {
     expect(args.data).toBe(data);
     expect(args.datum).toBeNull(); // @TODO depends on mocking out findClosestDatum
     expect(args.event).toBeDefined();
-    expect(arg.color).toBe('gray-or-grey?');
+    expect(args.color).toBe('gray-or-grey?');
 
     line.simulate('mouseleave');
     expect(onMouseLeave).toHaveBeenCalledTimes(1);
