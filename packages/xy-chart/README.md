@@ -5,7 +5,7 @@ A package of charts with standard x- and y- axes.
   <img src="https://img.shields.io/npm/v/@data-ui/xy-chart.svg?style=flat-square" />
 </a>
 <p align="center">
-  <img width="600px" src="https://raw.githubusercontent.com/williaster/data-ui/master/assets/xy-chart.gif" />
+  <img width="600px" src="https://user-images.githubusercontent.com/4496521/29149889-e34d14f6-7d2b-11e7-8f8f-b5021dc8f1b8.gif" />
 </p>
 
 See it live at <a href="https://williaster.github.io/data-ui" target="_blank">williaster.github.io/data-ui</a>.
