@@ -76,7 +76,8 @@ describe('getScaleForAccessor', () => {
   test('should compute date domains', () => {
     expect(getScaleForAccessor({
       allData,
-      accessor: d => new Date(d.date),
+      minAccessor: d => new Date(d.date),
+      maxAccessor: d => new Date(d.date),
       type: 'time',
       range: [0, 100],
     }).domain()).toEqual([
@@ -88,7 +89,8 @@ describe('getScaleForAccessor', () => {
   test('should compute date strings domains', () => {
     expect(getScaleForAccessor({
       allData,
-      accessor: d => d.date,
+      minAccessor: d => d.date,
+      maxAccessor: d => d.date,
       type: 'band',
       range: [0, 100],
     }).domain()).toEqual(['2016-01-05', '2017-01-05', '2018-01-05', '2019-01-05']);
@@ -97,7 +99,8 @@ describe('getScaleForAccessor', () => {
   test('should compute categorical domains', () => {
     expect(getScaleForAccessor({
       allData,
-      accessor: d => d.cat,
+      minAccessor: d => d.cat,
+      maxAccessor: d => d.cat,
       type: 'band',
       range: [0, 100],
     }).domain()).toEqual(['a', 'b', 'c', 'z']);
@@ -106,7 +109,8 @@ describe('getScaleForAccessor', () => {
   test('should compute numeric domains including zero', () => {
     expect(getScaleForAccessor({
       allData,
-      accessor: d => d.num,
+      minAccessor: d => d.num,
+      maxAccessor: d => d.num,
       type: 'linear',
       range: [0, 100],
     }).domain()).toEqual([0, 501]);
@@ -115,7 +119,8 @@ describe('getScaleForAccessor', () => {
   test('should compute numeric domains excluding zero', () => {
     expect(getScaleForAccessor({
       allData,
-      accessor: d => d.num,
+      minAccessor: d => d.num,
+      maxAccessor: d => d.num,
       type: 'linear',
       range: [0, 100],
       includeZero: false,
@@ -125,7 +130,8 @@ describe('getScaleForAccessor', () => {
   test('should compute numeric domains with missing values', () => {
     expect(getScaleForAccessor({
       allData,
-      accessor: d => d.dirtyNum,
+      minAccessor: d => d.dirtyNum,
+      maxAccessor: d => d.dirtyNum,
       type: 'linear',
       range: [0, 100],
       includeZero: false,

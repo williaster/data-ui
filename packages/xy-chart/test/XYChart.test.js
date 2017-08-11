@@ -3,7 +3,7 @@ import { Group } from '@vx/group';
 import React from 'react';
 import { shallow } from 'enzyme';
 
-import { XYChart, xyChartPropTypes XAxis, YAxis, LineSeries, WithTooltip } from '../src';
+import { XYChart, xyChartPropTypes, XAxis, YAxis, LineSeries, WithTooltip } from '../src';
 import Voronoi from '../src/chart/Voronoi';
 
 describe('<XYChart />', () => {
