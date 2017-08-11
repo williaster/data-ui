@@ -1,6 +1,6 @@
 import { Bar } from '@vx/shape';
 import React from 'react';
-import { shallow } from 'enzyme';
+import { shallow, mount } from 'enzyme';
 import { XYChart, BarSeries } from '../src/';
 
 describe('<BarSeries />', () => {
@@ -77,5 +77,30 @@ describe('<BarSeries />', () => {
     );
     expect(bandWrapper.find(BarSeries).length).toBe(1);
     expect(bandWrapper.find(BarSeries).dive().find(Bar).length).toBe(mockData.length);
+  });
+
+  test('it should call onMouseMove({ datum, data, event, color }) and onMouseLeave() on trigger', () => {
+    const data = mockData.map(d => ({ ...d, x: d.date, y: d.num }));
+    const onMouseMove = jest.fn();
+    const onMouseLeave = jest.fn();
+
+    const wrapper = mount(
+      <XYChart {...mockProps} onMouseMove={onMouseMove} onMouseLeave={onMouseLeave}>
+        <BarSeries fill="banana" label="l" data={data} />
+      </XYChart>,
+    );
+
+    const bar = wrapper.find(Bar).first();
+    bar.simulate('mousemove');
+
+    expect(onMouseMove).toHaveBeenCalledTimes(1);
+    const args = onMouseMove.mock.calls[0][0];
+    expect(args.data).toBe(data);
+    expect(args.datum).toBe(data[0]);
+    expect(args.event).toBeDefined();
+    expect(args.color).toBe('banana');
+
+    bar.simulate('mouseleave');
+    expect(onMouseLeave).toHaveBeenCalledTimes(1);
   });
 });

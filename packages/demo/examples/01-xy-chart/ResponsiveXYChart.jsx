@@ -14,14 +14,14 @@ export const dateFormatter = date => formatDate(parseDate(date));
 
 // this is a little messy to handle all cases across series types
 function renderTooltip({ datum, key, color }) {
-  const { x, y, value } = datum;
-  let xVal = x;
-  if (typeof x === 'string') {
-    xVal = parseDate(x) === null ? x : dateFormatter(x);
-  } else if (typeof x !== 'string' && Number(x) > 1000000) {
-    xVal = formatDate(x);
+  const { x, x0, y, value } = datum;
+  let xVal = x || x0;
+  if (typeof xVal === 'string') {
+    xVal = parseDate(xVal) === null ? xVal : dateFormatter(xVal);
+  } else if (typeof xVal !== 'string' && Number(xVal) > 1000000) {
+    xVal = formatDate(xVal);
   }
-  const yVal = key && datum[key] ? datum[key] : (y || value);
+  const yVal = key && datum[key] ? datum[key] : (y || value || '--');
   return (
     <div>
       {key &&

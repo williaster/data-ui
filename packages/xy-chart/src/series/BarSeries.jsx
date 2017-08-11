@@ -72,7 +72,7 @@ export default function BarSeries({
             stroke={d.stroke || callOrValue(stroke, d, i)}
             strokeWidth={d.strokeWidth || callOrValue(strokeWidth, d, i)}
             onMouseMove={onMouseMove && (() => (event) => {
-              onMouseMove({ event, datum: d, color });
+              onMouseMove({ event, data, datum: d, color });
             })}
             onMouseLeave={onMouseLeave && (() => onMouseLeave)}
           />

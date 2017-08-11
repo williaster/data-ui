@@ -1,6 +1,6 @@
 import { GlyphDot } from '@vx/glyph';
 import React from 'react';
-import { shallow } from 'enzyme';
+import { shallow, mount } from 'enzyme';
 
 import { XYChart, PointSeries } from '../src/';
 
@@ -80,5 +80,30 @@ describe('<PointSeries />', () => {
     const label = wrapper.render().find('.test');
     expect(label.length).toBe(1);
     expect(label.text()).toBe('LABEL');
+  });
+
+  test('it should call onMouseMove({ datum, data, event, color }) and onMouseLeave() on trigger', () => {
+    const data = mockData.map(d => ({ ...d, x: d.date, y: d.num }));
+    const onMouseMove = jest.fn();
+    const onMouseLeave = jest.fn();
+
+    const wrapper = mount(
+      <XYChart {...mockProps} onMouseMove={onMouseMove} onMouseLeave={onMouseLeave}>
+        <PointSeries label="" data={data} fill="army-green" />
+      </XYChart>,
+    );
+
+    const point = wrapper.find('circle').first();
+    point.simulate('mousemove');
+
+    expect(onMouseMove).toHaveBeenCalledTimes(1);
+    const args = onMouseMove.mock.calls[0][0];
+    expect(args.data).toBe(data);
+    expect(args.datum).toBe(data[0]);
+    expect(args.event).toBeDefined();
+    expect(args.color).toBe('army-green');
+
+    point.simulate('mouseleave');
+    expect(onMouseLeave).toHaveBeenCalledTimes(1);
   });
 });

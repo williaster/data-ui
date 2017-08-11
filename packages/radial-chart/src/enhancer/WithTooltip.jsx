@@ -13,8 +13,6 @@ export const withTooltipPropTypes = {
   onMouseMove: PropTypes.func, // expects to be called like func({ event, datum })
   onMouseLeave: PropTypes.func, // expects to be called like func({ event, datum })
   tooltipData: PropTypes.any,
-  showTooltip: PropTypes.func,
-  hideTooltip: PropTypes.func,
 };
 
 const propTypes = {

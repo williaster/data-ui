@@ -11,6 +11,7 @@ export { default as PointSeries } from './series/PointSeries';
 export { default as StackedBarSeries } from './series/StackedBarSeries';
 
 export { default as CrossHair } from './chart/CrossHair';
+export { default as WithTooltip, withTooltipPropTypes } from './enhancer/WithTooltip';
 
 export { LinearGradient } from '@vx/gradient';
 export { PatternLines } from '@vx/pattern';

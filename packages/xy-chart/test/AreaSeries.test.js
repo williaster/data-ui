@@ -1,10 +1,10 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import { shallow, mount } from 'enzyme';
 import { AreaClosed, LinePath } from '@vx/shape';
 
 import { XYChart, AreaSeries } from '../src/';
 
-describe('<LineSeries />', () => {
+describe('<AreaSeries />', () => {
   const mockProps = {
     xScale: { type: 'time' },
     yScale: { type: 'linear' },
@@ -57,5 +57,29 @@ describe('<LineSeries />', () => {
 
     const areaSeriesNoLinePath = wrapperNoLine.find(AreaSeries).dive();
     expect(areaSeriesNoLinePath.find(LinePath).length).toBe(0);
+  });
+
+  test('it should call onMouseMove({ datum, data, event }) and onMouseLeave() on trigger', () => {
+    const data = mockData.map(d => ({ ...d, x: d.date, y: d.num }));
+    const onMouseMove = jest.fn();
+    const onMouseLeave = jest.fn();
+
+    const wrapper = mount(
+      <XYChart {...mockProps} onMouseMove={onMouseMove} onMouseLeave={onMouseLeave}>
+        <AreaSeries label="l" data={data} />
+      </XYChart>,
+    );
+
+    const area = wrapper.find(AreaClosed).parent(); // listener is on group
+    area.simulate('mousemove');
+
+    expect(onMouseMove).toHaveBeenCalledTimes(1);
+    const args = onMouseMove.mock.calls[0][0];
+    expect(args.data).toBe(data);
+    expect(args.datum).toBeNull(); // @TODO depends on mocking out findClosestDatum
+    expect(args.event).toBeDefined();
+
+    area.simulate('mouseleave');
+    expect(onMouseLeave).toHaveBeenCalledTimes(1);
   });
 });

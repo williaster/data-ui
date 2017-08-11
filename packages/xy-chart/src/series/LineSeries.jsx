@@ -77,7 +77,7 @@ export default function LineSeries({
       defined={defined}
       onMouseMove={onMouseMove && (() => (event) => {
         const d = findClosestDatum({ data, getX: x, event, xScale });
-        onMouseMove({ event, datum: d, color });
+        onMouseMove({ event, data, datum: d, color });
       })}
       onMouseLeave={onMouseLeave && (() => onMouseLeave)}
       glyph={showPoints && ((d, i) => (

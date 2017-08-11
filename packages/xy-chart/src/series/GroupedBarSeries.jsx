@@ -73,7 +73,8 @@ export default function GroupedBarSeries({
       stroke={stroke}
       strokeWidth={strokeWidth}
       onMouseMove={onMouseMove && (d => (event) => {
-        onMouseMove({ event, datum: d.data, key: d.key, color: zScale(d.key) });
+        const { key, data: datum } = d;
+        onMouseMove({ event, data, datum, key, color: zScale(key) });
       })}
       onMouseLeave={onMouseLeave && (() => onMouseLeave)}
     />

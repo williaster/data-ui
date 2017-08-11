@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { extent } from 'd3-array';
 
 import { color } from '@data-ui/theme';
 import { Group } from '@vx/group';
@@ -23,14 +24,14 @@ const propTypes = {
   // likely injected by parent
   left: PropTypes.number,
   top: PropTypes.number,
-  xScale: PropTypes.func,
-  yScale: PropTypes.func,
+  xRange: PropTypes.arrayOf(PropTypes.number),
+  yRange: PropTypes.arrayOf(PropTypes.number),
 
 };
 
 const defaultProps = {
-  left: null,
-  top: null,
+  left: 0,
+  top: 0,
   circleSize: 4,
   circleFill: color.grays[7],
   circleStroke: '#ffffff',
@@ -48,8 +49,8 @@ const defaultProps = {
   stroke: color.grays[7],
   strokeDasharray: '3,3',
   strokeWidth: 1,
-  xScale: null,
-  yScale: null,
+  xRange: [0, 0],
+  yRange: [0, 0],
 };
 
 function CrossHair({
@@ -67,14 +68,12 @@ function CrossHair({
   stroke,
   strokeDasharray,
   strokeWidth,
-  xScale,
-  yScale,
+  xRange,
+  yRange,
   lineStyles,
 }) {
-  if (!xScale || !yScale || (!top && !left)) return null;
-
-  const [xMin, xMax] = xScale.range();
-  const [yMax, yMin] = yScale.range();
+  const [xMin, xMax] = extent(xRange);
+  const [yMin, yMax] = extent(yRange);
   return (
     <Group>
       {showHorizontalLine && top !== null &&

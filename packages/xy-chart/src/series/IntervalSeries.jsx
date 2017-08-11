@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
 import { Group } from '@vx/group';
 import { Bar } from '@vx/shape';
 import { color } from '@data-ui/theme';
@@ -56,6 +55,7 @@ export default function IntervalSeries({
       {data.map((d, i) => {
         const x = xScale(x0(d));
         const barWidth = xScale(x1(d)) - x;
+        const intervalFill = d.fill || callOrValue(fill, d, i);
         return (
           <Bar
             key={`interval-${label}-${x}`}
@@ -63,11 +63,11 @@ export default function IntervalSeries({
             y={0}
             width={barWidth}
             height={barHeight}
-            fill={d.fill || callOrValue(fill, d, i)}
+            fill={intervalFill}
             stroke={d.stroke || callOrValue(stroke, d, i)}
             strokeWidth={d.strokeWidth || callOrValue(strokeWidth, d, i)}
             onMouseMove={onMouseMove && (() => (event) => {
-              onMouseMove({ event, datum: d });
+              onMouseMove({ event, datum: d, data, color: intervalFill });
             })}
             onMouseLeave={onMouseLeave && (() => onMouseLeave)}
           />

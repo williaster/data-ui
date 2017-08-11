@@ -67,7 +67,7 @@ export default function AreaSeries({
     <Group
       onMouseMove={onMouseMove && ((event) => {
         const d = findClosestDatum({ data, getX: x, event, xScale });
-        onMouseMove({ event, datum: d, color });
+        onMouseMove({ event, data, datum: d });
       })}
       onMouseLeave={onMouseLeave}
     >

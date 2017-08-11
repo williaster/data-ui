@@ -39,7 +39,7 @@ const intervals = [[5, 8], [15, 19]];
 export const intervalLineData = cityTemperature.slice(0, 25).map((d, i) => ({
   ...d,
   x: d.date,
-  y: intervals.some(([i0, i1]) => i >= i0 && i <= i1) ? null : d[groupKeys[0]],
+  y: intervals.some(([i0, i1]) => i >= i0 && i <= i1) ? null : Number(d[groupKeys[0]]),
 }));
 
 export const intervalData = intervals.reduce((ret, [i0, i1]) => {

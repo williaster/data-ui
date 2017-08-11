@@ -262,8 +262,6 @@ export default {
           ariaLabel="Required label"
           xScale={{ type: 'time' }}
           yScale={{ type: 'linear', domain: [40, 80] }}
-          useVoronoi
-          showVoronoi
         >
           <YAxis label="Temperature (°F)" numTicks={4} />
           <PatternLines
@@ -274,18 +272,17 @@ export default {
             strokeWidth={1}
             orientation={['diagonal']}
           />
-          <IntervalSeries
-            data={intervalData}
-            label="Temperature interval"
-            fill="url(#interval_pattern)"
-          />
           <LineSeries
             data={intervalLineData}
             label="Line interval"
             showPoints
           />
-          <CrossHair />
-          <XAxis />
+          <IntervalSeries
+            data={intervalData}
+            label="Temperature interval"
+            fill="url(#interval_pattern)"
+          />
+          <XAxis numTicks={0} />
         </ResponsiveXYChart>
       ),
     },

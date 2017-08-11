@@ -3,7 +3,8 @@ import { Group } from '@vx/group';
 import React from 'react';
 import { shallow } from 'enzyme';
 
-import { XYChart, XAxis, YAxis, LineSeries } from '../src';
+import { XYChart, XAxis, YAxis, LineSeries, WithTooltip } from '../src';
+import Voronoi from '../src/chart/Voronoi';
 
 describe('<XYChart />', () => {
   const mockProps = {
@@ -40,6 +41,18 @@ describe('<XYChart />', () => {
     const svg = wrapper.find('svg');
     expect(svg.length).toBe(1);
     expect(svg.prop('aria-label')).toBe(mockProps.ariaLabel);
+  });
+
+  test('it should render a WithTooltip if renderTooltip is passed', () => {
+    let wrapper = shallow(
+      <XYChart {...mockProps} renderTooltip={null} />,
+    );
+    expect(wrapper.find(WithTooltip).length).toBe(0);
+
+    wrapper = shallow(
+      <XYChart {...mockProps} renderTooltip={() => {}} />,
+    );
+    expect(wrapper.find(WithTooltip).length).toBe(1);
   });
 
   test('it should render an offset <Group /> based on margin', () => {
@@ -150,5 +163,18 @@ describe('<XYChart />', () => {
     yScale = series.first().prop('yScale');
     expect(xScale.domain()).toEqual([mockData[0].date, mockData[2].date]);
     expect(yScale.domain()).toEqual([-mockData[2].num, 0]);
+  });
+
+  test('it should render a Voronoi if useVoronoi is true', () => {
+    const wrapper = shallow(
+      <XYChart {...mockProps} useVoronoi>
+        <LineSeries
+          label="label"
+          data={mockData.map(d => ({ ...d, x: d.date, y: d.num }))}
+        />
+      </XYChart>,
+    );
+
+    expect(wrapper.find(Voronoi).length).toBe(1);
   });
 });
