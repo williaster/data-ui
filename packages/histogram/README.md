@@ -24,6 +24,8 @@ const ResponsiveHistogram = withParentSize({ parentWidth, ...rest}) => (
   />
 );
 
+const rawData = Array(100).fill().map(Math.random);
+
 ...
   render () {
     return (
@@ -35,17 +37,25 @@ const ResponsiveHistogram = withParentSize({ parentWidth, ...rest}) => (
         binCount={25}
         valueAccessor={datum => datum.value}
         binType="numeric"
+        renderTooltip={({ event, datum, data, color }) => (
+          <div>
+            <strong style={{ color }}>{datum.bin0} to {datum.bin1}</strong>
+            <div><strong>count </strong>{datum.count}</div>
+            <div><strong>cumulative </strong>{datum.cumulative}</div>
+            <div><strong>density </strong>{datum.density}</div>
+          </div>
+        )}
       >
         <BarSeries
           animated
-          rawData={data /* or binnedData={data} */}
+          rawData={rawData /* or binnedData={...} */}
           fill={fill}
           stroke={stroke}
           strokeWidth={strokeWidth}
         />
         <BarSeries  
           animated
-          rawData={data /* or binnedData={data} */}
+          rawData={rawData /* or binnedData={data} */}
           fill={fill}
           stroke={stroke}
           strokeWidth={strokeWidth}
@@ -65,8 +75,8 @@ Check out the example source code and PropTable tabs in the Storybook <a href="h
 
 ### `<Histogram />`
 
-Name | Type | Default | Description 
------------- | ------------- | ------- | ---- 
+Name | Type | Default | Description
+------------ | ------------- | ------- | ----
 ariaLabel | PropTypes.string.isRequired | - | Accessibility label
 binValues | PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.number, PropTypes.string])) | null | Bin thresholds, overrides binCount
 binCount | PropTypes.number | 10 | an approximate number of bins to use (if data is not already binned)
@@ -78,7 +88,7 @@ horizontal | PropTypes.bool | false | whether the histograms is oriented vertica
 limits | PropTypes.array | null | values outside the limits are ignored
 margin | PropTypes.shape({ top: PropTypes.number, right: PropTypes.number, bottom: PropTypes.number, left: PropTypes.number }) | { top: 32, right: 32, bottom: 64, left: 64 } | chart margin, leave room for axes and labels!
 normalized | PropTypes.bool | false | whether the value axis is normalized as fraction of total
-theme | PropTypes.object | {} | chart theme
+theme | PropTypes.object | {} | chart theme object, see theme below.
 width | PropTypes.number.isRequired | - | width of the svg
 valueAccessor | PropTypes.func | d => d | for raw data, how to access the bin value
 
@@ -104,8 +114,8 @@ If both `rawData` and `binnnedData` are provided, `rawData` is ignored.
 
 ### `<BarSeries />`
 
-Name | Type | Default | Description 
------------- | ------------- | ------- | ---- 
+Name | Type | Default | Description
+------------ | ------------- | ------- | ----
 animated | PropTypes.bool | true | whether to animate updates to the data in the series
 rawData | PropTypes.array | [] | raw datum
 binnedData | binnedDataShape | [] | binned data
@@ -119,8 +129,8 @@ strokeWidth | PropTypes.oneOfType([PropTypes.func, PropTypes.number]) | 1 | dete
 
 For _raw data_ that is _numeric_, the `<DensitySeries />` plots an estimates of the probability density function, i.e., a kernel density estimate. If pre-aggregated and/or categorical data is passed to the Series, it plots an Area graph of values based on the data counts.
 
-Name | Type | Default | Description 
------------- | ------------- | ------- | ---- 
+Name | Type | Default | Description
+------------ | ------------- | ------- | ----
 animated | PropTypes.bool | true | whether to animate updates to the data in the series
 rawData | PropTypes.array | [] | raw datum
 binnedData | binnedDataShape | [] | binned data
@@ -139,16 +149,83 @@ useEntireScale | PropTypes.bool | false | if true, density plots will scale to f
 
 ### `<XAxis />` and `<YAxis />`
 
-Name | Type | Default | Description 
------------- | ------------- | ------- | ---- 
-axisStyles | axisStylesShape | {} | config object for axis and axis label styles
+Name | Type | Default | Description
+------------ | ------------- | ------- | ----
+axisStyles | axisStylesShape | {} | config object for axis and axis label styles, see theme below
 label | PropTypes.oneOfType([PropTypes.string, PropTypes.element]) | <text {...axisStyles.label[orientation]} /> | string or component for axis labels
 numTicks | PropTypes.number | null | approximate number of ticks
 orientation | XAxis PropTypes.oneOf(['bottom', 'top']) or YAxis PropTypes.oneOf(['left', 'right']) | bottom, left | orientation of axis
-tickStyles | tickStylesShape | {} | config object for styling ticks and tick labels
+tickStyles | tickStylesShape | {} | config object for styling ticks and tick labels, see theme below
 tickLabelComponent | PropTypes.element | <text {...tickStyles.label[orientation]} /> | component to use for tick labels
 tickFormat | PropTypes.func | null | (tick, tickIndex) => formatted tick
 tickValues | PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.number, PropTypes.string])) | null | custom tick values
+
+
+### Tooltips
+Tooltips are supported for histogram `BarSeries`. The _easiest_ way to use tooltips out of the box is by passing a `renderTooltip` function to `<Histogram />` as shown in the above example. This function takes an object with the shape `{ event, datum, data, color }` as input and should return the inner contents of the tooltip (not the tooltip container!) as shown above.  `datum` corresponds to the _binned_ data point, see the above-specified shapes which depend on whether your bins are categorical or numeric. `color` represents the bar fill.
+
+Under the covers this will wrap the `<Histogram />` component in the exported `<WithTooltip />` HOC, which wraps the `svg` in a `<div />` and handles the positioning and rendering of an HTML-based tooltip with the contents returned by `renderTooltip()`. This tooltip is aware of the bounds of its container and should position itself "smartly".
+
+If you'd like more customizability over tooltip rendering you can do either of the following:
+
+1) Roll your own tooltip positioning logic and pass `onMouseMove` and `onMouseLeave` functions to `Histogram`. These functions are passed to the `<BarSeries />` children and are called with the signature `onMouseMove({ data, datum, event, color })` and `onMouseLeave()` upon appropriate trigger.
+
+2) Wrap `<Histogram />` in `<WithTooltip />` yourself, which accepts props for additional customization:
+
+Name | Type | Default | Description
+------------ | ------------- | ------- | ----
+children | PropTypes.func or PropTypes.object | - | Child function (to call) or element (to clone) with onMouseMove, onMouseLeave, and tooltipData props/keys
+className | PropTypes.string | - | Class name to add to the `<div>` container wrapper
+renderTooltip | PropTypes.func.isRequired | - | Renders the _contents_ of the tooltip, signature of `({ event, data, datum, color }) => node`
+styles | PropTypes.object | {} | Styles to add to the `<div>` container wrapper
+TooltipComponent | PropTypes.func or PropTypes.object | `@vx`'s `TooltipWithBounds` | Component (not instance) to use as the tooltip container component. It is passed `top` and `left` numbers for positioning
+tooltipTimeout | PropTypes.number | 200 | Timeout in ms for the tooltip to hide upon calling `onMouseLeave`
+
+### Theme
+A theme object with the following shape can be passed to `<Histogram />` to style the chart, axes, and series. Alternatively, keys (eg `xAxisStyles`) can be passed directly to the axes components.
+
+See <a href="https://github.com/williaster/data-ui/blob/master/packages/data-ui-theme/src/chartTheme.js" target="_blank">`@data-ui/theme`</a> for an example.
+
+```
+export const themeShape = PropTypes.shape({
+  gridStyles: PropTypes.shape({
+    stroke: PropTypes.string,
+    strokeWidth: PropTypes.number,
+  }),
+  xAxisStyles: PropTypes.shape({
+    stroke: PropTypes.string,
+    strokeWidth: PropTypes.number,
+    label: PropTypes.shape({
+      bottom: PropTypes.object,
+      top: PropTypes.object,
+    }),
+  }),
+  yAxisStyles: PropTypes.shape({
+    stroke: PropTypes.string,
+    strokeWidth: PropTypes.number,
+    label: PropTypes.shape({
+      left: PropTypes.object,
+      right: PropTypes.object,
+    }),
+  })
+  xTickStyles: PropTypes.shape({
+    stroke: PropTypes.string,
+    tickLength: PropTypes.number,
+    label: PropTypes.shape({
+      bottom: PropTypes.object,
+      top: PropTypes.object,
+    }),
+  }),
+  yTickStyles: PropTypes.shape({
+    stroke: PropTypes.string,
+    tickLength: PropTypes.number,
+    label: PropTypes.shape({
+      left: PropTypes.object,
+      right: PropTypes.object,
+    }),
+  }),
+});
+```
 
 ## Development
 ```
