@@ -1,7 +1,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 
-import { RadialChart, WithTooltip } from '../src';
+import { RadialChart, WithTooltip, radialChartPropTypes } from '../src';
 
 describe('<RadialChart />', () => {
   const mockProps = {
@@ -13,6 +13,10 @@ describe('<RadialChart />', () => {
 
   test('it should be defined', () => {
     expect(RadialChart).toBeDefined();
+  });
+
+  test('radialChartPropTypes should be defined', () => {
+    expect(radialChartPropTypes).toBeDefined();
   });
 
   test('it should render an svg', () => {

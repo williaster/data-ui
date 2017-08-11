@@ -1,6 +1,6 @@
 export { default as XAxis } from './axis/XAxis';
 export { default as YAxis } from './axis/YAxis';
-export { default as XYChart } from './chart/XYChart';
+export { default as XYChart, propTypes as xyChartPropTypes } from './chart/XYChart';
 
 export { default as AreaSeries } from './series/AreaSeries';
 export { default as BarSeries } from './series/BarSeries';

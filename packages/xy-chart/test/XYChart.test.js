@@ -3,7 +3,7 @@ import { Group } from '@vx/group';
 import React from 'react';
 import { shallow } from 'enzyme';
 
-import { XYChart, XAxis, YAxis, LineSeries, WithTooltip } from '../src';
+import { XYChart, xyChartPropTypes XAxis, YAxis, LineSeries, WithTooltip } from '../src';
 import Voronoi from '../src/chart/Voronoi';
 
 describe('<XYChart />', () => {
@@ -24,6 +24,10 @@ describe('<XYChart />', () => {
 
   test('it should be defined', () => {
     expect(XYChart).toBeDefined();
+  });
+
+  test('xyChartPropTypes should be defined', () => {
+    expect(xyChartPropTypes).toEqual(expect.any(Object));
   });
 
   test('it should not render with invalid width or height', () => {

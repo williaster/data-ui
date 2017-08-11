@@ -63,4 +63,28 @@ describe('<AnimatedBarSeries />', () => {
     );
     expect(wrapper.find(Bar).length).toBe(categoricalBinnedData.length);
   });
+
+  test('it should call onMouseMove({ datum, data, event, color }) and onMouseLeave() on trigger', () => {
+    const onMouseMove = jest.fn();
+    const onMouseLeave = jest.fn();
+
+    const wrapper = mount(
+      <Histogram {...histogramProps} onMouseMove={onMouseMove} onMouseLeave={onMouseLeave}>
+        <BarSeries animated binnedData={numericBinnedData} fill="cabbage-purple" />
+      </Histogram>,
+    );
+
+    const bar = wrapper.find(Bar).first();
+    bar.simulate('mousemove');
+
+    expect(onMouseMove).toHaveBeenCalledTimes(1);
+    const args = onMouseMove.mock.calls[0][0];
+    expect(args.data).toBe(numericBinnedData);
+    expect(args.datum).toBe(numericBinnedData[0]);
+    expect(args.event).toBeDefined();
+    expect(args.color).toBe('cabbage-purple');
+
+    bar.simulate('mouseleave');
+    expect(onMouseLeave).toHaveBeenCalledTimes(1);
+  });
 });

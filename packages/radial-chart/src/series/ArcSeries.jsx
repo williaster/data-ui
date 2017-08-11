@@ -93,7 +93,7 @@ export default function ArcSeries({
         padRadius={padRadius}
         onMouseMove={datum => (event) => {
           const fraction = Math.abs(datum.startAngle - datum.endAngle) / (2 * Math.PI);
-          onMouseMove({ event, datum: datum.data, fraction });
+          onMouseMove({ event, data, datum: datum.data, fraction });
         }}
         onMouseLeave={() => () => { onMouseLeave(); }}
         {...restProps}
@@ -115,7 +115,6 @@ export default function ArcSeries({
             if (arc.endAngle - arc.startAngle < 0.1 || !labelElement) return null;
             return React.cloneElement(labelComponent, { x, y, arc }, labelElement);
           }}
-          style={{ pointerEvents: 'none' }}
         />}
     </g>
   );

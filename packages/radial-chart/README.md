@@ -55,7 +55,7 @@ export default () => (
 ```
 
 ### Tooltips
-The easiest way to use tooltips out of the box is by passing a `renderTooltip` function to `<RadialChart />`. This function takes an object with the shape `{ event, datum }` as input and should return the inner contents of the tooltip (not the tooltip container!) as shown above. Under the covers this will wrap the `<RadialChart />` component in the exported `<WithTooltip />` HOC, which wraps the `svg` in a `<div />` and handles the positioning and rendering of an HTML-based tooltip with the contents returned by `renderTooltip()`. This tooltip is aware of the bounds of its container and should position itself "smartly".
+The easiest way to use tooltips out of the box is by passing a `renderTooltip` function to `<RadialChart />`. This function takes an object with the shape `{ event, datum, data, fraction }` as input and should return the inner contents of the tooltip (not the tooltip container!) as shown above. Under the covers this will wrap the `<RadialChart />` component in the exported `<WithTooltip />` HOC, which wraps the `svg` in a `<div />` and handles the positioning and rendering of an HTML-based tooltip with the contents returned by `renderTooltip()`. This tooltip is aware of the bounds of its container and should position itself "smartly".
 
 If you'd like more customizability over tooltip rendering you can do either of the following:
 
@@ -73,7 +73,7 @@ styles | PropTypes.object | {} | Styles to add to the `<div>` container wrapper
 TooltipComponent | PropTypes.func or PropTypes.object | `@vx`'s `TooltipWithBounds` | Component (not instance) to use as the tooltip container component. It is passed `top` and `left` numbers for positioning
 tooltipTimeout | PropTypes.number | 200 | Timeout in ms for the tooltip to hide upon calling `onMouseLeave`
 
-Note that currently this is implemented with `@vx/tooltips`'s `withTooltip` HOC, which adds an _additioinal_ div wrapper.
+Note that currently this is implemented with `@vx/tooltips`'s `withTooltip` HOC, which adds an _additional_ div wrapper.
 
 ### Roadmap
 - more types of radial series

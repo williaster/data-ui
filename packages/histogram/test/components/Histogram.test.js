@@ -1,6 +1,14 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import { BarSeries, DensitySeries, Histogram, XAxis, YAxis } from '../../src/';
+import {
+  BarSeries,
+  DensitySeries,
+  Histogram,
+  histogramPropTypes,
+  WithTooltip,
+  XAxis,
+  YAxis,
+} from '../../src/';
 
 describe('<Histogram />', () => {
   const props = {
@@ -15,6 +23,10 @@ describe('<Histogram />', () => {
     expect(Histogram).toBeDefined();
   });
 
+  test('histogramPropTypes should be defined', () => {
+    expect(histogramPropTypes).toBeDefined();
+  });
+
   test('it should render an svg', () => {
     const wrapper = shallow(
       <Histogram {...props}>
@@ -22,6 +34,18 @@ describe('<Histogram />', () => {
       </Histogram>,
     );
     expect(wrapper.find('svg').length).toBe(1);
+  });
+
+  test('it should render a <WithTooltip /> if renderTooltip is passed', () => {
+    let wrapper = shallow(
+      <Histogram {...props}><BarSeries rawData={rawData} /></Histogram>,
+    );
+    expect(wrapper.find(WithTooltip).length).toBe(0);
+
+    wrapper = shallow(
+      <Histogram {...props} renderTooltip={() => {}}><BarSeries rawData={rawData} /></Histogram>,
+    );
+    expect(wrapper.find(WithTooltip).length).toBe(1);
   });
 
   test('it should render BarSeries, DensitySeries, XAxis, and YAxis children', () => {

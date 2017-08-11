@@ -44,4 +44,33 @@ describe('<ArcSeries />', () => {
     expect(labels.first().text()).toBe('10');
     expect(labels.last().text()).toBe('5');
   });
+
+  test('it should call onMouseMove({ datum, data, fraction, event }) and onMouseLeave() on trigger', () => {
+    const data = [{ value: 10 }, { value: 5 }];
+    const onMouseMove = jest.fn();
+    const onMouseLeave = jest.fn();
+
+    const wrapper = mount(
+      <ArcSeries
+        pieValue={d => d.value}
+        data={data}
+        label={null}
+        onMouseMove={onMouseMove}
+        onMouseLeave={onMouseLeave}
+      />,
+    );
+
+    const arc = wrapper.find('path').first();
+    arc.simulate('mousemove');
+
+    expect(onMouseMove).toHaveBeenCalledTimes(1);
+    const args = onMouseMove.mock.calls[0][0];
+    expect(args.data).toBe(data);
+    expect(args.datum).toBe(data[0]);
+    expect(args.fraction - (10 / 15)).toBeLessThan(0.0001);
+    expect(args.event).toBeDefined();
+
+    arc.simulate('mouseleave');
+    expect(onMouseLeave).toHaveBeenCalledTimes(1);
+  });
 });
