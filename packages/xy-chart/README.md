@@ -140,30 +140,32 @@ export const themeShape = PropTypes.shape({
 
 ### `<XAxis />` and `<YAxis />`
 
+
 Name | Type | Default | Description
 ------------ | ------------- | ------- | ----
-axisStyles | axisStylesShape | {} | config object for axis and axis label styles, see theme above.
-label | PropTypes.oneOfType([PropTypes.string, PropTypes.element]) | <text {...axisStyles.label[orientation]} /> | string or component for axis labels
-numTicks | PropTypes.number | null | *approximate* number of ticks (actual number depends on the data and d3's algorithm)
-orientation | XAxis PropTypes.oneOf(['bottom', 'top']) or YAxis PropTypes.oneOf(['left', 'right']) | bottom, left | orientation of axis
-tickStyles | tickStylesShape | {} | config object for styling ticks and tick labels, see theme above.
+axisStyles | axisStylesShape | `{}` | config object for axis and axis label styles, see theme above. 
+label | PropTypes.oneOfType( [PropTypes.string, PropTypes.element] ) | `<text {...axisStyles.label[orientation]} />` | string or component for axis labels
+numTicks | PropTypes.number | null | *approximate* number of ticks (actual number depends on the data and d3's algorithm) 
+orientation | *XAxis* PropTypes.oneOf(['bottom', 'top']) or *YAxis* PropTypes.oneOf(['left', 'right']) | bottom, left | orientation of axis
+tickStyles | tickStylesShape | `{}` | config object for styling ticks and tick labels, see theme above.
 tickLabelComponent | PropTypes.element | <text {...tickStyles.label[orientation]} /> | component to use for tick labels
 tickFormat | PropTypes.func | null | `(tick, tickIndex) => formatted tick`
-tickValues | PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.number, PropTypes.string])) | null | custom tick values
+tickValues | PropTypes.arrayOf( PropTypes.oneOfType([ PropTypes.number, PropTypes.string ]) ) | null | custom tick values
 
 
 ### Series
 Several types of series types are exported by the package, and can be used in combination. See the storybook source for more proptables for your series of interest. Here is an overview of scale support and data shapes:
 
+
 Series | supported x scale type | supported y scale types | data shape | voronoi recommended for tooltips?
------------- | ------------- | ------- | ----
-`<AreaSeries />` | time, linear | linear | `{ x, y [, fill, stroke] }` | yes
-`<BarSeries />` | time, linear, band | linear | `{ x, y [, fill, stroke] }` | no
-`<LineSeries />` | time, linear | linear | `{ x, y [, stroke] }` | yes
-`<PointSeries />` | time, linear | time, linear | `{ x, y [, fill, stroke, label] }` | yes
-`<StackedBarSeries />` | band | linear | `{ x, y }` (colors controlled with stackFills & stackKeys) | no
-`<GroupedBarSeries />` | band | linear | `{ x, y }` (colors controlled with groupFills & groupKeys) | no
-`<IntervalSeries />` | time, linear | linear | `{ x0, x1 [, fill, stroke] }` | no
+------------ | ------------- | ------- | ---- | ----
+`<AreaSeries/>` | time, linear | linear | `{ x, y [, fill, stroke] }` | yes
+`<BarSeries/>` | time, linear, band | linear | `{ x, y [, fill, stroke] }` | no
+`<LineSeries/>` | time, linear | linear | `{ x, y [, stroke] }` | yes
+`<PointSeries/>` | time, linear | time, linear | `{ x, y [, fill, stroke, label] }` | yes
+`<StackedBarSeries/>` | band | linear | `{ x, y }` (colors controlled with stackFills & stackKeys) | no
+`<GroupedBarSeries/>` | band | linear | `{ x, y }` (colors controlled with groupFills & groupKeys) | no
+`<IntervalSeries/>` | time, linear | linear | `{ x0, x1 [, fill, stroke] }` | no
 
 
 ### Tooltips
