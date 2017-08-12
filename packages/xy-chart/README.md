@@ -62,7 +62,7 @@ ariaLabel | PropTypes.string.isRequired | - | Required aria-label for accessibil
 children | PropTypes.node | - | Any node; axes, crosshair, and series children are cloned with additional props such as scales.
 width | PropTypes.number.isRequired | - | Required width of the chart (including margin). Check out `withParentSize` in the examples for responsive charts.
 height | PropTypes.number.isRequired | - | Required height of the chart (including margin). Check out `withParentSize` in the examples for responsive charts.
-margin | PropTypes.shape({ top: PropTypes.number, right: PropTypes.number, bottom: PropTypes.number, left: PropTypes.number }) | { top: 32, right: 32, bottom: 64, left: 64 } | chart margin, leave room for axes and labels! note 0 may clip LineSeries and PointSeries.
+margin | PropTypes.shape({ top: PropTypes.number, right: PropTypes.number, bottom: PropTypes.number, left: PropTypes.number }) | { top: 64, right: 64, bottom: 64, left: 64 } | chart margin, leave room for axes and labels! note 0 may clip LineSeries and PointSeries.
 renderTooltip | PropTypes.func | - | `({ data, datum, event, color }) => node`, should return the inner tooltip contents on trigger.
 onMouseMove | PropTypes.func | - | `func({ data, datum, event, color })`, passed to all child series (or voronoi). only needed if you are rolling your own tooltips (see below)
 onMouseLeave | PropTypes.func | - | `func()`, passed to all child series (or voronoi). only needed if you are rolling your own tooltips (see below)
