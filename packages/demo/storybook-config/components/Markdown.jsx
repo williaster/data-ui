@@ -40,7 +40,7 @@ export default class Markdown extends React.Component {
           code[class*="language-"],
           pre[class*="language-"] {
             color: black;
-            background: #fafafa;
+            background: #efefef;
             font-size: 13px;
             text-shadow: 0 1px white;
             font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
@@ -82,7 +82,7 @@ export default class Markdown extends React.Component {
           }
           :not(pre) > code[class*="language-"],
           pre[class*="language-"] {
-          backgr  ound: #f5f2f0;
+          background: #efefef;
           }
           /* Inline code */
           :not(pre) > code[class*="language-"] {
@@ -131,7 +131,6 @@ export default class Markdown extends React.Component {
           .language-css .token.string,
           .style .token.string {
             color: #a67f59;
-            background: hsla(0, 0%, 100%, .5);
           }
           .token.atrule,
           .token.attr-value,
