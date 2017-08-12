@@ -144,11 +144,11 @@ export const themeShape = PropTypes.shape({
 Name | Type | Default | Description
 ------------ | ------------- | ------- | ----
 axisStyles | axisStylesShape | `{}` | config object for axis and axis label styles, see theme above. 
-label | PropTypes.oneOfType( [PropTypes.string, PropTypes.element] ) | `<text {...axisStyles.label[orientation]} />` | string or component for axis labels
+label | PropTypes.oneOfType( [PropTypes.string, PropTypes.element] ) | `<text {...axisStyles.label[ orientation ]} />` | string or component for axis labels
 numTicks | PropTypes.number | null | *approximate* number of ticks (actual number depends on the data and d3's algorithm) 
-orientation | *XAxis* PropTypes.oneOf(['bottom', 'top']) or *YAxis* PropTypes.oneOf(['left', 'right']) | bottom, left | orientation of axis
+orientation | PropTypes.oneOf(['top', 'right', 'bottom', 'left']) | bottom (XAxis), right (YAxis) | orientation of axis
 tickStyles | tickStylesShape | `{}` | config object for styling ticks and tick labels, see theme above.
-tickLabelComponent | PropTypes.element | <text {...tickStyles.label[orientation]} /> | component to use for tick labels
+tickLabelComponent | PropTypes.element | `<text {...tickStyles.label[ orientation ]} />` | component to use for tick labels
 tickFormat | PropTypes.func | null | `(tick, tickIndex) => formatted tick`
 tickValues | PropTypes.arrayOf( PropTypes.oneOfType([ PropTypes.number, PropTypes.string ]) ) | null | custom tick values
 
