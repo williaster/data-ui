@@ -17,12 +17,12 @@ Demo it live at <a href="https://williaster.github.io/data-ui" target="_blank">w
 Similar to the `@data-ui/xy-chart` package, this `@data-ui/histogram` package exports a parent `<Histogram />` container component that renders an svg and coordinates scales across its children. You can pass the parent container optionally-animated `<BarSeries />` and/or `<DensitySeries />` as well as `<XAxis />` and `<YAxis />`.
 
 ```javascript
-import { Histogram, DensitySeries, BarSeries, withParentSize } from '@data-ui/histogram';
+import { Histogram, DensitySeries, BarSeries, withParentSize, XAxis, YAxis } from '@data-ui/histogram';
 
-const ResponsiveHistogram = withParentSize({ parentWidth, ...rest}) => (
+const ResponsiveHistogram = withParentSize(({ parentWidth, parentHeight, ...rest}) => (
   <Histogram
     width={parentWidth}
-    height={parentWidth * aspectRatio}
+    height={parentHeight}
     {...rest}
   />
 );
@@ -38,7 +38,7 @@ const rawData = Array(100).fill().map(Math.random);
         cumulative={false}
         normalized={true}
         binCount={25}
-        valueAccessor={datum => datum.value}
+        valueAccessor={datum => datum}
         binType="numeric"
         renderTooltip={({ event, datum, data, color }) => (
           <div>
@@ -52,20 +52,10 @@ const rawData = Array(100).fill().map(Math.random);
         <BarSeries
           animated
           rawData={rawData /* or binnedData={...} */}
-          fill={fill}
-          stroke={stroke}
-          strokeWidth={strokeWidth}
-        />
-        <BarSeries  
-          animated
-          rawData={rawData /* or binnedData={data} */}
-          fill={fill}
-          stroke={stroke}
-          strokeWidth={strokeWidth}
         />
         <XAxis />
         <YAxis />
-      </Histogram>
+      </ResponsiveHistogram>
     );
   }
 ```
