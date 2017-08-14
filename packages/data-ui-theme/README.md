@@ -4,7 +4,7 @@ This package exports theme variables that can be used by other packages. On the 
 `npm install --save @data-ui/theme`
 
 ```js
-import { font, svgFont, label, size, colors, chartTheme } from `@data-ui/theme`;
+import { font, svgFont, label, size, color, chartTheme } from `@data-ui/theme`;
 ```
 
 ## @data-ui packages
