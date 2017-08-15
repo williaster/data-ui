@@ -15,6 +15,7 @@ const propTypes = {
 
   // attributes on data points will override these
   fill: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+  fillOpacity: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
   stroke: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   strokeWidth: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
   strokeDasharray: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
@@ -31,6 +32,7 @@ const defaultProps = {
   labelComponent: <text {...chartTheme.labelStyles} />,
   size: 4,
   fill: color.default,
+  fillOpacity: 0.8,
   stroke: '#FFFFFF',
   strokeDasharray: null,
   strokeWidth: 1,
@@ -48,6 +50,7 @@ export default function PointSeries({
   label,
   labelComponent,
   fill,
+  fillOpacity,
   size,
   stroke,
   strokeWidth,
@@ -80,6 +83,7 @@ export default function PointSeries({
             cy={cy}
             r={callOrValue(size, d, i)}
             fill={circleFill}
+            fillOpacity={fillOpacity}
             stroke={d.stroke || callOrValue(stroke, d, i)}
             strokeWidth={d.strokeWidth || callOrValue(strokeWidth, d, i)}
             strokeDasharray={d.strokeDasharray || callOrValue(strokeDasharray, d, i)}
