@@ -23,6 +23,7 @@ import {
 import readme from '../../node_modules/@data-ui/xy-chart/README.md';
 
 import ResponsiveXYChart, { dateFormatter } from './ResponsiveXYChart';
+import ScatterWithHistogram from './ScatterWithHistograms';
 
 import {
   timeSeriesData,
@@ -156,6 +157,13 @@ export default {
           />
           <XAxis label="Time" numTicks={5} />
         </ResponsiveXYChart>
+      ),
+    },
+    {
+      description: 'PointSeries with Histogram',
+      components: [PointSeries],
+      example: () => (
+        <ScatterWithHistogram />
       ),
     },
     {
