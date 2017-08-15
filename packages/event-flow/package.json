@@ -1,6 +1,6 @@
 {
   "name": "@data-ui/event-flow",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "A visualization to explore sequences of events",
   "keywords": [
     "d3",
@@ -46,8 +46,8 @@
   },
   "dependencies": {
     "@data-ui/forms": "0.0.3",
-    "@data-ui/radial-chart": "0.0.6",
-    "@data-ui/theme": "0.0.7",
+    "@data-ui/radial-chart": "0.0.7",
+    "@data-ui/theme": "0.0.8",
     "@vx/axis": "0.0.120",
     "@vx/bounds": "0.0.129",
     "@vx/clip-path": "0.0.126",
