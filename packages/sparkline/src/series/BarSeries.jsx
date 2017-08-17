@@ -3,10 +3,23 @@ import React from 'react';
 
 import { Group } from '@vx/group';
 import { Bar } from '@vx/shape';
+import color from '@data-ui/theme/build/color';
+import svgLabel from '@data-ui/theme/build/svgLabel';
+
+import Label from '../annotation/Label';
+import callOrValue from '../utils/callOrValue';
+import positionLabel from '../utils/positionLabel';
 
 export const propTypes = {
   fill: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   fillOpacity: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
+  LabelComponent: PropTypes.element,
+  labelPosition: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.oneOf(['auto', 'top', 'right', 'bottom', 'left']),
+  ]),
+  labelOffset: PropTypes.number,
+  renderLabel: PropTypes.func, // (d, i) => node
   stroke: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   strokeWidth: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
 
@@ -21,10 +34,14 @@ export const propTypes = {
 
 export const defaultProps = {
   data: [],
-  fill: '#008489',
+  fill: color.default,
   fillOpacity: 0.7,
   getX: null,
   getY: null,
+  labelOffset: 8,
+  LabelComponent: <Label {...svgLabel.baseTickLabel} stroke="#fff" />,
+  labelPosition: 'top',
+  renderLabel: null,
   stroke: '#fff',
   strokeWidth: 1,
   xScale: null,
@@ -37,6 +54,10 @@ function BarSeries({
   getY,
   fill,
   fillOpacity,
+  labelOffset,
+  LabelComponent,
+  labelPosition,
+  renderLabel,
   stroke,
   strokeWidth,
   xScale,
@@ -45,25 +66,39 @@ function BarSeries({
   if (!xScale || !yScale || !getX || !getY || !data.length) return null;
   const barWidth = Math.max(1, (Math.max(...xScale.range()) / data.length) - 1);
   const maxBarHeight = Math.max(...yScale.range());
+  const labels = []; // render labels as top-most layer
+
   return (
     <Group>
-      {data.map((d) => {
+      {data.map((d, i) => {
         const x = xScale(getX(d));
         const y = yScale(getY(d));
+        const key = `bar-${x}-${y}-${i}`;
+        const label = renderLabel && renderLabel(getY(d), i);
+        if (label) {
+          labels.push({
+            key,
+            label,
+            x,
+            y,
+            ...positionLabel(callOrValue(labelPosition, d, i), labelOffset),
+          });
+        }
         return (
           <Bar
-            key={`bar-${x}-${y}`}
+            key={key}
             x={x - (barWidth / 2)}
             y={y}
             width={barWidth}
             height={maxBarHeight - y}
-            fill={d.fill || fill}
+            fill={callOrValue(d.fill || fill, d, i)}
             fillOpacity={typeof d.fillOpacity !== 'undefined' ? d.fillOpacity : fillOpacity}
             stroke={d.stroke || stroke}
             strokeWidth={d.strokeWidth || strokeWidth}
           />
         );
       })}
+      {labels.map(labelProps => React.cloneElement(LabelComponent, labelProps))}
     </Group>
   );
 }

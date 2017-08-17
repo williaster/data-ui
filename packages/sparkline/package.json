@@ -46,6 +46,7 @@
     "react": "^15.0.0 || 15.x"
   },
   "dependencies": {
+    "@data-ui/theme": "0.0.8",
     "@vx/axis": "0.0.134",
     "@vx/curve": "0.0.127",
     "@vx/glyph": "0.0.127",
@@ -58,7 +59,6 @@
     "@vx/shape": "0.0.131",
     "d3-array": "^1.2.0",
     "prop-types": "^15.5.10",
-    "resonance": "^0.9.5"
   },
   "jest": {
     "setupTestFrameworkScriptFile": "./test/setup.js"

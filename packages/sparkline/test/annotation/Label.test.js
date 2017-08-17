@@ -1,9 +1,9 @@
 // import React from 'react';
 // import { shallow } from 'enzyme';
-import { BandLine } from '../../src/';
+import { Label } from '../../src/';
 
-describe('<BandLine />', () => {
+describe('<Label />', () => {
   test('it should be defined', () => {
-    expect(BandLine).toBeDefined();
+    expect(Label).toBeDefined();
   });
 });

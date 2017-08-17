@@ -3,9 +3,10 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import { extent } from 'd3-array';
-import { Group } from '@vx/group';
-import { scaleLinear } from '@vx/scale';
+import Group from '@vx/group/build/Group';
+import scaleLinear from '@vx/scale/build/scales/linear';
 
+import { componentName, isLine, isSeries } from '../utils/componentIsX';
 import isDefined from '../utils/defined';
 
 const propTypes = {
@@ -21,6 +22,7 @@ const propTypes = {
   }),
   max: PropTypes.number,
   min: PropTypes.number,
+  svgStyles: PropTypes.object,
   width: PropTypes.number.isRequired,
   valueAccessor: PropTypes.func,
 };
@@ -35,11 +37,17 @@ const defaultProps = {
   },
   max: null,
   min: null,
+  svgStyles: null,
   valueAccessor: d => d,
 };
 
 const getX = d => d.x;
 const getY = d => d.y;
+
+const parsedDatumThunk = valueAccessor => (d, i) => {
+  const y = valueAccessor(d);
+  return { x: i, y, id: y, ...d };
+};
 
 class Sparkline extends React.PureComponent {
   constructor(props) {
@@ -63,7 +71,7 @@ class Sparkline extends React.PureComponent {
 
   getScales(props, { innerHeight, innerWidth }) {
     const { data: rawData, min, max, valueAccessor } = props || this.props;
-    const data = rawData.map((d, i) => ({ x: i, y: valueAccessor(d) }));
+    const data = rawData.map(parsedDatumThunk(valueAccessor));
     const yExtent = extent(data, getY);
     const xScale = scaleLinear({
       domain: [0, data.length - 1],
@@ -90,28 +98,32 @@ class Sparkline extends React.PureComponent {
   }
 
   render() {
-    const { ariaLabel, children, height, width } = this.props;
+    const { ariaLabel, children, height, svgStyles, width } = this.props;
     const { data, margin, xScale, yScale } = this.state;
-    const childProps = {
-      xScale,
-      yScale,
-      data,
-      getX,
-      getY,
-    };
-
     return (
       <svg
         aria-label={ariaLabel}
         role="img"
         width={width}
         height={height}
+        style={svgStyles}
       >
         <Group left={margin.left} top={margin.top}>
-          {React.Children.map(children, Child => (
-            // @TODO check for series or band type before cloning
-            React.cloneElement(Child, childProps)
-          ))}
+          {React.Children.map(children, (Child) => {
+            const name = componentName(Child);
+            if (isSeries(name) || isLine(name)) {
+              return (
+                React.cloneElement(Child, {
+                  xScale,
+                  yScale,
+                  data,
+                  getX,
+                  getY,
+                })
+              );
+            }
+            return Child;
+          })}
         </Group>
       </svg>
     );

@@ -1,6 +1,6 @@
 # @data-ui/sparkline
 
-A React + d3 library for creating histograms, implemented with vx and resonance.
+A React + d3 library for creating sparklines, implemented with vx and resonance.
 
 `npm install --save @data-ui/sparkline`
 
@@ -11,3 +11,5 @@ A React + d3 library for creating histograms, implemented with vx and resonance.
 Demo it live at <a href="https://williaster.github.io/data-ui" target="_blank">williaster.github.io/data-ui</a>.
 
 ## Example usage
+
+@TODO
