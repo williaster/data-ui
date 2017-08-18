@@ -8,6 +8,7 @@
     "copy-styles": "cp ./node_modules/react-virtualized/styles.css ./build/styles.css",
     "dev": "webpack --progress --colors --watch",
     "dev:nowatch": "webpack -d --progress --colors",
+    "prepublish": "npm run build",
     "test": "jest --colors --verbose --coverage"
   },
   "repository": "https://github.com/williaster/data-ui",

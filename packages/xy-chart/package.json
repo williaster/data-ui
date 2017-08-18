@@ -6,6 +6,7 @@
   "scripts": {
     "build": "webpack -p --optimize-minimize",
     "dev": "webpack --progress --colors --watch",
+    "prepublish": "npm run build",
     "test": "jest --colors --verbose --coverage"
   },
   "repository": "https://github.com/williaster/data-ui",
@@ -32,7 +33,7 @@
     "@vx/responsive": "0.0.120",
     "@vx/scale": "0.0.117",
     "@vx/shape": "0.0.131",
-    "@vx/tooltip": "0.0.134",
+    "@vx/tooltip": "0.0.137",
     "@vx/voronoi": "0.0.127",
     "d3-array": "^1.2.0",
     "prop-types": "^15.5.10"
