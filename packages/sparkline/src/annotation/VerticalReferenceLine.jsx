@@ -74,23 +74,22 @@ function VerticalReferenceLine({
   const [y1, y0] = yScale.range();
   const [yMin, yMax] = yScale.domain();
 
-  // use an index if passed, else find the index based on the ref type
-  const index = typeof reference === 'number'
-    ? reference
-    : data.findIndex((d, i) => (
+  // use a number if passed, else find the index based on the ref type
+  let refNumber = reference;
+  if (typeof reference !== 'number') {
+    const index = data.findIndex((d, i) => (
       (reference === 'first' && i === 0)
       || (reference === 'last' && i === data.length - 1)
       || (reference === 'min' && Math.abs(getY(d) - yMin) < 0.00001)
       || (reference === 'max' && Math.abs(getY(d) - yMax) < 0.00001)
     ));
+    const datum = data[index];
+    refNumber = getX(datum);
+  }
 
-  const datum = data[index];
-  if (!datum) return null;
-
-  const refNumber = getX(datum);
   const scaledRef = xScale(refNumber);
-  const fromPoint = new Point({ x: scaledRef, y: y0 });
-  const toPoint = new Point({ x: scaledRef, y: y1 });
+  const fromPoint = new Point({ x: scaledRef, y: y1 });
+  const toPoint = new Point({ x: scaledRef, y: y0 });
   const label = renderLabel && renderLabel(refNumber);
 
   return (

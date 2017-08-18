@@ -15,48 +15,16 @@ import {
   VerticalReferenceLine,
 
   PatternLines,
-  // LinearGradient,
 
   // withScreenSize,
 } from '@data-ui/sparkline';
 
 import readme from '../../node_modules/@data-ui/sparkline/README.md';
 
-// @TODO separate file if we keep this
-class DataProvider extends React.PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = {
-      data: [Math.random(), Math.random(), Math.random()],
-      intervalId: null,
-    };
-  }
+import BarSeriesExamples from './BarSeriesExamples';
+import LineSeriesExamples from './LineSeriesExamples';
 
-  componentDidMount() {
-    const intervalId = window.setInterval(this.updateData.bind(this), 500);
-    this.setState(() => ({ intervalId }));  // eslint-disable-line
-  }
 
-  componentWillUnmount() {
-    window.clearInterval(this.state.intervalId);
-  }
-
-  updateData() {
-    const { data } = this.state;
-    let nextData = [...data];
-    if (nextData.length < 20) {
-      nextData.push(Math.random());
-    } else {
-      nextData = nextData.slice(1);
-      nextData.push(Math.random());
-    }
-    this.setState(() => ({ data: nextData }));
-  }
-
-  render() {
-    return this.props.children(this.state.data); // eslint-disable-line
-  }
-}
 
 const sparklineProps = {
   ariaLabel: 'This is a Sparkline of...',
@@ -71,7 +39,7 @@ export default {
   usage: readme,
   examples: [
     {
-      description: 'Sparkline',
+      description: 'Kitchen sink',
       components: [
         Sparkline,
         BarSeries,
@@ -253,23 +221,7 @@ export default {
         </div>
       ),
     },
-    {
-      description: 'Updating',
-      components: [Sparkline, LineSeries],
-      example: () => (
-        <DataProvider>
-          {data => (
-            <Sparkline
-              ariaLabel="Random data"
-              width={300}
-              height={72}
-              data={data}
-            >
-              <LineSeries showArea />
-            </Sparkline>
-          )}
-        </DataProvider>
-      ),
-    },
+    ...BarSeriesExamples,
+    ...LineSeriesExamples,
   ],
 };
