@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import { curveCardinal, curveLinear, curveBasis } from '@vx/curve';
+import { curveCardinal, curveLinear, curveBasis, curveMonotoneX } from '@vx/curve';
 import LinePath from '@vx/shape/build/shapes/LinePath';
 import AreaClosed from '@vx/shape/build/shapes/AreaClosed';
 import { Sparkline, LineSeries } from '../../src/';
@@ -19,7 +19,7 @@ describe('<LineSeries />', () => {
   });
 
   test('it should render null if no accessors or scales are passed', () => {
-    expect(shallow(<LineSeries />)).toBeNull();
+    expect(shallow(<LineSeries />).type()).toBeNull();
   });
 
   test('it should render an AreaClosed if showArea is true', () => {
@@ -53,6 +53,7 @@ describe('<LineSeries />', () => {
       linear: curveLinear,
       basis: curveBasis,
       cardinal: curveCardinal,
+      monotoneX: curveMonotoneX,
     };
 
     Object.keys(curves).forEach((curve) => {

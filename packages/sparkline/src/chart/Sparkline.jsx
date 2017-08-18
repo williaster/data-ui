@@ -12,6 +12,7 @@ import isDefined from '../utils/defined';
 const propTypes = {
   ariaLabel: PropTypes.string.isRequired,
   children: PropTypes.node.isRequired,
+  className: PropTypes.string,
   data: PropTypes.array,
   height: PropTypes.number.isRequired,
   margin: PropTypes.shape({
@@ -22,12 +23,15 @@ const propTypes = {
   }),
   max: PropTypes.number,
   min: PropTypes.number,
-  svgStyles: PropTypes.object,
+  preserveAspectRatio: PropTypes.string,
+  styles: PropTypes.object,
   width: PropTypes.number.isRequired,
   valueAccessor: PropTypes.func,
+  viewBox: PropTypes.string,
 };
 
 const defaultProps = {
+  className: null,
   data: [],
   margin: {
     top: 16,
@@ -37,8 +41,10 @@ const defaultProps = {
   },
   max: null,
   min: null,
-  svgStyles: null,
+  preserveAspectRatio: null,
+  styles: null,
   valueAccessor: d => d,
+  viewBox: null,
 };
 
 const getX = d => d.x;
@@ -98,15 +104,27 @@ class Sparkline extends React.PureComponent {
   }
 
   render() {
-    const { ariaLabel, children, height, svgStyles, width } = this.props;
+    const {
+      ariaLabel,
+      children,
+      className,
+      height,
+      preserveAspectRatio,
+      styles,
+      width,
+      viewBox,
+    } = this.props;
     const { data, margin, xScale, yScale } = this.state;
     return (
       <svg
         aria-label={ariaLabel}
-        role="img"
-        width={width}
+        className={className}
         height={height}
-        style={svgStyles}
+        role="img"
+        preserveAspectRatio={preserveAspectRatio}
+        style={styles}
+        width={width}
+        viewBox={viewBox}
       >
         <Group left={margin.left} top={margin.top}>
           {React.Children.map(children, (Child) => {

@@ -8,5 +8,5 @@ export default (orientation, labelOffset = 8) => {
   } else if (orientation === 'left') {
     return { textAnchor: 'end', dy: 0, dx: -Math.abs(labelOffset) };
   }
-  return null;
+  return orientation;
 };

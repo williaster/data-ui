@@ -16,15 +16,19 @@ describe('<BarSeries />', () => {
     expect(BarSeries).toBeDefined();
   });
 
+  test('it should render null if no accessors or scales are passed', () => {
+    expect(shallow(<BarSeries />).type()).toBeNull();
+  });
+
   test('it should render one Bar per data point', () => {
     const wrapper = shallow(<Sparkline {...sparklineProps}><BarSeries /></Sparkline>);
     const series = wrapper.find(BarSeries).dive();
     expect(series.find(Bar).length).toBe(sparklineProps.data.length);
   });
 
-  test('it should pass (d, i) to renderLabel, fill, fillOpacity, stroke, strokeWidth func-type props', () => {
-    const func = stringOrNumber => (d, i) => {
-      expect(d).toEqual(expect.any(Object));
+  test('it should pass (yVal, i) to renderLabel, fill, fillOpacity, stroke, strokeWidth func-type props', () => {
+    const func = stringOrNumber => (yVal, i) => {
+      expect(yVal).toBe(sparklineProps.data[i]);
       expect(i).toEqual(expect.any(Number));
       return stringOrNumber === 'string' ? 'test' : 1;
     };

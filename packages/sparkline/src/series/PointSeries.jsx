@@ -95,11 +95,12 @@ function PointSeries({
           || (showMin && Math.abs(getY(d) - minY) < 0.00001)
           || (showMax && Math.abs(getY(d) - maxY) < 0.00001)
         ) {
+          const yVal = getY(d);
           const cx = xScale(getX(d));
-          const cy = yScale(getY(d));
+          const cy = yScale(yVal);
           const key = `${cx}-${cy}-${i}`;
 
-          const label = renderLabel && renderLabel(d, i);
+          const label = renderLabel && renderLabel(yVal, i);
           const prevCy = data[i - 1] ? yScale(getY(data[i - 1])) : null;
           const nextCy = data[i + 1] ? yScale(getY(data[i + 1])) : null;
 
@@ -113,18 +114,20 @@ function PointSeries({
               key={key}
               cx={cx}
               cy={cy}
-              r={callOrValue(d.size || size, d, i)}
-              fill={callOrValue(d.fill || fill, d, i)}
-              fillOpacity={callOrValue(d.fillOpacity || fillOpacity, d, i)}
-              stroke={callOrValue(d.stroke || stroke, d, i)}
-              strokeWidth={callOrValue(d.strokeWidth || strokeWidth, d, i)}
+              r={callOrValue(d.size || size, yVal, i)}
+              fill={callOrValue(d.fill || fill, yVal, i)}
+              fillOpacity={callOrValue(d.fillOpacity || fillOpacity, yVal, i)}
+              stroke={callOrValue(d.stroke || stroke, yVal, i)}
+              strokeWidth={callOrValue(d.strokeWidth || strokeWidth, yVal, i)}
             >
               {label &&
                 React.cloneElement(LabelComponent, {
                   x: cx,
                   y: cy,
                   ...positionLabel(
-                    labelPosition === 'auto' ? autoLabelPosition : callOrValue(labelPosition, d, i),
+                    labelPosition === 'auto'
+                      ? autoLabelPosition
+                      : callOrValue(labelPosition, yVal, i),
                     labelOffset,
                   ),
                   label,

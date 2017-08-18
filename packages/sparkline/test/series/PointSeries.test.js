@@ -18,7 +18,7 @@ describe('<PointSeries />', () => {
   });
 
   test('it should render null if no accessors or scales are passed', () => {
-    expect(shallow(<PointSeries />)).toBeNull();
+    expect(shallow(<PointSeries />).type()).toBeNull();
   });
 
   test('it should render one GlyphDot per point specified', () => {
@@ -49,9 +49,9 @@ describe('<PointSeries />', () => {
     expect(wrapper.find(GlyphDot).length).toBe(sparklineProps.data.length);
   });
 
-  test('it should pass (d, i) to renderLabel, fill, fillOpacity, stroke, strokeWidth, and size func-type props', () => {
-    const func = stringOrNumber => (d, i) => {
-      expect(d).toEqual(expect.any(Object));
+  test('it should pass (yVal, i) to renderLabel, fill, fillOpacity, stroke, strokeWidth, and size func-type props', () => {
+    const func = stringOrNumber => (yVal, i) => {
+      expect(yVal).toBe(sparklineProps.data[i]);
       expect(i).toEqual(expect.any(Number));
       return stringOrNumber === 'string' ? 'test' : 1;
     };

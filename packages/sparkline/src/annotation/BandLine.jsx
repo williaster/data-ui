@@ -3,6 +3,7 @@ import React from 'react';
 import { quantile } from 'd3-array';
 
 import Bar from '@vx/shape/build/shapes/Bar';
+import color from '@data-ui/theme/build/color';
 
 export const propTypes = {
   band: PropTypes.oneOfType([
@@ -34,7 +35,7 @@ export const defaultProps = {
   data: [],
   getY: null,
   band: 'innerquartiles',
-  fill: '#ccc',
+  fill: color.lightGray,
   fillOpacity: 0.5,
   stroke: 'transparent',
   strokeWidth: 0,

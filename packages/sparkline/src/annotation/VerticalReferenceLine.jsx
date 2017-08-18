@@ -70,7 +70,7 @@ function VerticalReferenceLine({
   xScale,
   yScale,
 }) {
-  if (!xScale || !yScale || !getY || !data.length) return null;
+  if (!xScale || !yScale || !getY || !getX || !data.length) return null;
   const [y1, y0] = yScale.range();
   const [yMin, yMax] = yScale.domain();
 

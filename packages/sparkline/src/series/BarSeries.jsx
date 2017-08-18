@@ -14,12 +14,12 @@ export const propTypes = {
   fill: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   fillOpacity: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
   LabelComponent: PropTypes.element,
+  labelOffset: PropTypes.number,
   labelPosition: PropTypes.oneOfType([
     PropTypes.func,
-    PropTypes.oneOf(['auto', 'top', 'right', 'bottom', 'left']),
+    PropTypes.oneOf(['top', 'right', 'bottom', 'left']),
   ]),
-  labelOffset: PropTypes.number,
-  renderLabel: PropTypes.func, // (d, i) => node
+  renderLabel: PropTypes.func, // (val, i) => node
   stroke: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   strokeWidth: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
 
@@ -27,7 +27,6 @@ export const propTypes = {
   data: PropTypes.array,
   getX: PropTypes.func,
   getY: PropTypes.func,
-  // @TODO width + height?
   xScale: PropTypes.func,
   yScale: PropTypes.func,
 };
@@ -67,21 +66,21 @@ function BarSeries({
   const barWidth = Math.max(1, (Math.max(...xScale.range()) / data.length) - 1);
   const maxBarHeight = Math.max(...yScale.range());
   const labels = []; // render labels as top-most layer
-
   return (
     <Group>
       {data.map((d, i) => {
+        const yVal = getY(d);
         const x = xScale(getX(d));
-        const y = yScale(getY(d));
+        const y = yScale(yVal);
         const key = `bar-${x}-${y}-${i}`;
-        const label = renderLabel && renderLabel(d, i);
+        const label = renderLabel && renderLabel(yVal, i);
         if (label) {
           labels.push({
             key,
             label,
             x,
             y,
-            ...positionLabel(callOrValue(labelPosition, d, i), labelOffset),
+            ...positionLabel(callOrValue(labelPosition, yVal, i), labelOffset),
           });
         }
         return (
@@ -91,12 +90,18 @@ function BarSeries({
             y={y}
             width={barWidth}
             height={maxBarHeight - y}
-            fill={callOrValue(d.fill || fill, d, i)}
+            fill={callOrValue(d.fill || fill, yVal, i)}
             fillOpacity={
-              callOrValue(typeof d.fillOpacity !== 'undefined' ? d.fillOpacity : fillOpacity, d, i)
+              callOrValue(
+                typeof d.fillOpacity !== 'undefined'
+                  ? d.fillOpacity
+                  : fillOpacity,
+                yVal,
+                i,
+              )
             }
-            stroke={callOrValue(d.stroke || stroke, d, i)}
-            strokeWidth={callOrValue(d.strokeWidth || strokeWidth, d, i)}
+            stroke={callOrValue(d.stroke || stroke, yVal, i)}
+            strokeWidth={callOrValue(d.strokeWidth || strokeWidth, yVal, i)}
           />
         );
       })}

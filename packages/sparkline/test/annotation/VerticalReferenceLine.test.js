@@ -18,7 +18,7 @@ describe('<VerticalReferenceLine />', () => {
   });
 
   test('it should render null if no accessors or scales are passed', () => {
-    expect(shallow(<VerticalReferenceLine />)).toBeNull();
+    expect(shallow(<VerticalReferenceLine />).type()).toBeNull();
   });
 
   test('it should render a Line', () => {

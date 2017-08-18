@@ -43,7 +43,6 @@ export const defaultProps = {
   LabelComponent: <Label {...svgLabel.baseTickLabel} stroke="#fff" />,
   labelOffset: 8,
   labelPosition: 'right',
-  orientation: 'horizontal',
   reference: 'mean',
   renderLabel: null,
   stroke: color.darkGray,

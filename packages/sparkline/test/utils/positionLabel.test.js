@@ -20,7 +20,7 @@ describe('positionLabel', () => {
     expect(Math.abs(positionLabel('right', 10).dx)).toEqual(10);
   });
 
-  test('it should return null for non-sensical positions', () => {
-    expect(positionLabel('nonsense')).toBeNull();
+  test('if position is not one of top, right, bottom, and left, it should return the input value', () => {
+    expect(positionLabel('nonsense')).toBe('nonsense');
   });
 });

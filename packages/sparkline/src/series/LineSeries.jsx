@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { curveCardinal, curveLinear, curveBasis } from '@vx/curve';
+import { curveCardinal, curveLinear, curveBasis, curveMonotoneX } from '@vx/curve';
 import Group from '@vx/group/build/Group';
 import LinePath from '@vx/shape/build/shapes/LinePath';
 import AreaClosed from '@vx/shape/build/shapes/AreaClosed';
@@ -12,11 +12,11 @@ import defined from '../utils/defined';
 export const propTypes = {
   fill: PropTypes.string,
   fillOpacity: PropTypes.number,
-  curve: PropTypes.oneOf(['linear', 'cardinal', 'basis']),
+  curve: PropTypes.oneOf(['linear', 'cardinal', 'basis', 'monotoneX']),
   showArea: PropTypes.bool,
   showLine: PropTypes.bool,
   stroke: PropTypes.string,
-  strokeDasharray: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+  strokeDasharray: PropTypes.string,
   strokeLinecap: PropTypes.oneOf(['butt', 'square', 'round', 'inherit']),
   strokeWidth: PropTypes.number,
 
@@ -49,6 +49,7 @@ const CURVE_LOOKUP = {
   linear: curveLinear,
   basis: curveBasis,
   cardinal: curveCardinal,
+  monotoneX: curveMonotoneX,
 };
 
 function LineSeries({

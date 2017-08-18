@@ -18,7 +18,7 @@ describe('<BandLine />', () => {
   });
 
   test('it should render null if no accessors or scales are passed', () => {
-    expect(shallow(<BandLine />)).toBeNull();
+    expect(shallow(<BandLine />).type()).toBeNull();
   });
 
   test('it should render a Bar', () => {

@@ -19,7 +19,7 @@ describe('<HorizontalReferenceLine />', () => {
   });
 
   test('it should render null if no accessors or scales are passed', () => {
-    expect(shallow(<HorizontalReferenceLine />)).toBeNull();
+    expect(shallow(<HorizontalReferenceLine />).type()).toBeNull();
   });
 
   test('it should render a Line', () => {
