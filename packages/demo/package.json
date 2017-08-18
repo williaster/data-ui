@@ -1,6 +1,6 @@
 {
   "name": "@data-ui/demo",
-  "version": "0.0.35",
+  "version": "0.0.36",
   "description": "data-ui demo",
   "scripts": {
     "gh-pages:clean": "rm -rf _gh-pages && lerna run dev:nowatch",
@@ -26,7 +26,7 @@
     "@data-ui/histogram": "0.0.5",
     "@data-ui/radial-chart": "0.0.8",
     "@data-ui/theme": "0.0.9",
-    "@data-ui/xy-chart": "0.0.19",
+    "@data-ui/xy-chart": "0.0.20",
     "@storybook/addon-options": "^3.1.6",
     "@storybook/react": "3.1.8",
     "@vx/legend": "0.0.127",
