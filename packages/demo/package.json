@@ -1,6 +1,6 @@
 {
   "name": "@data-ui/demo",
-  "version": "0.0.34",
+  "version": "0.0.35",
   "description": "data-ui demo",
   "scripts": {
     "gh-pages:clean": "rm -rf _gh-pages && lerna run dev:nowatch",
@@ -20,13 +20,13 @@
   "license": "MIT",
   "homepage": "https://github.com/williaster/data-ui#readme",
   "devDependencies": {
-    "@data-ui/data-table": "0.0.22",
-    "@data-ui/event-flow": "0.0.7",
-    "@data-ui/forms": "0.0.3",
-    "@data-ui/histogram": "0.0.4",
-    "@data-ui/radial-chart": "0.0.7",
-    "@data-ui/theme": "0.0.8",
-    "@data-ui/xy-chart": "0.0.18",
+    "@data-ui/data-table": "0.0.23",
+    "@data-ui/event-flow": "0.0.8",
+    "@data-ui/forms": "0.0.4",
+    "@data-ui/histogram": "0.0.5",
+    "@data-ui/radial-chart": "0.0.8",
+    "@data-ui/theme": "0.0.9",
+    "@data-ui/xy-chart": "0.0.19",
     "@storybook/addon-options": "^3.1.6",
     "@storybook/react": "3.1.8",
     "@vx/legend": "0.0.127",
