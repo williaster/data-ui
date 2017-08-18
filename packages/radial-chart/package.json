@@ -7,6 +7,7 @@
     "build": "webpack -p --optimize-minimize",
     "dev": "webpack -d --progress --colors --watch",
     "dev:nowatch": "webpack -d --progress --colors",
+    "prepublish": "npm run build",
     "test": "jest --colors --verbose --coverage"
   },
   "repository": "https://github.com/williaster/data-ui",

@@ -8,6 +8,7 @@
     "copy-styles": "cp ./node_modules/react-select/dist/react-select.min.css ./build/react-select.min.css",
     "dev": "webpack --progress --colors --watch",
     "dev:nowatch": "webpack --progress --colors",
+    "prepublish": "npm run build",
     "test": "jest --colors --verbose --coverage"
   },
   "repository": "https://github.com/williaster/data-ui",

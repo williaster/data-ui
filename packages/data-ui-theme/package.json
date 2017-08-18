@@ -10,6 +10,7 @@
     "build": "babel src/ -d build/",
     "dev": "babel src/ -d build/ --watch",
     "dev:nowatch": "babel src/ -d build/",
+    "prepublish": "npm run build",
     "test": "jest --colors --verbose --coverage"
   },
   "repository": "https://github.com/williaster/data-ui.git",
