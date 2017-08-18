@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { mean, median, max, min } from 'd3-array';
 
 import Group from '@vx/group/build/Group';
 import Line from '@vx/shape/build/shapes/Line';
@@ -25,10 +24,10 @@ export const propTypes = {
   labelOffset: PropTypes.number,
   labelPosition: PropTypes.oneOf(['top', 'right', 'bottom', 'left']),
   renderLabel: PropTypes.func,
-  stroke: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
-  strokeDasharray: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+  stroke: PropTypes.string,
+  strokeDasharray: PropTypes.string,
   strokeLinecap: PropTypes.oneOf(['butt', 'square', 'round', 'inherit']),
-  strokeWidth: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
+  strokeWidth: PropTypes.number,
 
   // all likely passed by the parent chart
   data: PropTypes.array,
@@ -45,8 +44,7 @@ export const defaultProps = {
   LabelComponent: <Label {...svgLabel.baseTickLabel} stroke="#fff" />,
   labelOffset: 10,
   labelPosition: 'top',
-  orientation: 'horizontal',
-  reference: 'mean',
+  reference: 'last',
   renderLabel: null,
   stroke: color.darkGray,
   strokeDasharray: null,

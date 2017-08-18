@@ -6,9 +6,9 @@ export function componentName(component) {
 }
 
 export function isSeries(name) {
-  return name.match(/series/gi);
+  return (/series/gi).test(name);
 }
 
 export function isLine(name) {
-  return name.match(/line/gi);
+  return (/line/gi).test(name);
 }

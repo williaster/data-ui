@@ -25,10 +25,10 @@ export const propTypes = {
   labelOffset: PropTypes.number,
   labelPosition: PropTypes.oneOf(['top', 'right', 'bottom', 'left']),
   renderLabel: PropTypes.func,
-  stroke: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
-  strokeDasharray: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+  stroke: PropTypes.string,
+  strokeDasharray: PropTypes.string,
   strokeLinecap: PropTypes.oneOf(['butt', 'square', 'round', 'inherit']),
-  strokeWidth: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
+  strokeWidth: PropTypes.number,
 
   // all likely passed by the parent chart
   data: PropTypes.array,

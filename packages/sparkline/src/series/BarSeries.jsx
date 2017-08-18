@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { Group } from '@vx/group';
-import { Bar } from '@vx/shape';
+import Group from '@vx/group/build/Group';
+import Bar from '@vx/shape/build/shapes/Bar';
 import color from '@data-ui/theme/build/color';
 import svgLabel from '@data-ui/theme/build/svgLabel';
 
@@ -74,7 +74,7 @@ function BarSeries({
         const x = xScale(getX(d));
         const y = yScale(getY(d));
         const key = `bar-${x}-${y}-${i}`;
-        const label = renderLabel && renderLabel(getY(d), i);
+        const label = renderLabel && renderLabel(d, i);
         if (label) {
           labels.push({
             key,
@@ -92,9 +92,11 @@ function BarSeries({
             width={barWidth}
             height={maxBarHeight - y}
             fill={callOrValue(d.fill || fill, d, i)}
-            fillOpacity={typeof d.fillOpacity !== 'undefined' ? d.fillOpacity : fillOpacity}
-            stroke={d.stroke || stroke}
-            strokeWidth={d.strokeWidth || strokeWidth}
+            fillOpacity={
+              callOrValue(typeof d.fillOpacity !== 'undefined' ? d.fillOpacity : fillOpacity, d, i)
+            }
+            stroke={callOrValue(d.stroke || stroke, d, i)}
+            strokeWidth={callOrValue(d.strokeWidth || strokeWidth, d, i)}
           />
         );
       })}

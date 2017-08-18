@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { quantile } from 'd3-array';
 
-import { Bar } from '@vx/shape';
+import Bar from '@vx/shape/build/shapes/Bar';
 
 export const propTypes = {
   band: PropTypes.oneOfType([
@@ -18,10 +18,10 @@ export const propTypes = {
     }),
     PropTypes.oneOf(['innerquartiles']),
   ]),
-  fill: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
-  fillOpacity: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
-  stroke: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
-  strokeWidth: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
+  fill: PropTypes.string,
+  fillOpacity: PropTypes.number,
+  stroke: PropTypes.string,
+  strokeWidth: PropTypes.number,
 
   // all likely passed by the parent chart
   data: PropTypes.array,

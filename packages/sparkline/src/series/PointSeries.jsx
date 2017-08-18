@@ -27,7 +27,7 @@ export const propTypes = {
     'first',
     'last',
   ])),
-  size: PropTypes.number,
+  size: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
   renderLabel: PropTypes.func, // (d, i) => node
   stroke: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   strokeWidth: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
@@ -99,7 +99,7 @@ function PointSeries({
           const cy = yScale(getY(d));
           const key = `${cx}-${cy}-${i}`;
 
-          const label = renderLabel && renderLabel(getY(d), i);
+          const label = renderLabel && renderLabel(d, i);
           const prevCy = data[i - 1] ? yScale(getY(data[i - 1])) : null;
           const nextCy = data[i + 1] ? yScale(getY(data[i + 1])) : null;
 
@@ -113,11 +113,11 @@ function PointSeries({
               key={key}
               cx={cx}
               cy={cy}
-              r={size}
-              fill={d.fill || fill}
-              fillOpacity={d.fillOpacity || fillOpacity}
-              stroke={d.stroke || stroke}
-              strokeWidth={d.strokeWidth || strokeWidth}
+              r={callOrValue(d.size || size, d, i)}
+              fill={callOrValue(d.fill || fill, d, i)}
+              fillOpacity={callOrValue(d.fillOpacity || fillOpacity, d, i)}
+              stroke={callOrValue(d.stroke || stroke, d, i)}
+              strokeWidth={callOrValue(d.strokeWidth || strokeWidth, d, i)}
             >
               {label &&
                 React.cloneElement(LabelComponent, {

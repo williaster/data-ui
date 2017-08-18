@@ -2,19 +2,23 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import { curveCardinal, curveLinear, curveBasis } from '@vx/curve';
-import { Group } from '@vx/group';
-import { LinePath, AreaClosed } from '@vx/shape';
+import Group from '@vx/group/build/Group';
+import LinePath from '@vx/shape/build/shapes/LinePath';
+import AreaClosed from '@vx/shape/build/shapes/AreaClosed';
+import color from '@data-ui/theme/build/color';
+
+import defined from '../utils/defined';
 
 export const propTypes = {
-  fill: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
-  fillOpacity: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
-  interpolation: PropTypes.oneOf(['linear', 'cardinal', 'basis']),
+  fill: PropTypes.string,
+  fillOpacity: PropTypes.number,
+  curve: PropTypes.oneOf(['linear', 'cardinal', 'basis']),
   showArea: PropTypes.bool,
   showLine: PropTypes.bool,
-  stroke: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+  stroke: PropTypes.string,
   strokeDasharray: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   strokeLinecap: PropTypes.oneOf(['butt', 'square', 'round', 'inherit']),
-  strokeWidth: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
+  strokeWidth: PropTypes.number,
 
   // all likely passed by the parent chart
   data: PropTypes.array,
@@ -26,14 +30,14 @@ export const propTypes = {
 
 export const defaultProps = {
   data: [],
-  fill: '#008489',
+  fill: color.default,
   fillOpacity: 0.3,
   getX: null,
   getY: null,
-  interpolation: 'cardinal',
+  curve: 'cardinal',
   showArea: false,
   showLine: true,
-  stroke: '#008489',
+  stroke: color.default,
   strokeWidth: 2,
   strokeDasharray: null,
   strokeLinecap: 'round',
@@ -53,7 +57,7 @@ function LineSeries({
   getY,
   fill,
   fillOpacity,
-  interpolation,
+  curve,
   showArea,
   showLine,
   stroke,
@@ -64,7 +68,7 @@ function LineSeries({
   yScale,
 }) {
   if (!xScale || !yScale || !getX || !getY || !data.length) return null;
-  const curve = CURVE_LOOKUP[interpolation];
+  const curveFunc = CURVE_LOOKUP[curve];
   return (
     <Group>
       {showArea &&
@@ -78,7 +82,8 @@ function LineSeries({
           fillOpacity={fillOpacity}
           stroke="transparent"
           strokeWidth={strokeWidth}
-          curve={curve}
+          curve={curveFunc}
+          defined={d => defined(getY(d))}
         />}
       {showLine && strokeWidth > 0 &&
         <LinePath
@@ -91,8 +96,9 @@ function LineSeries({
           strokeWidth={strokeWidth}
           strokeDasharray={strokeDasharray}
           strokeLinecap={strokeLinecap}
-          curve={curve}
+          curve={curveFunc}
           glyph={null}
+          defined={d => defined(getY(d))}
         />}
     </Group>
   );
