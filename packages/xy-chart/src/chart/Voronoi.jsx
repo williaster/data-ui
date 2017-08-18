@@ -68,5 +68,6 @@ class Voronoi extends React.PureComponent {
 
 Voronoi.propTypes = propTypes;
 Voronoi.defaultProps = defaultProps;
+Voronoi.displayName = 'Voronoi';
 
 export default Voronoi;

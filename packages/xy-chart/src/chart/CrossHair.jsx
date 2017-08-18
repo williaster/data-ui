@@ -110,5 +110,6 @@ function CrossHair({
 
 CrossHair.propTypes = propTypes;
 CrossHair.defaultProps = defaultProps;
+CrossHair.displayName = 'CrossHair';
 
 export default CrossHair;
