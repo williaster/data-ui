@@ -8,7 +8,7 @@ const spacerStyles = {
   alignItems: 'flex-start',
 };
 
-export default function Spacer({ children, top, right, bottom, left, flexDirection }) {
+export default function Spacer({ children, top, right, bottom, left, ...rest }) {
   return (
     <div
       style={{
@@ -17,7 +17,7 @@ export default function Spacer({ children, top, right, bottom, left, flexDirecti
         marginRight: right * unit,
         marginBottom: bottom * unit,
         marginLeft: left * unit,
-        flexDirection,
+        ...rest,
       }}
     >
       {children}

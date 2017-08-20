@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { extent } from 'd3-array';
 
 import GlyphDot from '@vx/glyph/build/glyphs/Dot';
 import Group from '@vx/group/build/Group';
@@ -42,7 +43,7 @@ export const propTypes = {
 
 export const defaultProps = {
   data: [],
-  fill: '#fff',
+  fill: color.default,
   fillOpacity: 1,
   LabelComponent: <Label {...svgLabel.baseTickLabel} stroke="#fff" />,
   labelOffset: 12,
@@ -51,8 +52,8 @@ export const defaultProps = {
   getY: null,
   points: ['min', 'max'],
   renderLabel: null,
-  size: 3,
-  stroke: color.default,
+  size: 4,
+  stroke: '#fff',
   strokeWidth: 2,
   xScale: null,
   yScale: null,
@@ -82,7 +83,7 @@ function PointSeries({
   const showMax = points.includes('max');
   const showFirst = points.includes('first');
   const showLast = points.includes('last');
-  const [minY, maxY] = yScale.domain();
+  const [minY, maxY] = extent(data, getY);
   const lastIndex = data.length - 1;
 
   return (

@@ -4,7 +4,7 @@ import { unit, font } from '@data-ui/theme';
 
 const spacerStyles = {
   ...font.large,
-  paddingBottom: unit,
+  paddingBottom: 0.5 * unit,
 };
 
 export default function Title({ children }) {

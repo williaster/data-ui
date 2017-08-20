@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { range } from 'd3-array';
 
@@ -5,7 +6,6 @@ import {
   Sparkline,
   BarSeries,
 
-  BandLine,
   HorizontalReferenceLine,
   VerticalReferenceLine,
 
@@ -25,6 +25,20 @@ const sparklineProps = {
   margin: { top: 24, right: 64, bottom: 24, left: 8 },
 };
 
+function Example({ title, children }) {
+  return (
+    <Spacer left={1}>
+      <Title>{title}</Title>
+      {typeof children === 'function' ? children() : children}
+    </Spacer>
+  );
+}
+
+Example.propTypes = {
+  title: PropTypes.node.isRequired,
+  children: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
+};
+
 export default [
   {
     description: 'BarSeries',
@@ -33,42 +47,39 @@ export default [
       BarSeries,
     ],
     example: () => (
-      <Spacer top={3} left={3}>
-        <Spacer left={1}>
-          <Title>Default</Title>
+      <Spacer top={2} left={2}>
+        <Example title="default">
           <Sparkline
             {...sparklineProps}
             data={range(50).map(() => (Math.random() * (Math.random() > 0.2 ? 1 : 2)))}
           >
             <BarSeries />
           </Sparkline>
-        </Spacer>
+        </Example>
 
-        <Spacer left={1}>
-          <Title>Custom fill and label with max line</Title>
+        <Example title="Custom fill with label and max line">
           <Sparkline
             {...sparklineProps}
-            data={range(25).map((_, i) => i + (Math.random() * 5))}
+            data={range(35).map((_, i) => i + (5 * Math.random()) + (i === 34 ? 5 : 0))}
           >
             <HorizontalReferenceLine
               reference="max"
               stroke={allColors.grape[8]}
               strokeWidth={1}
-              strokeDasharray="4,4"
+              strokeDasharray="3,3"
               labelPosition="right"
-              labelOffset={16}
+              labelOffset={12}
               renderLabel={() => 'max'}
             />
             <BarSeries
-              fill={(d, i) => allColors.grape[i === 24 ? 8 : 2]}
+              fill={(d, i) => allColors.grape[i === 34 ? 8 : 2]}
               fillOpacity={0.7}
-              renderLabel={(d, i) => (i === 24 ? '🚀' : null)}
+              renderLabel={(d, i) => (i === 34 ? '🚀' : null)}
             />
           </Sparkline>
-        </Spacer>
+        </Example>
 
-        <Spacer left={1}>
-          <Title>Gradient fill</Title>
+        <Example title="Gradient fill with vertical reference line">
           <Sparkline
             {...sparklineProps}
             data={range(30).map(() => (Math.random() * (Math.random() > 0.2 ? 1 : 2)))}
@@ -78,20 +89,25 @@ export default [
               to={allColors.yellow[1]}
               from={allColors.yellow[8]}
             />
+            <VerticalReferenceLine
+              reference={24}
+              stroke={allColors.yellow[8]}
+              strokeWidth={1}
+              strokeDasharray="3,3"
+              renderLabel={d => d.toFixed(1)}
+            />
             <BarSeries
               fill="url(#bar_gradient)"
               fillOpacity={(d, i) => (i === 24 ? 1 : 0.5)}
-              renderLabel={(d, i) => (i === 24 ? d.toFixed(1) : null)}
             />
           </Sparkline>
-        </Spacer>
+        </Example>
 
-        <Spacer left={1}>
-          <Title>Pattern fill with vertical reference line</Title>
+        <Example title="Pattern fill with vertical reference line">
           <Sparkline
             {...sparklineProps}
             data={range(20).map(() => (
-              5 * Math.random() * (Math.random() > 0.2 ? 1 : 2)
+              Math.random() * (Math.random() > 0.2 ? 1 : 2)
             ))}
           >
             <PatternLines
@@ -110,19 +126,20 @@ export default [
               strokeWidth={1}
               orientation={['horizontal', 'vertical']}
             />
+            <BarSeries
+              fill={(d, i) => (i > 9 ? 'url(#bar_pattern_2)' : 'url(#bar_pattern)')}
+              strokeWidth={5}
+            />
             <VerticalReferenceLine
               reference={9.5}
               stroke={color.grays[8]}
               strokeWidth={1}
               strokeDasharray="2,2"
               strokeLinecap="square"
-              renderLabel={() => 'Important point'}
-            />
-            <BarSeries
-              fill={(d, i) => (i > 9 ? 'url(#bar_pattern_2)' : 'url(#bar_pattern)')}
+              renderLabel={() => <tspan fill={allColors.pink[7]}>!!!</tspan>}
             />
           </Sparkline>
-        </Spacer>
+        </Example>
       </Spacer>
     ),
   },
