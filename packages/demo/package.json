@@ -25,6 +25,7 @@
     "@data-ui/forms": "0.0.4",
     "@data-ui/histogram": "0.0.5",
     "@data-ui/radial-chart": "0.0.8",
+    "@data-ui/sparkline": "0.0.0",
     "@data-ui/theme": "0.0.9",
     "@data-ui/xy-chart": "0.0.20",
     "@storybook/addon-options": "^3.1.6",
