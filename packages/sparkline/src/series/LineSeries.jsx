@@ -10,9 +10,9 @@ import color from '@data-ui/theme/build/color';
 import defined from '../utils/defined';
 
 export const propTypes = {
+  curve: PropTypes.oneOf(['linear', 'cardinal', 'basis', 'monotoneX']),
   fill: PropTypes.string,
   fillOpacity: PropTypes.number,
-  curve: PropTypes.oneOf(['linear', 'cardinal', 'basis', 'monotoneX']),
   showArea: PropTypes.bool,
   showLine: PropTypes.bool,
   stroke: PropTypes.string,
@@ -29,12 +29,12 @@ export const propTypes = {
 };
 
 export const defaultProps = {
+  curve: 'cardinal',
   data: [],
   fill: color.default,
   fillOpacity: 0.3,
   getX: null,
   getY: null,
-  curve: 'cardinal',
   showArea: false,
   showLine: true,
   stroke: color.default,

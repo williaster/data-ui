@@ -8,7 +8,8 @@ import {
   HorizontalReferenceLine,
   VerticalReferenceLine,
 } from '../../src';
-import { componentName, isLine, isSeries } from '../../src/utils/componentIsX';
+
+import { componentName, isBandLine, isReferenceLine, isSeries } from '../../src/utils/componentIsX';
 
 describe('componentName', () => {
   class Component extends React.Component {} // eslint-disable-line
@@ -34,18 +35,6 @@ describe('componentName', () => {
   });
 });
 
-describe('isLine', () => {
-  test('it should be defined', () => {
-    expect(isLine).toBeDefined();
-  });
-
-  test('it should return true for HorizontalReferenceLine, VerticalReferenceLine, and BandLine', () => {
-    expect(isLine(componentName(<HorizontalReferenceLine />))).toBe(true);
-    expect(isLine(componentName(<VerticalReferenceLine />))).toBe(true);
-    expect(isLine(componentName(<BandLine />))).toBe(true);
-  });
-});
-
 describe('isSeries', () => {
   test('it should be defined', () => {
     expect(isSeries).toBeDefined();
@@ -55,5 +44,36 @@ describe('isSeries', () => {
     expect(isSeries(componentName(<BarSeries />))).toBe(true);
     expect(isSeries(componentName(<LineSeries />))).toBe(true);
     expect(isSeries(componentName(<PointSeries />))).toBe(true);
+  });
+});
+
+describe('isReferenceLine', () => {
+  test('it should be defined', () => {
+    expect(isReferenceLine).toBeDefined();
+  });
+
+  test('it should return true for HorizontalReferenceLine and VerticalReferenceLine', () => {
+    expect(isReferenceLine(componentName(<HorizontalReferenceLine />))).toBe(true);
+    expect(isReferenceLine(componentName(<VerticalReferenceLine />))).toBe(true);
+  });
+
+  test('it should return negative for non-reference-line components', () => {
+    expect(isReferenceLine(componentName(<BandLine />))).toBe(false);
+    expect(isReferenceLine(componentName(<LineSeries />))).toBe(false);
+  });
+});
+
+describe('isBandLine', () => {
+  test('it should be defined', () => {
+    expect(isBandLine).toBeDefined();
+  });
+
+  test('it should return true for HorizontalReferenceLine and VerticalReferenceLine', () => {
+    expect(isBandLine(componentName(<BandLine />))).toBe(true);
+  });
+
+  test('it should return negative for non-band-line components', () => {
+    expect(isBandLine(componentName(<VerticalReferenceLine />))).toBe(false);
+    expect(isBandLine(componentName(<LineSeries />))).toBe(false);
   });
 });

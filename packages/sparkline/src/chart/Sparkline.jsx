@@ -6,7 +6,7 @@ import { extent } from 'd3-array';
 import Group from '@vx/group/build/Group';
 import scaleLinear from '@vx/scale/build/scales/linear';
 
-import { componentName, isLine, isSeries } from '../utils/componentIsX';
+import { componentName, isBandLine, isReferenceLine, isSeries } from '../utils/componentIsX';
 import isDefined from '../utils/defined';
 
 const propTypes = {
@@ -129,7 +129,7 @@ class Sparkline extends React.PureComponent {
         <Group left={margin.left} top={margin.top}>
           {React.Children.map(children, (Child) => {
             const name = componentName(Child);
-            if (isSeries(name) || isLine(name)) {
+            if (isSeries(name) || isReferenceLine(name) || isBandLine(name)) {
               return (
                 React.cloneElement(Child, {
                   xScale,

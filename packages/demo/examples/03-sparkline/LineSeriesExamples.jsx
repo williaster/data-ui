@@ -1,5 +1,4 @@
 /* eslint react/no-array-index-key: 0 */
-import PropTypes from 'prop-types';
 import React from 'react';
 import { range } from 'd3-array';
 
@@ -8,6 +7,7 @@ import {
   LineSeries,
   PointSeries,
 
+  Label,
   BandLine,
   HorizontalReferenceLine,
   VerticalReferenceLine,
@@ -18,29 +18,18 @@ import {
 
 import { color, allColors } from '@data-ui/theme';
 
+import Example from './Example';
 import Spacer from '../shared/Spacer';
-import Title from '../shared/Title';
 
 const sparklineProps = {
   ariaLabel: 'This is a Sparkline of...',
   width: 500,
   height: 100,
-  margin: { top: 24, right: 72, bottom: 24, left: 8 },
+  margin: { top: 24, right: 80, bottom: 24, left: 8 },
 };
 
-function Example({ title, children }) {
-  return (
-    <Spacer left={1}>
-      <Title>{title}</Title>
-      {typeof children === 'function' ? children() : children}
-    </Spacer>
-  );
-}
-
-Example.propTypes = {
-  title: PropTypes.node.isRequired,
-  children: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
-};
+const curvesData = [-10, 10, -10, 5, -5, 0];
+const curves = ['cardinal', 'linear', 'monotoneX', 'basis'];
 
 export default [
   {
@@ -126,42 +115,41 @@ export default [
         </Example>
 
         <Example title="All the curves">
-          {() => {
-            const data = [-10, 10, -10, 5, -5, 0];
-            const curves = [
-              { curve: 'cardinal', stroke: allColors.yellow },
-              { curve: 'linear', stroke: allColors.pink },
-              { curve: 'monotoneX', stroke: allColors.orange },
-              { curve: 'basis', stroke: allColors.red },
-            ];
-
-            return (
-              <Sparkline
-                {...sparklineProps}
-                data={data}
-              >
-                {data.map((_, i) => (
-                  <VerticalReferenceLine
-                    key={i}
-                    reference={i}
-                    stroke={color.grays[3]}
-                    strokeWidth={1}
-                    strokeLinecap="square"
-                    strokeDasharray="2,3"
-                    labelPosition="right"
-                  />
-                ))}
-                {curves.map(({ curve, stroke }, i) => (
-                  <LineSeries
-                    key={curve}
-                    curve={curve}
-                    stroke={allColors.cyan[i + 2]}
-                    strokeWidth={2}
-                  />
-                ))}
-              </Sparkline>
-            );
-          }}
+          <Sparkline
+            {...sparklineProps}
+            data={curvesData}
+          >
+            {curvesData.map((_, i) => (
+              <VerticalReferenceLine
+                key={i}
+                reference={i}
+                stroke={color.grays[3]}
+                strokeWidth={1}
+                strokeLinecap="square"
+                strokeDasharray="2,3"
+                labelPosition="right"
+              />
+            ))}
+            {curves.map((curve, i) => (
+              <LineSeries
+                key={curve}
+                curve={curve}
+                stroke={allColors.cyan[i + 2]}
+                strokeWidth={2}
+              />
+            ))}
+            {curves.map((curve, i) => (
+              <Label
+                key={curve}
+                textAnchor="start"
+                x={sparklineProps.width - sparklineProps.margin.right}
+                dy={8 + (i * 12)}
+                label={curve}
+                fill={allColors.cyan[i + 2]}
+                strokeWidth={1}
+              />
+            ))}
+          </Sparkline>
         </Example>
       </Spacer>
     ),

@@ -9,6 +9,10 @@ export function isSeries(name) {
   return (/series/gi).test(name);
 }
 
-export function isLine(name) {
-  return (/line/gi).test(name);
+export function isReferenceLine(name) {
+  return (/referenceline/gi).test(name);
+}
+
+export function isBandLine(name) {
+  return (/bandline/gi).test(name);
 }

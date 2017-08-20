@@ -1,5 +1,4 @@
 /* eslint react/no-array-index-key: 0 */
-import PropTypes from 'prop-types';
 import React from 'react';
 import { range } from 'd3-array';
 
@@ -13,12 +12,13 @@ import {
   VerticalReferenceLine,
 
   PatternLines,
+  withScreenSize,
 } from '@data-ui/sparkline';
 
 import { allColors } from '@data-ui/theme';
 
+import Example from './Example';
 import Spacer from '../shared/Spacer';
-import Title from '../shared/Title';
 
 const sparklineProps = {
   ariaLabel: 'This is a Sparkline of...',
@@ -27,19 +27,16 @@ const sparklineProps = {
   margin: { top: 24, right: 72, bottom: 24, left: 8 },
 };
 
-function Example({ title, children }) {
-  return (
-    <Spacer left={1}>
-      <Title>{title}</Title>
-      {typeof children === 'function' ? children() : children}
-    </Spacer>
-  );
-}
-
-Example.propTypes = {
-  title: PropTypes.node.isRequired,
-  children: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
-};
+const randomData = n => range(n).map(() => (Math.random() * (Math.random() > 0.2 ? 1 : 2)));
+const ResponsiveSparkline = withScreenSize(({ screenWidth, width, ...rest }) => (
+  <Sparkline
+    width={Math.min(
+      sparklineProps.width,
+      Math.max(20, screenWidth * 0.65),
+    )}
+    {...rest}
+  />
+));
 
 export default [
   {
@@ -51,22 +48,55 @@ export default [
     example: () => (
       <Spacer top={2} left={2}>
         <Example title="All points">
-          {() => {
-            const data = range(40).map(() => (Math.random() * (Math.random() > 0.2 ? 1 : 2)));
-            return (
+          <Sparkline
+            {...sparklineProps}
+            data={randomData(40)}
+          >
+            <LineSeries
+              strokeWidth={1}
+              stroke={allColors.cyan[3]}
+            />
+            <PointSeries points={['all']} />
+            <PointSeries points={['max']} fill={allColors.yellow[6]} />
+          </Sparkline>
+        </Example>
+
+        <Example title="Same scales for comparison">
+          <Spacer>
+            {[9, 3].map(multiplier => (
               <Sparkline
+                key={multiplier}
                 {...sparklineProps}
-                data={data}
+                height={50}
+                margin={{ ...sparklineProps.margin, top: 8, bottom: 4 }}
+                data={range(25).map(() => Math.random() * multiplier)}
+                min={0}
+                max={10}
               >
-                <LineSeries
-                  strokeWidth={1}
-                  stroke={allColors.cyan[3]}
+                <BandLine
+                  fill={allColors.teal[1]}
+                  band={{ from: {}, to: {} }}
                 />
-                <PointSeries points={['all']} />
-                <PointSeries points={['max']} fill={allColors.yellow[6]} />
+                <HorizontalReferenceLine
+                  reference={10}
+                  stroke={allColors.teal[7]}
+                  strokeDasharray="3,3"
+                  strokeLinecap="square"
+                  strokeWidth={1}
+                  renderLabel={d => <tspan fill={allColors.teal[7]}>{d.toFixed(1)}</tspan>}
+                />
+                <LineSeries
+                  curve="cardinal"
+                  strokeWidth={2}
+                  stroke={allColors.teal[6]}
+                />
+                <PointSeries
+                  points={['min', 'max']}
+                  fill={allColors.teal[6]}
+                />
               </Sparkline>
-            );
-          }}
+            ))}
+          </Spacer>
         </Example>
 
         <Example title="Nonsense bands">
@@ -99,66 +129,44 @@ export default [
         </Example>
 
         <Example title="Vertical lines for every point">
-          {() => {
-            const data = range(30).map(() => (Math.random() * (Math.random() > 0.2 ? 1 : 2)));
-            return (
-              <Sparkline
-                {...sparklineProps}
-                data={data}
-              >
-                {data.map((_, i) => (
-                  <VerticalReferenceLine
-                    key={i}
-                    reference={i}
-                    stroke={allColors.green[3]}
-                    strokeWidth={1}
-                    strokeLinecap="square"
-                    strokeDasharray="2,2"
-                  />
-                ))}
-                <LineSeries stroke={allColors.green[6]} />
-                <PointSeries points={['all']} fill={allColors.green[3]} />
-              </Sparkline>
-            );
-          }}
+          <Sparkline
+            {...sparklineProps}
+            data={randomData(30)}
+          >
+            {range(30).map((_, i) => (
+              <VerticalReferenceLine
+                key={i}
+                reference={i}
+                stroke={allColors.green[3]}
+                strokeWidth={1}
+                strokeLinecap="square"
+                strokeDasharray="2,2"
+              />
+            ))}
+            <LineSeries stroke={allColors.green[6]} />
+            <PointSeries points={['all']} fill={allColors.green[3]} />
+          </Sparkline>
         </Example>
 
-        <Example title="Same scales for comparison">
-          <Spacer>
-            {[9, 6, 3].map(multiplier => (
-              <Sparkline
-                key={multiplier}
-                {...sparklineProps}
-                height={50}
-                margin={{ ...sparklineProps.margin, top: 8, bottom: 4 }}
-                data={range(25).map(() => multiplier * Math.random())}
-                min={0}
-                max={10}
-              >
-                <BandLine
-                  fill={allColors.orange[1]}
-                  band={{ from: {}, to: {} }}
-                />
-                <HorizontalReferenceLine
-                  reference={10}
-                  stroke={allColors.orange[7]}
-                  strokeDasharray="3,3"
-                  strokeLinecap="square"
-                  strokeWidth={1}
-                  renderLabel={d => <tspan fill={allColors.orange[7]}>{d.toFixed(1)}</tspan>}
-                />
-                <LineSeries
-                  curve="cardinal"
-                  strokeWidth={2}
-                  stroke={allColors.orange[6]}
-                />
-                <PointSeries
-                  points={['min', 'max']}
-                  fill={allColors.orange[6]}
-                />
-              </Sparkline>
-            ))}
-          </Spacer>
+        <Example title="Responsive">
+          <ResponsiveSparkline
+            {...sparklineProps}
+            data={randomData(25)}
+          >
+            <PatternLines
+              id="area_pattern"
+              height={4}
+              width={4}
+              stroke={allColors.indigo[4]}
+              strokeWidth={1}
+              orientation={['diagonal']}
+            />
+            <LineSeries
+              showArea
+              stroke={allColors.indigo[5]}
+              fill="url(#area_pattern)"
+            />
+          </ResponsiveSparkline>
         </Example>
       </Spacer>
     ),

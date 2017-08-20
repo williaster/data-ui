@@ -1,10 +1,10 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { range } from 'd3-array';
 
 import {
   Sparkline,
   BarSeries,
+  LineSeries,
 
   HorizontalReferenceLine,
   VerticalReferenceLine,
@@ -15,8 +15,8 @@ import {
 
 import { color, allColors } from '@data-ui/theme';
 
+import Example from './Example';
 import Spacer from '../shared/Spacer';
-import Title from '../shared/Title';
 
 const sparklineProps = {
   ariaLabel: 'This is a Sparkline of...',
@@ -25,19 +25,7 @@ const sparklineProps = {
   margin: { top: 24, right: 64, bottom: 24, left: 8 },
 };
 
-function Example({ title, children }) {
-  return (
-    <Spacer left={1}>
-      <Title>{title}</Title>
-      {typeof children === 'function' ? children() : children}
-    </Spacer>
-  );
-}
-
-Example.propTypes = {
-  title: PropTypes.node.isRequired,
-  children: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
-};
+const randomData = n => range(n).map(() => (Math.random() * (Math.random() > 0.2 ? 1 : 2)));
 
 export default [
   {
@@ -48,10 +36,10 @@ export default [
     ],
     example: () => (
       <Spacer top={2} left={2}>
-        <Example title="default">
+        <Example title="Default">
           <Sparkline
             {...sparklineProps}
-            data={range(50).map(() => (Math.random() * (Math.random() > 0.2 ? 1 : 2)))}
+            data={randomData(50)}
           >
             <BarSeries />
           </Sparkline>
@@ -82,7 +70,7 @@ export default [
         <Example title="Gradient fill with vertical reference line">
           <Sparkline
             {...sparklineProps}
-            data={range(30).map(() => (Math.random() * (Math.random() > 0.2 ? 1 : 2)))}
+            data={randomData(30)}
           >
             <LinearGradient
               id="bar_gradient"
@@ -103,12 +91,20 @@ export default [
           </Sparkline>
         </Example>
 
+        <Example title="With a line">
+          <Sparkline
+            {...sparklineProps}
+            data={randomData(30)}
+          >
+            <BarSeries fillOpacity={0.9} fill={allColors.teal[3]} />
+            <LineSeries stroke={allColors.teal[8]} />
+          </Sparkline>
+        </Example>
+
         <Example title="Pattern fill with vertical reference line">
           <Sparkline
             {...sparklineProps}
-            data={range(20).map(() => (
-              Math.random() * (Math.random() > 0.2 ? 1 : 2)
-            ))}
+            data={randomData(20)}
           >
             <PatternLines
               id="bar_pattern"
@@ -140,6 +136,7 @@ export default [
             />
           </Sparkline>
         </Example>
+
       </Spacer>
     ),
   },

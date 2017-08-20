@@ -7,7 +7,6 @@ import PointsAndBandsExamples from './PointsAndBandsExamples';
 
 // @TODO
 // - functional child ruins source view
-// - fix PatternLines + LinearGradient for Sparkline Child
 // - getData(n) helper func.
 
 export default {

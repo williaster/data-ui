@@ -39,8 +39,8 @@ describe('<VerticalReferenceLine />', () => {
     ).find(VerticalReferenceLine).dive();
 
     const line = wrapper.find(Line);
-    expect(line.prop('from').y).toBe(0);
-    expect(line.prop('to').y).toBe(sparklineProps.height);
+    expect(line.prop('to').y).toBe(0);
+    expect(line.prop('from').y).toBe(sparklineProps.height);
   });
 
   test('it should render a line if reference is mean, median, min, max', () => {
