@@ -39,6 +39,8 @@ import {
 import WithToggle from '../shared/WithToggle';
 
 const { colors } = theme;
+PatternLines.displayName = 'PatternLines';
+LinearGradient.displayName = 'LinearGradient';
 
 export default {
   usage: readme,

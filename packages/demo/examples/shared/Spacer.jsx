@@ -39,5 +39,5 @@ Spacer.defaultProps = {
   right: 0,
   bottom: 1,
   left: 0,
-  flexDirection: 'column',
+  flexDirection: 'row',
 };

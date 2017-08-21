@@ -18,6 +18,9 @@ import {
 } from '@data-ui/sparkline';
 
 import Example from './Example';
+import Spacer from '../shared/Spacer';
+
+PatternLines.displayName = 'PatternLines';
 
 const sparklineProps = {
   ariaLabel: 'This is a Sparkline of...',
@@ -42,7 +45,7 @@ export default [
       BandLine,
     ],
     example: () => (
-      <div>
+      <Spacer top={2} left={2} flexDirection="column">
         <Example>
           <Sparkline
             {...sparklineProps}
@@ -214,7 +217,7 @@ export default [
             />
           </Sparkline>
         </Example>
-      </div>
+      </Spacer>
     ),
   },
 ];

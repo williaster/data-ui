@@ -242,5 +242,6 @@ class XYChart extends React.PureComponent {
 
 XYChart.propTypes = propTypes;
 XYChart.defaultProps = defaultProps;
+XYChart.displayName = 'XYChart';
 
 export default XYChart;

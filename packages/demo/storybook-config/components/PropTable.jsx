@@ -24,6 +24,7 @@ const defaultProps = {
 };
 
 function PropTable({ instance, component: HOCComponent, useHOC, styles }) {
+  debugger;
   let component = HOCComponent || instance;
   if (HOCComponent && !useHOC) {
     component = componentFromHOC(HOCComponent);
@@ -51,7 +52,7 @@ function PropTable({ instance, component: HOCComponent, useHOC, styles }) {
       <div {...css(styles.title)}>
         <code>
           <span {...css(codeStyles.brace)}>{'<'}</span>
-          <span {...css(codeStyles.component)}>{component.name}</span>
+          <span {...css(codeStyles.component)}>{component.displayName || component.name}</span>
           <span {...css(codeStyles.brace)}>{' /> '}</span>
         </code>
       </div>
