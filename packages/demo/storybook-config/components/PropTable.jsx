@@ -24,7 +24,6 @@ const defaultProps = {
 };
 
 function PropTable({ instance, component: HOCComponent, useHOC, styles }) {
-  debugger;
   let component = HOCComponent || instance;
   if (HOCComponent && !useHOC) {
     component = componentFromHOC(HOCComponent);
