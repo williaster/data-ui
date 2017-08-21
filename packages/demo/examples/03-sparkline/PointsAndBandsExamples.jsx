@@ -20,6 +20,8 @@ import { allColors } from '@data-ui/theme';
 import Example from './Example';
 import Spacer from '../shared/Spacer';
 
+PatternLines.displayName = 'PatternLines';
+
 const sparklineProps = {
   ariaLabel: 'This is a Sparkline of...',
   width: 500,
@@ -46,7 +48,7 @@ export default [
       LineSeries,
     ],
     example: () => (
-      <Spacer top={2} left={2}>
+      <Spacer top={2} left={2} flexDirection="column">
         <Example title="All points">
           <Sparkline
             {...sparklineProps}
@@ -62,7 +64,7 @@ export default [
         </Example>
 
         <Example title="Same scales for comparison">
-          <Spacer>
+          <Spacer flexDirection="column"r>
             {[9, 3].map(multiplier => (
               <Sparkline
                 key={multiplier}

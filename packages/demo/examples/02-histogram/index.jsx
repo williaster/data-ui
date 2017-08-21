@@ -20,6 +20,9 @@ import HistogramPlayground from './HistogramPlayground';
 import { normal, logNormal, mus, categorical, binnedCategorical, binnedNumeric } from './data';
 import renderTooltip from './renderHistogramTooltip';
 
+PatternLines.displayName = 'PatternLines';
+LinearGradient.displayName = 'LinearGradient';
+
 const ResponsiveHistogram = withScreenSize(({ screenWidth, children, ...rest }) => (
   <Histogram
     width={Math.min(1000, screenWidth / 1.3)}

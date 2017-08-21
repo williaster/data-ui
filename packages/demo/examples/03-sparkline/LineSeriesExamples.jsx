@@ -21,6 +21,9 @@ import { color, allColors } from '@data-ui/theme';
 import Example from './Example';
 import Spacer from '../shared/Spacer';
 
+PatternLines.displayName = 'PatternLines';
+LinearGradient.displayName = 'LinearGradient';
+
 const sparklineProps = {
   ariaLabel: 'This is a Sparkline of...',
   width: 500,
@@ -39,7 +42,7 @@ export default [
       LineSeries,
     ],
     example: () => (
-      <Spacer top={2} left={2}>
+      <Spacer top={2} left={2} flexDirection="column">
         <Example title="Default with last point">
           <Sparkline
             {...sparklineProps}

@@ -6,7 +6,7 @@ import Title from '../shared/Title';
 
 export default function Example({ title, children }) {
   return (
-    <Spacer>
+    <Spacer flexDirection="column">
       {title && <Title>{title}</Title>}
       {children}
     </Spacer>
