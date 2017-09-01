@@ -24,6 +24,7 @@
     "@data-ui/event-flow": "0.0.8",
     "@data-ui/forms": "0.0.4",
     "@data-ui/histogram": "0.0.6",
+    "@data-ui/map": "0.0.0",
     "@data-ui/radial-chart": "0.0.8",
     "@data-ui/sparkline": "0.0.1",
     "@data-ui/theme": "0.0.9",
@@ -63,6 +64,10 @@
   },
   "private": true,
   "dependencies": {
-    "d3-random": "^1.1.0"
+    "d3-random": "^1.1.0",
+    "d3-request": "^1.0.5",
+    "deck.gl": "^4.1.1",
+    "luma.gl": "^4.0.1",
+    "react-map-gl": "^3.0.4"
   }
 }
