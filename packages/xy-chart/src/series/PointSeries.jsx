@@ -72,7 +72,7 @@ export default function PointSeries({
         const cx = xScale(xVal);
         const cy = yScale(yVal);
         const circleFill = d.fill || callOrValue(fill, d, i);
-        const key = `${label}-${x(d)}`;
+        const key = `${label}-${x(d)}-${i}`;
         if (defined && d.label) {
           labels.push({ x: cx, y: cy, label: d.label, key: `${key}-label` });
         }
@@ -81,9 +81,9 @@ export default function PointSeries({
             key={key}
             cx={cx}
             cy={cy}
-            r={callOrValue(size, d, i)}
+            r={d.size || callOrValue(size, d, i)}
             fill={circleFill}
-            fillOpacity={fillOpacity}
+            fillOpacity={d.fillOpacity || callOrValue(fillOpacity, d, i)}
             stroke={d.stroke || callOrValue(stroke, d, i)}
             strokeWidth={d.strokeWidth || callOrValue(strokeWidth, d, i)}
             strokeDasharray={d.strokeDasharray || callOrValue(strokeDasharray, d, i)}

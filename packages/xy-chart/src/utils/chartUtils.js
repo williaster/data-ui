@@ -2,6 +2,8 @@ import { Children } from 'react';
 import { scaleLinear, scaleTime, scaleBand, scaleOrdinal } from '@vx/scale';
 import { extent } from 'd3-array';
 
+import computeCirclePack from './computeCirclePack';
+
 export function callOrValue(maybeFn, ...args) {
   if (typeof maybeFn === 'function') {
     return maybeFn(...args);
@@ -26,23 +28,31 @@ export function isDefined(val) {
 }
 
 export function isAxis(name) {
-  return name.match(/axis/gi);
+  return (/axis/gi).test(name);
 }
 
 export function isBarSeries(name) {
-  return name.match(/Bar/g);
+  return (/bar/gi).test(name);
+}
+
+export function isCirclePackSeries(name) {
+  return name === 'CirclePackSeries';
 }
 
 export function isCrossHair(name) {
-  return name.match(/crosshair/gi);
+  return (/crosshair/gi).test(name);
+}
+
+export function isReferenceLine(name) {
+  return (/reference/gi).test(name);
 }
 
 export function isSeries(name) {
-  return name.match(/series/gi);
+  return (/series/gi).test(name);
 }
 
 export function isStackedSeries(name) {
-  return name.match(/stacked/gi);
+  return (/stacked/gi).test(name);
 }
 
 export const scaleTypeToScale = {
@@ -60,8 +70,11 @@ export function collectDataFromChildSeries(children) {
   Children.forEach(children, (Child, i) => {
     if (Child && Child.props && Child.props.data) {
       const name = componentName(Child);
-      const { data } = Child.props;
+      let { data } = Child.props;
       if (data && isSeries(name)) {
+        if (isCirclePackSeries(name)) {
+          data = computeCirclePack(data);
+        }
         dataByIndex[i] = data;
         allData = allData.concat(data);
         dataBySeriesType[name] = (dataBySeriesType[name] || []).concat(data);

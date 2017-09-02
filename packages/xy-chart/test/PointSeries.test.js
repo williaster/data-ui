@@ -38,16 +38,6 @@ describe('<PointSeries />', () => {
     expect(wrapper.find(PointSeries).dive().find(GlyphDot).length).toBe(mockData.length);
   });
 
-  test('it should render a GlyphDot for each datum', () => {
-    const wrapper = shallow(
-      <XYChart {...mockProps} >
-        <PointSeries label="" data={mockData.map(d => ({ ...d, x: d.date, y: d.num }))} />
-      </XYChart>,
-    );
-    expect(wrapper.find(PointSeries).length).toBe(1);
-    expect(wrapper.find(PointSeries).dive().find(GlyphDot).length).toBe(mockData.length);
-  });
-
   test('it should not render points for null data', () => {
     const wrapper = shallow(
       <XYChart {...mockProps} >

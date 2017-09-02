@@ -5,10 +5,6 @@ import BarSeriesExamples from './BarSeriesExamples';
 import LineSeriesExamples from './LineSeriesExamples';
 import PointsAndBandsExamples from './PointsAndBandsExamples';
 
-// @TODO
-// - functional child ruins source view
-// - getData(n) helper func.
-
 export default {
   usage: readme,
   examples: [

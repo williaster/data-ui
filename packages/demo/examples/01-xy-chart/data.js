@@ -49,3 +49,25 @@ export const intervalData = intervals.reduce((ret, [i0, i1]) => {
   });
   return ret;
 }, []);
+
+// circle pack
+const dateBetween = (startDate, endDate) => (
+  new Date(
+    startDate.getTime() + (Math.random() * (endDate.getTime() - startDate.getTime())),
+  )
+);
+
+const start = new Date('2017-01-05');
+const end = new Date('2017-01-06');
+const minSize = 4;
+const maxSize = 15;
+
+export const circlePackData = Array(200).fill(null).map(() => {
+  const importance = Math.random();
+  return {
+    x: dateBetween(start, end),
+    importance,
+    size: minSize + (importance * (maxSize - minSize)),
+    fillOpacity: importance,
+  };
+});

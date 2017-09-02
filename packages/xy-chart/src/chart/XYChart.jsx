@@ -13,6 +13,7 @@ import {
   isAxis,
   isCrossHair,
   isBarSeries,
+  isReferenceLine,
   isSeries,
   getChildWithName,
   getScaleForAccessor,
@@ -89,8 +90,8 @@ class XYChart extends React.PureComponent {
   collectScalesFromProps() {
     const { xScale, yScale, children } = this.props;
     const { innerWidth, innerHeight } = this.getDimmensions();
-    const { allData, dataBySeriesType } = collectDataFromChildSeries(children);
-    const result = { allData };
+    const { allData, dataByIndex, dataBySeriesType } = collectDataFromChildSeries(children);
+    const result = { allData, dataByIndex };
 
     result.xScale = getScaleForAccessor({
       allData,
@@ -156,7 +157,7 @@ class XYChart extends React.PureComponent {
 
     const { margin, innerWidth, innerHeight } = this.getDimmensions();
     const { numXTicks, numYTicks } = this.getNumTicks(innerWidth, innerHeight);
-    const { xScale, yScale, allData } = this.collectScalesFromProps(); // @TODO cache these?
+    const { xScale, yScale, allData, dataByIndex } = this.collectScalesFromProps();
     const barWidth = xScale.barWidth || (xScale.bandwidth && xScale.bandwidth()) || 0;
 
     const voronoiX = d => xScale(getX(d) || 0);
@@ -183,7 +184,7 @@ class XYChart extends React.PureComponent {
               strokeWidth={theme.gridStyles && theme.gridStyles.strokeWidth}
             />}
 
-          {React.Children.map(children, (Child) => {
+          {React.Children.map(children, (Child, childIndex) => {
             const name = componentName(Child);
             if (isAxis(name)) {
               const styleKey = name[0].toLowerCase();
@@ -199,6 +200,7 @@ class XYChart extends React.PureComponent {
               });
             } else if (isSeries(name)) {
               return React.cloneElement(Child, {
+                data: dataByIndex[childIndex],
                 xScale,
                 yScale,
                 barWidth,
@@ -208,6 +210,8 @@ class XYChart extends React.PureComponent {
             } else if (isCrossHair(name)) {
               CrossHair = Child;
               return null;
+            } else if (isReferenceLine(name)) {
+              return React.cloneElement(Child, { xScale, yScale });
             }
             return Child;
           })}
