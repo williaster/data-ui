@@ -27,7 +27,6 @@
     "@data-ui/radial-chart": "0.0.8",
     "@data-ui/sparkline": "0.0.1",
     "@data-ui/theme": "0.0.9",
-    "@data-ui/time-pack": "0.0.0",
     "@data-ui/xy-chart": "0.0.21",
     "@storybook/addon-options": "^3.1.6",
     "@storybook/react": "3.1.8",

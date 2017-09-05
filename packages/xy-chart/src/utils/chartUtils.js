@@ -70,11 +70,11 @@ export function collectDataFromChildSeries(children) {
   Children.forEach(children, (Child, i) => {
     if (Child && Child.props && Child.props.data) {
       const name = componentName(Child);
-      let { data } = Child.props;
+      const { data } = Child.props;
       if (data && isSeries(name)) {
-        if (isCirclePackSeries(name)) {
-          data = computeCirclePack(data);
-        }
+        // if (isCirclePackSeries(name)) {
+        //   data = computeCirclePack(data);
+        // }
         dataByIndex[i] = data;
         allData = allData.concat(data);
         dataBySeriesType[name] = (dataBySeriesType[name] || []).concat(data);

@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 
 import PointSeries from './PointSeries';
 
+import computeCirclePack from '../utils/computeCirclePack';
+
 const propTypes = {
   ...PointSeries.propTypes,
   data: PropTypes.arrayOf(
@@ -19,7 +21,18 @@ const defaultProps = {
 };
 
 function CirclePackSeries(props) {
-  return <PointSeries {...props} />;
+  const { xScale, data, yScale } = props;
+  const { data: modifiedData,
+          xScale: modifiedXScale,
+          yScale: modifiedYScale } = computeCirclePack(data, xScale, yScale);
+  return (
+    <PointSeries
+      {...props}
+      data={modifiedData}
+      xScale={modifiedXScale}
+      yScale={modifiedYScale}
+    />
+  );
 }
 
 CirclePackSeries.propTypes = propTypes;

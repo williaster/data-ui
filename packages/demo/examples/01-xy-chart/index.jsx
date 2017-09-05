@@ -313,6 +313,11 @@ export default {
             data={circlePackData}
             label="Time pack"
           />
+          <CrossHair
+            showHorizontalLine={false}
+            fullHeight
+            stroke={colors.categories[0]}
+          />
           <XAxis label="Time" numTicks={5} />
         </ResponsiveXYChart>
       ),
