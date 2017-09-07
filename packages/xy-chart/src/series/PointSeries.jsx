@@ -8,7 +8,7 @@ import { chartTheme, color } from '@data-ui/theme';
 import { callOrValue, isDefined } from '../utils/chartUtils';
 import { pointSeriesDataShape } from '../utils/propShapes';
 
-const propTypes = {
+export const propTypes = {
   data: pointSeriesDataShape.isRequired,
   label: PropTypes.string.isRequired,
   labelComponent: PropTypes.element,
@@ -28,7 +28,7 @@ const propTypes = {
   onMouseLeave: PropTypes.func,
 };
 
-const defaultProps = {
+export const defaultProps = {
   labelComponent: <text {...chartTheme.labelStyles} />,
   size: 4,
   fill: color.default,

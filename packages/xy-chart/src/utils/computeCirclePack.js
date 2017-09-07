@@ -12,7 +12,7 @@
   *   Wang et al. Visualization of large hierarchical data by circle packing.
   * by adding horizontal constrains for each circle.
   */
-function packCircles(data, xScale) {
+function packCircles(data, xScale, getSize = d => d.size || 4) {
   const packBounds = [];
   const packOutline = [];
   const rect = {
@@ -196,7 +196,7 @@ function packCircles(data, xScale) {
 
   const nodes = [];
   data.forEach((node) => {
-    nodes.push({ ...node, x: xScale(node.x), r: node.size });
+    nodes.push({ ...node, x: xScale(node.x), r: getSize(node) });
   });
 
   for (let i = 0; i < nodes.length; i += 1) {
@@ -250,9 +250,9 @@ function packCircles(data, xScale) {
   return nodes;
 }
 
-export default function computeCirclePack(data, xScale) {
+export default function computeCirclePack(data, xScale, getSize) {
   const sorted = data.sort((a, b) => a.x - b.x);
-  const calculatedNodes = packCircles(data, xScale);
+  const calculatedNodes = packCircles(data, xScale, getSize);
   const result = [];
   for (let i = 0; i < calculatedNodes.length; i += 1) {
     result.push({
