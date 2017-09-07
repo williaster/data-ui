@@ -66,5 +66,5 @@ export const circlePackData = Array(400).fill(null).map((_, i) => ({
   x: dateBetween(start, end),
   r: minSize + (Math.random() * (maxSize - minSize)),
   fillOpacity: Math.max(0.4, Math.random()),
-  fill: theme.colors.categories[i % 2 === 0 ? 1: 3],
+  fill: theme.colors.categories[i % 2 === 0 ? 1 : 3],
 }));
