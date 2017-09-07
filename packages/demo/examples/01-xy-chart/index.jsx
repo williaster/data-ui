@@ -308,16 +308,20 @@ export default {
           xScale={{ type: 'time' }}
           yScale={{ type: 'linear' }}
         >
-          <HorizontalReferenceLine reference={0} />
           <CirclePackSeries
             data={circlePackData}
-            label="Time pack"
+            label="Circle time pack"
+            size={d => d.r}
+          />
+          <HorizontalReferenceLine
+            reference={0}
           />
           <CrossHair
             showHorizontalLine={false}
             fullHeight
-            stroke={colors.categories[0]}
-            circleFill="transparent"
+            stroke={colors.default}
+            circleFill="white"
+            circleStroke={colors.default}
           />
           <XAxis label="Time" numTicks={5} />
         </ResponsiveXYChart>
