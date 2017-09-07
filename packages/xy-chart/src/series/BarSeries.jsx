@@ -40,46 +40,50 @@ const defaultProps = {
 const x = d => d.x;
 const y = d => d.y;
 
-export default function BarSeries({
-  barWidth,
-  data,
-  fill,
-  stroke,
-  strokeWidth,
-  label,
-  xScale,
-  yScale,
-  onMouseMove,
-  onMouseLeave,
-}) {
-  if (!xScale || !yScale || !barWidth) return null;
+export default class BarSeries extends React.PureComponent {
+  render() {
+    const {
+      barWidth,
+      data,
+      fill,
+      stroke,
+      strokeWidth,
+      label,
+      xScale,
+      yScale,
+      onMouseMove,
+      onMouseLeave,
+    } = this.props;
 
-  const maxHeight = (yScale.range() || [0])[0];
-  const offset = xScale.offset || 0;
-  return (
-    <Group key={label}>
-      {data.map((d, i) => {
-        const barHeight = maxHeight - yScale(y(d));
-        const color = d.fill || callOrValue(fill, d, i);
-        return isDefined(d.y) && (
-          <Bar
-            key={`bar-${label}-${xScale(x(d))}`}
-            x={xScale(x(d)) - offset}
-            y={maxHeight - barHeight}
-            width={barWidth}
-            height={barHeight}
-            fill={color}
-            stroke={d.stroke || callOrValue(stroke, d, i)}
-            strokeWidth={d.strokeWidth || callOrValue(strokeWidth, d, i)}
-            onMouseMove={onMouseMove && (() => (event) => {
-              onMouseMove({ event, data, datum: d, color });
-            })}
-            onMouseLeave={onMouseLeave && (() => onMouseLeave)}
-          />
-        );
-      })}
-    </Group>
-  );
+    if (!xScale || !yScale || !barWidth) return null;
+
+    const maxHeight = (yScale.range() || [0])[0];
+    const offset = xScale.offset || 0;
+    return (
+      <Group key={label}>
+        {data.map((d, i) => {
+          const barHeight = maxHeight - yScale(y(d));
+          const color = d.fill || callOrValue(fill, d, i);
+          return isDefined(d.y) && (
+            <Bar
+              key={`bar-${label}-${xScale(x(d))}`}
+              x={xScale(x(d)) - offset}
+              y={maxHeight - barHeight}
+              width={barWidth}
+              height={barHeight}
+              fill={color}
+              stroke={d.stroke || callOrValue(stroke, d, i)}
+              strokeWidth={d.strokeWidth || callOrValue(strokeWidth, d, i)}
+              onMouseMove={onMouseMove && (() => (event) => {
+                onMouseMove({ event, data, datum: d, color });
+              })}
+              onMouseLeave={onMouseLeave && (() => onMouseLeave)}
+            />
+          );
+        })}
+      </Group>
+    );
+  }
 }
 
 BarSeries.propTypes = propTypes;

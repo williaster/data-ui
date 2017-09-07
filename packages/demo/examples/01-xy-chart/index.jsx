@@ -306,7 +306,7 @@ export default {
         <ResponsiveXYChart
           ariaLabel="Required label"
           xScale={{ type: 'time' }}
-          yScale={{ type: 'linear', domain: [-3, 3] }}
+          yScale={{ type: 'linear' }}
         >
           <HorizontalReferenceLine reference={0} />
           <CirclePackSeries
@@ -317,6 +317,7 @@ export default {
             showHorizontalLine={false}
             fullHeight
             stroke={colors.categories[0]}
+            circleFill="transparent"
           />
           <XAxis label="Time" numTicks={5} />
         </ResponsiveXYChart>

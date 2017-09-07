@@ -11,6 +11,7 @@ import {
   collectDataFromChildSeries,
   componentName,
   isAxis,
+  isCirclePackSeries,
   isCrossHair,
   isBarSeries,
   isReferenceLine,
@@ -68,28 +69,9 @@ const getY = d => d.y;
 const xString = d => d.x.toString();
 
 class XYChart extends React.PureComponent {
-  getDimmensions() {
-    const { margin, width, height } = this.props;
-    const completeMargin = { ...defaultProps.margin, ...margin };
-    return {
-      margin: completeMargin,
-      innerHeight: height - completeMargin.top - completeMargin.bottom,
-      innerWidth: width - completeMargin.left - completeMargin.right,
-    };
-  }
-
-  getNumTicks(innerWidth, innerHeight) {
-    const xAxis = getChildWithName('XAxis', this.props.children);
-    const yAxis = getChildWithName('YAxis', this.props.children);
-    return {
-      numXTicks: propOrFallback(xAxis && xAxis.props, 'numTicks', numTicksForWidth(innerWidth)),
-      numYTicks: propOrFallback(yAxis && yAxis.props, 'numTicks', numTicksForHeight(innerHeight)),
-    };
-  }
-
-  collectScalesFromProps() {
-    const { xScale, yScale, children } = this.props;
-    const { innerWidth, innerHeight } = this.getDimmensions();
+  static collectScalesFromProps(props) {
+    const { xScale, yScale, children } = props;
+    const { innerWidth, innerHeight } = XYChart.getDimmensions(props);
     const { allData, dataByIndex, dataBySeriesType } = collectDataFromChildSeries(children);
     const result = { allData, dataByIndex };
 
@@ -126,9 +108,66 @@ class XYChart extends React.PureComponent {
         result.xScale.barWidth = dummyBand.bandwidth();
         result.xScale.offset = offset;
       }
+      if (isCirclePackSeries(name)) {
+        result.yScale.domain([-innerHeight / 2, innerHeight / 2]);
+      }
     });
 
     return result;
+  }
+
+  static getDimmensions(props) {
+    const { margin, width, height } = props;
+    const completeMargin = { ...defaultProps.margin, ...margin };
+    return {
+      margin: completeMargin,
+      innerHeight: height - completeMargin.top - completeMargin.bottom,
+      innerWidth: width - completeMargin.left - completeMargin.right,
+    };
+  }
+
+  static getStateFromProps(props) {
+    const { margin, innerWidth, innerHeight } = XYChart.getDimmensions(props);
+    const { allData, dataByIndex, xScale, yScale } = XYChart.collectScalesFromProps(props);
+
+    return {
+      allData,
+      dataByIndex,
+      innerHeight,
+      innerWidth,
+      margin,
+      xScale,
+      yScale,
+      voronoiX: d => xScale(getX(d)),
+      voronoiY: d => yScale(getY(d)),
+    };
+  }
+
+  constructor(props) {
+    super(props);
+    this.state = props.renderTooltip ? {} : XYChart.getStateFromProps(props);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if ([ // recompute scales if any of the following change
+      'children',
+      'height',
+      'margin',
+      'width',
+      'xScale',
+      'yScale',
+    ].some(prop => this.props[prop] !== nextProps[prop])) {
+      this.setState(XYChart.getStateFromProps(nextProps));
+    }
+  }
+
+  getNumTicks(innerWidth, innerHeight) {
+    const xAxis = getChildWithName('XAxis', this.props.children);
+    const yAxis = getChildWithName('YAxis', this.props.children);
+    return {
+      numXTicks: propOrFallback(xAxis && xAxis.props, 'numTicks', numTicksForWidth(innerWidth)),
+      numYTicks: propOrFallback(yAxis && yAxis.props, 'numTicks', numTicksForHeight(innerHeight)),
+    };
   }
 
   render() {
@@ -155,14 +194,23 @@ class XYChart extends React.PureComponent {
       useVoronoi,
     } = this.props;
 
-    const { margin, innerWidth, innerHeight } = this.getDimmensions();
+    const {
+      allData,
+      dataByIndex,
+      innerWidth,
+      innerHeight,
+      margin,
+      voronoiX,
+      voronoiY,
+      xScale,
+      yScale,
+    } = this.state;
+
     const { numXTicks, numYTicks } = this.getNumTicks(innerWidth, innerHeight);
-    const { xScale, yScale, allData, dataByIndex } = this.collectScalesFromProps();
     const barWidth = xScale.barWidth || (xScale.bandwidth && xScale.bandwidth()) || 0;
 
-    const voronoiX = d => xScale(getX(d) || 0);
-    const voronoiY = d => yScale(getY(d) || 0);
     let CrossHair; // ensure this is the top-most layer
+    console.log('xy-chart render');
 
     return innerWidth > 0 && innerHeight > 0 && (
       <svg

@@ -36,49 +36,53 @@ const defaultProps = {
 
 const x = d => d.x;
 
-export default function GroupedBarSeries({
-  data,
-  groupKeys,
-  groupFills,
-  groupPadding,
-  stroke,
-  strokeWidth,
-  xScale,
-  yScale,
-  onMouseMove,
-  onMouseLeave,
-}) {
-  if (!xScale || !yScale) return null;
-  if (!xScale.bandwidth) { // @todo figure this out/be more graceful
-    throw new Error("'GroupedBarSeries' requires a 'band' type xScale");
+export default class GroupedBarSeries extends React.PureComponent {
+  render() {
+    const {
+      data,
+      groupKeys,
+      groupFills,
+      groupPadding,
+      stroke,
+      strokeWidth,
+      xScale,
+      yScale,
+      onMouseMove,
+      onMouseLeave,
+    } = this.props;
+
+    if (!xScale || !yScale) return null;
+    if (!xScale.bandwidth) { // @todo figure this out/be more graceful
+      throw new Error("'GroupedBarSeries' requires a 'band' type xScale");
+    }
+    const maxHeight = (yScale.range() || [0])[0];
+    const x1Scale = scaleTypeToScale.band({
+      rangeRound: [0, xScale.bandwidth()],
+      domain: groupKeys,
+      padding: groupPadding,
+    });
+    const zScale = scaleTypeToScale.ordinal({ range: groupFills, domain: groupKeys });
+    return (
+      <BarGroup
+        data={data}
+        keys={groupKeys}
+        height={maxHeight}
+        x0={x}
+        x0Scale={xScale}
+        x1Scale={x1Scale}
+        yScale={yScale}
+        zScale={zScale}
+        rx={2}
+        stroke={stroke}
+        strokeWidth={strokeWidth}
+        onMouseMove={onMouseMove && (d => (event) => {
+          const { key, data: datum } = d;
+          onMouseMove({ event, data, datum, key, color: zScale(key) });
+        })}
+        onMouseLeave={onMouseLeave && (() => onMouseLeave)}
+      />
+    );
   }
-  const maxHeight = (yScale.range() || [0])[0];
-  const x1Scale = scaleTypeToScale.band({
-    rangeRound: [0, xScale.bandwidth()],
-    domain: groupKeys,
-    padding: groupPadding,
-  });
-  const zScale = scaleTypeToScale.ordinal({ range: groupFills, domain: groupKeys });
-  return (
-    <BarGroup
-      data={data}
-      keys={groupKeys}
-      height={maxHeight}
-      x0={x}
-      x0Scale={xScale}
-      x1Scale={x1Scale}
-      yScale={yScale}
-      zScale={zScale}
-      rx={2}
-      stroke={stroke}
-      strokeWidth={strokeWidth}
-      onMouseMove={onMouseMove && (d => (event) => {
-        const { key, data: datum } = d;
-        onMouseMove({ event, data, datum, key, color: zScale(key) });
-      })}
-      onMouseLeave={onMouseLeave && (() => onMouseLeave)}
-    />
-  );
 }
 
 GroupedBarSeries.propTypes = propTypes;

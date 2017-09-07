@@ -58,17 +58,13 @@ const dateBetween = (startDate, endDate) => (
 );
 
 const start = new Date('2017-01-05');
-const end = new Date('2017-01-06');
+const end = new Date('2018-02-05');
 const minSize = 2;
-const maxSize = 7;
+const maxSize = 10;
 
-export const circlePackData = Array(800).fill(null).map(() => {
-  const importance = Math.random();
-  return {
-    x: dateBetween(start, end),
-    importance,
-    size: minSize + (importance * (maxSize - minSize)),
-    fillOpacity: importance,
-    fill: theme.colors.categories[Math.floor(Math.random() * 3)],
-  };
-});
+export const circlePackData = Array(400).fill(null).map(() => ({
+  x: dateBetween(start, end),
+  size: minSize + (Math.random() * (maxSize - minSize)),
+  fillOpacity: Math.max(0.4, Math.random()),
+  fill: theme.colors.categories[Math.floor(Math.random() * 2)],
+}));
