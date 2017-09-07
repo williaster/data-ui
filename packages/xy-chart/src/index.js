@@ -4,12 +4,14 @@ export { default as XYChart, propTypes as xyChartPropTypes } from './chart/XYCha
 
 export { default as AreaSeries } from './series/AreaSeries';
 export { default as BarSeries } from './series/BarSeries';
+export { default as CirclePackSeries } from './series/CirclePackSeries';
 export { default as GroupedBarSeries } from './series/GroupedBarSeries';
 export { default as IntervalSeries } from './series/IntervalSeries';
 export { default as LineSeries } from './series/LineSeries';
 export { default as PointSeries } from './series/PointSeries';
 export { default as StackedBarSeries } from './series/StackedBarSeries';
 
+export { default as HorizontalReferenceLine } from './annotation/HorizontalReferenceLine';
 export { default as CrossHair } from './chart/CrossHair';
 export { default as WithTooltip, withTooltipPropTypes } from './enhancer/WithTooltip';
 

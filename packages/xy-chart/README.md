@@ -143,9 +143,9 @@ export const themeShape = PropTypes.shape({
 
 Name | Type | Default | Description
 ------------ | ------------- | ------- | ----
-axisStyles | axisStylesShape | `{}` | config object for axis and axis label styles, see theme above. 
+axisStyles | axisStylesShape | `{}` | config object for axis and axis label styles, see theme above.
 label | PropTypes.oneOfType( [PropTypes.string, PropTypes.element] ) | `<text {...axisStyles.label[ orientation ]} />` | string or component for axis labels
-numTicks | PropTypes.number | null | *approximate* number of ticks (actual number depends on the data and d3's algorithm) 
+numTicks | PropTypes.number | null | *approximate* number of ticks (actual number depends on the data and d3's algorithm)
 orientation | PropTypes.oneOf(['top', 'right', 'bottom', 'left']) | bottom (XAxis), right (YAxis) | orientation of axis
 tickStyles | tickStylesShape | `{}` | config object for styling ticks and tick labels, see theme above.
 tickLabelComponent | PropTypes.element | `<text {...tickStyles.label[ orientation ]} />` | component to use for tick labels
@@ -162,10 +162,21 @@ Series | supported x scale type | supported y scale types | data shape | voronoi
 `<AreaSeries/>` | time, linear | linear | `{ x, y [, fill, stroke] }` | yes
 `<BarSeries/>` | time, linear, band | linear | `{ x, y [, fill, stroke] }` | no
 `<LineSeries/>` | time, linear | linear | `{ x, y [, stroke] }` | yes
-`<PointSeries/>` | time, linear | time, linear | `{ x, y [, fill, stroke, label] }` | yes
+`<PointSeries/>` | time, linear | time, linear | `{ x, y [size, fill, stroke, label] }` | yes
 `<StackedBarSeries/>` | band | linear | `{ x, y }` (colors controlled with stackFills & stackKeys) | no
 `<GroupedBarSeries/>` | band | linear | `{ x, y }` (colors controlled with groupFills & groupKeys) | no
+`<CirclePackSeries/>` | time, linear | y is computed | `{ x [, size] }` | not compatible
 `<IntervalSeries/>` | time, linear | linear | `{ x0, x1 [, fill, stroke] }` | no
+
+#### CirclePackSeries
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/4496521/30147216-07514a16-9352-11e7-9459-5802b771c750.png" width="500" />
+</p>
+
+This series implements the Circle packing algorithm described by <a href="https://www.researchgate.net/publication/221516201_Visualization_of_large_hierarchical_data_by_circle_packing" target="_blank">Wang et al. Visualization of large hierarchical data by circle packing</a>, but attempts to preserve datum x values (although they may be modified slightly). It is useful for visualizing e.g., atomic events where x values may partially overlap, and provides an alternative to an atomic histogram without a requirement for binning x values.
+
+Note that only `x` values are needed for `CirclePackSeries`, `y` values are computed based on `x` and `size` (if specified). Similar to `PointSeries`, `size`, `fill`, and `fillOpacity` may be set on datum themseleves or passed as props to the `CirclePackSeries` component.
 
 
 ### Tooltips

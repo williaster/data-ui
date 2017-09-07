@@ -33,41 +33,44 @@ const defaultProps = {
 
 const x = d => d.x;
 
-export default function StackedBarSeries({
-  data,
-  stackKeys,
-  stackFills,
-  stroke,
-  strokeWidth,
-  xScale,
-  yScale,
-  onMouseMove,
-  onMouseLeave,
-}) {
-  if (!xScale || !yScale) return null;
-  if (!xScale.bandwidth) { // @todo figure this out/be more graceful
-    throw new Error("'StackedBarSeries' requires a 'band' type xScale");
+export default class StackedBarSeries extends React.PureComponent {
+  render() {
+    const {
+      data,
+      stackKeys,
+      stackFills,
+      stroke,
+      strokeWidth,
+      xScale,
+      yScale,
+      onMouseMove,
+      onMouseLeave,
+    } = this.props;
+    if (!xScale || !yScale) return null;
+    if (!xScale.bandwidth) { // @todo figure this out/be more graceful
+      throw new Error("'StackedBarSeries' requires a 'band' type xScale");
+    }
+    const maxHeight = (yScale.range() || [0])[0];
+    const zScale = scaleTypeToScale.ordinal({ range: stackFills, domain: stackKeys });
+    return (
+      <BarStack
+        data={data}
+        keys={stackKeys}
+        height={maxHeight}
+        x={x}
+        xScale={xScale}
+        yScale={yScale}
+        zScale={zScale}
+        stroke={stroke}
+        strokeWidth={strokeWidth}
+        onMouseMove={onMouseMove && (d => (event) => {
+          const { data: datum, key } = d;
+          onMouseMove({ event, data, datum, key, color: zScale(key) });
+        })}
+        onMouseLeave={onMouseLeave && (() => onMouseLeave)}
+      />
+    );
   }
-  const maxHeight = (yScale.range() || [0])[0];
-  const zScale = scaleTypeToScale.ordinal({ range: stackFills, domain: stackKeys });
-  return (
-    <BarStack
-      data={data}
-      keys={stackKeys}
-      height={maxHeight}
-      x={x}
-      xScale={xScale}
-      yScale={yScale}
-      zScale={zScale}
-      stroke={stroke}
-      strokeWidth={strokeWidth}
-      onMouseMove={onMouseMove && (d => (event) => {
-        const { data: datum, key } = d;
-        onMouseMove({ event, data, datum, key, color: zScale(key) });
-      })}
-      onMouseLeave={onMouseLeave && (() => onMouseLeave)}
-    />
-  );
 }
 
 StackedBarSeries.propTypes = propTypes;

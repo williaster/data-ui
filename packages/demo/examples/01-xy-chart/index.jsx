@@ -9,12 +9,14 @@ import {
 
   AreaSeries,
   BarSeries,
+  CirclePackSeries,
+  GroupedBarSeries,
   IntervalSeries,
   LineSeries,
-  GroupedBarSeries,
-  StackedBarSeries,
   PointSeries,
+  StackedBarSeries,
 
+  HorizontalReferenceLine,
   PatternLines,
   LinearGradient,
   theme,
@@ -26,6 +28,7 @@ import ResponsiveXYChart, { dateFormatter } from './ResponsiveXYChart';
 import ScatterWithHistogram from './ScatterWithHistograms';
 
 import {
+  circlePackData,
   timeSeriesData,
   categoricalData,
   groupKeys,
@@ -293,6 +296,34 @@ export default {
             fill="url(#interval_pattern)"
           />
           <XAxis numTicks={0} />
+        </ResponsiveXYChart>
+      ),
+    },
+    {
+      description: 'CirclePackSeries',
+      components: [CirclePackSeries],
+      example: () => (
+        <ResponsiveXYChart
+          ariaLabel="Required label"
+          xScale={{ type: 'time' }}
+          yScale={{ type: 'linear' }}
+        >
+          <CirclePackSeries
+            data={circlePackData}
+            label="Circle time pack"
+            size={d => d.r}
+          />
+          <HorizontalReferenceLine
+            reference={0}
+          />
+          <CrossHair
+            showHorizontalLine={false}
+            fullHeight
+            stroke={colors.default}
+            circleFill="white"
+            circleStroke={colors.default}
+          />
+          <XAxis label="Time" numTicks={5} />
         </ResponsiveXYChart>
       ),
     },

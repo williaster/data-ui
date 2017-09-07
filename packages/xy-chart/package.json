@@ -30,6 +30,7 @@
     "@vx/grid": "0.0.120",
     "@vx/group": "0.0.127",
     "@vx/pattern": "0.0.120",
+    "@vx/point": "0.0.136",
     "@vx/responsive": "0.0.120",
     "@vx/scale": "0.0.117",
     "@vx/shape": "0.0.131",

@@ -26,23 +26,31 @@ export function isDefined(val) {
 }
 
 export function isAxis(name) {
-  return name.match(/axis/gi);
+  return (/axis/gi).test(name);
 }
 
 export function isBarSeries(name) {
-  return name.match(/Bar/g);
+  return (/bar/gi).test(name);
+}
+
+export function isCirclePackSeries(name) {
+  return name === 'CirclePackSeries';
 }
 
 export function isCrossHair(name) {
-  return name.match(/crosshair/gi);
+  return (/crosshair/gi).test(name);
+}
+
+export function isReferenceLine(name) {
+  return (/reference/gi).test(name);
 }
 
 export function isSeries(name) {
-  return name.match(/series/gi);
+  return (/series/gi).test(name);
 }
 
 export function isStackedSeries(name) {
-  return name.match(/stacked/gi);
+  return (/stacked/gi).test(name);
 }
 
 export const scaleTypeToScale = {
