@@ -2,8 +2,6 @@ import { Children } from 'react';
 import { scaleLinear, scaleTime, scaleBand, scaleOrdinal } from '@vx/scale';
 import { extent } from 'd3-array';
 
-import computeCirclePack from './computeCirclePack';
-
 export function callOrValue(maybeFn, ...args) {
   if (typeof maybeFn === 'function') {
     return maybeFn(...args);
@@ -72,9 +70,6 @@ export function collectDataFromChildSeries(children) {
       const name = componentName(Child);
       const { data } = Child.props;
       if (data && isSeries(name)) {
-        // if (isCirclePackSeries(name)) {
-        //   data = computeCirclePack(data);
-        // }
         dataByIndex[i] = data;
         allData = allData.concat(data);
         dataBySeriesType[name] = (dataBySeriesType[name] || []).concat(data);

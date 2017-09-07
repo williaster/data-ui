@@ -21,15 +21,13 @@ const defaultProps = {
 };
 
 function CirclePackSeries(props) {
-  const { xScale, data, yScale } = props;
+  const { data, xScale, yScale } = props;
   const { data: modifiedData,
-          xScale: modifiedXScale,
           yScale: modifiedYScale } = computeCirclePack(data, xScale, yScale);
   return (
     <PointSeries
       {...props}
       data={modifiedData}
-      xScale={modifiedXScale}
       yScale={modifiedYScale}
     />
   );

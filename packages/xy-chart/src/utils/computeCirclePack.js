@@ -3,11 +3,15 @@
   * Assume that the position of x and the size of circles have been scaled.
   * And each circle has the following properties:
   *  x: the position of x,
-  *  y: the position of y (can be undefined but will be calculated),
   *  size: the radius,
-  *  importance: ,
   */
 
+
+/**
+  * The algorthm is an implementation of the paper
+  *   Wang et al. Visualization of large hierarchical data by circle packing.
+  * by adding horizontal constrains for each circle.
+  */
 function packCircles(data, xScale) {
   const packBounds = [];
   const packOutline = [];
@@ -36,7 +40,7 @@ function packCircles(data, xScale) {
 
   function xpackBestPlace(startn, node) {
     const goodnodes = [];
-    for (let p = startn.pack_next; p !== startn; p = p.pack_next) {
+    for (let p = startn.nextPack; p !== startn; p = p.nextPack) {
       if (!(p.px + p.r < node.x - node.r || p.px - p.r > node.x + node.r)) {
         goodnodes.push(p);
       }
@@ -50,11 +54,11 @@ function packCircles(data, xScale) {
   }
 
   function xpackInsert(a, b) {
-    const c = a.pack_next;
-    a.pack_next = b;
-    b.pack_prev = a;
-    b.pack_next = c;
-    c.pack_prev = b;
+    const c = a.nextPack;
+    a.nextPack = b;
+    b.prevPack = a;
+    b.nextPack = c;
+    c.prevPack = b;
   }
 
   function xpackPlace(a, b, c) {
@@ -85,13 +89,13 @@ function packCircles(data, xScale) {
   }
 
   function xpackSplice(a, b) {
-    a.pack_next = b;
-    b.pack_prev = a;
+    a.nextPack = b;
+    b.prevPack = a;
   }
 
   function xpackLink(node) {
-    node.pack_next = node;
-    node.pack_prev = node;
+    node.nextPack = node;
+    node.prevPack = node;
   }
 
   function packNodes(nodes, start, n) {
@@ -143,7 +147,7 @@ function packCircles(data, xScale) {
                 return i;
               }
               a = xpackBestPlace(a, nodes[i]);
-              b = a.pack_next;
+              b = a.nextPack;
             }
 
             xpackPlace(a, b, c = nodes[i]);
@@ -151,14 +155,14 @@ function packCircles(data, xScale) {
             let isect = 0;
             let s1 = 1;
             let s2 = 1;
-            for (j = b.pack_next; j !== b; j = j.pack_next, s1 += 1) {
+            for (j = b.nextPack; j !== b; j = j.nextPack, s1 += 1) {
               if (xpackIntersects(j, c)) {
                 isect = 1;
                 break;
               }
             }
             if (isect === 1) {
-              for (k = a.pack_prev; k !== j.pack_prev; k = k.pack_prev, s2 += 1) {
+              for (k = a.prevPack; k !== j.prevPack; k = k.prevPack, s2 += 1) {
                 if (xpackIntersects(k, c)) {
                   break;
                 }
@@ -192,7 +196,7 @@ function packCircles(data, xScale) {
 
   const nodes = [];
   data.forEach((node) => {
-    nodes.push(Object.assign({}, node, { x: xScale(node.x), r: node.size }));
+    nodes.push({ ...node, x: xScale(node.x), r: node.size });
   });
 
   for (let i = 0; i < nodes.length; i += 1) {
@@ -209,12 +213,12 @@ function packCircles(data, xScale) {
       yMax: -Infinity,
     });
 
-      // pack this nodes group
+    // pack this nodes group
     i = packNodes(nodes, i, n);
 
     // get the packing outline
     packOutline.push(nodes[i - 1]);
-    for (let p = nodes[i - 1].pack_next; p !== nodes[i - 1]; p = p.pack_next) {
+    for (let p = nodes[i - 1].nextPack; p !== nodes[i - 1]; p = p.nextPack) {
       packOutline.push(p);
     }
     n += 1;
@@ -231,7 +235,7 @@ function packCircles(data, xScale) {
     rect.yMax = Math.max(rect.yMax, bd.yMax);
   });
 
-        // compute the global outline
+  // compute the global outline
   packOutline.sort((a, b) => (a.px - b.px));
   packOutline.forEach((p) => {
     if (p.py < 0) {
@@ -246,26 +250,30 @@ function packCircles(data, xScale) {
   return nodes;
 }
 
+function rescale(yScale) {
+  const modifiedYScale = yScale.copy();
+  const [rangemin, rangemax] = modifiedYScale.range();
+  const height = Math.abs(rangemin - rangemax);
+  modifiedYScale.domain([-height / 2, height / 2]);
+  return modifiedYScale;
+}
+
 export default function computeCirclePack(data, xScale, yScale) {
   const sorted = data.sort((a, b) => a.x - b.x);
   const calculatedNodes = packCircles(data, xScale);
   const result = [];
   for (let i = 0; i < calculatedNodes.length; i += 1) {
-    result.push(Object.assign(
-      {},
-      sorted[i],
-      {
-        x: xScale.invert(calculatedNodes[i].px),
-        y: calculatedNodes[i].py,
-      }));
+    result.push({
+      ...sorted[i],
+      x: xScale.invert(calculatedNodes[i].px),
+      y: calculatedNodes[i].py,
+    });
   }
-  const modifiedYScale = yScale.copy();
-  const [rangemin, rangemax] = modifiedYScale.range();
-  const height = Math.abs(rangemin - rangemax);
-  modifiedYScale.domain([-height / 2, height / 2]);
+
+  const modifiedYScale = rescale(yScale);
+
   return {
     data: result,
-    xScale,
     yScale: modifiedYScale,
   };
 }
