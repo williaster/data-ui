@@ -208,9 +208,7 @@ class XYChart extends React.PureComponent {
 
     const { numXTicks, numYTicks } = this.getNumTicks(innerWidth, innerHeight);
     const barWidth = xScale.barWidth || (xScale.bandwidth && xScale.bandwidth()) || 0;
-
     let CrossHair; // ensure this is the top-most layer
-    console.log('xy-chart render');
 
     return innerWidth > 0 && innerHeight > 0 && (
       <svg
