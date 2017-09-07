@@ -36,48 +36,51 @@ const defaultProps = {
   tickValues: undefined,
 };
 
-export default function XAxis({
-  axisStyles,
-  innerHeight,
-  hideZero,
-  label,
-  numTicks,
-  orientation,
-  rangePadding,
-  scale,
-  tickFormat,
-  tickLabelComponent,
-  tickStyles,
-  tickValues,
-}) {
-  if (!scale || !innerHeight) return null;
-  const Axis = orientation === 'bottom' ? AxisBottom : AxisTop;
-  return (
-    <Axis
-      top={orientation === 'bottom' ? innerHeight : 0}
-      left={0}
-      rangePadding={rangePadding}
-      hideTicks={numTicks === 0}
-      hideZero={hideZero}
-      label={typeof label === 'string' && axisStyles.label ?
-        <text {...(axisStyles.label || {})[orientation]}>
-          {label}
-        </text>
-        : label
-      }
-      numTicks={numTicks}
-      scale={scale}
-      stroke={axisStyles.stroke}
-      strokeWidth={axisStyles.strokeWidth}
-      tickFormat={tickFormat}
-      tickLength={tickStyles.tickLength}
-      tickStroke={tickStyles.stroke}
-      tickLabelComponent={tickLabelComponent || (tickStyles.label &&
-        <text {...(tickStyles.label || {})[orientation]} />
-      )}
-      tickValues={tickValues}
-    />
-  );
+export default class XAxis extends React.PureComponent {
+  render() {
+    const {
+      axisStyles,
+      innerHeight,
+      hideZero,
+      label,
+      numTicks,
+      orientation,
+      rangePadding,
+      scale,
+      tickFormat,
+      tickLabelComponent,
+      tickStyles,
+      tickValues,
+    } = this.props;
+    if (!scale || !innerHeight) return null;
+    const Axis = orientation === 'bottom' ? AxisBottom : AxisTop;
+    return (
+      <Axis
+        top={orientation === 'bottom' ? innerHeight : 0}
+        left={0}
+        rangePadding={rangePadding}
+        hideTicks={numTicks === 0}
+        hideZero={hideZero}
+        label={typeof label === 'string' && axisStyles.label ?
+          <text {...(axisStyles.label || {})[orientation]}>
+            {label}
+          </text>
+          : label
+        }
+        numTicks={numTicks}
+        scale={scale}
+        stroke={axisStyles.stroke}
+        strokeWidth={axisStyles.strokeWidth}
+        tickFormat={tickFormat}
+        tickLength={tickStyles.tickLength}
+        tickStroke={tickStyles.stroke}
+        tickLabelComponent={tickLabelComponent || (tickStyles.label &&
+          <text {...(tickStyles.label || {})[orientation]} />
+        )}
+        tickValues={tickValues}
+      />
+    );
+  }
 }
 
 XAxis.propTypes = propTypes;

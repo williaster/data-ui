@@ -250,15 +250,7 @@ function packCircles(data, xScale) {
   return nodes;
 }
 
-function rescale(yScale) {
-  const modifiedYScale = yScale.copy();
-  const [rangemin, rangemax] = modifiedYScale.range();
-  const height = Math.abs(rangemin - rangemax);
-  modifiedYScale.domain([-height / 2, height / 2]);
-  return modifiedYScale;
-}
-
-export default function computeCirclePack(data, xScale, yScale) {
+export default function computeCirclePack(data, xScale) {
   const sorted = data.sort((a, b) => a.x - b.x);
   const calculatedNodes = packCircles(data, xScale);
   const result = [];
@@ -270,10 +262,5 @@ export default function computeCirclePack(data, xScale, yScale) {
     });
   }
 
-  const modifiedYScale = rescale(yScale);
-
-  return {
-    data: result,
-    yScale: modifiedYScale,
-  };
+  return result;
 }

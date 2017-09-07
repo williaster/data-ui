@@ -9,9 +9,9 @@ const propTypes = {
   ...PointSeries.propTypes,
   data: PropTypes.arrayOf(
     PropTypes.shape({
+      // x should be anything sortable
       x: PropTypes.oneOfType([PropTypes.number, PropTypes.object, PropTypes.instanceOf(Date)]),
       size: PropTypes.number,
-      importance: PropTypes.number,
     }),
   ).isRequired,
 };
@@ -20,17 +20,18 @@ const defaultProps = {
   ...PointSeries.defaultProps,
 };
 
-function CirclePackSeries(props) {
-  const { data, xScale, yScale } = props;
-  const { data: modifiedData,
-          yScale: modifiedYScale } = computeCirclePack(data, xScale, yScale);
-  return (
-    <PointSeries
-      {...props}
-      data={modifiedData}
-      yScale={modifiedYScale}
-    />
-  );
+// eslint-disable-next-line react/prefer-stateless-function
+class CirclePackSeries extends React.PureComponent {
+  render() {
+    const { data: rawData, xScale } = this.props;
+    const data = computeCirclePack(rawData, xScale);
+    return (
+      <PointSeries
+        {...this.props}
+        data={data}
+      />
+    );
+  }
 }
 
 CirclePackSeries.propTypes = propTypes;

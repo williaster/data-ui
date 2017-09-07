@@ -14,9 +14,9 @@ describe('<PointSeries />', () => {
   };
 
   const mockData = [
-    { x: new Date('2017-01-05 00:00:00'), importance: 0, size: 1 },
-    { x: new Date('2017-01-05 01:00:00'), importance: 1, size: 3 },
-    { x: new Date('2017-01-05 02:00:00'), importance: 5, size: 5 },
+    { x: new Date('2017-01-05 00:00:00'), size: 1 },
+    { x: new Date('2017-01-05 01:00:00'), size: 3 },
+    { x: new Date('2017-01-05 02:00:00'), size: 5 },
   ];
 
   test('it should be defined', () => {
@@ -26,12 +26,25 @@ describe('<PointSeries />', () => {
   test('it should render a PointSeries', () => {
     const wrapper = shallow(
       <XYChart {...mockProps} >
-        <CirclePackSeries label="" data={mockData.map(d => ({ ...d, x: d.date, y: d.num }))} />
+        <CirclePackSeries label="" data={mockData} />
       </XYChart>,
     );
     const circleSeries = wrapper.find(CirclePackSeries);
     expect(circleSeries.length).toBe(1);
     expect(circleSeries.dive().find(PointSeries).length).toBe(1);
+  });
+
+  test('data passed to PointSeries should include computed y values', () => {
+    const wrapper = shallow(
+      <XYChart {...mockProps} >
+        <CirclePackSeries label="" data={mockData} />
+      </XYChart>,
+    );
+    const circleSeries = wrapper.find(CirclePackSeries);
+    const pointSeries = circleSeries.dive().find(PointSeries);
+    const data = pointSeries.prop('data');
+    expect(mockData[0].y).toBeUndefined();
+    expect(data[0].y).toEqual(expect.any(Number));
   });
 
   test('it should call onMouseMove({ datum, data, event, color }) and onMouseLeave() on trigger', () => {
