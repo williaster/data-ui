@@ -57,8 +57,6 @@ class Network extends React.PureComponent {
     return false;
   }
 
-
-
   getStateFromProps(props) {
     return {
       graph: props.graph,
@@ -94,7 +92,7 @@ class Network extends React.PureComponent {
           nodeComponent={Node}
           {...this.props}
           graph={this.state.graph}
-          onNodeClick={this.onNodeClick}
+          onNodeClick={this.props.onNodeClick}
         />
       </svg>
     );
