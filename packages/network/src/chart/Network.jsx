@@ -33,7 +33,6 @@ class Network extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = this.getStateFromProps(props);
-    this.onNodeClick = this.onNodeClick.bind(this);
     layout(this.state.graph, (newGraph) => {
       this.setState({ graph: newGraph });
     });
@@ -57,6 +56,8 @@ class Network extends React.PureComponent {
     }
     return false;
   }
+
+
 
   getStateFromProps(props) {
     return {
