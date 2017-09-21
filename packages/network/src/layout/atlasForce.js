@@ -1,7 +1,11 @@
 import * as d3Force from 'd3-force';
 
-export default function layout(graph, updateFunc) {
+export default function layout({ graph, animated, callback }) {
   const newGraph = { ...graph };
+  let callbackEvent = 'end';
+  if (animated) {
+    callbackEvent = 'tick';
+  }
   d3Force
     .forceSimulation(newGraph.nodes)
     .force('charge', d3Force.forceManyBody().strength(-600))
@@ -10,9 +14,9 @@ export default function layout(graph, updateFunc) {
     .force('y', d3Force.forceY())
     .force('center', d3Force.forceCenter(450, 250))
     .alphaMin(0.1)
-    .on('tick', () => {
+    .on(callbackEvent, () => {
       const tempGraph = { ...graph };
-      tempGraph.isFinished = true;
-      updateFunc(tempGraph);
+      tempGraph.needUpdate = true;
+      callback(tempGraph);
     });
 }

@@ -1,7 +1,6 @@
 import React from 'react';
 import cx from 'classnames';
 import { Group } from '@vx/group';
-import Graph from './Graph';
 
 export default function Links({
   links,

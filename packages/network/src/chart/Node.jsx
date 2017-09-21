@@ -37,7 +37,7 @@ export default function Node(props) {
         onMouseMove({ event, data: node });
       })}
       onClick={onClick && ((event) => {
-        onClick({ event, node });
+        onClick({ event, index: node.index });
       })}
     />
   );

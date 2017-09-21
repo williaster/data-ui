@@ -14,7 +14,8 @@ class ExpandableNetwork extends React.PureComponent {
     this.onNodeClick = this.onNodeClick.bind(this);
   }
 
-  onNodeClick({ node }) {
+  onNodeClick({ index }) {
+    const node = this.state.graph.nodes[index];
     const nodes = [
       {
         x: 300,

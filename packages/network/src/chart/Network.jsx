@@ -34,35 +34,52 @@ const defaultProps = {
 class Network extends React.PureComponent {
   constructor(props) {
     super(props);
-    this.state = this.getStateFromProps(props);
-    layout(this.state.graph, (newGraph) => {
-      this.setState({ graph: newGraph });
+    this.state = {
+      graph: this.copyGraph(props.graph),
+    };
+    layout({
+      graph: props.graph,
+      animated: props.animated,
+      callback: (newGraph) => {
+        this.setStateGraph(newGraph);
+      },
     });
   }
 
-
   componentWillReceiveProps(nextProps) {
-    const { graph } = nextProps;
-    if (!graph.isFinished &&
-        this.state.graph.nodes !== graph.nodes &&
-        this.state.graph.links !== graph.links) {
-      layout(graph, (newGraph) => {
-        this.setState({ graph: newGraph });
+    const { graph, animated } = nextProps;
+    if (this.props.grpah !== graph) {
+      layout({
+        graph,
+        animated,
+        callback: (newGraph) => {
+          this.setStateGraph(newGraph);
+        },
       });
     }
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    if (nextState.graph.isFinished) {
-      return true;
-    }
-    return false;
+  setStateGraph(graph) {
+    const copiedGraph = this.copyGraph(graph);
+    this.setState({
+      graph: copiedGraph,
+    });
   }
 
-  getStateFromProps(props) {
-    return {
-      graph: props.graph,
-    };
+  copyGraph(graph) {
+    const nodes = graph.nodes.map((node, index) => ({
+      ...node,
+      index,
+    }));
+    const links = graph.links.map((link, index) => ({
+      ...link,
+      sourceX: link.source.x,
+      sourceY: link.source.y,
+      targetX: link.target.x,
+      targetY: link.target.y,
+      index,
+    }));
+    return { nodes, links };
   }
 
   render() {

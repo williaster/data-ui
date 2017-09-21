@@ -20,10 +20,10 @@ export default function Link(props) {
   const { stroke, strokeWidth, strokeOpacity } = linkStyles;
   return (
     <line
-      x1={link.source.x}
-      y1={link.source.y}
-      x2={link.target.x}
-      y2={link.target.y}
+      x1={link.sourceX}
+      y1={link.sourceY}
+      x2={link.targetX}
+      y2={link.targetY}
       stroke={stroke}
       strokeWidth={strokeWidth}
       strokeOpacity={strokeOpacity}
