@@ -26,6 +26,7 @@ export default function Node(props) {
   const { stroke, strokeWidth, fill, opacity, defaultSize } = nodeStyles;
   return (
     <circle
+      // key={node.id}
       r={node.size || defaultSize}
       fill={node.fill || fill}
       stroke={node.stroke || stroke}

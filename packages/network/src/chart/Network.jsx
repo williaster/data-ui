@@ -21,12 +21,14 @@ export const propTypes = {
   layout: PropTypes.string,
   theme: themeShape,
   renderTooltip: PropTypes.func,
+  animated: PropTypes.boolean,
 };
 
 const defaultProps = {
   layout: 'none',
   renderTooltip: null,
   theme: {},
+  animated: false,
 };
 
 class Network extends React.PureComponent {
@@ -63,41 +65,34 @@ class Network extends React.PureComponent {
     };
   }
 
-
   render() {
     const {
       ariaLabel,
       height,
       width,
     } = this.props;
-    if (this.props.renderTooltip) {
-      return (
-        <WithTooltip renderTooltip={this.props.renderTooltip}>
-          <Network
-            {...this.props}
-            renderTooltip={null}
-          />
-        </WithTooltip>
-      );
-    }
     return (
-      <svg
-        aria-label={ariaLabel}
-        role="img"
-        width={width}
-        height={height}
-      >
-        <Graph
-          linkComponent={Link}
-          nodeComponent={Node}
-          {...this.props}
-          graph={this.state.graph}
-          onNodeClick={this.props.onNodeClick}
-        />
-      </svg>
+      <WithTooltip renderTooltip={this.props.renderTooltip}>
+        {({ onMouseMove, onMouseLeave }) => (
+          <svg
+            aria-label={ariaLabel}
+            role="img"
+            width={width}
+            height={height}
+          >
+            <Graph
+              linkComponent={Link}
+              nodeComponent={Node}
+              onMouseMove={onMouseMove}
+              onMouseLeave={onMouseLeave}
+              onNodeClick={this.props.onNodeClick}
+              graph={this.state.graph}
+            />
+          </svg>
+        )}
+      </WithTooltip>
     );
   }
-
 
 }
 

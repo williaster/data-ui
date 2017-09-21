@@ -6,7 +6,6 @@ import {
   withScreenSize,
 } from '@data-ui/network';
 
-import ExpandableNetwork from './ExpandableNetwork';
 
 function renderTooltip({ data }) {
   const { x, y, id } = data;
@@ -39,19 +38,6 @@ const ResponsiveNetowork = withScreenSize(({ screenWidth, children, ...rest }) =
     {children}
   </Network>
 ));
-
-const ResponsiveExpandableNetowork = withScreenSize(({ screenWidth, children, ...rest }) => (
-  <ExpandableNetwork
-    width={Math.min(1000, screenWidth / 1.3)}
-    height={Math.min(1000 / 1.8, screenWidth / 1.3 / 1.8)}
-    ariaLabel="Network showing ..."
-    renderTooltip={renderTooltip}
-    {...rest}
-  >
-    {children}
-  </ExpandableNetwork>
-));
-
 
 const nodes = [
   {
@@ -100,20 +86,10 @@ export default {
   usage: 'Test',
   examples: [
     {
-      description: 'DefaultNetwork',
+      description: 'Test',
       components: [Network],
       example: () => (
         <ResponsiveNetowork
-          ariaLabel="test"
-          graph={graph}
-        />
-      ),
-    },
-    {
-      description: 'ExpandableNetwork',
-      components: [ExpandableNetwork],
-      example: () => (
-        <ResponsiveExpandableNetowork
           ariaLabel="test"
           graph={graph}
         />
