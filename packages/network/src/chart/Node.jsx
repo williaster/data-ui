@@ -7,6 +7,8 @@ const proptypes = {
   node: PropTypes.object.isRequired,
   onMouseMove: PropTypes.func,
   onClick: PropTypes.func,
+  onMouseLeave: PropTypes.func,
+  onMouseEnter: PropTypes.func,
 };
 
 const defaultProps = {
@@ -19,10 +21,12 @@ const defaultProps = {
   },
   onMouseMove: undefined,
   onClick: undefined,
+  onMouseLeave: undefined,
+  onMouseEnter: undefined,
 };
 
 export default function Node(props) {
-  const { nodeStyles, node, onMouseMove, onClick } = props;
+  const { nodeStyles, node, onMouseMove, onClick, onMouseLeave, onMouseEnter } = props;
   const { stroke, strokeWidth, fill, opacity, defaultSize } = nodeStyles;
   return (
     <circle
@@ -32,9 +36,14 @@ export default function Node(props) {
       stroke={node.stroke || stroke}
       strokeWidth={strokeWidth}
       opacity={node.opacity || opacity}
-      {...props}
       onMouseMove={onMouseMove && ((event) => {
         onMouseMove({ event, data: node });
+      })}
+      onMouseLeave={onMouseLeave && ((event) => {
+        onMouseLeave({ event, index: node.index });
+      })}
+      onMouseEnter={onMouseEnter && ((event) => {
+        onMouseEnter({ event, index: node.index });
       })}
       onClick={onClick && ((event) => {
         onClick({ event, index: node.index });

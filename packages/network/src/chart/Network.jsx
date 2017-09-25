@@ -7,7 +7,7 @@ import { themeShape } from '../utils/propShapes';
 import WithTooltip, { withTooltipPropTypes } from '../enhancer/WithTooltip';
 import Node from './Node';
 import Link from './Link';
-import layout from '../layout/atlasForce';
+import Layout from '../layout/atlasForce';
 
 export const propTypes = {
   ...withTooltipPropTypes,
@@ -21,7 +21,7 @@ export const propTypes = {
   layout: PropTypes.string,
   theme: themeShape,
   renderTooltip: PropTypes.func,
-  animated: PropTypes.boolean,
+  animated: PropTypes.bool,
 };
 
 const defaultProps = {
@@ -37,9 +37,9 @@ class Network extends React.PureComponent {
     this.state = {
       graph: this.copyGraph(props.graph),
     };
-    layout({
-      graph: props.graph,
-      animated: props.animated,
+    this.layout = new Layout({ animated: props.animated });
+    this.layout.setGraph(props.graph);
+    this.layout.layout({
       callback: (newGraph) => {
         this.setStateGraph(newGraph);
       },
@@ -48,15 +48,22 @@ class Network extends React.PureComponent {
 
   componentWillReceiveProps(nextProps) {
     const { graph, animated } = nextProps;
-    if (this.props.grpah !== graph) {
-      layout({
-        graph,
-        animated,
+    if (this.props.graph.links !== graph.links ||
+      this.props.graph.nodes !== graph.nodes) {
+      this.layout.setGraph(graph);
+      this.layout.setAnimated(animated);
+      this.layout.layout({
         callback: (newGraph) => {
           this.setStateGraph(newGraph);
         },
       });
+    } else {
+      this.setStateGraph(graph);
     }
+  }
+
+  componentWillUnmount() {
+    this.layout.clear();
   }
 
   setStateGraph(graph) {
@@ -87,10 +94,13 @@ class Network extends React.PureComponent {
       ariaLabel,
       height,
       width,
+      onNodeClick,
+      onMouseEnter,
+      onMouseLeave,
     } = this.props;
     return (
       <WithTooltip renderTooltip={this.props.renderTooltip}>
-        {({ onMouseMove, onMouseLeave }) => (
+        {({ onMouseMove, onMouseLeave: toolTiponMouseLeave }) => (
           <svg
             aria-label={ariaLabel}
             role="img"
@@ -101,8 +111,12 @@ class Network extends React.PureComponent {
               linkComponent={Link}
               nodeComponent={Node}
               onMouseMove={onMouseMove}
-              onMouseLeave={onMouseLeave}
-              onNodeClick={this.props.onNodeClick}
+              onMouseLeave={(event) => {
+                onMouseLeave(event);
+                toolTiponMouseLeave(event);
+              }}
+              onMouseEnter={onMouseEnter}
+              onNodeClick={onNodeClick}
               graph={this.state.graph}
             />
           </svg>

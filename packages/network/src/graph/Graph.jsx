@@ -1,15 +1,40 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { Group } from '@vx/group';
 import Links from './Links';
 import Nodes from './Nodes';
 
-export default function Graph({
+
+const propTypes = {
+  graph: PropTypes.shape({
+    nodes: PropTypes.array.isRequired,
+    links: PropTypes.array.isRequired,
+  }).isRequired,
+  linkComponent: PropTypes.func.isRequired,
+  nodeComponent: PropTypes.func.isRequired,
+  onMouseEnter: PropTypes.func,
+  onMouseLeave: PropTypes.func,
+  onMouseMove: PropTypes.func,
+  onNodeClick: PropTypes.func,
+};
+
+const defaultProps = {
+  linkComponent: 'none',
+  nodeComponent: null,
+  onMouseLeave: null,
+  onMouseMove: null,
+  onNodeClick: null,
+  onMouseEnter: null,
+};
+
+function Graph({
   graph,
   linkComponent,
   nodeComponent,
   onMouseLeave,
   onMouseMove,
   onNodeClick,
+  onMouseEnter,
 }) {
   return (
     <Group>
@@ -22,6 +47,7 @@ export default function Graph({
       <Nodes
         nodes={graph.nodes}
         nodeComponent={nodeComponent}
+        onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
         onMouseMove={onMouseMove}
         onClick={onNodeClick}
@@ -29,3 +55,8 @@ export default function Graph({
     </Group>
   );
 }
+
+Graph.propTypes = propTypes;
+Graph.defaultProps = defaultProps;
+
+export default Graph;

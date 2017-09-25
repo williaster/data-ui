@@ -26,7 +26,7 @@ export default function Link(props) {
       y2={link.targetY}
       stroke={stroke}
       strokeWidth={strokeWidth}
-      strokeOpacity={strokeOpacity}
+      strokeOpacity={link.opacity || strokeOpacity}
     />
   );
 }

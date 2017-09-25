@@ -7,6 +7,7 @@ export default function Nodes({
   nodes,
   nodeComponent,
   className,
+  onMouseEnter,
   onMouseLeave,
   onMouseMove,
   onClick,
@@ -19,7 +20,7 @@ export default function Nodes({
           className={cx('vx-network-nodes', className)}
           transform={`translate(${node.x}, ${node.y})`}
         >
-          {React.createElement(nodeComponent, { node, onMouseLeave, onMouseMove, onClick })}
+          {React.createElement(nodeComponent, { node, onMouseLeave, onMouseMove, onMouseEnter, onClick })}
         </Group>,
       )}
     </Group>
