@@ -5,7 +5,7 @@ import { Group } from '@vx/group';
 
 const propTypes = {
   links: PropTypes.array.isRequired,
-  linkComponent: PropTypes.func.isRequired,
+  linkComponent: PropTypes.oneOfType([PropTypes.element, PropTypes.func]).isRequired,
   className: PropTypes.string,
 };
 

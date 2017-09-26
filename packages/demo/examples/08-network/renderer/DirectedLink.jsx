@@ -1,9 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { linkShape } from '@data-ui/network';
+
 
 const proptypes = {
   linkStyles: PropTypes.object,
-  link: PropTypes.object.isRequired,
+  link: linkShape.isRequired,
 };
 
 const defaultProps = {
@@ -18,7 +20,7 @@ const defaultProps = {
 export default function Link(props) {
   const { linkStyles, link } = props;
   const { stroke, strokeWidth, strokeOpacity, radius } = linkStyles;
-  const id = `arrow-id${Math.floor(Math.random() * 1000)}`;
+  const id = `arrow-id${link.id}`;
   return (
     <g>
       <defs>

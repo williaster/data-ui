@@ -1,9 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { nodeShape } from '@data-ui/network';
+
 
 const proptypes = {
   nodeStyles: PropTypes.object,
-  node: PropTypes.object.isRequired,
+  node: nodeShape.isRequired,
   onMouseMove: PropTypes.func,
   onClick: PropTypes.func,
   onMouseLeave: PropTypes.func,
@@ -30,22 +32,41 @@ export default function UserNode(props) {
   return (
     <g opacity={node.opacity || opacity} >
       <circle
-        // key={node.id}
         r={node.size || defaultSize}
         fill={node.fill || fill}
         stroke={node.stroke || stroke}
         strokeWidth={strokeWidth}
         onMouseMove={onMouseMove && ((event) => {
-          onMouseMove({ event, data: node });
+          onMouseMove({
+            event,
+            index: node.index,
+            id: node.id,
+            data: node,
+          });
         })}
         onMouseLeave={onMouseLeave && ((event) => {
-          onMouseLeave({ event, index: node.index });
+          onMouseLeave({
+            event,
+            index: node.index,
+            id: node.id,
+            data: node,
+          });
         })}
         onMouseEnter={onMouseEnter && ((event) => {
-          onMouseEnter({ event, index: node.index });
+          onMouseEnter({
+            event,
+            index: node.index,
+            id: node.id,
+            data: node,
+          });
         })}
         onClick={onClick && ((event) => {
-          onClick({ event, index: node.index });
+          onClick({
+            event,
+            index: node.index,
+            id: node.id,
+            data: node,
+          });
         })}
       />
       <text

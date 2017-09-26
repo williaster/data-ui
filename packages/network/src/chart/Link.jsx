@@ -1,10 +1,9 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { linkStyleShape } from '../utils/propShapes';
+import { linkStyleShape, linkShape } from '../utils/propShapes';
 
 const proptypes = {
   linkStyles: linkStyleShape,
-  link: PropTypes.object.isRequired,
+  link: linkShape.isRequired,
 };
 
 const defaultProps = {
@@ -15,8 +14,7 @@ const defaultProps = {
   },
 };
 
-export default function Link(props) {
-  const { linkStyles, link } = props;
+export default function Link({ linkStyles, link }) {
   const { stroke, strokeWidth, strokeOpacity } = linkStyles;
   return (
     <line
