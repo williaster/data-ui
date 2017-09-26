@@ -29,7 +29,7 @@ const defaultProps = {
   className: null,
   HoverStyles: () => (
     <style type="text/css">{`
-      .vx-network-nodes:hover {
+      .data-ui-nodes:hover {
         opacity: 0.7;
         cursor: pointer;
       }
