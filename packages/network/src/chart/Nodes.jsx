@@ -1,28 +1,45 @@
 import React from 'react';
 import cx from 'classnames';
+import PropTypes from 'prop-types';
 import { Group } from '@vx/group';
+
+const propTypes = {
+  nodes: PropTypes.array.isRequired,
+  nodeComponent: PropTypes.func.isRequired,
+  className: PropTypes.string,
+};
+
+const defaultProps = {
+  className: '',
+};
 
 export default function Nodes({
   nodes,
   nodeComponent,
   className,
-  onMouseEnter,
-  onMouseLeave,
-  onMouseMove,
-  onClick,
+  ...rest
 }) {
-
   return (
     <Group>
-      {nodes.map((node, i) =>
+      {nodes.map(node =>
         <Group
-          key={`network-node-${i}`}
-          className={cx('vx-network-nodes', className)}
+          key={`network-node-${node.id}`}
+          className={cx('data-ui-nodes', className)}
           transform={`translate(${node.x}, ${node.y})`}
         >
-          {React.createElement(nodeComponent, { node, onMouseLeave, onMouseMove, onMouseEnter, onClick })}
+          {React.createElement(
+            nodeComponent,
+            {
+              node,
+              ...rest,
+            })
+          }
         </Group>,
       )}
     </Group>
   );
 }
+
+Nodes.propTypes = propTypes;
+Nodes.defaultProps = defaultProps;
+

@@ -6,6 +6,10 @@ import {
   withScreenSize,
 } from '@data-ui/network';
 
+import {
+  defaultGraph
+} from './data';
+
 import ExpandableNetwork from './ExpandableNetwork';
 import GraphWithCustimizedRenderer from './GraphWithCustimizedRenderer';
 
@@ -66,50 +70,23 @@ const ResponsiveGraphWithCustimizedRenderer = withScreenSize(({ screenWidth, chi
 ));
 
 
-const nodes = [
-  {
-    x: 100,
-    y: 200,
-    id: 1231,
-    size: 10,
-    opacity: 1,
-    fill: '#e03131',
-    label: 'User A',
-    type: 'Attr',
-  },
-  {
-    x: 200,
-    y: 200,
-    id: 1232,
-    size: 10,
-    opacity: 0.3,
-    fill: '#5f3dc4',
-    label: 'User B',
-    type: 'User',
-  },
-  {
-    x: 200,
-    y: 100,
-    id: 1235,
-    size: 15,
-    opacity: 0.8,
-    label: 'User C',
-    type: 'User',
-  },
-];
+const nodes = defaultGraph.nodes;
 
 const links = [
   {
     source: nodes[1],
     target: nodes[2],
+    id: Math.floor(Math.random() * 1000000000),
   },
   {
     source: nodes[0],
     target: nodes[2],
+    id: Math.floor(Math.random() * 1000000000),
   },
   {
     source: nodes[0],
     target: nodes[1],
+    id: Math.floor(Math.random() * 1000000000),
   },
 ];
 

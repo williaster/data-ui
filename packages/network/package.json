@@ -54,6 +54,7 @@
     "@vx/shape": "0.0.136",
     "@vx/tooltip": "0.0.137",
     "airbnb-prop-types": "^2.8.0",
+    "classnames": "^2.2.5",
     "d3-force": "^1.0.6",
     "prop-types": "^15.5.10"
   },

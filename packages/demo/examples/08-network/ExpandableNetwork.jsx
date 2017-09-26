@@ -5,6 +5,8 @@ import {
   Network,
 } from '@data-ui/network';
 
+import { getAddedGraph } from './data';
+
 
 class ExpandableNetwork extends React.PureComponent {
   constructor(props) {
@@ -48,55 +50,11 @@ class ExpandableNetwork extends React.PureComponent {
   }
 
   onNodeClick({ index }) {
-    const node = this.state.graph.nodes[index];
-    const nodes = [
-      {
-        x: 100,
-        y: 200,
-        id: 1231,
-        size: 10,
-        opacity: 1,
-        fill: '#e03131',
-        label: 'User A',
-      },
-      {
-        x: 200,
-        y: 200,
-        id: 1232,
-        size: 10,
-        opacity: 0.3,
-        fill: '#5f3dc4',
-        label: 'User B',
-      },
-      {
-        x: 200,
-        y: 100,
-        id: 1235,
-        size: 15,
-        opacity: 0.8,
-        label: 'User C',
-      },
-    ];
 
-    const links = [
-      {
-        source: node,
-        target: nodes[0],
-      },
-      {
-        source: node,
-        target: nodes[1],
-      },
-      {
-        source: node,
-        target: nodes[2],
-      },
-    ];
+    const graph = this.state.graph;
 
-    const newGraph = {
-      nodes: nodes.concat(this.state.graph.nodes),
-      links: links.concat(this.state.graph.links),
-    };
+    const newGraph = getAddedGraph(graph, graph.nodes[index]);
+
 
     this.setState({ graph: newGraph });
   }

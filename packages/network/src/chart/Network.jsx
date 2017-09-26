@@ -123,7 +123,9 @@ class Network extends React.PureComponent {
                 nodeComponent={renderNode || Node}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={(event) => {
-                  onMouseLeave(event);
+                  if (onMouseLeave) {
+                    onMouseLeave(event);
+                  }
                   toolTiponMouseLeave(event);
                 }}
                 onMouseMove={onMouseMove}

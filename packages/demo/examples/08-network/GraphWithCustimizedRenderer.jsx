@@ -59,7 +59,7 @@ class GraphWithCustimizedRenderer extends React.PureComponent {
       {
         x: 100,
         y: 200,
-        id: 1231,
+        id: Math.floor(Math.random()*1000000000),
         size: 10,
         opacity: 1,
         fill: '#e03131',
@@ -69,7 +69,7 @@ class GraphWithCustimizedRenderer extends React.PureComponent {
       {
         x: 200,
         y: 200,
-        id: 1232,
+        id: Math.floor(Math.random()*1000000000),
         size: 10,
         opacity: 0.3,
         fill: '#5f3dc4',
@@ -79,7 +79,7 @@ class GraphWithCustimizedRenderer extends React.PureComponent {
       {
         x: 200,
         y: 100,
-        id: 1235,
+        id: Math.floor(Math.random()*1000000000),
         size: 15,
         opacity: 0.8,
         label: 'User C',
@@ -91,14 +91,17 @@ class GraphWithCustimizedRenderer extends React.PureComponent {
       {
         source: node,
         target: nodes[0],
+        id: Math.floor(Math.random()*1000000000),
       },
       {
         source: node,
         target: nodes[1],
+        id: Math.floor(Math.random()*1000000000),
       },
       {
         source: node,
         target: nodes[2],
+        id: Math.floor(Math.random()*1000000000),
       },
     ];
 
