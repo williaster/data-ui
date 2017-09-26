@@ -6,13 +6,19 @@ import {
 } from '@data-ui/network';
 
 
-class ExpandableNetwork extends React.PureComponent {
+import UserNode from './renderer/UserNode';
+import AttributeNode from './renderer/AttributeNode';
+import DirectedLink from './renderer/DirectedLink';
+
+class GraphWithCustimizedRenderer extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = this.getStateFromProps(props);
     this.onNodeClick = this.onNodeClick.bind(this);
     this.onMouseEnter = this.onMouseEnter.bind(this);
     this.onMouseLeave = this.onMouseLeave.bind(this);
+    this.renderNode = this.renderNode.bind(this);
+    this.renderLink = this.renderLink.bind(this);
   }
 
   onMouseLeave() {
@@ -58,6 +64,7 @@ class ExpandableNetwork extends React.PureComponent {
         opacity: 1,
         fill: '#e03131',
         label: 'User A',
+        type: 'User',
       },
       {
         x: 200,
@@ -67,6 +74,7 @@ class ExpandableNetwork extends React.PureComponent {
         opacity: 0.3,
         fill: '#5f3dc4',
         label: 'User B',
+        type: 'User',
       },
       {
         x: 200,
@@ -75,6 +83,7 @@ class ExpandableNetwork extends React.PureComponent {
         size: 15,
         opacity: 0.8,
         label: 'User C',
+        type: 'Attr'
       },
     ];
 
@@ -107,6 +116,35 @@ class ExpandableNetwork extends React.PureComponent {
     };
   }
 
+  renderNode({ node, ...rest }) {
+    const { onMouseEnter, onMouseLeave, onMouseMove, onClick } = rest;
+    if (node.type == "User") {
+      return (
+        <UserNode
+          node={node}
+          onMouseEnter={onMouseEnter}
+          onMouseLeave={onMouseLeave}
+          onMouseMove={onMouseMove}
+          onClick={onClick}
+        />
+      );
+    }
+
+    return (
+      <AttributeNode
+        node={node}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
+        onMouseMove={onMouseMove}
+        onClick={onClick}
+      />
+    );
+  }
+
+  renderLink({ link, ...rest }) {
+    return <DirectedLink link={link} />
+  }
+
 
   render() {
     return (<Network
@@ -115,8 +153,10 @@ class ExpandableNetwork extends React.PureComponent {
       onNodeClick={this.onNodeClick}
       onMouseEnter={this.onMouseEnter}
       onMouseLeave={this.onMouseLeave}
+      renderNode={this.renderNode}
+      renderLink={this.renderLink}
     />);
   }
 }
 
-export default ExpandableNetwork;
+export default GraphWithCustimizedRenderer;

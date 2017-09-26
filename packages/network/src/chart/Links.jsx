@@ -9,6 +9,7 @@ export default function Links({
   onMouseLeave,
   onMouseMove,
 }) {
+
   return (
     <Group>
       {links.map((link, i) =>

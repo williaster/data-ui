@@ -1,7 +1,6 @@
 import React from 'react';
 import cx from 'classnames';
 import { Group } from '@vx/group';
-import Graph from './Graph';
 
 export default function Nodes({
   nodes,
@@ -12,6 +11,7 @@ export default function Nodes({
   onMouseMove,
   onClick,
 }) {
+
   return (
     <Group>
       {nodes.map((node, i) =>

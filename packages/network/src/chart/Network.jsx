@@ -2,12 +2,14 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import Graph from '../graph/Graph';
+import { Group } from '@vx/group';
 import { themeShape } from '../utils/propShapes';
 import WithTooltip, { withTooltipPropTypes } from '../enhancer/WithTooltip';
-import Node from './Node';
-import Link from './Link';
 import Layout from '../layout/atlasForce';
+import Links from './Links';
+import Nodes from './Nodes';
+import Link from './Link';
+import Node from './Node';
 
 export const propTypes = {
   ...withTooltipPropTypes,
@@ -97,6 +99,8 @@ class Network extends React.PureComponent {
       onNodeClick,
       onMouseEnter,
       onMouseLeave,
+      renderNode,
+      renderLink,
     } = this.props;
     return (
       <WithTooltip renderTooltip={this.props.renderTooltip}>
@@ -107,18 +111,25 @@ class Network extends React.PureComponent {
             width={width}
             height={height}
           >
-            <Graph
-              linkComponent={Link}
-              nodeComponent={Node}
-              onMouseMove={onMouseMove}
-              onMouseLeave={(event) => {
-                onMouseLeave(event);
-                toolTiponMouseLeave(event);
-              }}
-              onMouseEnter={onMouseEnter}
-              onNodeClick={onNodeClick}
-              graph={this.state.graph}
-            />
+            <Group>
+              <Links
+                links={this.state.graph.links}
+                linkComponent={renderLink || Link}
+                onMouseLeave={onMouseLeave}
+                onMouseMove={onMouseMove}
+              />
+              <Nodes
+                nodes={this.state.graph.nodes}
+                nodeComponent={renderNode || Node}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={(event) => {
+                  onMouseLeave(event);
+                  toolTiponMouseLeave(event);
+                }}
+                onMouseMove={onMouseMove}
+                onClick={onNodeClick}
+              />
+            </Group>
           </svg>
         )}
       </WithTooltip>

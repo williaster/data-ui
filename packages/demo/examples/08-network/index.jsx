@@ -7,6 +7,7 @@ import {
 } from '@data-ui/network';
 
 import ExpandableNetwork from './ExpandableNetwork';
+import GraphWithCustimizedRenderer from './GraphWithCustimizedRenderer';
 
 function renderTooltip({ data }) {
   const { x, y, id } = data;
@@ -52,6 +53,18 @@ const ResponsiveExpandableNetowork = withScreenSize(({ screenWidth, children, ..
   </ExpandableNetwork>
 ));
 
+const ResponsiveGraphWithCustimizedRenderer = withScreenSize(({ screenWidth, children, ...rest }) => (
+  <GraphWithCustimizedRenderer
+    width={Math.min(1000, screenWidth / 1.3)}
+    height={Math.min(1000 / 1.8, screenWidth / 1.3 / 1.8)}
+    ariaLabel="Network showing ..."
+    renderTooltip={renderTooltip}
+    {...rest}
+  >
+    {children}
+  </GraphWithCustimizedRenderer>
+));
+
 
 const nodes = [
   {
@@ -61,6 +74,8 @@ const nodes = [
     size: 10,
     opacity: 1,
     fill: '#e03131',
+    label: 'User A',
+    type: 'Attr',
   },
   {
     x: 200,
@@ -69,6 +84,8 @@ const nodes = [
     size: 10,
     opacity: 0.3,
     fill: '#5f3dc4',
+    label: 'User B',
+    type: 'User',
   },
   {
     x: 200,
@@ -76,6 +93,8 @@ const nodes = [
     id: 1235,
     size: 15,
     opacity: 0.8,
+    label: 'User C',
+    type: 'User',
   },
 ];
 
@@ -124,6 +143,17 @@ export default {
       components: [ExpandableNetwork],
       example: () => (
         <ResponsiveExpandableNetowork
+          ariaLabel="test"
+          graph={graph}
+          animated
+        />
+      ),
+    },
+    {
+      description: 'GraphWithCustimizedRenderer',
+      components: [GraphWithCustimizedRenderer],
+      example: () => (
+        <ResponsiveGraphWithCustimizedRenderer
           ariaLabel="test"
           graph={graph}
           animated

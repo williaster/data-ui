@@ -1,9 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { nodeStyleShape } from '../utils/propShapes';
 
 const proptypes = {
-  nodeStyles: nodeStyleShape,
+  nodeStyles: PropTypes.object,
   node: PropTypes.object.isRequired,
   onMouseMove: PropTypes.func,
   onClick: PropTypes.func,
@@ -25,7 +24,7 @@ const defaultProps = {
   onMouseEnter: undefined,
 };
 
-export default function Node(props) {
+export default function UserNode(props) {
   const { nodeStyles, node, onMouseMove, onClick, onMouseLeave, onMouseEnter } = props;
   const { stroke, strokeWidth, fill, opacity, defaultSize } = nodeStyles;
   return (
@@ -53,11 +52,11 @@ export default function Node(props) {
         textAnchor="middle"
         y={2 * node.size}
       >
-        {node.label}
+        {`User Node ${node.label}`}
       </text>
     </g>
   );
 }
 
-Node.propTypes = proptypes;
-Node.defaultProps = defaultProps;
+UserNode.propTypes = proptypes;
+UserNode.defaultProps = defaultProps;
