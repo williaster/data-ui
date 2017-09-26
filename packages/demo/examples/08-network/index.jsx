@@ -7,11 +7,11 @@ import {
 } from '@data-ui/network';
 
 import {
-  defaultGraph
+  defaultGraph as graph,
 } from './data';
 
 import ExpandableNetwork from './ExpandableNetwork';
-import GraphWithCustimizedRenderer from './GraphWithCustimizedRenderer';
+import NetworkWithCustimizedRenderer from './NetworkWithCustimizedRenderer';
 
 function renderTooltip({ data }) {
   const { x, y, id } = data;
@@ -33,64 +33,23 @@ function renderTooltip({ data }) {
   );
 }
 
-const ResponsiveNetowork = withScreenSize(({ screenWidth, children, ...rest }) => (
-  <Network
-    width={Math.min(1000, screenWidth / 1.3)}
-    height={Math.min(1000 / 1.8, screenWidth / 1.3 / 1.8)}
-    ariaLabel="Network showing ..."
-    renderTooltip={renderTooltip}
-    {...rest}
-  >
-    {children}
-  </Network>
+const ResponsiveNetwork = withScreenSize(({
+  screenWidth,
+  children,
+  networkComponent,
+  ...rest }) => (
+    React.createElement(
+      networkComponent,
+      {
+        width: Math.min(1000, screenWidth / 1.3),
+        height: Math.min(1000 / 1.8, screenWidth / 1.3 / 1.8),
+        ariaLabel: 'Network showing ...',
+        renderTooltip,
+        ...rest,
+      },
+      children,
+    )
 ));
-
-const ResponsiveExpandableNetowork = withScreenSize(({ screenWidth, children, ...rest }) => (
-  <ExpandableNetwork
-    width={Math.min(1000, screenWidth / 1.3)}
-    height={Math.min(1000 / 1.8, screenWidth / 1.3 / 1.8)}
-    ariaLabel="Network showing ..."
-    renderTooltip={renderTooltip}
-    {...rest}
-  >
-    {children}
-  </ExpandableNetwork>
-));
-
-const ResponsiveGraphWithCustimizedRenderer = withScreenSize(({ screenWidth, children, ...rest }) => (
-  <GraphWithCustimizedRenderer
-    width={Math.min(1000, screenWidth / 1.3)}
-    height={Math.min(1000 / 1.8, screenWidth / 1.3 / 1.8)}
-    ariaLabel="Network showing ..."
-    renderTooltip={renderTooltip}
-    {...rest}
-  >
-    {children}
-  </GraphWithCustimizedRenderer>
-));
-
-
-const nodes = defaultGraph.nodes;
-
-const links = [
-  {
-    source: nodes[1],
-    target: nodes[2],
-    id: Math.floor(Math.random() * 1000000000),
-  },
-  {
-    source: nodes[0],
-    target: nodes[2],
-    id: Math.floor(Math.random() * 1000000000),
-  },
-  {
-    source: nodes[0],
-    target: nodes[1],
-    id: Math.floor(Math.random() * 1000000000),
-  },
-];
-
-const graph = { nodes, links };
 
 export default {
   usage: 'Test',
@@ -99,9 +58,9 @@ export default {
       description: 'DefaultNetwork',
       components: [Network],
       example: () => (
-        <ResponsiveNetowork
-          ariaLabel="test"
+        <ResponsiveNetwork
           graph={graph}
+          networkComponent={Network}
         />
       ),
     },
@@ -109,9 +68,9 @@ export default {
       description: 'ExpandableNetwork',
       components: [ExpandableNetwork],
       example: () => (
-        <ResponsiveExpandableNetowork
-          ariaLabel="test"
+        <ResponsiveNetwork
           graph={graph}
+          networkComponent={ExpandableNetwork}
         />
       ),
     },
@@ -119,20 +78,20 @@ export default {
       description: 'ExpandableAnimatedNetwork',
       components: [ExpandableNetwork],
       example: () => (
-        <ResponsiveExpandableNetowork
-          ariaLabel="test"
+        <ResponsiveNetwork
           graph={graph}
+          networkComponent={ExpandableNetwork}
           animated
         />
       ),
     },
     {
-      description: 'GraphWithCustimizedRenderer',
-      components: [GraphWithCustimizedRenderer],
+      description: 'NetworkWithCustimizedRenderer',
+      components: [NetworkWithCustimizedRenderer],
       example: () => (
-        <ResponsiveGraphWithCustimizedRenderer
-          ariaLabel="test"
+        <ResponsiveNetwork
           graph={graph}
+          networkComponent={NetworkWithCustimizedRenderer}
           animated
         />
       ),

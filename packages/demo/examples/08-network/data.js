@@ -1,5 +1,11 @@
+/* eslint no-bitwise: 0, react/no-unused-prop-types: 0 */
+
 function getRandomID() {
-  return Math.floor(Math.random() * 1000000000);
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (char) => {
+    const randomNumber = Math.random() * 16 | 0;
+    const value = char === 'x' ? randomNumber : ((randomNumber & 0x3) | 0x8);
+    return value.toString(16);
+  });
 }
 
 const defaultNodes = [
