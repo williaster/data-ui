@@ -1,7 +1,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import Node from '../../src/chart/Node';
-import { defaultGraph } from '../data';
+import defaultGraph from '../data';
 
 describe('<Node />', () => {
   const props = {

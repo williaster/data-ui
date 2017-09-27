@@ -2,7 +2,7 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import Nodes from '../../src/chart/Nodes';
 import Node from '../../src/chart/Node';
-import { defaultGraph } from '../data';
+import defaultGraph from '../data';
 
 describe('<Links />', () => {
   const props = {

@@ -10,6 +10,8 @@ import {
   defaultGraph as graph,
 } from './data';
 
+import readme from '../../node_modules/@data-ui/network/README.md';
+
 import ExpandableNetwork from './ExpandableNetwork';
 import NetworkWithCustimizedRenderer from './NetworkWithCustimizedRenderer';
 
@@ -52,7 +54,7 @@ const ResponsiveNetwork = withScreenSize(({
 ));
 
 export default {
-  usage: 'Test',
+  usage: readme,
   examples: [
     {
       description: 'DefaultNetwork',

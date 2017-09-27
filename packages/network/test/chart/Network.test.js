@@ -3,7 +3,7 @@ import { shallow, mount } from 'enzyme';
 import { Network, WithTooltip } from '../../src';
 import Nodes from '../../src/chart/Nodes';
 import Links from '../../src/chart/Links';
-import { defaultGraph } from '../data';
+import defaultGraph from '../data';
 
 describe('<Network />', () => {
   const props = {

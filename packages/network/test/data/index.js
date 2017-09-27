@@ -57,7 +57,10 @@ const defaultLinks = [
   },
 ];
 
-export const defaultGraph = {
+const defaultGraph = {
   nodes: defaultNodes,
   links: defaultLinks,
-}
+};
+
+export default defaultGraph;
+
