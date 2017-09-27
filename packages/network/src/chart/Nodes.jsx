@@ -7,17 +7,28 @@ const propTypes = {
   nodes: PropTypes.array.isRequired,
   nodeComponent: PropTypes.oneOfType([PropTypes.element, PropTypes.func]).isRequired,
   className: PropTypes.string,
+  onMouseLeave: PropTypes.func,
+  onMouseMove: PropTypes.func,
+  onMouseEnter: PropTypes.func,
+  onClick: PropTypes.func,
 };
 
 const defaultProps = {
   className: '',
+  onMouseLeave: null,
+  onMouseMove: null,
+  onMouseEnter: null,
+  onClick: null,
 };
 
 export default function Nodes({
   nodes,
   nodeComponent,
   className,
-  ...rest
+  onMouseLeave,
+  onMouseMove,
+  onMouseEnter,
+  onClick,
 }) {
   return (
     <Group>
@@ -31,7 +42,10 @@ export default function Nodes({
             nodeComponent,
             {
               node,
-              ...rest,
+              onMouseLeave,
+              onMouseMove,
+              onMouseEnter,
+              onClick,
             })
           }
         </Group>,

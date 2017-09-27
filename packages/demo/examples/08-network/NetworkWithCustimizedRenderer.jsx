@@ -25,7 +25,7 @@ class NetworkWithCustimizedRenderer extends React.PureComponent {
   }
 
   renderNode({ node, ...rest }) {
-    const { onMouseEnter, onMouseLeave, onMouseMove, onClick } = rest;
+    const { onMouseMove, onMouseEnter, onMouseLeave, onClick } = rest;
     if (node.type == "User") {
       return (
         <UserNode
@@ -64,7 +64,6 @@ class NetworkWithCustimizedRenderer extends React.PureComponent {
         ariaLabel={ariaLabel}
         graph={this.state.graph}
         onNodeClick={this.onNodeClick}
-        onMouseLeave={this.onMouseLeave}
         renderNode={this.renderNode}
         renderLink={this.renderLink}
       />

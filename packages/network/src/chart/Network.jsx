@@ -94,8 +94,8 @@ class Network extends React.PureComponent {
       height,
       width,
       onNodeClick,
-      onMouseEnter,
-      onMouseLeave,
+      onNodeMouseEnter,
+      onNodeMouseLeave,
       renderNode,
       renderLink,
       renderTooltip,
@@ -117,10 +117,10 @@ class Network extends React.PureComponent {
               <Nodes
                 nodes={this.state.graph.nodes}
                 nodeComponent={renderNode || Node}
-                onMouseEnter={onMouseEnter}
+                onMouseEnter={onNodeMouseEnter}
                 onMouseLeave={(event) => {
-                  if (onMouseLeave) {
-                    onMouseLeave(event);
+                  if (onNodeMouseLeave) {
+                    onNodeMouseLeave(event);
                   }
                   toolTipOnMouseLeave(event);
                 }}
