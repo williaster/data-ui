@@ -3,18 +3,12 @@ import * as d3Force from 'd3-force';
 
 class AtlasForceDirectedLayout {
   constructor({ animated }) {
-    this.animated = animated;
-    this.callbackEvent = 'end';
-    if (this.animated) {
-      this.callbackEvent = 'tick';
-    }
+    this.setAnimated(animated);
   }
 
   setGraph(graph) {
     this.graph = graph;
-    if (this.simulation) {
-      this.clear();
-    }
+    this.clear();
     this.simulation = d3Force.forceSimulation(graph.nodes)
     .force('charge', d3Force.forceManyBody().strength(-600))
     .force('link', d3Force.forceLink(graph.links).distance(100).strength(1))
@@ -49,7 +43,9 @@ class AtlasForceDirectedLayout {
   }
 
   clear() {
-    this.simulation.on(this.callbackEvent, null);
+    if (this.simulation) {
+      this.simulation.on(this.callbackEvent, null);
+    }
   }
 
 }
