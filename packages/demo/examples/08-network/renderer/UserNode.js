@@ -20,10 +20,10 @@ const defaultProps = {
     opacity: 0.5,
     defaultSize: 3,
   },
-  onMouseMove: undefined,
-  onClick: undefined,
-  onMouseLeave: undefined,
-  onMouseEnter: undefined,
+  onMouseMove: null,
+  onClick: null,
+  onMouseLeave: null,
+  onMouseEnter: null,
 };
 
 export default function UserNode(props) {
