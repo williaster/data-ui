@@ -1,3 +1,4 @@
+/* eslint no-bitwise: 0, react/no-unused-prop-types: 0 */
 function getRandomID() {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (char) => {
     const randomNumber = Math.random() * 16 | 0;
