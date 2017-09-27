@@ -34,4 +34,27 @@ describe('<Network />', () => {
     expect(wrapper.find(Nodes).length).toBe(1);
     expect(wrapper.find(Links).length).toBe(1);
   });
+
+  test('it should handle mouse events correctly', () => {
+    let testID = 0;
+    function onMouseEvent({ id }) {
+      testID = id;
+    }
+    const wrapper = mount(
+      <Network
+        onNodeMouseLeave={onMouseEvent}
+        onNodeMouseEnter={onMouseEvent}
+        onNodeClick={onMouseEvent}
+        {...props}
+      />,
+    );
+    wrapper.find('circle').first().simulate('click');
+    expect(testID).toBe(props.graph.nodes[0].id);
+    testID = 0;
+    wrapper.find('circle').first().simulate('mouseEnter');
+    expect(testID).toBe(props.graph.nodes[0].id);
+    testID = 0;
+    wrapper.find('circle').first().simulate('mouseLeave');
+    expect(testID).toBe(props.graph.nodes[0].id);
+  });
 });
