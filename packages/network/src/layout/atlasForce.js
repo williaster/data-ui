@@ -27,7 +27,6 @@ class AtlasForceDirectedLayout {
   layout({ callback }) {
     this.simulation.on(this.callbackEvent, () => {
       const tempGraph = { ...this.graph };
-      tempGraph.needUpdate = true;
       callback(tempGraph);
     });
   }

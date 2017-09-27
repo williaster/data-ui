@@ -25,8 +25,3 @@ export const linkStyleShape = PropTypes.shape({
   strokeWidth: PropTypes.number,
   opacity: PropTypes.number,
 });
-
-export const themeShape = PropTypes.shape({
-  nodeStyles: nodeStyleshape,
-  linkStyles: linkStyleShape,
-});

@@ -1,9 +1,8 @@
-/* eslint class-methods-use-this: 0, react/no-unused-prop-types: 0 */
+/* eslint class-methods-use-this: 0 */
 import PropTypes from 'prop-types';
 import React from 'react';
 
 import { Group } from '@vx/group';
-import { themeShape } from '../utils/propShapes';
 import WithTooltip, { withTooltipPropTypes } from '../enhancer/WithTooltip';
 import Layout from '../layout/atlasForce';
 import Links from './Links';
@@ -21,7 +20,6 @@ export const propTypes = {
     links: PropTypes.array.isRequired,
   }).isRequired,
   layout: PropTypes.string,
-  theme: themeShape,
   renderTooltip: PropTypes.func,
   animated: PropTypes.bool,
 };
@@ -29,7 +27,6 @@ export const propTypes = {
 const defaultProps = {
   layout: 'none',
   renderTooltip: null,
-  theme: {},
   animated: false,
 };
 
@@ -43,24 +40,24 @@ class Network extends React.PureComponent {
     this.layout.setGraph(props.graph);
     this.layout.layout({
       callback: (newGraph) => {
-        this.setStateGraph(newGraph);
+        this.setGraphState(newGraph);
       },
     });
   }
 
   componentWillReceiveProps(nextProps) {
     const { graph, animated } = nextProps;
-    if (this.props.graph.links !== graph.links ||
-      this.props.graph.nodes !== graph.nodes) {
+    if (this.props.graph.links !== graph.links || this.props.graph.nodes !==
+     graph.nodes) {
       this.layout.setGraph(graph);
       this.layout.setAnimated(animated);
       this.layout.layout({
         callback: (newGraph) => {
-          this.setStateGraph(newGraph);
+          this.setGraphState(newGraph);
         },
       });
     } else {
-      this.setStateGraph(graph);
+      this.setGraphState(graph);
     }
   }
 
@@ -68,7 +65,7 @@ class Network extends React.PureComponent {
     this.layout.clear();
   }
 
-  setStateGraph(graph) {
+  setGraphState(graph) {
     const copiedGraph = this.copyGraph(graph);
     this.setState({
       graph: copiedGraph,
@@ -101,10 +98,11 @@ class Network extends React.PureComponent {
       onMouseLeave,
       renderNode,
       renderLink,
+      renderTooltip,
     } = this.props;
     return (
-      <WithTooltip renderTooltip={this.props.renderTooltip}>
-        {({ onMouseMove, onMouseLeave: toolTiponMouseLeave }) => (
+      <WithTooltip renderTooltip={renderTooltip}>
+        {({ onMouseMove, onMouseLeave: toolTipOnMouseLeave }) => (
           <svg
             aria-label={ariaLabel}
             role="img"
@@ -115,8 +113,6 @@ class Network extends React.PureComponent {
               <Links
                 links={this.state.graph.links}
                 linkComponent={renderLink || Link}
-                onMouseLeave={onMouseLeave}
-                onMouseMove={onMouseMove}
               />
               <Nodes
                 nodes={this.state.graph.nodes}
@@ -126,7 +122,7 @@ class Network extends React.PureComponent {
                   if (onMouseLeave) {
                     onMouseLeave(event);
                   }
-                  toolTiponMouseLeave(event);
+                  toolTipOnMouseLeave(event);
                 }}
                 onMouseMove={onMouseMove}
                 onClick={onNodeClick}
