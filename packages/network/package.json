@@ -59,6 +59,5 @@
     "prop-types": "^15.5.10"
   },
   "jest": {
-    "setupTestFrameworkScriptFile": "./test/testsSetup.js"
   }
 }
