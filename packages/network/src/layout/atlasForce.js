@@ -24,6 +24,10 @@ class AtlasForceDirectedLayout {
     .alphaMin(0.1);
   }
 
+  getGraph() {
+    return this.graph;
+  }
+
   layout({ callback }) {
     this.simulation.on(this.callbackEvent, () => {
       const tempGraph = { ...this.graph };
@@ -33,10 +37,15 @@ class AtlasForceDirectedLayout {
 
   setAnimated(animated) {
     this.clear();
+    this.animated = animated;
     this.callbackEvent = 'end';
     if (animated) {
       this.callbackEvent = 'tick';
     }
+  }
+
+  isAnimated() {
+    return this.animated;
   }
 
   clear() {
