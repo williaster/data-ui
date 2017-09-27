@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { nodeStyleShape, nodeShape } from '../utils/propShapes';
 
+
 const proptypes = {
   nodeStyles: nodeStyleShape,
   node: nodeShape.isRequired,

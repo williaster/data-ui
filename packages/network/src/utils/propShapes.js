@@ -7,7 +7,7 @@ export const nodeShape = PropTypes.shape({
   id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
 });
 
-export const nodeStyleshape = PropTypes.shape({
+export const nodeStyleShape = PropTypes.shape({
   stroke: PropTypes.string,
   strokeWidth: PropTypes.number,
   fill: PropTypes.string,

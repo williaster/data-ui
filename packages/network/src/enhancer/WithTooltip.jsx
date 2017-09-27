@@ -10,8 +10,8 @@ import {
 } from '@vx/tooltip';
 
 export const withTooltipPropTypes = {
-  onMouseMove: PropTypes.func, // expects to be called like func({ event, datum, data })
-  onMouseLeave: PropTypes.func, // expects to be called like func({ event, datum, data })
+  onMouseMove: PropTypes.func, // expects to be called like func({ event, index, id, data })
+  onMouseLeave: PropTypes.func, // expects to be called like func({ event, index, id, data })
   tooltipData: PropTypes.any,
 };
 
