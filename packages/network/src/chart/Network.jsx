@@ -19,13 +19,11 @@ export const propTypes = {
     nodes: PropTypes.array.isRequired,
     links: PropTypes.array.isRequired,
   }).isRequired,
-  layout: PropTypes.string,
   renderTooltip: PropTypes.func,
   animated: PropTypes.bool,
 };
 
 const defaultProps = {
-  layout: 'none',
   renderTooltip: null,
   animated: false,
 };
@@ -47,8 +45,10 @@ class Network extends React.PureComponent {
 
   componentWillReceiveProps(nextProps) {
     const { graph, animated } = nextProps;
-    if (this.props.graph.links !== graph.links || this.props.graph.nodes !==
-     graph.nodes) {
+    if (
+      this.props.graph.links !== graph.links
+      || this.props.graph.nodes !== graph.nodes
+    ) {
       this.layout.setGraph(graph);
       this.layout.setAnimated(animated);
       this.layout.layout({
