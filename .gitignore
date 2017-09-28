@@ -6,3 +6,4 @@ node_modules
 *.log
 /.eslintcache
 coverage
+package-lock.json

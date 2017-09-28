@@ -11,6 +11,7 @@ env:
   - PACKAGE=data-table
   - PACKAGE=data-ui-theme
   - PACKAGE=forms
+  - PACKAGE=network
 script:
   - 'cd ./packages/$PACKAGE && npm install && npm run test'
   - 'cd ../../'

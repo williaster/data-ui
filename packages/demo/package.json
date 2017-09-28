@@ -28,6 +28,7 @@
     "@data-ui/sparkline": "0.0.1",
     "@data-ui/theme": "0.0.9",
     "@data-ui/xy-chart": "0.0.22",
+    "@data-ui/network": "^0.0.0",
     "@storybook/addon-options": "^3.1.6",
     "@storybook/react": "3.1.8",
     "@vx/legend": "0.0.127",

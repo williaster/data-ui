@@ -1,0 +1,64 @@
+{
+  "name": "@data-ui/network",
+  "version": "0.0.0",
+  "description": "React + d3 library for creating graph visualizations",
+  "main": "build/index.js",
+  "files": [
+    "build"
+  ],
+  "scripts": {
+    "build": "make build SRC=./src",
+    "prepublish": "make build SRC=./src",
+    "test": "jest --verbose --coverage --color"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/williaster/data-ui.git"
+  },
+  "keywords": [
+    "vx",
+    "react",
+    "d3",
+    "visualization",
+    "graph visualization",
+    "chart",
+    "data"
+  ],
+  "author": "Conglei Shi @conglei_shi",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/williaster/data-ui/issues"
+  },
+  "homepage": "https://github.com/williaster/data-ui#readme",
+  "devDependencies": {
+    "babel-jest": "^20.0.3",
+    "babel-polyfill": "^6.23.0",
+    "enzyme": "^2.8.2",
+    "jest": "^20.0.3",
+    "react": "^15.0.0 || 15.x",
+    "react-addons-test-utils": "^15.4.2",
+    "react-fatigue-dev": "github:tj/react-fatigue-dev",
+    "react-tools": "^0.10.0",
+    "regenerator-runtime": "^0.10.5"
+  },
+  "peerDependencies": {
+    "react": "^15.0.0 || 15.x"
+  },
+  "dependencies": {
+    "@data-ui/theme": "0.0.9",
+    "@vx/event": "0.0.136",
+    "@vx/glyph": "0.0.136",
+    "@vx/group": "0.0.136",
+    "@vx/network": "0.0.136",
+    "@vx/responsive": "0.0.136",
+    "@vx/shape": "0.0.136",
+    "@vx/tooltip": "0.0.137",
+    "airbnb-prop-types": "^2.8.0",
+    "classnames": "^2.2.5",
+    "d3-force": "^1.0.6",
+    "prop-types": "^15.5.10"
+  },
+  "jest": {
+    "setupTestFrameworkScriptFile": "./test/testsSetup.js"
+  }
+}
