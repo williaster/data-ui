@@ -6,6 +6,7 @@ cache:
     - node_modules
 env:
   - PACKAGE=xy-chart
+  - PACKAGE=sparkline
   - PACKAGE=histogram
   - PACKAGE=radial-chart
   - PACKAGE=data-table

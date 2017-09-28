@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { linkShape } from '@data-ui/network';
 
-
 const proptypes = {
   linkStyles: PropTypes.object,
   link: linkShape.isRequired,

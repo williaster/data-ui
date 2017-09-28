@@ -1,15 +1,13 @@
+/* eslint class-methods-use-this: 0 */
+import { Network, networkPropTypes } from '@data-ui/network';
 import React from 'react';
-import {
-  Network,
-  propTypes,
-} from '@data-ui/network';
 
 import { getAddedGraph } from './data';
 import UserNode from './renderer/UserNode';
 import AttributeNode from './renderer/AttributeNode';
 import DirectedLink from './renderer/DirectedLink';
 
-class NetworkWithCustimizedRenderer extends React.PureComponent {
+class NetworkWithCustomizedRenderer extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = { graph: props.graph };
@@ -24,9 +22,9 @@ class NetworkWithCustimizedRenderer extends React.PureComponent {
     this.setState({ graph: newGraph });
   }
 
-  renderNode({ node, ...rest }) {
-    const { onMouseMove, onMouseEnter, onMouseLeave, onClick } = rest;
-    if (node.type == "User") {
+  renderNode(props) {
+    const { node, onMouseMove, onMouseEnter, onMouseLeave, onClick } = props;
+    if (node.type === 'User') {
       return (
         <UserNode
           node={node}
@@ -49,8 +47,8 @@ class NetworkWithCustimizedRenderer extends React.PureComponent {
     );
   }
 
-  renderLink({ link, ...rest }) {
-    return <DirectedLink link={link} />
+  renderLink({ link }) {
+    return <DirectedLink link={link} />;
   }
 
   render() {
@@ -71,4 +69,8 @@ class NetworkWithCustimizedRenderer extends React.PureComponent {
   }
 }
 
-export default NetworkWithCustimizedRenderer;
+NetworkWithCustomizedRenderer.propTypes = {
+  ...networkPropTypes,
+};
+
+export default NetworkWithCustomizedRenderer;

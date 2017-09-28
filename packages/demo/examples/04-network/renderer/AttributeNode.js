@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { nodeShape } from '@data-ui/network';
 
-
 const proptypes = {
   nodeStyles: PropTypes.object,
   node: nodeShape.isRequired,
@@ -26,13 +25,16 @@ const defaultProps = {
   onMouseEnter: null,
 };
 
-export default function UserNode(props) {
+export default function AttributeNode(props) {
   const { nodeStyles, node, onMouseMove, onClick, onMouseLeave, onMouseEnter } = props;
   const { stroke, strokeWidth, fill, opacity, defaultSize } = nodeStyles;
   return (
     <g opacity={node.opacity || opacity} >
-      <circle
-        r={node.size || defaultSize}
+      <rect
+        x={-node.size / 2}
+        y={-node.size / 2}
+        width={node.size || defaultSize}
+        height={node.size || defaultSize}
         fill={node.fill || fill}
         stroke={node.stroke || stroke}
         strokeWidth={strokeWidth}
@@ -71,13 +73,14 @@ export default function UserNode(props) {
       />
       <text
         textAnchor="middle"
+        pointerEvents="none"
         y={2 * node.size}
       >
-        {`User Node ${node.label}`}
+        {`Attr Node ${node.label}`}
       </text>
     </g>
   );
 }
 
-UserNode.propTypes = proptypes;
-UserNode.defaultProps = defaultProps;
+AttributeNode.propTypes = proptypes;
+AttributeNode.defaultProps = defaultProps;
