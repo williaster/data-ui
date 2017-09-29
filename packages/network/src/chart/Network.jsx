@@ -15,6 +15,12 @@ export const propTypes = {
   ariaLabel: PropTypes.string.isRequired,
   width: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired,
+  margin: PropTypes.shape({
+    top: PropTypes.number,
+    left: PropTypes.number,
+    bottom: PropTypes.number,
+    right: PropTypes.number,
+  }),
   graph: PropTypes.shape({
     nodes: PropTypes.array.isRequired,
     links: PropTypes.array.isRequired,
@@ -26,6 +32,12 @@ export const propTypes = {
 const defaultProps = {
   renderTooltip: null,
   animated: false,
+  margin: {
+    top: 20,
+    left: 20,
+    bottom: 20,
+    right: 20,
+  },
 };
 
 class Network extends React.PureComponent {
@@ -73,16 +85,51 @@ class Network extends React.PureComponent {
   }
 
   copyGraph(graph) {
-    const nodes = graph.nodes.map((node, index) => ({
-      ...node,
+    const { width, height, margin } = this.props;
+    const range = graph.nodes.reduce((minMax, node) => {
+      return {
+        x: {
+          min: Math.min(minMax.x.min, node.x),
+          max: Math.max(minMax.x.max, node.x),
+        },
+        y: {
+          min: Math.min(minMax.y.min, node.y),
+          max: Math.max(minMax.y.max, node.y),
+        },
+      };
+    }, {
+      x: {
+        min: 999999,
+        max: -999999,
+      },
+      y: {
+        min: 999999,
+        max: -999999,
+      },
+    });
+
+    function xScale(x) {
+      return ((range.x.max - x) / (range.x.max - range.x.min)) *
+       (width - margin.left - margin.right) + margin.left;
+    }
+
+    function yScale(y) {
+      return ((range.y.max - y) / (range.y.max - range.y.min)) *
+       (height - margin.top - margin.bottom) + margin.top;
+    }
+
+    const nodes = graph.nodes.map(({ x, y, ...rest }, index) => ({
+      x: xScale(x),
+      y: yScale(y),
+      ...rest,
       index,
     }));
     const links = graph.links.map((link, index) => ({
       ...link,
-      sourceX: link.source.x,
-      sourceY: link.source.y,
-      targetX: link.target.x,
-      targetY: link.target.y,
+      sourceX: xScale(link.source.x),
+      sourceY: yScale(link.source.y),
+      targetX: xScale(link.target.x),
+      targetY: yScale(link.target.y),
       index,
     }));
     return { nodes, links };

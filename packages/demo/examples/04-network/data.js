@@ -69,11 +69,11 @@ export function getAddedGraph(graph, targetNode) {
   const links = graph.links.concat([]);
   for (let i = 0; i < numOfNodes; i += 1) {
     const node = {
-      x: Math.random(),
-      y: Math.random(),
+      x: targetNode.x,
+      y: targetNode.y,
       id: getRandomID(),
-      size: Math.floor(Math.random() * 8),
-      label: 'Added Node',
+      size: Math.floor(Math.random() * 8) + 7,
+      label: 'N Nodes',
     };
 
     const link = {
