@@ -7,13 +7,14 @@ import { axisStylesShape, tickStylesShape } from '../utils/propShapes';
 const propTypes = {
   axisStyles: axisStylesShape,
   hideZero: PropTypes.bool,
-  label: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+  label: PropTypes.string,
+  labelProps: PropTypes.object,
   labelOffset: PropTypes.number,
   numTicks: PropTypes.number,
   orientation: PropTypes.oneOf(['left', 'right']),
   rangePadding: PropTypes.number,
   tickStyles: tickStylesShape,
-  tickLabelComponent: PropTypes.element,
+  tickLabelProps: PropTypes.func,
   tickFormat: PropTypes.func,
   tickValues: PropTypes.array,
 
@@ -27,13 +28,14 @@ const defaultProps = {
   hideZero: false,
   innerWidth: null,
   label: null,
+  labelProps: null,
   labelOffset: 0,
   numTicks: null,
   orientation: 'right',
   rangePadding: null,
   scale: null,
   tickFormat: null,
-  tickLabelComponent: undefined,
+  tickLabelProps: null,
   tickStyles: {},
   tickValues: undefined,
 };
@@ -45,19 +47,25 @@ export default class YAxis extends React.PureComponent {
       hideZero,
       innerWidth,
       label,
+      labelProps,
       labelOffset,
       numTicks,
       orientation,
       rangePadding,
       scale,
       tickFormat,
-      tickLabelComponent,
+      tickLabelProps: passedTickLabelProps,
       tickStyles,
       tickValues,
     } = this.props;
     if (!scale || !innerWidth) return null;
 
     const Axis = orientation === 'left' ? AxisLeft : AxisRight;
+    
+    const tickLabelProps = passedTickLabelProps ||
+      (tickStyles.label && tickStyles.label[orientation])
+        ? () => tickStyles.label[orientation] : undefined;
+
     return (
       <Axis
         top={0}
@@ -65,12 +73,8 @@ export default class YAxis extends React.PureComponent {
         rangePadding={rangePadding}
         hideTicks={numTicks === 0}
         hideZero={hideZero}
-        label={typeof label === 'string' && axisStyles.label ?
-          <text {...(axisStyles.label || {})[orientation]}>
-            {label}
-          </text>
-          : label
-        }
+        label={label}
+        labelProps={labelProps || (axisStyles.label || {})[orientation]}
         labelOffset={labelOffset}
         numTicks={numTicks}
         scale={scale}
@@ -79,9 +83,7 @@ export default class YAxis extends React.PureComponent {
         tickFormat={tickFormat}
         tickLength={tickStyles.tickLength}
         tickStroke={tickStyles.stroke}
-        tickLabelComponent={tickLabelComponent || (tickStyles.label &&
-          <text {...(tickStyles.label || {})[orientation]} />
-        )}
+        tickLabelProps={tickLabelProps}
         tickValues={tickValues}
       />
     );

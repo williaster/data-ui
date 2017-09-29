@@ -7,12 +7,13 @@ import { axisStylesShape, tickStylesShape } from '../utils/propShapes';
 const propTypes = {
   axisStyles: axisStylesShape,
   hideZero: PropTypes.bool,
-  label: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+  label: PropTypes.string,
+  labelProps: PropTypes.object,
   numTicks: PropTypes.number,
   orientation: PropTypes.oneOf(['bottom', 'top']),
   rangePadding: PropTypes.number,
   tickStyles: tickStylesShape,
-  tickLabelComponent: PropTypes.element,
+  tickLabelProps: PropTypes.func,
   tickFormat: PropTypes.func,
   tickValues: PropTypes.array,
 
@@ -26,12 +27,13 @@ const defaultProps = {
   hideZero: false,
   innerHeight: null,
   label: null,
+  labelProps: null,
   numTicks: null,
   orientation: 'bottom',
   rangePadding: null,
   scale: null,
   tickFormat: null,
-  tickLabelComponent: null,
+  tickLabelProps: null,
   tickStyles: {},
   tickValues: undefined,
 };
@@ -43,17 +45,23 @@ export default class XAxis extends React.PureComponent {
       innerHeight,
       hideZero,
       label,
+      labelProps,
       numTicks,
       orientation,
       rangePadding,
       scale,
       tickFormat,
-      tickLabelComponent,
+      tickLabelProps: passedTickLabelProps,
       tickStyles,
       tickValues,
     } = this.props;
     if (!scale || !innerHeight) return null;
     const Axis = orientation === 'bottom' ? AxisBottom : AxisTop;
+    
+    const tickLabelProps = passedTickLabelProps ||
+      (tickStyles.label && tickStyles.label[orientation])
+        ? () => tickStyles.label[orientation] : undefined;
+
     return (
       <Axis
         top={orientation === 'bottom' ? innerHeight : 0}
@@ -61,12 +69,8 @@ export default class XAxis extends React.PureComponent {
         rangePadding={rangePadding}
         hideTicks={numTicks === 0}
         hideZero={hideZero}
-        label={typeof label === 'string' && axisStyles.label ?
-          <text {...(axisStyles.label || {})[orientation]}>
-            {label}
-          </text>
-          : label
-        }
+        label={label}
+        labelProps={labelProps || (axisStyles.label || {})[orientation]}
         numTicks={numTicks}
         scale={scale}
         stroke={axisStyles.stroke}
@@ -74,9 +78,7 @@ export default class XAxis extends React.PureComponent {
         tickFormat={tickFormat}
         tickLength={tickStyles.tickLength}
         tickStroke={tickStyles.stroke}
-        tickLabelComponent={tickLabelComponent || (tickStyles.label &&
-          <text {...(tickStyles.label || {})[orientation]} />
-        )}
+        tickLabelProps={tickLabelProps}
         tickValues={tickValues}
       />
     );

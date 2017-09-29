@@ -65,25 +65,21 @@ describe('<YAxis />', () => {
   });
 
   test('It should render a label if passed', () => {
-    const label = <text id="label" />;
     const wrapper = shallow(
-      <XYChart {...chartProps}><YAxis label={label} /></XYChart>,
+      <XYChart {...chartProps}><YAxis label="apple" /></XYChart>,
     );
-    expect(wrapper.render().find('#label').length).toBe(1);
+    expect(wrapper.render().find('.vx-axis-label').first().text()).toBe('apple');
   });
 
-  test('It should use a tickLabelComponent and tickFormat func when passed', () => {
+  test('It should use the output of tickFormat() when passed', () => {
     const tickFormat = () => 'iNvaRiAnT LabEl';
     const wrapper = shallow(
       <XYChart {...chartProps}>
         <LineSeries label="" data={[{ x: 'a', y: 7 }]} />
-        <YAxis
-          tickFormat={tickFormat}
-          tickLabelComponent={<text className="test" />}
-        />
+        <YAxis tickFormat={tickFormat} />
       </XYChart>,
     );
-    const label = wrapper.render().find('.test');
-    expect(label.first().text()).toBe(tickFormat());
+    const tick = wrapper.render().find('.vx-axis-tick').first();
+    expect(tick.find('text').text()).toBe(tickFormat());
   });
 });
