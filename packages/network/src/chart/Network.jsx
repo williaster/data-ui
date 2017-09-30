@@ -38,6 +38,7 @@ const defaultProps = {
     bottom: 20,
     right: 20,
   },
+  keepAspectRatio: true,
 };
 
 class Network extends React.PureComponent {
@@ -86,36 +87,49 @@ class Network extends React.PureComponent {
 
   copyGraph(graph) {
     const { width, height, margin } = this.props;
-    const range = graph.nodes.reduce((minMax, node) => {
-      return {
+    const range = graph.nodes.reduce(
+      (minMax, node) =>
+        ({
+          x: {
+            min: Math.min(minMax.x.min, node.x),
+            max: Math.max(minMax.x.max, node.x),
+          },
+          y: {
+            min: Math.min(minMax.y.min, node.y),
+            max: Math.max(minMax.y.max, node.y),
+          },
+        }),
+      {
         x: {
-          min: Math.min(minMax.x.min, node.x),
-          max: Math.max(minMax.x.max, node.x),
+          min: 999999,
+          max: -999999,
         },
         y: {
-          min: Math.min(minMax.y.min, node.y),
-          max: Math.max(minMax.y.max, node.y),
+          min: 999999,
+          max: -999999,
         },
-      };
-    }, {
-      x: {
-        min: 999999,
-        max: -999999,
-      },
-      y: {
-        min: 999999,
-        max: -999999,
-      },
-    });
+      });
+
+    const actualWidth = width - margin.left - margin.right;
+    const actualheight = height - margin.top - margin.bottom;
+    const dataXRange = range.x.max - range.x.min;
+    const dataYRange = range.y.max - range.y.min;
+
+    const zoomLevel = Math.max(
+      dataXRange / actualWidth,
+      dataYRange / actualheight,
+    );
 
     function xScale(x) {
-      return ((range.x.max - x) / (range.x.max - range.x.min)) *
-       (width - margin.left - margin.right) + margin.left;
+      const offset = margin.left +
+      (((actualWidth - (dataXRange / zoomLevel)) / 2) - (range.x.min / zoomLevel));
+      return (x / zoomLevel) + offset;
     }
 
     function yScale(y) {
-      return ((range.y.max - y) / (range.y.max - range.y.min)) *
-       (height - margin.top - margin.bottom) + margin.top;
+      const offset = margin.top +
+      (((actualheight - (dataYRange / zoomLevel)) / 2) - (range.y.min / zoomLevel));
+      return (y / zoomLevel) + offset;
     }
 
     const nodes = graph.nodes.map(({ x, y, ...rest }, index) => ({
