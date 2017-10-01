@@ -38,7 +38,6 @@ const defaultProps = {
     bottom: 20,
     right: 20,
   },
-  keepAspectRatio: true,
 };
 
 class Network extends React.PureComponent {
@@ -88,15 +87,15 @@ class Network extends React.PureComponent {
   copyGraph(graph) {
     const { width, height, margin } = this.props;
     const range = graph.nodes.reduce(
-      (minMax, node) =>
+      ({ x, y }, node) =>
         ({
           x: {
-            min: Math.min(minMax.x.min, node.x),
-            max: Math.max(minMax.x.max, node.x),
+            min: Math.min(x.min, node.x),
+            max: Math.max(x.max, node.x),
           },
           y: {
-            min: Math.min(minMax.y.min, node.y),
-            max: Math.max(minMax.y.max, node.y),
+            min: Math.min(y.min, node.y),
+            max: Math.max(y.max, node.y),
           },
         }),
       {
@@ -120,16 +119,18 @@ class Network extends React.PureComponent {
       dataYRange / actualheight,
     );
 
+    const xOffsetForCentering = ((actualWidth - (dataXRange / zoomLevel)) / 2);
+    const xTotalOffset = margin.left + (xOffsetForCentering - (range.x.min / zoomLevel));
+
+    const yOffsetForCentering = ((actualheight - (dataYRange / zoomLevel)) / 2);
+    const yTotalOffset = margin.top + (yOffsetForCentering - (range.y.min / zoomLevel));
+
     function xScale(x) {
-      const offset = margin.left +
-      (((actualWidth - (dataXRange / zoomLevel)) / 2) - (range.x.min / zoomLevel));
-      return (x / zoomLevel) + offset;
+      return (x / zoomLevel) + xTotalOffset;
     }
 
     function yScale(y) {
-      const offset = margin.top +
-      (((actualheight - (dataYRange / zoomLevel)) / 2) - (range.y.min / zoomLevel));
-      return (y / zoomLevel) + offset;
+      return (y / zoomLevel) + yTotalOffset;
     }
 
     const nodes = graph.nodes.map(({ x, y, ...rest }, index) => ({
