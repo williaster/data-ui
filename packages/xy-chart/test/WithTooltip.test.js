@@ -154,7 +154,7 @@ describe('<WithTooltip />', () => {
       </WithTooltip>,
     );
 
-    const container = wrapper.find('.i-like-tooltipz');
+    const container = wrapper.find(`.${className}`);
     expect(container.length).toBe(1);
     expect(container.prop('style')).toMatchObject(styles);
   });

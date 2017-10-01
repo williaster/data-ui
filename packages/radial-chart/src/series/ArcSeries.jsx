@@ -97,6 +97,7 @@ export default function ArcSeries({
         }}
         onMouseLeave={() => () => { onMouseLeave(); }}
         {...restProps}
+        centroid={null}
       />
       {label && labelComponent &&
         <Arc
