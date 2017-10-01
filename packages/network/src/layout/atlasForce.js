@@ -10,10 +10,8 @@ class AtlasForceDirectedLayout {
     this.graph = graph;
     this.clear();
     this.simulation = d3Force.forceSimulation(graph.nodes)
-    .force('charge', d3Force.forceManyBody().strength(-600))
-    .force('link', d3Force.forceLink(graph.links).distance(100).strength(1))
-    .force('x', d3Force.forceX())
-    .force('y', d3Force.forceY())
+    .force('charge', d3Force.forceManyBody())
+    .force('link', d3Force.forceLink(graph.links))
     .force('center', d3Force.forceCenter(450, 250))
     .alphaMin(0.1);
   }

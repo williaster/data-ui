@@ -15,36 +15,52 @@ export const propTypes = {
   ariaLabel: PropTypes.string.isRequired,
   width: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired,
+  margin: PropTypes.shape({
+    top: PropTypes.number,
+    left: PropTypes.number,
+    bottom: PropTypes.number,
+    right: PropTypes.number,
+  }),
   graph: PropTypes.shape({
     nodes: PropTypes.array.isRequired,
     links: PropTypes.array.isRequired,
   }).isRequired,
   renderTooltip: PropTypes.func,
   animated: PropTypes.bool,
+  labelWaitingForLayout: PropTypes.string,
 };
 
 const defaultProps = {
   renderTooltip: null,
   animated: false,
+  margin: {
+    top: 20,
+    left: 20,
+    bottom: 20,
+    right: 20,
+  },
+  labelWaitingForLayout: 'Please Wait...',
 };
 
 class Network extends React.PureComponent {
   constructor(props) {
     super(props);
+
+    const { graph, animated, width, height, margin } = props;
     this.state = {
-      graph: this.copyGraph(props.graph),
+      layoutReadyForRendering: false,
     };
-    this.layout = new Layout({ animated: props.animated });
-    this.layout.setGraph(props.graph);
+    this.layout = new Layout({ animated });
+    this.layout.setGraph(graph);
     this.layout.layout({
       callback: (newGraph) => {
-        this.setGraphState(newGraph);
+        this.setGraphState({ graph: newGraph, width, height, margin });
       },
     });
   }
 
   componentWillReceiveProps(nextProps) {
-    const { graph, animated } = nextProps;
+    const { graph, animated, width, height, margin } = nextProps;
     if (
       this.props.graph.links !== graph.links
       || this.props.graph.nodes !== graph.nodes
@@ -53,11 +69,11 @@ class Network extends React.PureComponent {
       this.layout.setAnimated(animated);
       this.layout.layout({
         callback: (newGraph) => {
-          this.setGraphState(newGraph);
+          this.setGraphState({ graph: newGraph, width, height, margin });
         },
       });
     } else {
-      this.setGraphState(graph);
+      this.setGraphState({ graph, width, height, margin });
     }
   }
 
@@ -65,27 +81,72 @@ class Network extends React.PureComponent {
     this.layout.clear();
   }
 
-  setGraphState(graph) {
-    const copiedGraph = this.copyGraph(graph);
-    this.setState({
-      graph: copiedGraph,
-    });
-  }
+  setGraphState({ graph, width, height, margin }) {
+    const range = graph.nodes.reduce(
+      ({ x, y }, node) =>
+        ({
+          x: {
+            min: Math.min(x.min, node.x),
+            max: Math.max(x.max, node.x),
+          },
+          y: {
+            min: Math.min(y.min, node.y),
+            max: Math.max(y.max, node.y),
+          },
+        }),
+      {
+        x: {
+          min: 999999,
+          max: -999999,
+        },
+        y: {
+          min: 999999,
+          max: -999999,
+        },
+      });
 
-  copyGraph(graph) {
-    const nodes = graph.nodes.map((node, index) => ({
-      ...node,
+    const actualWidth = width - margin.left - margin.right;
+    const actualheight = height - margin.top - margin.bottom;
+    const dataXRange = range.x.max - range.x.min;
+    const dataYRange = range.y.max - range.y.min;
+
+    const zoomLevel = Math.max(
+      dataXRange / actualWidth,
+      dataYRange / actualheight,
+    );
+
+    const xOffsetForCentering = ((actualWidth - (dataXRange / zoomLevel)) / 2);
+    const xTotalOffset = margin.left + (xOffsetForCentering - (range.x.min / zoomLevel));
+
+    const yOffsetForCentering = ((actualheight - (dataYRange / zoomLevel)) / 2);
+    const yTotalOffset = margin.top + (yOffsetForCentering - (range.y.min / zoomLevel));
+
+    function xScale(x) {
+      return (x / zoomLevel) + xTotalOffset;
+    }
+
+    function yScale(y) {
+      return (y / zoomLevel) + yTotalOffset;
+    }
+
+    const nodes = graph.nodes.map(({ x, y, ...rest }, index) => ({
+      x: xScale(x),
+      y: yScale(y),
+      ...rest,
       index,
     }));
     const links = graph.links.map((link, index) => ({
       ...link,
-      sourceX: link.source.x,
-      sourceY: link.source.y,
-      targetX: link.target.x,
-      targetY: link.target.y,
+      sourceX: xScale(link.source.x),
+      sourceY: yScale(link.source.y),
+      targetX: xScale(link.target.x),
+      targetY: yScale(link.target.y),
       index,
     }));
-    return { nodes, links };
+    this.setState({
+      graph: { nodes, links },
+      layoutReadyForRendering: true,
+    });
   }
 
   render() {
@@ -99,6 +160,7 @@ class Network extends React.PureComponent {
       renderNode,
       renderLink,
       renderTooltip,
+      labelWaitingForLayout,
     } = this.props;
     return (
       <WithTooltip renderTooltip={renderTooltip}>
@@ -109,25 +171,37 @@ class Network extends React.PureComponent {
             width={width}
             height={height}
           >
-            <Group>
-              <Links
-                links={this.state.graph.links}
-                linkComponent={renderLink || Link}
-              />
-              <Nodes
-                nodes={this.state.graph.nodes}
-                nodeComponent={renderNode || Node}
-                onMouseEnter={onNodeMouseEnter}
-                onMouseLeave={(event) => {
-                  if (onNodeMouseLeave) {
-                    onNodeMouseLeave(event);
-                  }
-                  toolTipOnMouseLeave(event);
-                }}
-                onMouseMove={onMouseMove}
-                onClick={onNodeClick}
-              />
-            </Group>
+            {this.state.layoutReadyForRendering ?
+              (
+                <Group>
+                  <Links
+                    links={this.state.graph.links}
+                    linkComponent={renderLink || Link}
+                  />
+                  <Nodes
+                    nodes={this.state.graph.nodes}
+                    nodeComponent={renderNode || Node}
+                    onMouseEnter={onNodeMouseEnter}
+                    onMouseLeave={(event) => {
+                      if (onNodeMouseLeave) {
+                        onNodeMouseLeave(event);
+                      }
+                      toolTipOnMouseLeave(event);
+                    }}
+                    onMouseMove={onMouseMove}
+                    onClick={onNodeClick}
+                  />
+                </Group>
+              ) : (
+                <text
+                  x={width / 2}
+                  y={height / 2}
+                  textAnchor="middle"
+                >
+                  {labelWaitingForLayout}
+                </text>
+              )
+            }
           </svg>
         )}
       </WithTooltip>
