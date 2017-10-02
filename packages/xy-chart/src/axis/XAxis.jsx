@@ -57,7 +57,7 @@ export default class XAxis extends React.PureComponent {
     } = this.props;
     if (!scale || !innerHeight) return null;
     const Axis = orientation === 'bottom' ? AxisBottom : AxisTop;
-    
+
     const tickLabelProps = passedTickLabelProps ||
       (tickStyles.label && tickStyles.label[orientation])
         ? () => tickStyles.label[orientation] : undefined;
@@ -76,9 +76,9 @@ export default class XAxis extends React.PureComponent {
         stroke={axisStyles.stroke}
         strokeWidth={axisStyles.strokeWidth}
         tickFormat={tickFormat}
+        tickLabelProps={tickLabelProps}
         tickLength={tickStyles.tickLength}
         tickStroke={tickStyles.stroke}
-        tickLabelProps={tickLabelProps}
         tickValues={tickValues}
       />
     );

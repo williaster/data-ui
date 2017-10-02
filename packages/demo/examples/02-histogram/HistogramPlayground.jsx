@@ -20,7 +20,7 @@ const distributionLookup = {
   logNormal: randomLogNormal,
 };
 
-const colors = themeColors.categories;
+const colors = [themeColors.categories[3], themeColors.categories[1]];
 
 function datumGenerator(generator) {
   return (_, i) => ({ value: generator(), id: i });
@@ -100,7 +100,7 @@ class HistogramPlayground extends React.PureComponent {
   renderHistogramControls() {
     const { binCount } = this.state;
     return (
-      <div style={{ display: 'flex', flexDirection: 'row', paddingBottom: 8 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', paddingBottom: 8 }}>
         {['cumulative', 'normalized', 'xAxis', 'yAxis', 'horizontal'].map(key => (
           <Checkbox
             key={key}
@@ -196,8 +196,6 @@ class HistogramPlayground extends React.PureComponent {
 
     return (
       <div style={{ display: 'flex', flexDirection: 'column' }}>
-        {this.renderHistogramControls()}
-
         <HistogramComponent
           normalized={normalized}
           cumulative={cumulative}
@@ -229,6 +227,8 @@ class HistogramPlayground extends React.PureComponent {
           {xAxis && <XAxis />}
           {yAxis && <YAxis />}
         </HistogramComponent>
+
+        {this.renderHistogramControls()}
 
         {datasets.map(key => this.renderDatasetControls(key))}
       </div>

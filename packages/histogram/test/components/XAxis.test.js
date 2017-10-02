@@ -33,8 +33,7 @@ describe('<XAxis />', () => {
   });
 
   test('It should render a label if passed', () => {
-    const label = <text id="label" />;
-    const wrapper = shallow(<XAxis {...props} label={label} />);
-    expect(wrapper.render().find('#label').length).toBe(1);
+    const wrapper = shallow(<XAxis {...props} label="banana" />);
+    expect(wrapper.render().find('.vx-axis-label').first().text()).toBe('banana');
   });
 });

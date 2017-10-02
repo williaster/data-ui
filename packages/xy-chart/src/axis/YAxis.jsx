@@ -61,7 +61,7 @@ export default class YAxis extends React.PureComponent {
     if (!scale || !innerWidth) return null;
 
     const Axis = orientation === 'left' ? AxisLeft : AxisRight;
-    
+
     const tickLabelProps = passedTickLabelProps ||
       (tickStyles.label && tickStyles.label[orientation])
         ? () => tickStyles.label[orientation] : undefined;
@@ -81,9 +81,9 @@ export default class YAxis extends React.PureComponent {
         stroke={axisStyles.stroke}
         strokeWidth={axisStyles.strokeWidth}
         tickFormat={tickFormat}
+        tickLabelProps={tickLabelProps}
         tickLength={tickStyles.tickLength}
         tickStroke={tickStyles.stroke}
-        tickLabelProps={tickLabelProps}
         tickValues={tickValues}
       />
     );

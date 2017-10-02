@@ -1,7 +1,7 @@
 import React from 'react';
-import { shallow, mount } from 'enzyme';
+import { shallow, mount, render } from 'enzyme';
 import { Bar } from '@vx/shape';
-import { NodeGroup } from 'resonance';
+import { NodeGroup } from 'react-move';
 
 import { BarSeries, Histogram } from '../../src/';
 import AnimatedBarSeries from '../../src/series/animated/AnimatedBarSeries';
@@ -51,7 +51,10 @@ describe('<AnimatedBarSeries />', () => {
         <BarSeries animated binnedData={numericBinnedData} />
       </Histogram>,
     );
-    expect(wrapper.find(Bar).length).toBe(numericBinnedData.length);
+
+    setTimeout(() => {
+      expect(wrapper.find(Bar).length).toBe(numericBinnedData.length);
+    }, 0);
   });
 
   test('it should render one <Bar/> per categorical bin', () => {
@@ -61,7 +64,10 @@ describe('<AnimatedBarSeries />', () => {
         <BarSeries animated binnedData={categoricalBinnedData} />
       </Histogram>,
     );
-    expect(wrapper.find(Bar).length).toBe(categoricalBinnedData.length);
+
+    setTimeout(() => {
+      expect(wrapper.find(Bar).length).toBe(categoricalBinnedData.length);
+    }, 0);
   });
 
   test('it should call onMouseMove({ datum, data, event, color }) and onMouseLeave() on trigger', () => {
@@ -74,17 +80,19 @@ describe('<AnimatedBarSeries />', () => {
       </Histogram>,
     );
 
-    const bar = wrapper.find(Bar).first();
-    bar.simulate('mousemove');
+    setTimeout(() => {
+      const bar = wrapper.find(Bar).first();
+      bar.simulate('mousemove');
 
-    expect(onMouseMove).toHaveBeenCalledTimes(1);
-    const args = onMouseMove.mock.calls[0][0];
-    expect(args.data).toBe(numericBinnedData);
-    expect(args.datum).toBe(numericBinnedData[0]);
-    expect(args.event).toBeDefined();
-    expect(args.color).toBe('cabbage-purple');
+      expect(onMouseMove).toHaveBeenCalledTimes(1);
+      const args = onMouseMove.mock.calls[0][0];
+      expect(args.data).toBe(numericBinnedData);
+      expect(args.datum).toBe(numericBinnedData[0]);
+      expect(args.event).toBeDefined();
+      expect(args.color).toBe('cabbage-purple');
 
-    bar.simulate('mouseleave');
-    expect(onMouseLeave).toHaveBeenCalledTimes(1);
+      bar.simulate('mouseleave');
+      expect(onMouseLeave).toHaveBeenCalledTimes(1);
+    }, 0);
   });
 });
