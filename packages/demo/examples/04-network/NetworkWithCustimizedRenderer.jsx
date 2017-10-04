@@ -2,7 +2,7 @@
 import { Network, networkPropTypes } from '@data-ui/network';
 import React from 'react';
 
-import { getAddedGraph } from './data';
+import { expandGraph } from './data';
 import UserNode from './renderer/UserNode';
 import AttributeNode from './renderer/AttributeNode';
 import DirectedLink from './renderer/DirectedLink';
@@ -18,8 +18,8 @@ class NetworkWithCustomizedRenderer extends React.PureComponent {
 
   onNodeClick({ index }) {
     const graph = this.state.graph;
-    const newGraph = getAddedGraph(graph, graph.nodes[index]);
-    this.setState({ graph: newGraph });
+    const newGraph = expandGraph(graph, graph.nodes[index]);
+    this.setState(() => ({ graph: newGraph }));
   }
 
   renderNode(props) {
@@ -52,12 +52,13 @@ class NetworkWithCustomizedRenderer extends React.PureComponent {
   }
 
   render() {
-    const { animated, ariaLabel, width, height, renderTooltip } = this.props;
+    const { animated, ariaLabel, width, height, renderTooltip, margin } = this.props;
     return (
       <Network
         renderTooltip={renderTooltip}
         width={width}
         height={height}
+        margin={margin}
         animated={animated}
         ariaLabel={ariaLabel}
         graph={this.state.graph}

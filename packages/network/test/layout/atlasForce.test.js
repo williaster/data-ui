@@ -1,4 +1,4 @@
-import AtlasForceDirectedLayout from '../../src/layout/atlasForce';
+import { AtlasForceDirectedLayout } from '../../src/';
 import defaultGraph from '../data';
 
 describe('AtlasForceDirectedLayout', () => {

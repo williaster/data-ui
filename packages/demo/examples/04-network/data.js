@@ -1,4 +1,5 @@
 /* eslint no-bitwise: 0, react/no-unused-prop-types: 0 */
+import { color } from '@data-ui/theme';
 
 function getRandomID() {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (char) => {
@@ -63,7 +64,7 @@ export const defaultGraph = {
   links: defaultLinks,
 };
 
-export function getAddedGraph(graph, targetNode) {
+export function expandGraph(graph, targetNode) {
   const numOfNodes = Math.ceil(Math.random() * 5);
   const nodes = graph.nodes.concat([]);
   const links = graph.links.concat([]);
@@ -73,7 +74,8 @@ export function getAddedGraph(graph, targetNode) {
       y: targetNode.y,
       id: getRandomID(),
       size: Math.floor(Math.random() * 8) + 7,
-      label: 'N Nodes',
+      label: 'Node X',
+      fill: color.categories[Math.floor(Math.random() * color.categories.length)],
     };
 
     const link = {
@@ -98,4 +100,3 @@ export function getAddedGraph(graph, targetNode) {
   }
   return { nodes, links };
 }
-

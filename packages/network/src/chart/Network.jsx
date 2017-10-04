@@ -27,7 +27,7 @@ export const propTypes = {
   }).isRequired,
   renderTooltip: PropTypes.func,
   animated: PropTypes.bool,
-  labelWaitingForLayout: PropTypes.string,
+  waitingForLayoutLabel: PropTypes.string,
 };
 
 const defaultProps = {
@@ -39,7 +39,7 @@ const defaultProps = {
     bottom: 20,
     right: 20,
   },
-  labelWaitingForLayout: 'Please Wait...',
+  waitingForLayoutLabel: 'Computing layout...',
 };
 
 class Network extends React.PureComponent {
@@ -48,7 +48,7 @@ class Network extends React.PureComponent {
 
     const { graph, animated, width, height, margin } = props;
     this.state = {
-      layoutReadyForRendering: false,
+      computingLayout: true,
     };
     this.layout = new Layout({ animated });
     this.layout.setGraph(graph);
@@ -65,6 +65,7 @@ class Network extends React.PureComponent {
       this.props.graph.links !== graph.links
       || this.props.graph.nodes !== graph.nodes
     ) {
+      this.setState(() => ({ computingLayout: true }));
       this.layout.setGraph(graph);
       this.layout.setAnimated(animated);
       this.layout.layout({
@@ -143,10 +144,11 @@ class Network extends React.PureComponent {
       targetY: yScale(link.target.y),
       index,
     }));
-    this.setState({
+
+    this.setState(() => ({
       graph: { nodes, links },
-      layoutReadyForRendering: true,
-    });
+      computingLayout: false,
+    }));
   }
 
   render() {
@@ -160,8 +162,9 @@ class Network extends React.PureComponent {
       renderNode,
       renderLink,
       renderTooltip,
-      labelWaitingForLayout,
+      waitingForLayoutLabel,
     } = this.props;
+
     return (
       <WithTooltip renderTooltip={renderTooltip}>
         {({ onMouseMove, onMouseLeave: toolTipOnMouseLeave }) => (
@@ -171,37 +174,37 @@ class Network extends React.PureComponent {
             width={width}
             height={height}
           >
-            {this.state.layoutReadyForRendering ?
-              (
-                <Group>
-                  <Links
-                    links={this.state.graph.links}
-                    linkComponent={renderLink || Link}
-                  />
-                  <Nodes
-                    nodes={this.state.graph.nodes}
-                    nodeComponent={renderNode || Node}
-                    onMouseEnter={onNodeMouseEnter}
-                    onMouseLeave={(event) => {
-                      if (onNodeMouseLeave) {
-                        onNodeMouseLeave(event);
-                      }
-                      toolTipOnMouseLeave(event);
-                    }}
-                    onMouseMove={onMouseMove}
-                    onClick={onNodeClick}
-                  />
-                </Group>
-              ) : (
-                <text
-                  x={width / 2}
-                  y={height / 2}
-                  textAnchor="middle"
-                >
-                  {labelWaitingForLayout}
-                </text>
-              )
-            }
+            {this.state.graph &&
+              <Group>
+                <Links
+                  links={this.state.graph.links}
+                  linkComponent={renderLink || Link}
+                />
+                <Nodes
+                  nodes={this.state.graph.nodes}
+                  nodeComponent={renderNode || Node}
+                  onMouseEnter={onNodeMouseEnter}
+                  onMouseLeave={(event) => {
+                    if (onNodeMouseLeave) {
+                      onNodeMouseLeave(event);
+                    }
+                    toolTipOnMouseLeave(event);
+                  }}
+                  onMouseMove={onMouseMove}
+                  onClick={onNodeClick}
+                />
+              </Group>}
+
+            {this.state.computingLayout && waitingForLayoutLabel &&
+              <text
+                x={width / 2}
+                y={height / 2}
+                textAnchor="middle"
+                stroke="#ffffff"
+                paintOrder="stroke"
+              >
+                {waitingForLayoutLabel}
+              </text>}
           </svg>
         )}
       </WithTooltip>

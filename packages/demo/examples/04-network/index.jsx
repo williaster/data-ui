@@ -16,12 +16,12 @@ import ExpandableNetwork from './ExpandableNetwork';
 import NetworkWithCustimizedRenderer from './NetworkWithCustimizedRenderer';
 
 function renderTooltip({ data }) {
-  const { x, y, id } = data;
+  const { x, y, label } = data;
   return (
     <div>
-      {id &&
+      {label &&
         <div>
-          <strong>{id}</strong>
+          <strong>{label}</strong>
         </div>}
       <div>
         <strong> x </strong>
@@ -39,7 +39,8 @@ const ResponsiveNetwork = withScreenSize(({
   screenWidth,
   children,
   networkComponent,
-  ...rest }) => (
+  ...rest
+}) => (
     React.createElement(
       networkComponent,
       {
@@ -47,6 +48,7 @@ const ResponsiveNetwork = withScreenSize(({
         height: Math.min(1000 / 1.8, screenWidth / 1.3 / 1.8),
         ariaLabel: 'Network showing ...',
         renderTooltip,
+        margin: { top: 40, right: 40, bottom: 40, left: 40 },
         ...rest,
       },
       children,

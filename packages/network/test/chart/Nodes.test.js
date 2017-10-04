@@ -1,10 +1,9 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import Nodes from '../../src/chart/Nodes';
-import Node from '../../src/chart/Node';
+import { Node, Nodes } from '../../src/';
 import defaultGraph from '../data';
 
-describe('<Links />', () => {
+describe('<Nodes />', () => {
   const props = {
     nodes: defaultGraph.nodes,
     nodeComponent: Node,
@@ -14,7 +13,7 @@ describe('<Links />', () => {
     expect(Nodes).toBeDefined();
   });
 
-  test('it should render the correct number of Link components', () => {
+  test('it should render the correct number of Node components', () => {
     const wrapper = shallow(
       <Nodes {...props} />,
     );

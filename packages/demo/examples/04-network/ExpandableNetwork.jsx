@@ -4,7 +4,7 @@ import {
   propTypes,
 } from '@data-ui/network';
 
-import { getAddedGraph } from './data';
+import { expandGraph } from './data';
 
 class ExpandableNetwork extends React.PureComponent {
   constructor(props) {
@@ -15,17 +15,18 @@ class ExpandableNetwork extends React.PureComponent {
 
   onNodeClick({ index }) {
     const graph = this.state.graph;
-    const newGraph = getAddedGraph(graph, graph.nodes[index]);
-    this.setState({ graph: newGraph });
+    const newGraph = expandGraph(graph, graph.nodes[index]);
+    this.setState(() => ({ graph: newGraph }));
   }
 
   render() {
-    const { animated, ariaLabel, width, height, renderTooltip } = this.props;
+    const { animated, ariaLabel, width, height, renderTooltip, margin } = this.props;
     return (
       <Network
         renderTooltip={renderTooltip}
         width={width}
         height={height}
+        margin={margin}
         animated={animated}
         ariaLabel={ariaLabel}
         graph={this.state.graph}
