@@ -2,14 +2,18 @@ import ReactGA from 'react-ga';
 
 const GA_ID = 'UA-102418724-1';
 
-if (typeof window !== 'undefined' && window.location.hostname !== 'localhost') {
+const isProd = () =>
+  typeof window !== 'undefined' &&
+  ['localhost', '0.0.0.0'].indexOf(window.location.hostname) === -1;
+
+if (isProd()) {
   ReactGA.initialize(GA_ID);
   ReactGA.set({ page: window.location.pathname, title: 'data-ui' });
   ReactGA.pageview(window.location.pathname);
 }
 
 export function analytics({ story, kind, tab = 'demo' }) {
-  if (typeof window !== 'undefined' && window.location.hostname !== 'localhost') {
+  if (isProd()) {
     ReactGA.set({
       page: window.location.pathname,
       title: `${kind} > ${story} > ${tab}`,

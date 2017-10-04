@@ -1,8 +1,6 @@
 import React from 'react';
 import { shallow, mount } from 'enzyme';
-import { Network, WithTooltip } from '../../src';
-import Nodes from '../../src/chart/Nodes';
-import Links from '../../src/chart/Links';
+import { Network, WithTooltip, Nodes, Links } from '../../src';
 import defaultGraph from '../data';
 
 describe('<Network />', () => {
@@ -34,44 +32,26 @@ describe('<Network />', () => {
     expect(wrapper.find('text').length).toBe(1);
   });
 
-  test('it should render the graph for animation enabled graph very soon', () => {
+  test('it should render the graph for animation enabled graph with little delay', (done) => {
+    expect.assertions(2);
     const wrapper = mount(<Network {...props} animated />);
     setTimeout(() => {
       expect(wrapper.find(Nodes).length).toBe(1);
       expect(wrapper.find(Links).length).toBe(1);
-    }, 50);
+      done();
+    }, 10);
   });
 
-  test('it should recompute the graph when prop changes', () => {
-    const wrapper = mount(<Network {...props} animated />);
-    setTimeout(() => {
-      const graph = wrapper.state('graph');
-      let isComputedCorrectly = true;
-      graph.nodes.forEach((node) => {
-        if (node.x > 100) {
-          isComputedCorrectly = false;
-        }
-      });
-      expect(isComputedCorrectly).toBe(true);
-    }, 50);
-    wrapper.setProps({ width: 200 });
-    setTimeout(() => {
-      const graph = wrapper.state('graph');
-      let isRecomputed = false;
-      graph.nodes.forEach((node) => {
-        if (node.x > 100) {
-          isRecomputed = true;
-        }
-      });
-      expect(isRecomputed).toBe(true);
-    }, 50);
-  });
+  test('it should handle mouse events correctly', (done) => {
+    expect.assertions(3);
 
-  test('it should handle mouse events correctly', () => {
-    let testID = 0;
+    const expectedId = props.graph.nodes[0].id;
+    let testID = null;
+
     function onMouseEvent({ id }) {
       testID = id;
     }
+
     const wrapper = mount(
       <Network
         onNodeMouseLeave={onMouseEvent}
@@ -81,15 +61,21 @@ describe('<Network />', () => {
         animated
       />,
     );
+
     setTimeout(() => {
-      wrapper.find('circle').first().simulate('click');
-      expect(testID).toBe(props.graph.nodes[0].id);
-      testID = 0;
-      wrapper.find('circle').first().simulate('mouseEnter');
-      expect(testID).toBe(props.graph.nodes[0].id);
-      testID = 0;
-      wrapper.find('circle').first().simulate('mouseLeave');
-      expect(testID).toBe(props.graph.nodes[0].id);
+      const node = wrapper.find('circle').first();
+      node.simulate('click');
+      expect(testID).toBe(expectedId);
+
+      testID = null;
+      node.simulate('mouseEnter');
+      expect(testID).toBe(expectedId);
+
+      testID = null;
+      node.simulate('mouseLeave');
+      expect(testID).toBe(expectedId);
+
+      done();
     }, 50);
   });
 });

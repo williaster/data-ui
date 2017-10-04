@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import Node from '../../src/chart/Node';
+import { Node } from '../../src/';
 import defaultGraph from '../data';
 
 describe('<Node />', () => {
@@ -12,7 +12,7 @@ describe('<Node />', () => {
     expect(Node).toBeDefined();
   });
 
-  test('it should render a <g> dom', () => {
+  test('it should render a <g>', () => {
     const wrapper = shallow(
       <Node {...props} />,
     );

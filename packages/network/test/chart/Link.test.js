@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import Link from '../../src/chart/Link';
+import { Link } from '../../src/';
 import defaultGraph from '../data';
 
 describe('<Link />', () => {
