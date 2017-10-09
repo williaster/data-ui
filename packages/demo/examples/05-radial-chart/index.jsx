@@ -1,4 +1,4 @@
-import mockData from '@vx/mock-data';
+import { browserUsage } from '@vx/mock-data';
 import React from 'react';
 import { LegendOrdinal } from '@vx/legend';
 
@@ -11,8 +11,6 @@ import {
 } from '@data-ui/radial-chart';
 
 import readme from '../../node_modules/@data-ui/radial-chart/README.md';
-
-const { browserUsage } = mockData;
 
 const browsersLast = browserUsage[browserUsage.length - 1];
 const browserFractions = Object.entries(browsersLast)
