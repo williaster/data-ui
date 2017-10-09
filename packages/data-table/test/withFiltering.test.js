@@ -1,6 +1,6 @@
 import { List } from 'immutable';
 import React from 'react';
-import { shallow } from 'enzyme';
+import { shallow, mount } from 'enzyme';
 
 import withFiltering from '../src/enhancers/withFiltering';
 import Table from '../src/components/Table';
@@ -42,11 +42,12 @@ describe('withFiltering()', () => {
   });
 
   test('it should filter dataList based on initialFilterText', () => {
-    let wrapper = shallow(<TableWithFiltering {...props} />);
+    // filtering is triggered on mount to not block render thread
+    let wrapper = mount(<TableWithFiltering {...props} />);
     let RenderedTable = wrapper.find(Table);
     expect(RenderedTable.prop('dataList').size).toBe(dataList.size);
 
-    wrapper = shallow(<TableWithFiltering {...props} initialFilterText="z" />);
+    wrapper = mount(<TableWithFiltering {...props} initialFilterText="z" />);
     RenderedTable = wrapper.find(Table);
     expect(RenderedTable.prop('dataList').size).toBe(1);
   });
