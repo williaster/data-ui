@@ -65,7 +65,7 @@ export default class PointSeries extends React.PureComponent {
     return (
       <Group key={label}>
         {data.map((d, i) => {
-          const xVal = d.x
+          const xVal = d.x;
           const yVal = d.y;
           const defined = isDefined(xVal) && isDefined(yVal);
           const x = xScale(xVal);
