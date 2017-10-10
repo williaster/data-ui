@@ -7,8 +7,30 @@ import { chartTheme, color } from '@data-ui/theme';
 import { callOrValue, isDefined } from '../utils/chartUtils';
 import { pointSeriesDataShape } from '../utils/propShapes';
 
+
+const GlyphDotComponentPropType = {
+  x: PropTypes.number.isRequired,
+  y: PropTypes.number.isRequired,
+  size: PropTypes.number.isRequired,
+  fill: PropTypes.string.isRequired,
+  fillOpacity: PropTypes.number.isRequired,
+  stroke: PropTypes.string.isRequired,
+  strokeWidth: PropTypes.number.isRequired,
+  strokeDasharray: PropTypes.string,
+  onMouseMove: PropTypes.func,
+  onMouseLeave: PropTypes.func,
+  data: pointSeriesDataShape.isRequired,
+  datum: PropTypes.object.isRequired,
+}
+
+GlyphDotComponentDefaultPropType = {
+  onMouseMove: null,
+  onMouseLeave: null,
+  strokeDasharray: null,
+}
+
 function GlyphDotComponent({
-  key,
+  label,
   x,
   y,
   size,
@@ -22,9 +44,9 @@ function GlyphDotComponent({
   data,
   datum,
 }) {
+
   return (
     <GlyphDot
-      key={key}
       cx={x}
       cy={y}
       r={size}
@@ -38,14 +60,17 @@ function GlyphDotComponent({
       })}
       onMouseLeave={onMouseLeave}
     />
-  )
+  );
 }
+
+GlyphDotComponent.propTypes = GlyphDotComponentPropType;
+GlyphDotComponent.defaultProps = GlyphDotComponentDefaultPropType;
 
 export const propTypes = {
   data: pointSeriesDataShape.isRequired,
   label: PropTypes.string.isRequired,
   labelComponent: PropTypes.element,
-  pointComponent: PropTypes.element,
+  pointComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
   // attributes on data points will override these
   fill: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   fillOpacity: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
@@ -98,7 +123,7 @@ export default class PointSeries extends React.PureComponent {
       pointComponent,
     } = this.props;
     if (!xScale || !yScale) return null;
-
+    const labelSet = new Set();
     const labels = [];
     return (
       <Group key={label}>
@@ -118,9 +143,8 @@ export default class PointSeries extends React.PureComponent {
           const computedStroke = d.stroke || callOrValue(stroke, d, i);
           const computedStrokeWidth = d.strokeWidth || callOrValue(strokeWidth, d, i);
           const computedStrokeDasharray = d.strokeDasharray || callOrValue(strokeDasharray, d, i);
-          return defined &&
-            React.createElement(pointComponent, {
-              key,
+          const props = {
+              key: key,
               x: cx,
               y: cy,
               size: computedSize,
@@ -133,7 +157,9 @@ export default class PointSeries extends React.PureComponent {
               onMouseLeave,
               data,
               datum: d,
-            });
+          };
+          return defined &&
+            React.createElement(pointComponent, props);
         })}
         {/* Put labels on top */}
         {labels.map(d => React.cloneElement(labelComponent, d, d.label))}
