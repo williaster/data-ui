@@ -7,6 +7,21 @@ import { callOrValue, isDefined } from '../utils/chartUtils';
 import { pointSeriesDataShape } from '../utils/propShapes';
 import GlyphDotComponent from '../glyph/GlyphDotComponent';
 
+export const pointComponentPropTypes = {
+  x: PropTypes.number.isRequired,
+  y: PropTypes.number.isRequired,
+  size: PropTypes.number.isRequired,
+  fill: PropTypes.string.isRequired,
+  fillOpacity: PropTypes.number.isRequired,
+  stroke: PropTypes.string.isRequired,
+  strokeWidth: PropTypes.number.isRequired,
+  strokeDasharray: PropTypes.string,
+  onMouseMove: PropTypes.func,
+  onMouseLeave: PropTypes.func,
+  data: pointSeriesDataShape.isRequired,
+  datum: PropTypes.object.isRequired,
+};
+
 export const propTypes = {
   data: pointSeriesDataShape.isRequired,
   label: PropTypes.string.isRequired,

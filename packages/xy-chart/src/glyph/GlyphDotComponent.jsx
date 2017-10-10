@@ -1,24 +1,7 @@
 import React from 'react';
 import { GlyphDot } from '@vx/glyph';
-import PropTypes from 'prop-types';
 
-import { pointSeriesDataShape } from '../utils/propShapes';
-
-
-export const propTypes = {
-  x: PropTypes.number.isRequired,
-  y: PropTypes.number.isRequired,
-  size: PropTypes.number.isRequired,
-  fill: PropTypes.string.isRequired,
-  fillOpacity: PropTypes.number.isRequired,
-  stroke: PropTypes.string.isRequired,
-  strokeWidth: PropTypes.number.isRequired,
-  strokeDasharray: PropTypes.string,
-  onMouseMove: PropTypes.func,
-  onMouseLeave: PropTypes.func,
-  data: pointSeriesDataShape.isRequired,
-  datum: PropTypes.object.isRequired,
-};
+import { pointComponentPropTypes } from '../series/PointSeries';
 
 const defaultPropTypes = {
   onMouseMove: null,
@@ -58,5 +41,5 @@ export default function GlyphDotComponent({
   );
 }
 
-GlyphDotComponent.propTypes = propTypes;
+GlyphDotComponent.propTypes = pointComponentPropTypes;
 GlyphDotComponent.defaultProps = defaultPropTypes;
