@@ -42,9 +42,6 @@ export const defaultProps = {
   onMouseLeave: null,
 };
 
-const x = d => d.x;
-const y = d => d.y;
-
 export default class PointSeries extends React.PureComponent {
   render() {
     const {
@@ -68,15 +65,15 @@ export default class PointSeries extends React.PureComponent {
     return (
       <Group key={label}>
         {data.map((d, i) => {
-          const xVal = x(d);
-          const yVal = y(d);
+          const xVal = d.x
+          const yVal = d.y;
           const defined = isDefined(xVal) && isDefined(yVal);
-          const cx = xScale(xVal);
-          const cy = yScale(yVal);
+          const x = xScale(xVal);
+          const y = yScale(yVal);
           const computedFill = d.fill || callOrValue(fill, d, i);
-          const key = `${label}-${x(d)}-${i}`;
+          const key = `${label}-${d.x}-${i}`;
           if (defined && d.label) {
-            labels.push({ x: cx, y: cy, label: d.label, key: `${key}-label` });
+            labels.push({ x, y, label: d.label, key: `${key}-label` });
           }
           const computedSize = d.size || callOrValue(size, d, i);
           const computedFillOpacity = d.fillOpacity || callOrValue(fillOpacity, d, i);
@@ -85,8 +82,8 @@ export default class PointSeries extends React.PureComponent {
           const computedStrokeDasharray = d.strokeDasharray || callOrValue(strokeDasharray, d, i);
           const props = {
             key,
-            x: cx,
-            y: cy,
+            x,
+            y,
             size: computedSize,
             fill: computedFill,
             fillOpacity: computedFillOpacity,

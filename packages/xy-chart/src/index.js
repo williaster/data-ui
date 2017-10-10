@@ -22,4 +22,4 @@ export { withScreenSize, withParentSize } from '@vx/responsive';
 export { default as withTheme } from './enhancer/withTheme';
 export { chartTheme as theme } from '@data-ui/theme';
 
-export { PointComponentPropTypes } from './utils/propShapes';
+export { propTypes as PointComponentPropTypes } from './glyph/GlyphDotComponent';
