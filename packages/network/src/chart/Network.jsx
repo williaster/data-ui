@@ -64,18 +64,10 @@ class Network extends React.PureComponent {
     if (
       this.props.graph.links !== graph.links
       || this.props.graph.nodes !== graph.nodes
+      || this.state.computingLayout
     ) {
       this.layout.clear();
       this.setState(() => ({ computingLayout: true }));
-      this.layout.setGraph(graph);
-      this.layout.setAnimated(animated);
-      this.layout.layout({
-        callback: (newGraph) => {
-          this.setGraphState({ graph: newGraph, width, height, margin });
-        },
-      });
-    } else if (this.state.computingLayout) {
-      this.layout.clear();
       this.layout.setGraph(graph);
       this.layout.setAnimated(animated);
       this.layout.layout({
