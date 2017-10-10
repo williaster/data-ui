@@ -28,18 +28,18 @@ describe('<PointSeries />', () => {
     expect(shallow(<PointSeries label="" data={[]} />).type()).toBeNull();
   });
 
-  test('it should render a GlyphDot for each datum', () => {
-    const wrapper = shallow(
+  test('it should render a circle for each datum', () => {
+    const wrapper = mount(
       <XYChart {...mockProps} >
         <PointSeries label="" data={mockData.map(d => ({ ...d, x: d.date, y: d.num }))} />
       </XYChart>,
     );
     expect(wrapper.find(PointSeries).length).toBe(1);
-    expect(wrapper.find(PointSeries).dive().find(GlyphDot).length).toBe(mockData.length);
+    expect(wrapper.find(PointSeries).dive().find('circle').length).toBe(mockData.length);
   });
 
   test('it should not render points for null data', () => {
-    const wrapper = shallow(
+    const wrapper = mount(
       <XYChart {...mockProps} >
         <PointSeries
           label=""
@@ -51,7 +51,7 @@ describe('<PointSeries />', () => {
       </XYChart>,
     );
     const series = wrapper.find(PointSeries).dive();
-    expect(series.find(GlyphDot).length).toBe(mockData.length - 2);
+    expect(series.find('circle').length).toBe(mockData.length - 2);
   });
 
   test('it should render labels if present', () => {
