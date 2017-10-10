@@ -91,11 +91,12 @@ export default function ArcSeries({
         cornerRadius={cornerRadius}
         padAngle={padAngle}
         padRadius={padRadius}
-        onMouseMove={datum => (event) => {
-          const fraction = Math.abs(datum.startAngle - datum.endAngle) / (2 * Math.PI);
-          onMouseMove({ event, data, datum: datum.data, fraction });
-        }}
-        onMouseLeave={() => () => { onMouseLeave(); }}
+        onMouseMove={onMouseLeave &&
+          (datum => (event) => {
+            const fraction = Math.abs(datum.startAngle - datum.endAngle) / (2 * Math.PI);
+            onMouseMove({ event, data, datum: datum.data, fraction });
+          })}
+        onMouseLeave={onMouseLeave && (() => () => { onMouseLeave(); })}
         {...restProps}
         centroid={null}
       />
