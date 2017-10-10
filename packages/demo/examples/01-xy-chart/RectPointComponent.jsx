@@ -1,3 +1,4 @@
+/* eslint react/prop-types: 0 */
 import React from 'react';
 
 export default function RectComponent({
@@ -33,5 +34,5 @@ export default function RectComponent({
       })}
       onMouseLeave={onMouseLeave}
     />
-  )
+  );
 }

@@ -1,4 +1,3 @@
-import { GlyphDot } from '@vx/glyph';
 import React from 'react';
 import { shallow, mount } from 'enzyme';
 
