@@ -1,8 +1,8 @@
-import { GlyphDot } from '@vx/glyph';
 import React from 'react';
 import { shallow, mount } from 'enzyme';
 
 import { XYChart, PointSeries } from '../src/';
+import GlyphDotComponent from '../src/glyph/GlyphDotComponent';
 
 describe('<PointSeries />', () => {
   const mockProps = {
@@ -28,14 +28,14 @@ describe('<PointSeries />', () => {
     expect(shallow(<PointSeries label="" data={[]} />).type()).toBeNull();
   });
 
-  test('it should render a GlyphDot for each datum', () => {
+  test('it should render a GlyphDotComponent for each datum', () => {
     const wrapper = shallow(
       <XYChart {...mockProps} >
         <PointSeries label="" data={mockData.map(d => ({ ...d, x: d.date, y: d.num }))} />
       </XYChart>,
     );
     expect(wrapper.find(PointSeries).length).toBe(1);
-    expect(wrapper.find(PointSeries).dive().find(GlyphDot).length).toBe(mockData.length);
+    expect(wrapper.find(PointSeries).dive().find(GlyphDotComponent).length).toBe(mockData.length);
   });
 
   test('it should not render points for null data', () => {
@@ -51,7 +51,7 @@ describe('<PointSeries />', () => {
       </XYChart>,
     );
     const series = wrapper.find(PointSeries).dive();
-    expect(series.find(GlyphDot).length).toBe(mockData.length - 2);
+    expect(series.find(GlyphDotComponent).length).toBe(mockData.length - 2);
   });
 
   test('it should render labels if present', () => {
