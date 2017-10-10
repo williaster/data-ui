@@ -1,7 +1,16 @@
 import React from 'react';
-import { PointComponentPropTypes } from '@data-ui/xy-chart';
+import { GlyphDot } from '@vx/glyph';
 
-export default function RectComponent({
+import { PointComponentPropTypes } from '../utils/propShapes';
+
+
+const GlyphDotComponentDefaultPropTypes = {
+  onMouseMove: null,
+  onMouseLeave: null,
+  strokeDasharray: null,
+};
+
+export default function GlyphDotComponent({
   x,
   y,
   size,
@@ -15,13 +24,11 @@ export default function RectComponent({
   data,
   datum,
 }) {
-  const rectSize = size * 1.414;
   return (
-    <rect
-      x={x - (rectSize / 2)}
-      y={y - (rectSize / 2)}
-      width={rectSize}
-      height={rectSize}
+    <GlyphDot
+      cx={x}
+      cy={y}
+      r={size}
       fill={fill}
       fillOpacity={fillOpacity}
       stroke={stroke}
@@ -35,11 +42,5 @@ export default function RectComponent({
   );
 }
 
-const defaultProps = {
-  strokeDasharray: null,
-  onMouseMove: null,
-  onMouseLeave: null,
-};
-
-RectComponent.propTypes = PointComponentPropTypes;
-RectComponent.defaultProps = defaultProps;
+GlyphDotComponent.propTypes = PointComponentPropTypes;
+GlyphDotComponent.defaultProps = GlyphDotComponentDefaultPropTypes;

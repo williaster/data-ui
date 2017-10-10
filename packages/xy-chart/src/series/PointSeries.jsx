@@ -1,70 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { GlyphDot } from '@vx/glyph';
 import { Group } from '@vx/group';
 import { chartTheme, color } from '@data-ui/theme';
 
 import { callOrValue, isDefined } from '../utils/chartUtils';
 import { pointSeriesDataShape } from '../utils/propShapes';
-
-
-const GlyphDotComponentPropType = {
-  x: PropTypes.number.isRequired,
-  y: PropTypes.number.isRequired,
-  size: PropTypes.number.isRequired,
-  fill: PropTypes.string.isRequired,
-  fillOpacity: PropTypes.number.isRequired,
-  stroke: PropTypes.string.isRequired,
-  strokeWidth: PropTypes.number.isRequired,
-  strokeDasharray: PropTypes.string,
-  onMouseMove: PropTypes.func,
-  onMouseLeave: PropTypes.func,
-  data: pointSeriesDataShape.isRequired,
-  datum: PropTypes.object.isRequired,
-}
-
-GlyphDotComponentDefaultPropType = {
-  onMouseMove: null,
-  onMouseLeave: null,
-  strokeDasharray: null,
-}
-
-function GlyphDotComponent({
-  label,
-  x,
-  y,
-  size,
-  fill,
-  fillOpacity,
-  stroke,
-  strokeWidth,
-  strokeDasharray,
-  onMouseMove,
-  onMouseLeave,
-  data,
-  datum,
-}) {
-
-  return (
-    <GlyphDot
-      cx={x}
-      cy={y}
-      r={size}
-      fill={fill}
-      fillOpacity={fillOpacity}
-      stroke={stroke}
-      strokeWidth={strokeWidth}
-      strokeDasharray={strokeDasharray}
-      onMouseMove={onMouseMove && ((event) => {
-        onMouseMove({ event, data, datum, color: fill });
-      })}
-      onMouseLeave={onMouseLeave}
-    />
-  );
-}
-
-GlyphDotComponent.propTypes = GlyphDotComponentPropType;
-GlyphDotComponent.defaultProps = GlyphDotComponentDefaultPropType;
+import GlyphDotComponent from '../glyph/GlyphDotComponent';
 
 export const propTypes = {
   data: pointSeriesDataShape.isRequired,
@@ -123,7 +64,6 @@ export default class PointSeries extends React.PureComponent {
       pointComponent,
     } = this.props;
     if (!xScale || !yScale) return null;
-    const labelSet = new Set();
     const labels = [];
     return (
       <Group key={label}>
@@ -144,19 +84,19 @@ export default class PointSeries extends React.PureComponent {
           const computedStrokeWidth = d.strokeWidth || callOrValue(strokeWidth, d, i);
           const computedStrokeDasharray = d.strokeDasharray || callOrValue(strokeDasharray, d, i);
           const props = {
-              key: key,
-              x: cx,
-              y: cy,
-              size: computedSize,
-              fill: computedFill,
-              fillOpacity: computedFillOpacity,
-              stroke: computedStroke,
-              strokeWidth: computedStrokeWidth,
-              strokeDasharray: computedStrokeDasharray,
-              onMouseMove,
-              onMouseLeave,
-              data,
-              datum: d,
+            key,
+            x: cx,
+            y: cy,
+            size: computedSize,
+            fill: computedFill,
+            fillOpacity: computedFillOpacity,
+            stroke: computedStroke,
+            strokeWidth: computedStrokeWidth,
+            strokeDasharray: computedStrokeDasharray,
+            onMouseMove,
+            onMouseLeave,
+            data,
+            datum: d,
           };
           return defined &&
             React.createElement(pointComponent, props);
