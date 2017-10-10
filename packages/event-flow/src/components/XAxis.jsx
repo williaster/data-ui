@@ -7,11 +7,12 @@ import { numTicksForWidth } from '../utils/scale-utils';
 
 const propTypes = {
   hideZero: PropTypes.bool,
-  label: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+  label: PropTypes.string,
+  labelProps: PropTypes.object,
   numTicks: PropTypes.number,
   orientation: PropTypes.oneOf(['bottom', 'top']),
   rangePadding: PropTypes.number,
-  tickLabelComponent: PropTypes.element,
+  tickLabelProps: PropTypes.func,
   height: PropTypes.number.isRequired,
   scale: PropTypes.func.isRequired,
   tickFormat: PropTypes.func,
@@ -20,10 +21,11 @@ const propTypes = {
 const defaultProps = {
   hideZero: false,
   label: null,
+  labelProps: null,
   numTicks: null,
   orientation: 'top',
   rangePadding: null,
-  tickLabelComponent: null,
+  tickLabelProps: null,
   tickFormat: null,
 };
 
@@ -31,15 +33,18 @@ export default function XAxis({
   height,
   hideZero,
   label,
+  labelProps,
   numTicks,
   orientation,
   rangePadding,
   scale,
-  tickLabelComponent,
   tickFormat,
+  tickLabelProps: passedTickLabelProps,
 }) {
   const Axis = orientation === 'bottom' ? AxisBottom : AxisTop;
   const width = Math.max(...scale.range());
+  const tickLabelProps = passedTickLabelProps || (() => xTickStyles.label[orientation]);
+
   return (
     <Axis
       top={orientation === 'bottom' ? height : 0}
@@ -47,12 +52,8 @@ export default function XAxis({
       rangePadding={rangePadding}
       hideTicks={numTicks === 0}
       hideZero={hideZero}
-      label={typeof label === 'string' ?
-        <text {...(xAxisStyles.label || {})[orientation]}>
-          {label}
-        </text>
-        : label
-      }
+      label={label}
+      labelProps={labelProps || xAxisStyles.label[orientation]}
       numTicks={numTicksForWidth(width)}
       scale={scale}
       stroke={xAxisStyles.stroke}
@@ -60,10 +61,7 @@ export default function XAxis({
       tickFormat={tickFormat}
       tickLength={xTickStyles.tickLength}
       tickStroke={xTickStyles.stroke}
-      tickLabelComponent={
-        tickLabelComponent ||
-        <text {...(xTickStyles.label)[orientation]} />
-      }
+      tickLabelProps={tickLabelProps}
     />
   );
 }
