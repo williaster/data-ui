@@ -35,11 +35,13 @@ describe('<Network />', () => {
   test('it should render the graph for animation enabled graph with little delay', (done) => {
     expect.assertions(2);
     const wrapper = mount(<Network {...props} animated />);
+
     setTimeout(() => {
+      wrapper.update();
       expect(wrapper.find(Nodes).length).toBe(1);
       expect(wrapper.find(Links).length).toBe(1);
       done();
-    }, 10);
+    }, 20);
   });
 
   test('it should handle mouse events correctly', (done) => {
@@ -63,6 +65,8 @@ describe('<Network />', () => {
     );
 
     setTimeout(() => {
+      wrapper.update();
+
       const node = wrapper.find('circle').first();
       node.simulate('click');
       expect(testID).toBe(expectedId);
@@ -76,6 +80,6 @@ describe('<Network />', () => {
       expect(testID).toBe(expectedId);
 
       done();
-    }, 50);
+    }, 20);
   });
 });
