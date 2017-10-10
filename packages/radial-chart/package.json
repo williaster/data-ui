@@ -1,6 +1,6 @@
 {
   "name": "@data-ui/radial-chart",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "A package for radial-axis visualizations https://williaster.github.io/data-ui",
   "main": "build/index.js",
   "scripts": {
