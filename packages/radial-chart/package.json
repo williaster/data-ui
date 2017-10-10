@@ -23,11 +23,11 @@
   "license": "MIT",
   "dependencies": {
     "@data-ui/theme": "0.0.9",
-    "@vx/event": "0.0.127",
-    "@vx/group": "0.0.127",
-    "@vx/scale": "0.0.127",
-    "@vx/shape": "0.0.131",
-    "@vx/tooltip": "0.0.134",
+    "@vx/event": "0.0.140",
+    "@vx/group": "0.0.140",
+    "@vx/scale": "0.0.140",
+    "@vx/shape": "0.0.140",
+    "@vx/tooltip": "0.0.140",
     "prop-types": "^15.5.10"
   },
   "devDependencies": {
@@ -36,14 +36,18 @@
     "babel-loader": "^6.4.1",
     "babel-plugin-syntax-jsx": "^6.18.0",
     "babel-preset-airbnb": "^2.2.3",
-    "enzyme": "^2.8.2",
+    "enzyme": "^3.0.0",
+    "enzyme-adapter-react-16": "^1.0.0",
     "jest": "^20.0.3",
-    "react": "^15.6.1",
-    "react-dom": "^15.6.1",
-    "react-test-renderer": "^15.6.1",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0",
+    "react-test-renderer": "^16.0.0",
     "webpack": "^2.4.1"
   },
   "peerDependencies": {
-    "react": "^15.4.0"
+    "react": "^15.0.0-0 || ^16.0.0-0"
+  },
+  "jest": {
+    "setupFiles": ["<rootDir>/test/shim.js", "<rootDir>/test/setup.js"]
   }
 }

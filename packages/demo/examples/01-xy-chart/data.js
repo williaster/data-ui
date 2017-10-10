@@ -1,7 +1,5 @@
-import mockData from '@vx/mock-data';
+import { cityTemperature, appleStock, genRandomNormalPoints, letterFrequency } from '@vx/mock-data';
 import { theme } from '@data-ui/xy-chart';
-
-const { cityTemperature, appleStock, genRandomNormalPoints, letterFrequency } = mockData;
 
 export const timeSeriesData = appleStock.filter((d, i) => i % 120 === 0).map(d => ({
   x: new Date(d.date),

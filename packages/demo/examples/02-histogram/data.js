@@ -1,8 +1,6 @@
 import { range } from 'd3-array';
 import { randomNormal, randomLogNormal } from 'd3-random';
-import mockData from '@vx/mock-data';
-
-const { letterFrequency } = mockData;
+import { letterFrequency } from '@vx/mock-data';
 
 // raw data -------------------------------------------------------------------
 function intBetween(min, max) {

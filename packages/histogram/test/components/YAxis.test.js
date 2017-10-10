@@ -33,8 +33,7 @@ describe('<YAxis />', () => {
   });
 
   test('It should render a label if passed', () => {
-    const label = <text id="label" />;
-    const wrapper = shallow(<YAxis {...props} label={label} />);
-    expect(wrapper.render().find('#label').length).toBe(1);
+    const wrapper = shallow(<YAxis {...props} label="apple" />);
+    expect(wrapper.render().find('.vx-axis-label').first().text()).toBe('apple');
   });
 });

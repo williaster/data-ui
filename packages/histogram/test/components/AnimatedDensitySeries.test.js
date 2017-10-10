@@ -1,7 +1,7 @@
 import React from 'react';
 import { shallow, mount } from 'enzyme';
 import { AreaClosed, LinePath } from '@vx/shape';
-import { NodeGroup } from 'resonance';
+import { NodeGroup } from 'react-move';
 
 import { DensitySeries, Histogram } from '../../src/';
 import AnimatedDensitySeries from '../../src/series/animated/AnimatedDensitySeries';

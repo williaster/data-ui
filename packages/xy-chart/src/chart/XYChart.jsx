@@ -145,6 +145,8 @@ class XYChart extends React.PureComponent {
 
   constructor(props) {
     super(props);
+    // if renderTooltip is passed we return another XYChart wrapped in WithTooltip
+    // therefore we don't want to compute state if the nested chart will do so
     this.state = props.renderTooltip ? {} : XYChart.getStateFromProps(props);
   }
 

@@ -34,17 +34,18 @@
     "babel-polyfill": "^6.23.0",
     "babel-preset-airbnb": "^2.2.3",
     "css-loader": "^0.28.0",
-    "enzyme": "^2.9.1",
+    "enzyme": "^3.1.0",
+    "enzyme-adapter-react-16": "^1.0.0",
     "jest": "^20.0.3",
-    "react": "^15.6.1",
-    "react-dom": "^15.6.1",
-    "react-test-renderer": "^15.6.1",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0",
+    "react-test-renderer": "^16.0.0",
     "webpack": "^2.4.1"
   },
   "peerDependencies": {
-    "react": "^15.4.0"
+    "react": "^15.0.0-0 || ^16.0.0-0"
   },
   "jest": {
-    "setupTestFrameworkScriptFile": "./test/testsSetup.js"
+    "setupFiles": ["<rootDir>/test/shim.js", "<rootDir>/test/setup.js"]
   }
 }

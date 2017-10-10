@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from 'enzyme';
+import { shallow } from 'enzyme';
 
 import IconX from '../src/icons/IconX';
 
@@ -9,7 +9,13 @@ describe('<IconX />', () => {
   });
 
   it('it should render an <svg>', () => {
-    const wrapper = render(<IconX />);
-    expect(wrapper.find('svg').length).toBe(1);
+    const wrapper = shallow(<IconX />);
+
+    expect(
+      wrapper
+        .dive() // BaseIcon
+        .dive() // IconX
+        .find('svg').length,
+    ).toBe(1);
   });
 });

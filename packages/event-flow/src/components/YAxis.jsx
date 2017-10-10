@@ -7,12 +7,13 @@ import { yAxisStyles, yTickStyles } from '../theme';
 
 const propTypes = {
   hideZero: PropTypes.bool,
-  label: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+  label: PropTypes.string,
+  labelProps: PropTypes.object,
   labelOffset: PropTypes.number,
   numTicks: PropTypes.number,
   orientation: PropTypes.oneOf(['left', 'right']),
   rangePadding: PropTypes.number,
-  tickLabelComponent: PropTypes.element,
+  tickLabelProps: PropTypes.func,
   tickFormat: PropTypes.func,
   scale: PropTypes.func.isRequired,
   width: PropTypes.number.isRequired,
@@ -22,12 +23,13 @@ const defaultProps = {
   axisStyles: {},
   hideZero: false,
   label: null,
+  labelProps: null,
   labelOffset: 0,
   numTicks: null,
   orientation: 'left',
   rangePadding: null,
   tickFormat: null,
-  tickLabelComponent: undefined,
+  tickLabelProps: null,
   tickStyles: {},
 };
 
@@ -35,16 +37,19 @@ export default function YAxis({
   hideZero,
   width,
   label,
+  labelProps,
   labelOffset,
   numTicks,
   orientation,
   rangePadding,
   scale,
   tickFormat,
-  tickLabelComponent,
+  tickLabelProps: passedTickLabelProps,
 }) {
   const Axis = orientation === 'left' ? AxisLeft : AxisRight;
   const height = Math.max(...scale.range());
+  const tickLabelProps = passedTickLabelProps || (() => yTickStyles.label[orientation]);
+
   return (
     <Axis
       top={0}
@@ -52,12 +57,8 @@ export default function YAxis({
       rangePadding={rangePadding}
       hideTicks={numTicks === 0}
       hideZero={hideZero}
-      label={typeof label === 'string' ?
-        <text {...(yAxisStyles.label)[orientation]}>
-          {label}
-        </text>
-        : label
-      }
+      label={label}
+      labelProps={labelProps || yAxisStyles.label[orientation]}
       labelOffset={labelOffset}
       numTicks={numTicksForHeight(height)}
       scale={scale}
@@ -66,10 +67,7 @@ export default function YAxis({
       tickFormat={tickFormat}
       tickLength={yTickStyles.tickLength}
       tickStroke={yTickStyles.stroke}
-      tickLabelComponent={
-        tickLabelComponent ||
-        <text {...(yTickStyles.label)[orientation]} />
-      }
+      tickLabelProps={tickLabelProps}
     />
   );
 }

@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { NodeGroup } from 'resonance';
+import { NodeGroup } from 'react-move';
 
 import { Group } from '@vx/group';
 import { Bar } from '@vx/shape';

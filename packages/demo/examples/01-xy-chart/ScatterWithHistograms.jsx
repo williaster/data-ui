@@ -2,7 +2,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import mockData from '@vx/mock-data';
+import { genRandomNormalPoints } from '@vx/mock-data';
 
 import {
   XYChart,
@@ -21,8 +21,6 @@ import {
 } from '@data-ui/histogram';
 
 import Checkbox from '../shared/Checkbox';
-
-const { genRandomNormalPoints } = mockData;
 
 const BIN_COUNT = 50;
 const n = 100;

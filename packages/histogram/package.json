@@ -35,37 +35,39 @@
   "devDependencies": {
     "babel-jest": "^20.0.3",
     "babel-polyfill": "^6.23.0",
-    "enzyme": "^2.8.2",
+    "enzyme": "^3.0.0",
+    "enzyme-adapter-react-16": "^1.0.0",
     "jest": "^20.0.3",
-    "react": "^15.0.0 || 15.x",
-    "react-addons-test-utils": "^15.4.2",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0",
     "react-fatigue-dev": "github:tj/react-fatigue-dev",
+    "react-test-renderer": "^16.0.0",
     "react-tools": "^0.10.0",
     "regenerator-runtime": "^0.10.5"
   },
   "peerDependencies": {
-    "react": "^15.0.0 || 15.x"
+    "react": "^15.0.0-0 || ^16.0.0-0"
   },
   "dependencies": {
     "@data-ui/theme": "0.0.9",
-    "@vx/axis": "0.0.134",
-    "@vx/curve": "0.0.127",
-    "@vx/event": "0.0.127",
-    "@vx/glyph": "0.0.127",
-    "@vx/gradient": "0.0.129",
-    "@vx/group": "0.0.127",
-    "@vx/pattern": "0.0.127",
-    "@vx/responsive": "0.0.127",
-    "@vx/scale": "0.0.127",
-    "@vx/shape": "0.0.131",
-    "@vx/tooltip": "0.0.134",
+    "@vx/axis": "0.0.140",
+    "@vx/curve": "0.0.140",
+    "@vx/event": "0.0.140",
+    "@vx/glyph": "0.0.140",
+    "@vx/gradient": "0.0.140",
+    "@vx/group": "0.0.140",
+    "@vx/pattern": "0.0.140",
+    "@vx/responsive": "0.0.140",
+    "@vx/scale": "0.0.140",
+    "@vx/shape": "0.0.140",
+    "@vx/tooltip": "0.0.140",
     "airbnb-prop-types": "^2.8.0",
     "d3-array": "^1.2.0",
     "d3-scale": "^1.0.6",
     "prop-types": "^15.5.10",
-    "resonance": "^0.9.5"
+    "react-move": "^2.1.0"
   },
   "jest": {
-    "setupTestFrameworkScriptFile": "./test/testsSetup.js"
+    "setupFiles": ["<rootDir>/test/shim.js", "<rootDir>/test/setup.js"]
   }
 }

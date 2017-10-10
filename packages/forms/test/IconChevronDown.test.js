@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from 'enzyme';
+import { shallow } from 'enzyme';
 
 import IconChevronDown from '../src/icons/IconChevronDown';
 
@@ -9,7 +9,12 @@ describe('<IconChevronDown />', () => {
   });
 
   it('it should render an <svg>', () => {
-    const wrapper = render(<IconChevronDown />);
-    expect(wrapper.find('svg').length).toBe(1);
+    const wrapper = shallow(<IconChevronDown />);
+    expect(
+      wrapper
+        .dive() // BaseIcon
+        .dive() // IconX
+        .find('svg').length,
+    ).toBe(1);
   });
 });

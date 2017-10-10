@@ -3,6 +3,10 @@ import { render, mount } from 'enzyme';
 
 import { WithTooltip, withTooltipPropTypes } from '../src';
 
+global.requestAnimationFrame = (callback) => {
+  setTimeout(callback, 0);
+};
+
 describe('<WithTooltip />', () => {
   test('WithTooltip should be defined', () => {
     expect(WithTooltip).toBeDefined();
@@ -72,11 +76,13 @@ describe('<WithTooltip />', () => {
       <WithTooltip renderTooltip={renderTooltip}>
         {({ onMouseMove }) => {
           mouseMove = onMouseMove;
+          return <svg />;
         }}
       </WithTooltip>,
     );
 
     mouseMove({});
+    wrapper.update();
     expect(renderTooltip).toHaveBeenCalledTimes(1);
     expect(wrapper.find('#test').length).toBe(1);
   });
@@ -94,16 +100,19 @@ describe('<WithTooltip />', () => {
         {({ onMouseMove, onMouseLeave }) => {
           mouseMove = onMouseMove;
           mouseLeave = onMouseLeave;
+          return null;
         }}
       </WithTooltip>,
     );
 
     mouseMove({});
+    wrapper.update();
     expect(renderTooltip).toHaveBeenCalledTimes(1);
     expect(wrapper.find('#test').length).toBe(1);
 
     mouseLeave({});
     jest.runAllTimers();
+    wrapper.update();
     expect(wrapper.find('#test').length).toBe(0);
   });
 
@@ -127,6 +136,7 @@ describe('<WithTooltip />', () => {
     );
 
     mouseMove({});
+    wrapper.update();
     expect(wrapper.find('#test').length).toBe(1);
   });
 
@@ -144,7 +154,7 @@ describe('<WithTooltip />', () => {
       </WithTooltip>,
     );
 
-    const container = wrapper.find('.i-like-tooltipz');
+    const container = wrapper.find(`.${className}`);
     expect(container.length).toBe(1);
     expect(container.prop('style')).toMatchObject(styles);
   });

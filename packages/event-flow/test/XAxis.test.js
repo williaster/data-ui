@@ -26,21 +26,14 @@ describe('<XAxis />', () => {
   });
 
   test('It should render a label if passed', () => {
-    const label = <text id="label" />;
-    const wrapper = shallow(<XAxis {...props} label={label} />);
-    expect(wrapper.render().find('#label').length).toBe(1);
+    const wrapper = shallow(<XAxis {...props} label="banana" />);
+    expect(wrapper.render().find('.vx-axis-label').first().text()).toBe('banana');
   });
 
-  test('It should use a tickLabelComponent and tickFormat func when passed', () => {
+  test('It should use the output of tickFormat() for ticks', () => {
     const tickFormat = () => 'iNvaRiAnT LabEl';
-    const wrapper = shallow(
-      <XAxis
-        {...props}
-        tickFormat={tickFormat}
-        tickLabelComponent={<text className="test" />}
-      />,
-    );
-    const label = wrapper.render().find('.test');
-    expect(label.first().text()).toBe(tickFormat());
+    const wrapper = shallow(<XAxis {...props} tickFormat={tickFormat} />);
+    const tick = wrapper.render().find('.vx-axis-tick').first();
+    expect(tick.find('text').text()).toBe(tickFormat());
   });
 });

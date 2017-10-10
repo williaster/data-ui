@@ -35,11 +35,11 @@ describe('<ArcSeries />', () => {
       <ArcSeries
         pieValue={d => d.value}
         data={[{ value: 10 }, { value: 5 }]}
-        labelComponent={<ArcLabel className="test" />}
+        labelComponent={<ArcLabel dx="1.6" />}
         label={arc => arc.data.value}
       />,
     );
-    const labels = wrapper.find('.test');
+    const labels = wrapper.find('text');
     expect(labels.length).toBe(2);
     expect(labels.first().text()).toBe('10');
     expect(labels.last().text()).toBe('5');

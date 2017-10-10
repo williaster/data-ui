@@ -1,5 +1,5 @@
 import { List } from 'immutable';
-import mockData from '@vx/mock-data';
+import { browserUsage } from '@vx/mock-data';
 import React from 'react';
 import {
   Table,
@@ -20,8 +20,8 @@ const DynamicCellHeight = withTableAutoSizer(withDynamicCellHeights(Table));
 const SortableTable = withSorting(Table);
 const SortableFilterableTable = withTableAutoSizer(withSorting(FilterableTable));
 
-const dataList = List(mockData.browserUsage);
-const allColumns = Object.keys(mockData.browserUsage[0]);
+const dataList = List(browserUsage);
+const allColumns = Object.keys(browserUsage[0]);
 const someColumns = allColumns.slice(0, 4);
 
 export default {
