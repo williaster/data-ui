@@ -1,18 +1,51 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
-import { Group } from '@vx/group';
 import { GlyphDot } from '@vx/glyph';
+import { Group } from '@vx/group';
 import { chartTheme, color } from '@data-ui/theme';
 
 import { callOrValue, isDefined } from '../utils/chartUtils';
 import { pointSeriesDataShape } from '../utils/propShapes';
 
+function GlyphDotComponent({
+  key,
+  x,
+  y,
+  size,
+  fill,
+  fillOpacity,
+  stroke,
+  strokeWidth,
+  strokeDasharray,
+  onMouseMove,
+  onMouseLeave,
+  data,
+  datum,
+}) {
+  return (
+    <GlyphDot
+      key={key}
+      cx={x}
+      cy={y}
+      r={size}
+      fill={fill}
+      fillOpacity={fillOpacity}
+      stroke={stroke}
+      strokeWidth={strokeWidth}
+      strokeDasharray={strokeDasharray}
+      onMouseMove={onMouseMove && ((event) => {
+        onMouseMove({ event, data, datum, color: fill });
+      })}
+      onMouseLeave={onMouseLeave}
+    />
+  )
+}
+
 export const propTypes = {
   data: pointSeriesDataShape.isRequired,
   label: PropTypes.string.isRequired,
   labelComponent: PropTypes.element,
-
+  pointComponent: PropTypes.element,
   // attributes on data points will override these
   fill: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   fillOpacity: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
@@ -30,6 +63,7 @@ export const propTypes = {
 
 export const defaultProps = {
   labelComponent: <text {...chartTheme.labelStyles} />,
+  pointComponent: GlyphDotComponent,
   size: 4,
   fill: color.default,
   fillOpacity: 0.8,
@@ -61,6 +95,7 @@ export default class PointSeries extends React.PureComponent {
       yScale,
       onMouseMove,
       onMouseLeave,
+      pointComponent,
     } = this.props;
     if (!xScale || !yScale) return null;
 
@@ -73,28 +108,32 @@ export default class PointSeries extends React.PureComponent {
           const defined = isDefined(xVal) && isDefined(yVal);
           const cx = xScale(xVal);
           const cy = yScale(yVal);
-          const circleFill = d.fill || callOrValue(fill, d, i);
+          const computedFill = d.fill || callOrValue(fill, d, i);
           const key = `${label}-${x(d)}-${i}`;
           if (defined && d.label) {
             labels.push({ x: cx, y: cy, label: d.label, key: `${key}-label` });
           }
-          return defined && (
-            <GlyphDot
-              key={key}
-              cx={cx}
-              cy={cy}
-              r={d.size || callOrValue(size, d, i)}
-              fill={circleFill}
-              fillOpacity={d.fillOpacity || callOrValue(fillOpacity, d, i)}
-              stroke={d.stroke || callOrValue(stroke, d, i)}
-              strokeWidth={d.strokeWidth || callOrValue(strokeWidth, d, i)}
-              strokeDasharray={d.strokeDasharray || callOrValue(strokeDasharray, d, i)}
-              onMouseMove={onMouseMove && ((event) => {
-                onMouseMove({ event, data, datum: d, color: circleFill });
-              })}
-              onMouseLeave={onMouseLeave}
-            />
-          );
+          const computedSize = d.size || callOrValue(size, d, i);
+          const computedFillOpacity = d.fillOpacity || callOrValue(fillOpacity, d, i);
+          const computedStroke = d.stroke || callOrValue(stroke, d, i);
+          const computedStrokeWidth = d.strokeWidth || callOrValue(strokeWidth, d, i);
+          const computedStrokeDasharray = d.strokeDasharray || callOrValue(strokeDasharray, d, i);
+          return defined &&
+            React.createElement(pointComponent, {
+              key,
+              x: cx,
+              y: cy,
+              size: computedSize,
+              fill: computedFill,
+              fillOpacity: computedFillOpacity,
+              stroke: computedStroke,
+              strokeWidth: computedStrokeWidth,
+              strokeDasharray: computedStrokeDasharray,
+              onMouseMove,
+              onMouseLeave,
+              data,
+              datum: d,
+            });
         })}
         {/* Put labels on top */}
         {labels.map(d => React.cloneElement(labelComponent, d, d.label))}

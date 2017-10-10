@@ -26,6 +26,7 @@ import readme from '../../node_modules/@data-ui/xy-chart/README.md';
 
 import ResponsiveXYChart, { dateFormatter } from './ResponsiveXYChart';
 import ScatterWithHistogram from './ScatterWithHistograms';
+import RectPointComponent from './RectPointComponent';
 
 import {
   circlePackData,
@@ -200,6 +201,26 @@ export default {
       ),
     },
     {
+      description: 'PointSeries With Customized Renderer',
+      components: [PointSeries],
+      example: () => (
+        <ResponsiveXYChart
+          ariaLabel="Required label"
+          xScale={{ type: 'linear', nice: true }}
+          yScale={{ type: 'linear', nice: true }}
+        >
+          <YAxis label="Y" numTicks={4} />
+          <XAxis label="X" numTicks={4} />
+          <PointSeries
+            data={pointData}
+            label="Random"
+            size={d => d.size}
+            pointComponent={RectPointComponent}
+          />
+        </ResponsiveXYChart>
+      ),
+    },
+    {
       description: 'StackedBarSeries',
       components: [StackedBarSeries],
       example: () => (
@@ -312,6 +333,35 @@ export default {
             data={circlePackData}
             label="Circle time pack"
             size={d => d.r}
+          />
+          <HorizontalReferenceLine
+            reference={0}
+          />
+          <CrossHair
+            showHorizontalLine={false}
+            fullHeight
+            stroke={colors.default}
+            circleFill="white"
+            circleStroke={colors.default}
+          />
+          <XAxis label="Time" numTicks={5} />
+        </ResponsiveXYChart>
+      ),
+    },
+    {
+      description: 'CirclePackSeries With Customized Renderer',
+      components: [CirclePackSeries],
+      example: () => (
+        <ResponsiveXYChart
+          ariaLabel="Required label"
+          xScale={{ type: 'time' }}
+          yScale={{ type: 'linear' }}
+        >
+          <CirclePackSeries
+            data={circlePackData}
+            label="Circle time pack"
+            size={d => d.r}
+            pointComponent={RectPointComponent}
           />
           <HorizontalReferenceLine
             reference={0}
