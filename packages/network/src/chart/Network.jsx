@@ -64,7 +64,9 @@ class Network extends React.PureComponent {
     if (
       this.props.graph.links !== graph.links
       || this.props.graph.nodes !== graph.nodes
+      || this.state.computingLayout
     ) {
+      this.layout.clear();
       this.setState(() => ({ computingLayout: true }));
       this.layout.setGraph(graph);
       this.layout.setAnimated(animated);
@@ -196,15 +198,23 @@ class Network extends React.PureComponent {
               </Group>}
 
             {this.state.computingLayout && waitingForLayoutLabel &&
-              <text
-                x={width / 2}
-                y={height / 2}
-                textAnchor="middle"
-                stroke="#ffffff"
-                paintOrder="stroke"
-              >
-                {waitingForLayoutLabel}
-              </text>}
+              <Group>
+                <rect
+                  width={width}
+                  height={height}
+                  opacity={0.8}
+                  fill="#ffffff"
+                />
+                <text
+                  x={width / 2}
+                  y={height / 2}
+                  textAnchor="middle"
+                  stroke="#ffffff"
+                  paintOrder="stroke"
+                >
+                  {waitingForLayoutLabel}
+                </text>
+              </Group>}
           </svg>
         )}
       </WithTooltip>
