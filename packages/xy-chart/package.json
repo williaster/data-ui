@@ -1,6 +1,6 @@
 {
   "name": "@data-ui/xy-chart",
-  "version": "0.0.22",
+  "version": "0.0.23",
   "description": "A package of charts with standard x- and y- axes. https://williaster.github.io/data-ui",
   "main": "build/index.js",
   "scripts": {
@@ -56,6 +56,9 @@
     "react": "^15.0.0-0 || ^16.0.0-0"
   },
   "jest": {
-    "setupFiles": ["<rootDir>/test/shim.js", "<rootDir>/test/setup.js"]
+    "setupFiles": [
+      "<rootDir>/test/shim.js",
+      "<rootDir>/test/setup.js"
+    ]
   }
 }

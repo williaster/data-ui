@@ -1,6 +1,6 @@
 {
   "name": "@data-ui/sparkline",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "React + d3 library for creating sparklines",
   "main": "build/index.js",
   "files": [
@@ -63,6 +63,9 @@
     "prop-types": "^15.5.10"
   },
   "jest": {
-    "setupFiles": ["<rootDir>/test/shim.js", "<rootDir>/test/setup.js"]
+    "setupFiles": [
+      "<rootDir>/test/shim.js",
+      "<rootDir>/test/setup.js"
+    ]
   }
 }

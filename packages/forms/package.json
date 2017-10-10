@@ -1,6 +1,6 @@
 {
   "name": "@data-ui/forms",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "A package of form elements for data-rich UIs. https://williaster.github.io/data-ui",
   "main": "build/index.js",
   "scripts": {
@@ -46,7 +46,10 @@
     "react": "^15.0.0-0 || ^16.0.0-0"
   },
   "jest": {
-    "setupFiles": ["<rootDir>/test/shim.js", "<rootDir>/test/setup.js"],
+    "setupFiles": [
+      "<rootDir>/test/shim.js",
+      "<rootDir>/test/setup.js"
+    ],
     "setupTestFrameworkScriptFile": "./test/testsSetup.js"
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "@data-ui/histogram",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "React + d3 library for creating histograms",
   "main": "build/index.js",
   "files": [
@@ -68,6 +68,9 @@
     "react-move": "^2.1.0"
   },
   "jest": {
-    "setupFiles": ["<rootDir>/test/shim.js", "<rootDir>/test/setup.js"]
+    "setupFiles": [
+      "<rootDir>/test/shim.js",
+      "<rootDir>/test/setup.js"
+    ]
   }
 }

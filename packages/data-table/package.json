@@ -1,6 +1,6 @@
 {
   "name": "@data-ui/data-table",
-  "version": "0.0.23",
+  "version": "0.0.24",
   "description": "Table components that can handle a lot of data",
   "main": "build/index.js",
   "scripts": {
@@ -46,6 +46,9 @@
     "react": "^15.0.0-0 || ^16.0.0-0"
   },
   "jest": {
-    "setupFiles": ["<rootDir>/test/shim.js", "<rootDir>/test/setup.js"]
+    "setupFiles": [
+      "<rootDir>/test/shim.js",
+      "<rootDir>/test/setup.js"
+    ]
   }
 }

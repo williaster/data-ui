@@ -1,6 +1,6 @@
 {
   "name": "@data-ui/network",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "React + d3 library for creating graph visualizations",
   "main": "build/index.js",
   "files": [
@@ -60,6 +60,9 @@
     "prop-types": "^15.5.10"
   },
   "jest": {
-    "setupFiles": ["<rootDir>/test/shim.js", "<rootDir>/test/setup.js"]
+    "setupFiles": [
+      "<rootDir>/test/shim.js",
+      "<rootDir>/test/setup.js"
+    ]
   }
 }
