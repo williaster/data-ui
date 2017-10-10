@@ -1,5 +1,5 @@
 import React from 'react';
-import { shallow, mount, render } from 'enzyme';
+import { shallow, mount } from 'enzyme';
 import { Bar } from '@vx/shape';
 import { NodeGroup } from 'react-move';
 
