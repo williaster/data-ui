@@ -4,7 +4,7 @@
   "description": "A package of charts with standard x- and y- axes. https://williaster.github.io/data-ui",
   "main": "build/index.js",
   "scripts": {
-    "build": "webpack -p --optimize-minimize",
+    "build": "webpack -p",
     "dev": "webpack --progress --colors --watch",
     "prepublish": "npm run build",
     "test": "jest --colors --verbose --coverage"

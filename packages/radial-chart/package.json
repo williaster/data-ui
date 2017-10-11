@@ -4,7 +4,7 @@
   "description": "A package for radial-axis visualizations https://williaster.github.io/data-ui",
   "main": "build/index.js",
   "scripts": {
-    "build": "webpack -p --optimize-minimize",
+    "build": "webpack -p",
     "dev": "webpack -d --progress --colors --watch",
     "dev:nowatch": "webpack -d --progress --colors",
     "prepublish": "npm run build",
