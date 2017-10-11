@@ -4,7 +4,7 @@
   "description": "Table components that can handle a lot of data",
   "main": "build/index.js",
   "scripts": {
-    "build": "webpack -p --optimize-minimize && npm run copy-styles",
+    "build": "webpack -p && npm run copy-styles",
     "copy-styles": "cp ./node_modules/react-virtualized/styles.css ./build/styles.css",
     "dev": "webpack --progress --colors --watch",
     "dev:nowatch": "webpack -d --progress --colors",

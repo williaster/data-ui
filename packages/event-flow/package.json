@@ -12,7 +12,7 @@
   ],
   "main": "build/index.js",
   "scripts": {
-    "build": "webpack -p --optimize-minimize",
+    "build": "webpack -p",
     "dev": "webpack --progress --colors --watch",
     "dev:nowatch": "webpack -d --progress --colors",
     "prepublish": "npm run build",
