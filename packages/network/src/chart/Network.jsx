@@ -13,7 +13,12 @@ import Node from './Node';
 export const propTypes = {
   ...withTooltipPropTypes,
   ariaLabel: PropTypes.string.isRequired,
-  width: PropTypes.number.isRequired,
+  animated: PropTypes.bool,
+  children: PropTypes.node,
+  graph: PropTypes.shape({
+    nodes: PropTypes.array.isRequired,
+    links: PropTypes.array.isRequired,
+  }).isRequired,
   height: PropTypes.number.isRequired,
   margin: PropTypes.shape({
     top: PropTypes.number,
@@ -21,18 +26,15 @@ export const propTypes = {
     bottom: PropTypes.number,
     right: PropTypes.number,
   }),
-  graph: PropTypes.shape({
-    nodes: PropTypes.array.isRequired,
-    links: PropTypes.array.isRequired,
-  }).isRequired,
   renderTooltip: PropTypes.func,
-  animated: PropTypes.bool,
   waitingForLayoutLabel: PropTypes.string,
+  width: PropTypes.number.isRequired,
 };
 
 const defaultProps = {
-  renderTooltip: null,
   animated: false,
+  children: null,
+  renderTooltip: null,
   margin: {
     top: 20,
     left: 20,
@@ -156,15 +158,16 @@ class Network extends React.PureComponent {
   render() {
     const {
       ariaLabel,
+      children,
       height,
-      width,
       onNodeClick,
       onNodeMouseEnter,
       onNodeMouseLeave,
-      renderNode,
       renderLink,
+      renderNode,
       renderTooltip,
       waitingForLayoutLabel,
+      width,
     } = this.props;
 
     return (
@@ -196,6 +199,8 @@ class Network extends React.PureComponent {
                   onClick={onNodeClick}
                 />
               </Group>}
+
+            {children}
 
             {this.state.computingLayout && waitingForLayoutLabel &&
               <Group>
