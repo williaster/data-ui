@@ -53,7 +53,7 @@ class WithTooltip extends React.PureComponent {
     if (this.tooltipTimeout) clearTimeout(this.tooltipTimeout);
     let coords = { x: 0, y: 0 };
     if (event && event.target && event.target.ownerSVGElement) {
-      coords = localPoint(event.target.ownerSVGElement, event);
+      coords = localPoint(event);
     }
 
     this.props.showTooltip({
