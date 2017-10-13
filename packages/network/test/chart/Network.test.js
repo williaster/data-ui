@@ -27,6 +27,11 @@ describe('<Network />', () => {
     expect(wrapper.find('svg').length).toBe(1);
   });
 
+  test('it should render any additional children passed within the svg', () => {
+    const wrapper = mount(<Network {...props}><defs><filter id="test_filter" /></defs></Network>);
+    expect(wrapper.find('svg').find('#test_filter').length).toBe(1);
+  });
+
   test('it should show initial status of rendering', () => {
     const wrapper = mount(<Network {...props} />);
     expect(wrapper.find('text').length).toBe(1);
