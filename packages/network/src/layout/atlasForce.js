@@ -1,19 +1,23 @@
 import * as d3Force from 'd3-force';
 
-
 class AtlasForceDirectedLayout {
-  constructor({ animated }) {
-    this.setAnimated(animated);
+  constructor() {
+    this.forceManyBody = d3Force.forceManyBody();
+    this.forceLink = d3Force.forceLink();
+    this.forceCollide = d3Force.forceCollide();
   }
 
   setGraph(graph) {
     this.graph = graph;
     this.clear();
-    this.simulation = d3Force.forceSimulation(graph.nodes)
-    .force('charge', d3Force.forceManyBody())
-    .force('link', d3Force.forceLink(graph.links))
-    .force('center', d3Force.forceCenter(450, 250))
-    .alphaMin(0.1);
+    this.forceLink.links(graph.links);
+    this.simulation = d3Force
+      .forceSimulation(graph.nodes)
+      .force('charge', this.forceManyBody)
+      .force('link', this.forceLink)
+      .force('center', d3Force.forceCenter(450, 250))
+      .force('collide', this.forceCollide)
+      .alphaMin(0.1);
   }
 
   getGraph() {
@@ -36,6 +40,41 @@ class AtlasForceDirectedLayout {
     }
   }
 
+  setCollideRadius(radius) {
+    this.forceCollide.radius(radius);
+    return this;
+  }
+
+  setCollideStrength(strength) {
+    this.forceCollide.strength(strength);
+    return this;
+  }
+
+  setNodeStrength(strength) {
+    this.forceManyBody.strength(strength);
+    return this;
+  }
+
+  setLinkStrength(strength) {
+    this.forceLink.strength(strength);
+    return this;
+  }
+
+  setNodeMinDistance(distance) {
+    this.forceManyBody.distanceMin(distance);
+    return this;
+  }
+
+  setNodeMaxDistance(distance) {
+    this.forceManyBody.distanceMax(distance);
+    return this;
+  }
+
+  setLinkDistance(distance) {
+    this.forceLink.distance(distance);
+    return this;
+  }
+
   isAnimated() {
     return this.animated;
   }
@@ -45,7 +84,6 @@ class AtlasForceDirectedLayout {
       this.simulation.on(this.callbackEvent, null);
     }
   }
-
 }
 
 export default AtlasForceDirectedLayout;
