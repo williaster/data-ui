@@ -3,7 +3,7 @@ import { shallow, mount } from 'enzyme';
 
 import { XYChart, CirclePackSeries, PointSeries } from '../src/';
 
-describe('<PointSeries />', () => {
+describe('<CirclePackSeries />', () => {
   const mockProps = {
     xScale: { type: 'time' },
     yScale: { type: 'linear', includeZero: false },
@@ -69,5 +69,23 @@ describe('<PointSeries />', () => {
 
     point.simulate('mouseleave');
     expect(onMouseLeave).toHaveBeenCalledTimes(1);
+  });
+
+  test('it should invoke layoutCallback if passed with y-range and -domain arguments', () => {
+    jest.useFakeTimers();
+    const layoutCallback = jest.fn();
+
+    mount(
+      <XYChart {...mockProps} >
+        <CirclePackSeries label="" data={mockData} layoutCallback={layoutCallback} />
+      </XYChart>,
+    );
+
+    jest.runAllTimers();
+
+    expect(layoutCallback).toHaveBeenCalledTimes(1);
+    const { domain, range } = layoutCallback.mock.calls[0][0];
+    expect(Array.isArray(domain)).toBe(true);
+    expect(Array.isArray(range)).toBe(true);
   });
 });

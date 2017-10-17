@@ -24,9 +24,10 @@ import {
 
 import readme from '../../node_modules/@data-ui/xy-chart/README.md';
 
+import CirclePackWithCallback from './CirclePackWithCallback';
+import RectPointComponent from './RectPointComponent';
 import ResponsiveXYChart, { dateFormatter } from './ResponsiveXYChart';
 import ScatterWithHistogram from './ScatterWithHistograms';
-import RectPointComponent from './RectPointComponent';
 
 import {
   circlePackData,
@@ -340,42 +341,18 @@ export default {
           <CrossHair
             showHorizontalLine={false}
             fullHeight
-            stroke={colors.default}
+            stroke={colors.darkGray}
             circleFill="white"
-            circleStroke={colors.default}
+            circleStroke={colors.darkGray}
           />
           <XAxis label="Time" numTicks={5} />
         </ResponsiveXYChart>
       ),
     },
     {
-      description: 'CirclePackSeries With Customized Renderer',
+      description: 'CirclePackSeries with custom renderer and height callback',
       components: [CirclePackSeries],
-      example: () => (
-        <ResponsiveXYChart
-          ariaLabel="Required label"
-          xScale={{ type: 'time' }}
-          yScale={{ type: 'linear' }}
-        >
-          <CirclePackSeries
-            data={circlePackData}
-            label="Circle time pack"
-            size={d => d.r}
-            pointComponent={RectPointComponent}
-          />
-          <HorizontalReferenceLine
-            reference={0}
-          />
-          <CrossHair
-            showHorizontalLine={false}
-            fullHeight
-            stroke={colors.default}
-            circleFill="white"
-            circleStroke={colors.default}
-          />
-          <XAxis label="Time" numTicks={5} />
-        </ResponsiveXYChart>
-      ),
+      example: () => <CirclePackWithCallback />,
     },
     {
       description: 'Mixed series',

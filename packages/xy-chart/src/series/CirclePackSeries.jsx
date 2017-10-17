@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { extent as d3Extent } from 'd3-array';
 
 import PointSeries, {
   propTypes as pointSeriesPropTypes,
@@ -17,24 +18,54 @@ const propTypes = {
       size: PropTypes.number,
     }),
   ).isRequired,
+  layoutCallback: PropTypes.func,
 };
 
 const defaultProps = {
   ...pointSeriesDefaultProps,
   size: d => d.size || 4,
+  layoutCallback: null,
 };
 
-// eslint-disable-next-line react/prefer-stateless-function
 class CirclePackSeries extends React.PureComponent {
-  render() {
-    const { data: rawData, xScale, size } = this.props;
+  constructor(props) {
+    super(props);
+    this.computeCirclePack = this.computeCirclePack.bind(this);
+    this.state = { data: this.computeCirclePack(props) };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (['data', 'xScale', 'size'].some(prop => this.props[prop] !== nextProps[prop])) {
+      this.setState({ data: this.computeCirclePack(nextProps) });
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.timeout) clearTimeout(this.timeout);
+  }
+
+  computeCirclePack({ data: rawData, xScale, yScale, size, layoutCallback }) {
     const data = computeCirclePack(rawData, xScale, size);
-    return (
-      <PointSeries
-        {...this.props}
-        data={data}
-      />
-    );
+
+    // callback enables the user to re-set the chart height if there is overflow
+    if (layoutCallback) {
+      if (this.timeout) clearTimeout(this.timeout);
+
+      const [min, max] = d3Extent(data, d => d.y);
+      this.timeout = setTimeout(() => {
+        layoutCallback({
+          range: [min, max], domain: [yScale(min), yScale(max)],
+        });
+      }, 10);
+    }
+
+    return data;
+  }
+
+  render() {
+    const { data } = this.state;
+
+    return <PointSeries {...this.props} data={data} />;
   }
 }
 
