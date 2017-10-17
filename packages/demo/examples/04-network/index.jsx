@@ -14,7 +14,7 @@ import readme from '../../node_modules/@data-ui/network/README.md';
 
 import ExpandableNetwork from './ExpandableNetwork';
 import NetworkWithCustimizedRenderer from './NetworkWithCustimizedRenderer';
-import ExpandableNetworkWithCustimizedLayout from './ExpandableNetworkWithCustimizedLayout';
+import ExpandableNetworkWithCustomizedLayout from './ExpandableNetworkWithCustomizedLayout';
 
 function renderTooltip({ data }) {
   const { x, y, label } = data;
@@ -91,12 +91,12 @@ export default {
       ),
     },
     {
-      description: 'ExpandableNetworkWithCustimizedLayout',
-      components: [ExpandableNetworkWithCustimizedLayout],
+      description: 'ExpandableNetworkWithCustomizedLayout',
+      components: [ExpandableNetworkWithCustomizedLayout],
       example: () => (
         <ResponsiveNetwork
           graph={graph}
-          networkComponent={ExpandableNetworkWithCustimizedLayout}
+          networkComponent={ExpandableNetworkWithCustomizedLayout}
           animated
         />
       ),

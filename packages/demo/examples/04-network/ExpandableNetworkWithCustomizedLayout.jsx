@@ -3,7 +3,7 @@ import { Network, propTypes, AtlasForceDirectedLayout } from '@data-ui/network';
 
 import { expandGraph } from './data';
 
-class ExpandableNetwork extends React.PureComponent {
+class ExpandableNetworkWithCustomizedLayout extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = { graph: props.graph };
@@ -38,6 +38,6 @@ class ExpandableNetwork extends React.PureComponent {
   }
 }
 
-ExpandableNetwork.propTypes = propTypes;
+ExpandableNetworkWithCustomizedLayout.propTypes = propTypes;
 
-export default ExpandableNetwork;
+export default ExpandableNetworkWithCustomizedLayout;

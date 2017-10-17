@@ -54,11 +54,7 @@ class Network extends React.PureComponent {
     this.state = {
       computingLayout: true,
     };
-    if (layout) {
-      this.layout = layout;
-    } else {
-      this.layout = new Layout();
-    }
+    this.layout = layout || new Layout();
     this.layout.setAnimated(animated);
     this.layout.setGraph(graph);
     this.layout.layout({
