@@ -1,9 +1,14 @@
 /* eslint react/prop-types: 0 */
 import React from 'react';
 
-import { Network, withScreenSize } from '@data-ui/network';
+import {
+  Network,
+  withScreenSize,
+} from '@data-ui/network';
 
-import { defaultGraph as graph } from './data';
+import {
+  defaultGraph as graph,
+} from './data';
 
 import readme from '../../node_modules/@data-ui/network/README.md';
 
@@ -15,11 +20,10 @@ function renderTooltip({ data }) {
   const { x, y, label } = data;
   return (
     <div>
-      {label && (
+      {label &&
         <div>
           <strong>{label}</strong>
-        </div>
-      )}
+        </div>}
       <div>
         <strong> x </strong>
         {x && x.toFixed ? x.toFixed(2) : x}
@@ -32,20 +36,25 @@ function renderTooltip({ data }) {
   );
 }
 
-const ResponsiveNetwork = withScreenSize(({ screenWidth, children, networkComponent, ...rest }) =>
-  React.createElement(
-    networkComponent,
-    {
-      width: Math.min(1000, screenWidth / 1.3),
-      height: Math.min(1000 / 1.8, screenWidth / 1.3 / 1.8),
-      ariaLabel: 'Network showing ...',
-      renderTooltip,
-      margin: { top: 40, right: 40, bottom: 40, left: 40 },
-      ...rest,
-    },
-    children,
-  ),
-);
+const ResponsiveNetwork = withScreenSize(({
+  screenWidth,
+  children,
+  networkComponent,
+  ...rest
+}) => (
+    React.createElement(
+      networkComponent,
+      {
+        width: Math.min(1000, screenWidth / 1.3),
+        height: Math.min(1000 / 1.8, screenWidth / 1.3 / 1.8),
+        ariaLabel: 'Network showing ...',
+        renderTooltip,
+        margin: { top: 40, right: 40, bottom: 40, left: 40 },
+        ...rest,
+      },
+      children,
+    )
+));
 
 export default {
   usage: readme,
@@ -53,18 +62,32 @@ export default {
     {
       description: 'DefaultNetwork',
       components: [Network],
-      example: () => <ResponsiveNetwork graph={graph} networkComponent={Network} />,
+      example: () => (
+        <ResponsiveNetwork
+          graph={graph}
+          networkComponent={Network}
+        />
+      ),
     },
     {
       description: 'ExpandableNetwork',
       components: [ExpandableNetwork],
-      example: () => <ResponsiveNetwork graph={graph} networkComponent={ExpandableNetwork} />,
+      example: () => (
+        <ResponsiveNetwork
+          graph={graph}
+          networkComponent={ExpandableNetwork}
+        />
+      ),
     },
     {
       description: 'ExpandableAnimatedNetwork',
       components: [ExpandableNetwork],
       example: () => (
-        <ResponsiveNetwork graph={graph} networkComponent={ExpandableNetwork} animated />
+        <ResponsiveNetwork
+          graph={graph}
+          networkComponent={ExpandableNetwork}
+          animated
+        />
       ),
     },
     {

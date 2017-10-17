@@ -71,9 +71,9 @@ class Network extends React.PureComponent {
   componentWillReceiveProps(nextProps) {
     const { graph, animated, width, height, margin } = nextProps;
     if (
-      this.props.graph.links !== graph.links ||
-      this.props.graph.nodes !== graph.nodes ||
-      this.state.computingLayout
+      this.props.graph.links !== graph.links
+      || this.props.graph.nodes !== graph.nodes
+      || this.state.computingLayout
     ) {
       this.layout.clear();
       this.setState(() => ({ computingLayout: true }));
@@ -95,16 +95,17 @@ class Network extends React.PureComponent {
 
   setGraphState({ graph, width, height, margin }) {
     const range = graph.nodes.reduce(
-      ({ x, y }, node) => ({
-        x: {
-          min: Math.min(x.min, node.x),
-          max: Math.max(x.max, node.x),
-        },
-        y: {
-          min: Math.min(y.min, node.y),
-          max: Math.max(y.max, node.y),
-        },
-      }),
+      ({ x, y }, node) =>
+        ({
+          x: {
+            min: Math.min(x.min, node.x),
+            max: Math.max(x.max, node.x),
+          },
+          y: {
+            min: Math.min(y.min, node.y),
+            max: Math.max(y.max, node.y),
+          },
+        }),
       {
         x: {
           min: 999999,
@@ -114,28 +115,30 @@ class Network extends React.PureComponent {
           min: 999999,
           max: -999999,
         },
-      },
-    );
+      });
 
     const actualWidth = width - margin.left - margin.right;
     const actualheight = height - margin.top - margin.bottom;
     const dataXRange = range.x.max - range.x.min;
     const dataYRange = range.y.max - range.y.min;
 
-    const zoomLevel = Math.max(dataXRange / actualWidth, dataYRange / actualheight);
+    const zoomLevel = Math.max(
+      dataXRange / actualWidth,
+      dataYRange / actualheight,
+    );
 
-    const xOffsetForCentering = (actualWidth - dataXRange / zoomLevel) / 2;
-    const xTotalOffset = margin.left + (xOffsetForCentering - range.x.min / zoomLevel);
+    const xOffsetForCentering = ((actualWidth - (dataXRange / zoomLevel)) / 2);
+    const xTotalOffset = margin.left + (xOffsetForCentering - (range.x.min / zoomLevel));
 
-    const yOffsetForCentering = (actualheight - dataYRange / zoomLevel) / 2;
-    const yTotalOffset = margin.top + (yOffsetForCentering - range.y.min / zoomLevel);
+    const yOffsetForCentering = ((actualheight - (dataYRange / zoomLevel)) / 2);
+    const yTotalOffset = margin.top + (yOffsetForCentering - (range.y.min / zoomLevel));
 
     function xScale(x) {
-      return x / zoomLevel + xTotalOffset;
+      return (x / zoomLevel) + xTotalOffset;
     }
 
     function yScale(y) {
-      return y / zoomLevel + yTotalOffset;
+      return (y / zoomLevel) + yTotalOffset;
     }
 
     const nodes = graph.nodes.map(({ x, y, ...rest }, index) => ({
@@ -177,10 +180,18 @@ class Network extends React.PureComponent {
     return (
       <WithTooltip renderTooltip={renderTooltip}>
         {({ onMouseMove, onMouseLeave: toolTipOnMouseLeave }) => (
-          <svg aria-label={ariaLabel} role="img" width={width} height={height}>
-            {this.state.graph && (
+          <svg
+            aria-label={ariaLabel}
+            role="img"
+            width={width}
+            height={height}
+          >
+            {this.state.graph &&
               <Group>
-                <Links links={this.state.graph.links} linkComponent={renderLink || Link} />
+                <Links
+                  links={this.state.graph.links}
+                  linkComponent={renderLink || Link}
+                />
                 <Nodes
                   nodes={this.state.graph.nodes}
                   nodeComponent={renderNode || Node}
@@ -194,31 +205,34 @@ class Network extends React.PureComponent {
                   onMouseMove={onMouseMove}
                   onClick={onNodeClick}
                 />
-              </Group>
-            )}
+              </Group>}
 
             {children}
 
-            {this.state.computingLayout &&
-              waitingForLayoutLabel && (
-                <Group>
-                  <rect width={width} height={height} opacity={0.8} fill="#ffffff" />
-                  <text
-                    x={width / 2}
-                    y={height / 2}
-                    textAnchor="middle"
-                    stroke="#ffffff"
-                    paintOrder="stroke"
-                  >
-                    {waitingForLayoutLabel}
-                  </text>
-                </Group>
-              )}
+            {this.state.computingLayout && waitingForLayoutLabel &&
+              <Group>
+                <rect
+                  width={width}
+                  height={height}
+                  opacity={0.8}
+                  fill="#ffffff"
+                />
+                <text
+                  x={width / 2}
+                  y={height / 2}
+                  textAnchor="middle"
+                  stroke="#ffffff"
+                  paintOrder="stroke"
+                >
+                  {waitingForLayoutLabel}
+                </text>
+              </Group>}
           </svg>
         )}
       </WithTooltip>
     );
   }
+
 }
 
 Network.defaultProps = defaultProps;
