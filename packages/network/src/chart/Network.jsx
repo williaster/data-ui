@@ -29,6 +29,7 @@ export const propTypes = {
   renderTooltip: PropTypes.func,
   waitingForLayoutLabel: PropTypes.string,
   width: PropTypes.number.isRequired,
+  layout: PropTypes.object,
 };
 
 const defaultProps = {
@@ -41,6 +42,7 @@ const defaultProps = {
     bottom: 20,
     right: 20,
   },
+  layout: null,
   waitingForLayoutLabel: 'Computing layout...',
 };
 
@@ -48,11 +50,12 @@ class Network extends React.PureComponent {
   constructor(props) {
     super(props);
 
-    const { graph, animated, width, height, margin } = props;
+    const { graph, animated, width, height, margin, layout } = props;
     this.state = {
       computingLayout: true,
     };
-    this.layout = new Layout({ animated });
+    this.layout = layout || new Layout();
+    this.layout.setAnimated(animated);
     this.layout.setGraph(graph);
     this.layout.layout({
       callback: (newGraph) => {
