@@ -5,6 +5,7 @@ class AtlasForceDirectedLayout {
     this.forceManyBody = d3Force.forceManyBody();
     this.forceLink = d3Force.forceLink();
     this.forceCollide = d3Force.forceCollide();
+    this.setAnimated(false);
   }
 
   setGraph(graph) {

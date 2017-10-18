@@ -7,13 +7,13 @@ describe('AtlasForceDirectedLayout', () => {
   });
 
   test('is should set the value of the graph properly', () => {
-    const layout = new AtlasForceDirectedLayout({ animated: false });
+    const layout = new AtlasForceDirectedLayout();
     layout.setGraph(defaultGraph);
     expect(defaultGraph === layout.getGraph());
   });
 
   test('is should set the value of the animated properly', () => {
-    const layout = new AtlasForceDirectedLayout({ animated: false });
+    const layout = new AtlasForceDirectedLayout();
     layout.setGraph(defaultGraph);
     expect(layout.isAnimated() === false);
     layout.setAnimated(true);
@@ -21,7 +21,7 @@ describe('AtlasForceDirectedLayout', () => {
   });
 
   test('is should return a graph with the same data after laying out', () => {
-    const layout = new AtlasForceDirectedLayout({ animated: false });
+    const layout = new AtlasForceDirectedLayout();
     layout.setGraph(defaultGraph);
     layout.layout(
       {
