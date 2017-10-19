@@ -2,6 +2,7 @@ import * as d3Force from 'd3-force';
 
 class AtlasForceDirectedLayout {
   constructor() {
+    this.alphaMin = 0.1;
     this.forceManyBody = d3Force.forceManyBody();
     this.forceLink = d3Force.forceLink();
     this.forceCollide = d3Force.forceCollide();
@@ -18,7 +19,7 @@ class AtlasForceDirectedLayout {
       .force('link', this.forceLink)
       .force('center', d3Force.forceCenter(450, 250))
       .force('collide', this.forceCollide)
-      .alphaMin(0.1);
+      .alphaMin(this.alphaMin);
   }
 
   getGraph() {
@@ -30,6 +31,11 @@ class AtlasForceDirectedLayout {
       const tempGraph = { ...this.graph };
       callback(tempGraph);
     });
+  }
+
+  setAlphaMin(alphaMin) {
+    this.alphaMin = alphaMin;
+    return this;
   }
 
   setAnimated(animated) {

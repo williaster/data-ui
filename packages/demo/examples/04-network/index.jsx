@@ -13,7 +13,7 @@ import {
 import readme from '../../node_modules/@data-ui/network/README.md';
 
 import ExpandableNetwork from './ExpandableNetwork';
-import NetworkWithCustimizedRenderer from './NetworkWithCustimizedRenderer';
+import NetworkWithCustomizedRenderer from './NetworkWithCustomizedRenderer';
 import ExpandableNetworkWithCustomizedLayout from './ExpandableNetworkWithCustomizedLayout';
 
 function renderTooltip({ data }) {
@@ -60,7 +60,7 @@ export default {
   usage: readme,
   examples: [
     {
-      description: 'DefaultNetwork',
+      description: 'Default network',
       components: [Network],
       example: () => (
         <ResponsiveNetwork
@@ -70,7 +70,7 @@ export default {
       ),
     },
     {
-      description: 'ExpandableNetwork',
+      description: 'Expandable network',
       components: [ExpandableNetwork],
       example: () => (
         <ResponsiveNetwork
@@ -80,7 +80,7 @@ export default {
       ),
     },
     {
-      description: 'ExpandableAnimatedNetwork',
+      description: 'Animated expandable network',
       components: [ExpandableNetwork],
       example: () => (
         <ResponsiveNetwork
@@ -91,7 +91,7 @@ export default {
       ),
     },
     {
-      description: 'ExpandableNetworkWithCustomizedLayout',
+      description: 'Animated expandable network with custom layout',
       components: [ExpandableNetworkWithCustomizedLayout],
       example: () => (
         <ResponsiveNetwork
@@ -102,12 +102,12 @@ export default {
       ),
     },
     {
-      description: 'NetworkWithCustimizedRenderer',
-      components: [NetworkWithCustimizedRenderer],
+      description: 'Animated expandable network with custom renderer',
+      components: [NetworkWithCustomizedRenderer],
       example: () => (
         <ResponsiveNetwork
           graph={graph}
-          networkComponent={NetworkWithCustimizedRenderer}
+          networkComponent={NetworkWithCustomizedRenderer}
           animated
         />
       ),

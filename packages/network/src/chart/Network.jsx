@@ -15,6 +15,7 @@ export const propTypes = {
   ariaLabel: PropTypes.string.isRequired,
   animated: PropTypes.bool,
   children: PropTypes.node,
+  className: PropTypes.string,
   graph: PropTypes.shape({
     nodes: PropTypes.array.isRequired,
     links: PropTypes.array.isRequired,
@@ -35,6 +36,7 @@ export const propTypes = {
 const defaultProps = {
   animated: false,
   children: null,
+  className: null,
   renderTooltip: null,
   margin: {
     top: 20,
@@ -162,6 +164,7 @@ class Network extends React.PureComponent {
     const {
       ariaLabel,
       children,
+      className,
       height,
       onNodeClick,
       onNodeMouseEnter,
@@ -178,6 +181,7 @@ class Network extends React.PureComponent {
         {({ onMouseMove, onMouseLeave: toolTipOnMouseLeave }) => (
           <svg
             aria-label={ariaLabel}
+            className={className}
             role="img"
             width={width}
             height={height}
