@@ -59,15 +59,6 @@ function renderTooltip({ datum }) { // eslint-disable-line react/prop-types
   );
 }
 
-const RotatedLabel = ({ x, y }) => ( // eslint-disable-line react/prop-types
-  <text
-    {...theme.yAxisStyles.label.right}
-    transform={`translate(${-y},${x})rotate(270)`}
-  >
-    y counts
-  </text>
-);
-
 const propTypes = {
   parentWidth: PropTypes.number.isRequired,
 };
@@ -146,7 +137,11 @@ class ScatterWithHistogram extends React.PureComponent {
           ))}
           <HistYAxis
             orientation="right"
-            label={<RotatedLabel />}
+            label="y counts"
+            labelProps={{
+              ...theme.yAxisStyles.label.right,
+              transform: `translate(${height / 1.75}, ${height})rotate(270)`,
+            }}
           />
         </Histogram>
       </div>

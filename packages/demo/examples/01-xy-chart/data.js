@@ -31,6 +31,21 @@ export const pointData = genRandomNormalPoints(n).map(([x, y], i) => ({
   label: (i % n) === 0 ? `(${parseInt(x, 10)},${parseInt(y, 10)})` : null,
 }));
 
+// band data
+const stdDev = 0.1;
+export const temperatureBands = groupKeys.map((city, cityIndex) => (
+  cityTemperature.slice(0, 25).map((d) => {
+    const y = Number(d[city]) - (20 * cityIndex);
+    return {
+      key: city,
+      x: d.date,
+      y,
+      y0: y + (stdDev * y),
+      y1: y - (stdDev * y),
+    };
+  })
+));
+
 // interval data
 const intervals = [[5, 8], [15, 19]];
 

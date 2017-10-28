@@ -70,25 +70,24 @@ const xString = d => d.x.toString();
 
 class XYChart extends React.PureComponent {
   static collectScalesFromProps(props) {
-    const { xScale, yScale, children } = props;
+    const { xScale: xScaleObject, yScale: yScaleObject, children } = props;
     const { innerWidth, innerHeight } = XYChart.getDimmensions(props);
     const { allData, dataByIndex, dataBySeriesType } = collectDataFromChildSeries(children);
-    const result = { allData, dataByIndex };
 
-    result.xScale = getScaleForAccessor({
+    const xScale = getScaleForAccessor({
       allData,
       minAccessor: d => (typeof d.x0 !== 'undefined' ? d.x0 : d.x),
       maxAccessor: d => (typeof d.x1 !== 'undefined' ? d.x1 : d.x),
       range: [0, innerWidth],
-      ...xScale,
+      ...xScaleObject,
     });
 
-    result.yScale = getScaleForAccessor({
+    const yScale = getScaleForAccessor({
       allData,
       minAccessor: d => (typeof d.y0 !== 'undefined' ? d.y0 : d.y),
       maxAccessor: d => (typeof d.y1 !== 'undefined' ? d.y1 : d.y),
       range: [innerHeight, 0],
-      ...yScale,
+      ...yScaleObject,
     });
 
     React.Children.forEach(children, (Child) => { // Child-specific scales or adjustments here
@@ -104,16 +103,21 @@ class XYChart extends React.PureComponent {
         });
 
         const offset = dummyBand.bandwidth() / 2;
-        result.xScale.range([offset, innerWidth - offset]);
-        result.xScale.barWidth = dummyBand.bandwidth();
-        result.xScale.offset = offset;
+        xScale.range([offset, innerWidth - offset]);
+        xScale.barWidth = dummyBand.bandwidth();
+        xScale.offset = offset;
       }
       if (isCirclePackSeries(name)) {
-        result.yScale.domain([-innerHeight / 2, innerHeight / 2]);
+        yScale.domain([-innerHeight / 2, innerHeight / 2]);
       }
     });
 
-    return result;
+    return {
+      allData,
+      dataByIndex,
+      xScale,
+      yScale,
+    };
   }
 
   static getDimmensions(props) {

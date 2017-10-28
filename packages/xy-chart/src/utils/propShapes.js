@@ -28,6 +28,20 @@ export const lineSeriesDataShape = PropTypes.arrayOf(
   }),
 );
 
+export const areaSeriesDataShape = PropTypes.arrayOf(
+  PropTypes.shape({
+    x: PropTypes.oneOfType([ // data with null x/y are not rendered
+      PropTypes.string,
+      PropTypes.number,
+      PropTypes.instanceOf(Date),
+      PropTypes.object, // eg a moment() instance
+    ]),
+    y: PropTypes.number, // null data are not rendered
+    y0: PropTypes.number,
+    y1: PropTypes.number,
+  }),
+);
+
 export const barSeriesDataShape = PropTypes.arrayOf(PropTypes.shape({
   x: PropTypes.oneOfType([
     PropTypes.string,

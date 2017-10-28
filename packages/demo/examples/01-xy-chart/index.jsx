@@ -8,6 +8,7 @@ import {
   YAxis,
 
   AreaSeries,
+  BandSeries,
   BarSeries,
   CirclePackSeries,
   GroupedBarSeries,
@@ -39,6 +40,7 @@ import {
   pointData,
   intervalLineData,
   intervalData,
+  temperatureBands,
 } from './data';
 
 import WithToggle from '../shared/WithToggle';
@@ -123,7 +125,7 @@ export default {
       },
     },
     {
-      description: 'AreaSeries',
+      description: 'AreaSeries -- closed',
       components: [AreaSeries],
       example: () => (
         <ResponsiveXYChart
@@ -159,10 +161,45 @@ export default {
           <CrossHair
             showHorizontalLine={false}
             fullHeight
-            stroke={colors.categories[2]}
-            circleFill={colors.categories[2]}
+            stroke={colors.darkGray}
+            circleFill="white"
+            circleStroke={colors.darkGray}
           />
           <XAxis label="Time" numTicks={5} />
+        </ResponsiveXYChart>
+      ),
+    },
+    {
+      description: 'AreaSeries -- band',
+      components: [XYChart, AreaSeries, LineSeries],
+      example: () => (
+        <ResponsiveXYChart
+          ariaLabel="Required label"
+          xScale={{ type: 'time' }}
+          yScale={{ type: 'linear' }}
+        >
+          <YAxis label="Temperature (°F)" numTicks={4} />
+          {temperatureBands.map((data, i) => ([
+            <AreaSeries
+              key={`band-${data[0].key}`}
+              label="Temperature range"
+              data={data}
+              strokeWidth={0}
+              fill={colors.categories[i]}
+            />,
+            <LineSeries
+              key={`line-${data[0].key}`}
+              data={data}
+              stroke={colors.categories[i]}
+              label="Temperature avg"
+            />,
+          ]))}
+          <CrossHair
+            showHorizontalLine={false}
+            fullHeight
+            stroke={colors.darkGray}
+            circleStroke={colors.darkGray}
+          />
         </ResponsiveXYChart>
       ),
     },

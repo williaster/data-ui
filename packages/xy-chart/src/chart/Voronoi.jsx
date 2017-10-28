@@ -56,9 +56,7 @@ class Voronoi extends React.PureComponent {
             onMouseMove={() => (event) => {
               onMouseMove({ event, datum: polygon.data });
             }}
-            onMouseLeave={() => () => {
-              onMouseLeave();
-            }}
+            onMouseLeave={() => onMouseLeave}
           />
         ))}
       </Group>
