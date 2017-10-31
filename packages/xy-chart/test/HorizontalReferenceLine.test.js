@@ -59,4 +59,41 @@ describe('<HorizontalReferenceLine />', () => {
     expect(line.prop('from').y).toBe(scaledValue);
     expect(line.prop('to').y).toBe(scaledValue);
   });
+
+  test('it should render a label if specified', () => {
+    const label = 'label!';
+
+    const noLabelWrapper = shallow(
+      <XYChart {...mockProps}>
+        <HorizontalReferenceLine reference={reference} />
+      </XYChart>,
+    ).find(HorizontalReferenceLine).dive();
+
+    const withLabelWrapper = shallow(
+      <XYChart {...mockProps}>
+        <HorizontalReferenceLine reference={reference} label={label} />
+      </XYChart>,
+    ).find(HorizontalReferenceLine).dive();
+
+    expect(noLabelWrapper.find('text').length).toBe(0);
+    expect(withLabelWrapper.find('text').length).toBe(1);
+    expect(withLabelWrapper.find('text').text()).toBe(label);
+  });
+
+  test('it should use labelProps if passed', () => {
+    const wrapper = shallow(
+      <XYChart {...mockProps}>
+        <HorizontalReferenceLine
+          reference={reference}
+          label="label!"
+          labelProps={{
+            id: 'test',
+          }}
+        />
+      </XYChart>,
+    ).find(HorizontalReferenceLine).dive();
+
+    const text = wrapper.find('text');
+    expect(text.prop('id')).toBe('test');
+  });
 });

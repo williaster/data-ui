@@ -223,7 +223,7 @@ export default {
           useVoronoi
         >
           <XAxis numTicks={5} />
-          <YAxis label="Price ($)" />
+          <YAxis label="Price" tickFormat={val => `$${val}`} />
           <LinearGradient
             id="confidence-interval-fill"
             from={colors.categories[3]}
@@ -232,6 +232,8 @@ export default {
           <HorizontalReferenceLine
             reference={reference}
             label={`Min $${reference}`}
+            strokeDasharray="3 3"
+            strokeLinecap="butt"
           />
           <AreaSeries
             label="band"
@@ -243,6 +245,7 @@ export default {
             label="line"
             data={priceBandData.points.map(d => (d.y >= reference ? d : { ...d, y: reference }))}
             stroke={colors.categories[3]}
+            strokeWidth={2}
           />
           <PointSeries
             label="line"
@@ -251,7 +254,6 @@ export default {
             fillOpacity={1}
             stroke={colors.categories[3]}
           />
-
           <CrossHair
             showHorizontalLine={false}
             fullHeight
