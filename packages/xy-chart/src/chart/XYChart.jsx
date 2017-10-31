@@ -11,9 +11,10 @@ import {
   collectDataFromChildSeries,
   componentName,
   isAxis,
+  isBarSeries,
   isCirclePackSeries,
   isCrossHair,
-  isBarSeries,
+  isDefined,
   isReferenceLine,
   isSeries,
   getChildWithName,
@@ -65,14 +66,23 @@ const defaultProps = {
 
 // accessors
 const getX = d => d.x;
+//   if (isDefined(d.x)) return d.x;
+//   else if (isDefined(d.x0 && d.x1)) return (d.x0 + d.x1) / 2;
+//   return 0;
+// };
 const getY = d => d.y;
-const xString = d => d.x.toString();
+//   if (isDefined(d.y)) return d.y;
+//   else if (isDefined(d.y0 && d.y1)) return (d.y0 + d.y1) / 2;
+//   return 0;
+// };
+
+const xString = d => getX(d).toString();
 
 class XYChart extends React.PureComponent {
   static collectScalesFromProps(props) {
     const { xScale: xScaleObject, yScale: yScaleObject, children } = props;
     const { innerWidth, innerHeight } = XYChart.getDimmensions(props);
-    const { allData, dataByIndex, dataBySeriesType } = collectDataFromChildSeries(children);
+    const { allData, dataBySeriesType } = collectDataFromChildSeries(children);
 
     const xScale = getScaleForAccessor({
       allData,
@@ -114,7 +124,6 @@ class XYChart extends React.PureComponent {
 
     return {
       allData,
-      dataByIndex,
       xScale,
       yScale,
     };
@@ -132,11 +141,10 @@ class XYChart extends React.PureComponent {
 
   static getStateFromProps(props) {
     const { margin, innerWidth, innerHeight } = XYChart.getDimmensions(props);
-    const { allData, dataByIndex, xScale, yScale } = XYChart.collectScalesFromProps(props);
+    const { allData, xScale, yScale } = XYChart.collectScalesFromProps(props);
 
     return {
       allData,
-      dataByIndex,
       innerHeight,
       innerWidth,
       margin,
@@ -202,7 +210,6 @@ class XYChart extends React.PureComponent {
 
     const {
       allData,
-      dataByIndex,
       innerWidth,
       innerHeight,
       margin,
@@ -236,7 +243,7 @@ class XYChart extends React.PureComponent {
               strokeWidth={theme.gridStyles && theme.gridStyles.strokeWidth}
             />}
 
-          {React.Children.map(children, (Child, childIndex) => {
+          {React.Children.map(children, (Child) => {
             const name = componentName(Child);
             if (isAxis(name)) {
               const styleKey = name[0].toLowerCase();
@@ -251,13 +258,13 @@ class XYChart extends React.PureComponent {
                 tickStyles: { ...theme[`${styleKey}TickStyles`], ...Child.props.tickStyles },
               });
             } else if (isSeries(name)) {
+              const { onMouseLeave: childMouseLeave, onMouseMove: childMouseMove } = Child.props;
               return React.cloneElement(Child, {
-                data: dataByIndex[childIndex],
                 xScale,
                 yScale,
                 barWidth,
-                onMouseLeave: useVoronoi ? null : onMouseLeave,
-                onMouseMove: useVoronoi ? null : onMouseMove,
+                onMouseLeave: typeof childMouseLeave !== 'undefined' ? childMouseLeave : onMouseLeave,
+                onMouseMove: typeof childMouseMove !== 'undefined' ? childMouseMove : onMouseMove,
               });
             } else if (isCrossHair(name)) {
               CrossHair = Child;
@@ -270,7 +277,7 @@ class XYChart extends React.PureComponent {
 
           {useVoronoi &&
             <Voronoi
-              data={allData}
+              data={allData.filter(d => isDefined(d.x) && isDefined(d.y))}
               x={voronoiX}
               y={voronoiY}
               width={innerWidth}

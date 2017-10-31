@@ -8,11 +8,11 @@ import { color } from '@data-ui/theme';
 
 import { callOrValue, isDefined } from '../utils/chartUtils';
 import findClosestDatum from '../utils/findClosestDatum';
-import { lineSeriesDataShape } from '../utils/propShapes';
+import { interpolationShape, lineSeriesDataShape } from '../utils/propShapes';
 
 const propTypes = {
   data: lineSeriesDataShape.isRequired,
-  interpolation: PropTypes.oneOf(['linear', 'cardinal']), // @todo add more
+  interpolation: interpolationShape,
   label: PropTypes.string.isRequired,
   showPoints: PropTypes.bool,
 
@@ -29,7 +29,7 @@ const propTypes = {
 };
 
 const defaultProps = {
-  interpolation: 'cardinal',
+  interpolation: 'monotoneX',
   showPoints: false,
   stroke: color.default,
   strokeDasharray: null,
@@ -37,8 +37,8 @@ const defaultProps = {
   strokeLinecap: 'round',
   xScale: null,
   yScale: null,
-  onMouseMove: null,
-  onMouseLeave: null,
+  onMouseMove: undefined,
+  onMouseLeave: undefined,
 };
 
 const x = d => d.x;

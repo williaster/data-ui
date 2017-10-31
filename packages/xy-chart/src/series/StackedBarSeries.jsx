@@ -27,8 +27,8 @@ const defaultProps = {
   strokeWidth: 1,
   xScale: null,
   yScale: null,
-  onMouseMove: null,
-  onMouseLeave: null,
+  onMouseMove: undefined,
+  onMouseLeave: undefined,
 };
 
 const x = d => d.x;

@@ -46,6 +46,47 @@ export const temperatureBands = groupKeys.map((city, cityIndex) => (
   })
 ));
 
+export const priceBandData = {
+  band: [
+    { x: new Date('2017-06-01'), y0: 215, y1: 260 },
+    { x: new Date('2017-06-02'), y0: 203, y1: 290 },
+    { x: new Date('2017-06-03'), y0: 196, y1: 279 },
+    { x: new Date('2017-06-04'), y0: 190, y1: 261 },
+    { x: new Date('2017-06-05'), y0: 140, y1: 250 },
+    { x: new Date('2017-06-06'), y0: 120, y1: 231 },
+    { x: new Date('2017-06-07'), y0: 131, y1: 211 },
+    { x: new Date('2017-06-08'), y0: 123, y1: 196 },
+    { x: new Date('2017-06-09'), y0: 105, y1: 171 },
+    { x: new Date('2017-06-10'), y0: 100, y1: 175 },
+    { x: new Date('2017-06-11'), y0: 80, y1: 150 },
+    { x: new Date('2017-06-12'), y0: 83, y1: 164 },
+    { x: new Date('2017-06-13'), y0: 86, y1: 155 },
+    { x: new Date('2017-06-14'), y0: 80, y1: 132 },
+    { x: new Date('2017-06-15'), y0: 73, y1: 125 },
+    { x: new Date('2017-06-16'), y0: 71, y1: 132 },
+    { x: new Date('2017-06-17'), y0: 78, y1: 123 },
+    { x: new Date('2017-06-18'), y0: 82, y1: 156 },
+    { x: new Date('2017-06-19'), y0: 76, y1: 150 },
+    { x: new Date('2017-06-20'), y0: 87, y1: 173 },
+    { x: new Date('2017-06-21'), y0: 95, y1: 168 },
+    { x: new Date('2017-06-22'), y0: 105, y1: 182 },
+    { x: new Date('2017-06-23'), y0: 100, y1: 202 },
+    { x: new Date('2017-06-24'), y0: 116, y1: 211 },
+    { x: new Date('2017-06-25'), y0: 126, y1: 230 },
+    { x: new Date('2017-06-26'), y0: 137, y1: 246 },
+    { x: new Date('2017-06-27'), y0: 142, y1: 262 },
+    { x: new Date('2017-06-28'), y0: 170, y1: 273 },
+    { x: new Date('2017-06-29'), y0: 190, y1: 285 },
+    { x: new Date('2017-06-30'), y0: 201, y1: 301 },
+  ],
+};
+
+priceBandData.points = priceBandData.band.map(({ x, y0, y1 }) => ({
+  x,
+  // Introduce noise within the y0-y1 range
+  y: ((y1 + y0) / 2) + ((Math.random() > 0.5 ? -1 : 1) * Math.random() * ((y1 - y0) / 4)),
+}));
+
 // interval data
 const intervals = [[5, 8], [15, 19]];
 

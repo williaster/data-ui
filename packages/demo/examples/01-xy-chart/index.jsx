@@ -8,7 +8,6 @@ import {
   YAxis,
 
   AreaSeries,
-  BandSeries,
   BarSeries,
   CirclePackSeries,
   GroupedBarSeries,
@@ -41,6 +40,7 @@ import {
   intervalLineData,
   intervalData,
   temperatureBands,
+  priceBandData,
 } from './data';
 
 import WithToggle from '../shared/WithToggle';
@@ -178,27 +178,86 @@ export default {
           xScale={{ type: 'time' }}
           yScale={{ type: 'linear' }}
         >
-          <YAxis label="Temperature (°F)" numTicks={4} />
           {temperatureBands.map((data, i) => ([
+            <PatternLines
+              id={`band-${i}`}
+              height={5}
+              width={5}
+              stroke={colors.categories[i + 1]}
+              strokeWidth={1}
+              orientation={['diagonal']}
+            />,
             <AreaSeries
               key={`band-${data[0].key}`}
               label="Temperature range"
               data={data}
-              strokeWidth={0}
-              fill={colors.categories[i]}
+              strokeWidth={0.5}
+              stroke={colors.categories[i + 1]}
+              fill={`url(#band-${i})`}
             />,
             <LineSeries
               key={`line-${data[0].key}`}
               data={data}
-              stroke={colors.categories[i]}
+              stroke={colors.categories[i + 1]}
               label="Temperature avg"
             />,
           ]))}
+          <YAxis label="Temperature (°F)" numTicks={4} />
           <CrossHair
             showHorizontalLine={false}
             fullHeight
-            stroke={colors.darkGray}
-            circleStroke={colors.darkGray}
+            stroke={colors.gray}
+            circleStroke={colors.gray}
+          />
+        </ResponsiveXYChart>
+      ),
+    },
+    {
+      description: 'AreaSeries -- confidence intervals',
+      components: [XYChart, AreaSeries, LineSeries, PointSeries],
+      example: (reference = 150) => (
+        <ResponsiveXYChart
+          ariaLabel="Required label"
+          xScale={{ type: 'time' }}
+          yScale={{ type: 'linear' }}
+          useVoronoi
+        >
+          <XAxis numTicks={5} />
+          <YAxis label="Price ($)" />
+          <LinearGradient
+            id="confidence-interval-fill"
+            from={colors.categories[3]}
+            to={colors.categories[4]}
+          />
+          <HorizontalReferenceLine
+            reference={reference}
+            label={`Min $${reference}`}
+          />
+          <AreaSeries
+            label="band"
+            data={priceBandData.band}
+            fill="url(#confidence-interval-fill)"
+            strokeWidth={0}
+          />
+          <LineSeries
+            label="line"
+            data={priceBandData.points.map(d => (d.y >= reference ? d : { ...d, y: reference }))}
+            stroke={colors.categories[3]}
+          />
+          <PointSeries
+            label="line"
+            data={priceBandData.points.filter(d => d.y < reference)}
+            fill="#fff"
+            fillOpacity={1}
+            stroke={colors.categories[3]}
+          />
+
+          <CrossHair
+            showHorizontalLine={false}
+            fullHeight
+            stroke={colors.categories[3]}
+            circleStroke={colors.categories[3]}
+            circleFill="transparent"
           />
         </ResponsiveXYChart>
       ),

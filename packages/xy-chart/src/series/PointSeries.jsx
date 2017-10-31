@@ -53,8 +53,8 @@ export const defaultProps = {
   strokeWidth: 1,
   xScale: null,
   yScale: null,
-  onMouseMove: null,
-  onMouseLeave: null,
+  onMouseMove: undefined,
+  onMouseLeave: undefined,
 };
 
 export default class PointSeries extends React.PureComponent {

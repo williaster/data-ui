@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import interpolatorLookup from './interpolatorLookup';
 
 export const scaleShape = PropTypes.shape({
   type: PropTypes.oneOf([
@@ -138,3 +139,5 @@ export const themeShape = PropTypes.shape({
   yAxisStyles: axisStylesShape,
   yTickStyles: tickStylesShape,
 });
+
+export const interpolationShape = PropTypes.oneOf(Object.keys(interpolatorLookup));

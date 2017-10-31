@@ -9,13 +9,13 @@ import { color } from '@data-ui/theme';
 import interpolatorLookup from '../utils/interpolatorLookup';
 import { callOrValue, isDefined } from '../utils/chartUtils';
 import findClosestDatum from '../utils/findClosestDatum';
-import { areaSeriesDataShape } from '../utils/propShapes';
+import { areaSeriesDataShape, interpolationShape } from '../utils/propShapes';
 
 const propTypes = {
   data: areaSeriesDataShape.isRequired,
   fill: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   fillOpacity: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
-  interpolation: PropTypes.oneOf(['linear', 'cardinal']), // @todo add more
+  interpolation: interpolationShape,
   label: PropTypes.string.isRequired,
   stroke: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   strokeDasharray: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
@@ -29,7 +29,7 @@ const propTypes = {
 };
 
 const defaultProps = {
-  interpolation: 'cardinal',
+  interpolation: 'monotoneX',
   stroke: color.default,
   strokeWidth: 3,
   strokeDasharray: null,
@@ -38,8 +38,8 @@ const defaultProps = {
   fillOpacity: 0.3,
   xScale: null,
   yScale: null,
-  onMouseMove: null,
-  onMouseLeave: null,
+  onMouseMove: undefined,
+  onMouseLeave: undefined,
 };
 
 const x = d => d.x;
