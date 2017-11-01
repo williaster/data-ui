@@ -1,7 +1,7 @@
 import React from 'react';
 import { shallow, mount } from 'enzyme';
 
-import { VoronoiPolygon } from '@vx/voronoi';
+import VoronoiPolygon from '@vx/voronoi/build/components/VoronoiPolygon';
 
 import Voronoi from '../src/chart/Voronoi';
 

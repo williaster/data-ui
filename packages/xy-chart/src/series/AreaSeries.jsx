@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Area from '@vx/shape/build/shapes/Area';
+import Group from '@vx/group/build/Group';
 import LinePath from '@vx/shape/build/shapes/LinePath';
-import { Group } from '@vx/group';
-import { color } from '@data-ui/theme';
+import color from '@data-ui/theme/build/color';
 
 import interpolatorLookup from '../utils/interpolatorLookup';
 import { callOrValue, isDefined } from '../utils/chartUtils';
@@ -77,7 +77,7 @@ export default class AreaSeries extends React.PureComponent {
     const strokeValue = callOrValue(stroke, data);
     const strokeWidthValue = callOrValue(strokeWidth, data);
     const fillValue = callOrValue(fill, data);
-    const curve = interpolatorLookup[interpolation] || interpolatorLookup.cardinal;
+    const curve = interpolatorLookup[interpolation] || interpolatorLookup.monotoneX;
     return (
       <Group
         key={label}

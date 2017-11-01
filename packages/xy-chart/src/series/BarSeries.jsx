@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Group } from '@vx/group';
-import { Bar } from '@vx/shape';
-import { color as themeColors } from '@data-ui/theme';
+import Bar from '@vx/shape/build/shapes/Bar';
+import Group from '@vx/group/build/Group';
+import themeColors from '@data-ui/theme/build/color';
 
 import { barSeriesDataShape } from '../utils/propShapes';
 import { callOrValue, isDefined } from '../utils/chartUtils';

@@ -1,13 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { localPoint } from '@vx/event';
-
-import {
-  withTooltip,
-  TooltipWithBounds,
-  withTooltipPropTypes as vxTooltipPropTypes,
-} from '@vx/tooltip';
+import localPoint from '@vx/event/build/localPoint';
+import withTooltip from '@vx/tooltip/build/enhancers/withTooltip';
+import TooltipWithBounds, { withTooltipPropTypes as vxTooltipPropTypes } from '@vx/tooltip/build/tooltips/TooltipWithBounds';
 
 export const withTooltipPropTypes = {
   onMouseMove: PropTypes.func, // expects to be called like func({ event, datum })

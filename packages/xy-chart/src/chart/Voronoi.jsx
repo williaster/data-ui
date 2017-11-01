@@ -2,8 +2,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Group } from '@vx/group';
-import { voronoi as voronoiLayout, VoronoiPolygon } from '@vx/voronoi';
+import Group from '@vx/group/build/Group';
+import voronoiLayout from '@vx/voronoi/build/voronoi';
+import VoronoiPolygon from '@vx/voronoi/build/components/VoronoiPolygon';
 
 const propTypes = {
   data: PropTypes.array.isRequired,

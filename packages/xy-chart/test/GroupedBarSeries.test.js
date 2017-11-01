@@ -1,4 +1,5 @@
-import { BarGroup, Bar } from '@vx/shape';
+import Bar from '@vx/shape/build/shapes/Bar';
+import BarGroup from '@vx/shape/build/shapes/BarGroup';
 import React from 'react';
 import { shallow, mount } from 'enzyme';
 import { XYChart, GroupedBarSeries } from '../src/';

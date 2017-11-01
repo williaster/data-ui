@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { extent } from 'd3-array';
 
-import { color } from '@data-ui/theme';
-import { Group } from '@vx/group';
-import { Line } from '@vx/shape';
+import color from '@data-ui/theme/build/color';
+import Group from '@vx/group/build/Group';
+import Line from '@vx/shape/build/shapes/Line';
 
 const propTypes = {
   fullHeight: PropTypes.bool,

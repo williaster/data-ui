@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { BarGroup } from '@vx/shape';
-import { color } from '@data-ui/theme';
+import BarGroup from '@vx/shape/build/shapes/BarGroup';
+import color from '@data-ui/theme/build/color';
 
 import { groupedBarSeriesDataShape } from '../utils/propShapes';
 import { scaleTypeToScale } from '../utils/chartUtils';
