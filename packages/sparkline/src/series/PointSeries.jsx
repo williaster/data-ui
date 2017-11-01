@@ -21,13 +21,20 @@ export const propTypes = {
     PropTypes.func,
     PropTypes.oneOf(['auto', 'top', 'right', 'bottom', 'left']),
   ]),
-  points: PropTypes.arrayOf(PropTypes.oneOf([
-    'all',
-    'min',
-    'max',
-    'first',
-    'last',
-  ])),
+  onMouseMove: PropTypes.func,
+  onMouseLeave: PropTypes.func,
+  points: PropTypes.arrayOf(
+    PropTypes.oneOfType([
+      PropTypes.number, // index
+      PropTypes.oneOf([
+        'all',
+        'min',
+        'max',
+        'first',
+        'last',
+      ]),
+    ]),
+  ),
   size: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
   renderLabel: PropTypes.func, // (d, i) => node
   stroke: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
@@ -48,6 +55,8 @@ export const defaultProps = {
   LabelComponent: <Label {...svgLabel.baseTickLabel} stroke="#fff" />,
   labelOffset: 12,
   labelPosition: 'auto',
+  onMouseMove: null,
+  onMouseLeave: null,
   getX: null,
   getY: null,
   points: ['min', 'max'],
@@ -59,87 +68,111 @@ export const defaultProps = {
   yScale: null,
 };
 
-function PointSeries({
-  data,
-  getX,
-  getY,
-  fill,
-  fillOpacity,
-  LabelComponent,
-  labelOffset,
-  labelPosition,
-  points,
-  renderLabel,
-  size,
-  stroke,
-  strokeWidth,
-  xScale,
-  yScale,
-}) {
-  if (!xScale || !yScale || !getX || !getY || !data.length) return null;
+class PointSeries extends React.Component {
+  // we define a custom handler because the points prop may be impractible to cache
+  shouldComponentUpdate(nextProps) {
+    const nonPointsAreEqual = Object.keys(propTypes).every(
+      prop => prop === 'points' || this.props[prop] === nextProps[prop],
+    );
 
-  const showAll = points.includes('all');
-  const showMin = points.includes('min');
-  const showMax = points.includes('max');
-  const showFirst = points.includes('first');
-  const showLast = points.includes('last');
-  const [minY, maxY] = extent(data, getY);
-  const lastIndex = data.length - 1;
+    const pointsAreEqual =
+      nextProps.points.length === this.props.points.length
+      && nextProps.points.every(point => this.props.points.indexOf(point) > -1);
 
-  return (
-    <Group>
-      {data.map((d, i) => {
-        if (
-          showAll
-          || (showFirst && i === 0)
-          || (showLast && i === lastIndex)
-          || (showMin && Math.abs(getY(d) - minY) < 0.00001)
-          || (showMax && Math.abs(getY(d) - maxY) < 0.00001)
-        ) {
-          const yVal = getY(d);
-          const cx = xScale(getX(d));
-          const cy = yScale(yVal);
-          const key = `${cx}-${cy}-${i}`;
+    return !(pointsAreEqual && nonPointsAreEqual);
+  }
 
-          const label = renderLabel && renderLabel(yVal, i);
-          const prevCy = data[i - 1] ? yScale(getY(data[i - 1])) : null;
-          const nextCy = data[i + 1] ? yScale(getY(data[i + 1])) : null;
+  render() {
+    const {
+      data,
+      getX,
+      getY,
+      fill,
+      fillOpacity,
+      LabelComponent,
+      labelOffset,
+      labelPosition,
+      onMouseMove,
+      onMouseLeave,
+      points,
+      renderLabel,
+      size,
+      stroke,
+      strokeWidth,
+      xScale,
+      yScale,
+    } = this.props;
+    if (!xScale || !yScale || !getX || !getY || !data.length) return null;
 
-          // position label above a point if either of the surrounding points are lower
-          const autoLabelPosition =
-            (prevCy !== null && prevCy > cy) || (nextCy !== null && nextCy > cy)
-            ? 'top' : 'bottom';
+    const showAll = points.includes('all');
+    const showMin = points.includes('min');
+    const showMax = points.includes('max');
+    const showFirst = points.includes('first');
+    const showLast = points.includes('last');
+    const [minY, maxY] = extent(data, getY);
+    const lastIndex = data.length - 1;
 
-          return defined && (
-            <GlyphDot
-              key={key}
-              cx={cx}
-              cy={cy}
-              r={callOrValue(d.size || size, yVal, i)}
-              fill={callOrValue(d.fill || fill, yVal, i)}
-              fillOpacity={callOrValue(d.fillOpacity || fillOpacity, yVal, i)}
-              stroke={callOrValue(d.stroke || stroke, yVal, i)}
-              strokeWidth={callOrValue(d.strokeWidth || strokeWidth, yVal, i)}
-            >
-              {label &&
-                React.cloneElement(LabelComponent, {
-                  x: cx,
-                  y: cy,
-                  ...positionLabel(
-                    labelPosition === 'auto'
-                      ? autoLabelPosition
-                      : callOrValue(labelPosition, yVal, i),
-                    labelOffset,
-                  ),
-                  label,
+    return (
+      <Group>
+        {data.map((d, i) => {
+          if (
+            points.indexOf(i) > -1
+            || showAll
+            || (showFirst && i === 0)
+            || (showLast && i === lastIndex)
+            || (showMin && Math.abs(getY(d) - minY) < 0.00001)
+            || (showMax && Math.abs(getY(d) - maxY) < 0.00001)
+          ) {
+            const yVal = getY(d);
+            const cx = xScale(getX(d));
+            const cy = yScale(yVal);
+            const key = `${cx}-${cy}-${i}`;
+
+            const label = renderLabel && renderLabel(yVal, i);
+            const prevCy = data[i - 1] ? yScale(getY(data[i - 1])) : null;
+            const nextCy = data[i + 1] ? yScale(getY(data[i + 1])) : null;
+            const fillValue = callOrValue(d.fill || fill, yVal, i);
+
+            // position label above a point if either of the surrounding points are lower
+            const autoLabelPosition =
+              (prevCy !== null && prevCy > cy) || (nextCy !== null && nextCy > cy)
+              ? 'top' : 'bottom';
+
+            return defined && (
+              <GlyphDot
+                key={key}
+                cx={cx}
+                cy={cy}
+                r={callOrValue(d.size || size, yVal, i)}
+                fill={fillValue}
+                fillOpacity={callOrValue(d.fillOpacity || fillOpacity, yVal, i)}
+                stroke={callOrValue(d.stroke || stroke, yVal, i)}
+                strokeWidth={callOrValue(d.strokeWidth || strokeWidth, yVal, i)}
+                onMouseMove={onMouseMove && ((event) => {
+                  onMouseMove({ event, data, datum: d, index: i, color: fillValue });
                 })}
-            </GlyphDot>
-          );
-        }
-        return null;
-      })}
-    </Group>
-  );
+                onMouseLeave={onMouseLeave}
+              >
+                {label &&
+                  React.cloneElement(LabelComponent, {
+                    x: cx,
+                    y: cy,
+                    ...positionLabel(
+                      labelPosition === 'auto'
+                        ? autoLabelPosition
+                        : callOrValue(labelPosition, yVal, i),
+                      labelOffset,
+                    ),
+                    label,
+                  })}
+              </GlyphDot>
+            );
+          }
+          return null;
+        })}
+      </Group>
+    );
+  }
 }
 
 PointSeries.propTypes = propTypes;

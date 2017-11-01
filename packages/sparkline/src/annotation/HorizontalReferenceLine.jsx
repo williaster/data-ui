@@ -53,54 +53,57 @@ export const defaultProps = {
   yScale: null,
 };
 
-function HorizontalReferenceLine({
-  data,
-  getY,
-  LabelComponent,
-  labelOffset,
-  labelPosition,
-  reference,
-  renderLabel,
-  stroke,
-  strokeDasharray,
-  strokeLinecap,
-  strokeWidth,
-  xScale,
-  yScale,
-}) {
-  if (!xScale || !yScale || !getY || !data.length) return null;
-  const [x0, x1] = xScale.range();
+class HorizontalReferenceLine extends React.PureComponent {
+  render() {
+    const {
+      data,
+      getY,
+      LabelComponent,
+      labelOffset,
+      labelPosition,
+      reference,
+      renderLabel,
+      stroke,
+      strokeDasharray,
+      strokeLinecap,
+      strokeWidth,
+      xScale,
+      yScale,
+    } = this.props;
+    if (!xScale || !yScale || !getY || !data.length) return null;
+    const [x0, x1] = xScale.range();
 
-  let refNumber = reference;
-  if (reference === 'mean') refNumber = mean(data, getY);
-  if (reference === 'median') refNumber = median(data, getY);
-  if (reference === 'max') refNumber = max(data, getY);
-  if (reference === 'min') refNumber = min(data, getY);
+    let refNumber = reference;
+    if (reference === 'mean') refNumber = mean(data, getY);
+    if (reference === 'median') refNumber = median(data, getY);
+    if (reference === 'max') refNumber = max(data, getY);
+    if (reference === 'min') refNumber = min(data, getY);
 
-  const scaledRef = yScale(refNumber);
-  const fromPoint = new Point({ x: x0, y: scaledRef });
-  const toPoint = new Point({ x: x1, y: scaledRef });
-  const label = renderLabel && renderLabel(refNumber);
+    const scaledRef = yScale(refNumber);
+    const fromPoint = new Point({ x: x0, y: scaledRef });
+    const toPoint = new Point({ x: x1, y: scaledRef });
+    const label = renderLabel && renderLabel(refNumber);
 
-  return (
-    <Group>
-      <Line
-        from={fromPoint}
-        to={toPoint}
-        stroke={stroke}
-        strokeDasharray={strokeDasharray}
-        strokeLinecap={strokeLinecap}
-        strokeWidth={strokeWidth}
-        vectorEffect="non-scaling-stroke"
-      />
-      {label && React.cloneElement(LabelComponent, {
-        x: toPoint.x,
-        y: toPoint.y,
-        ...positionLabel(labelPosition, labelOffset),
-        label,
-      })}
-    </Group>
-  );
+    return (
+      <Group>
+        <Line
+          from={fromPoint}
+          to={toPoint}
+          stroke={stroke}
+          strokeDasharray={strokeDasharray}
+          strokeLinecap={strokeLinecap}
+          strokeWidth={strokeWidth}
+          vectorEffect="non-scaling-stroke"
+        />
+        {label && React.cloneElement(LabelComponent, {
+          x: toPoint.x,
+          y: toPoint.y,
+          ...positionLabel(labelPosition, labelOffset),
+          label,
+        })}
+      </Group>
+    );
+  }
 }
 
 HorizontalReferenceLine.propTypes = propTypes;

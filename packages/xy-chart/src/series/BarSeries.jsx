@@ -77,7 +77,7 @@ export default class BarSeries extends React.PureComponent {
               onMouseMove={onMouseMove && (() => (event) => {
                 onMouseMove({ event, data, datum: d, color });
               })}
-              onMouseLeave={onMouseLeave && (() => onMouseLeave)}
+              onMouseLeave={onMouseLeave}
             />
           );
         })}

@@ -5,6 +5,8 @@ import localPoint from '@vx/event/build/localPoint';
 import withTooltip from '@vx/tooltip/build/enhancers/withTooltip';
 import TooltipWithBounds, { withTooltipPropTypes as vxTooltipPropTypes } from '@vx/tooltip/build/tooltips/TooltipWithBounds';
 
+export { default as Tooltip } from '@vx/tooltip/build/tooltips/Tooltip';
+
 export const withTooltipPropTypes = {
   onMouseMove: PropTypes.func, // expects to be called like func({ event, datum })
   onMouseLeave: PropTypes.func, // expects to be called like func({ event, datum })
@@ -47,7 +49,9 @@ class WithTooltip extends React.PureComponent {
   }
 
   handleMouseMove({ event, datum, ...rest }) {
-    if (this.tooltipTimeout) clearTimeout(this.tooltipTimeout);
+    if (this.tooltipTimeout) {
+      clearTimeout(this.tooltipTimeout);
+    }
 
     let coords = { x: 0, y: 0 };
     if (event && event.target && event.target.ownerSVGElement) {

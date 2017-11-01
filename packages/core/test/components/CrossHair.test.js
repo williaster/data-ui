@@ -3,7 +3,7 @@ import { shallow } from 'enzyme';
 
 import Line from '@vx/shape/build/shapes/Line';
 
-import CrossHair from '../src/chart/CrossHair';
+import CrossHair from '../src/components/CrossHair';
 
 describe('<CrossHair />', () => {
   const props = {

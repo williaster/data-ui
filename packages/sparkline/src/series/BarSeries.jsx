@@ -19,6 +19,8 @@ export const propTypes = {
     PropTypes.func,
     PropTypes.oneOf(['top', 'right', 'bottom', 'left']),
   ]),
+  onMouseMove: PropTypes.func,
+  onMouseLeave: PropTypes.func,
   renderLabel: PropTypes.func, // (val, i) => node
   stroke: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   strokeWidth: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
@@ -40,6 +42,8 @@ export const defaultProps = {
   labelOffset: 8,
   LabelComponent: <Label {...svgLabel.baseTickLabel} stroke="#fff" />,
   labelPosition: 'top',
+  onMouseMove: null,
+  onMouseLeave: null,
   renderLabel: null,
   stroke: '#fff',
   strokeWidth: 1,
@@ -47,67 +51,77 @@ export const defaultProps = {
   yScale: null,
 };
 
-function BarSeries({
-  data,
-  getX,
-  getY,
-  fill,
-  fillOpacity,
-  labelOffset,
-  LabelComponent,
-  labelPosition,
-  renderLabel,
-  stroke,
-  strokeWidth,
-  xScale,
-  yScale,
-}) {
-  if (!xScale || !yScale || !getX || !getY || !data.length) return null;
-  const barWidth = Math.max(1, (Math.max(...xScale.range()) / data.length) - 1);
-  const maxBarHeight = Math.max(...yScale.range());
-  const labels = []; // render labels as top-most layer
-  return (
-    <Group>
-      {data.map((d, i) => {
-        const yVal = getY(d);
-        const x = xScale(getX(d));
-        const y = yScale(yVal);
-        const key = `bar-${x}-${y}-${i}`;
-        const label = renderLabel && renderLabel(yVal, i);
-        if (label) {
-          labels.push({
-            key,
-            label,
-            x,
-            y,
-            ...positionLabel(callOrValue(labelPosition, yVal, i), labelOffset),
-          });
-        }
-        return (
-          <Bar
-            key={key}
-            x={x - (barWidth / 2)}
-            y={y}
-            width={barWidth}
-            height={maxBarHeight - y}
-            fill={callOrValue(d.fill || fill, yVal, i)}
-            fillOpacity={
-              callOrValue(
-                typeof d.fillOpacity !== 'undefined'
-                  ? d.fillOpacity
-                  : fillOpacity,
-                yVal,
-                i,
-              )
-            }
-            stroke={callOrValue(d.stroke || stroke, yVal, i)}
-            strokeWidth={callOrValue(d.strokeWidth || strokeWidth, yVal, i)}
-          />
-        );
-      })}
-      {labels.map(labelProps => React.cloneElement(LabelComponent, labelProps))}
-    </Group>
-  );
+class BarSeries extends React.PureComponent {
+  render() {
+    const {
+      data,
+      getX,
+      getY,
+      fill,
+      fillOpacity,
+      labelOffset,
+      LabelComponent,
+      labelPosition,
+      onMouseMove,
+      onMouseLeave,
+      renderLabel,
+      stroke,
+      strokeWidth,
+      xScale,
+      yScale,
+    } = this.props;
+
+    if (!xScale || !yScale || !getX || !getY || !data.length) return null;
+    const barWidth = Math.max(1, (Math.max(...xScale.range()) / data.length) - 1);
+    const maxBarHeight = Math.max(...yScale.range());
+    const labels = []; // render labels as top-most layer
+    return (
+      <Group>
+        {data.map((d, i) => {
+          const yVal = getY(d);
+          const x = xScale(getX(d));
+          const y = yScale(yVal);
+          const key = `bar-${x}-${y}-${i}`;
+          const label = renderLabel && renderLabel(yVal, i);
+          if (label) {
+            labels.push({
+              key,
+              label,
+              x,
+              y,
+              ...positionLabel(callOrValue(labelPosition, yVal, i), labelOffset),
+            });
+          }
+          return (
+            <Bar
+              key={key}
+              x={x - (barWidth / 2)}
+              y={y}
+              width={barWidth}
+              height={maxBarHeight - y}
+              fill={callOrValue(d.fill || fill, yVal, i)}
+              fillOpacity={
+                callOrValue(
+                  typeof d.fillOpacity !== 'undefined'
+                    ? d.fillOpacity
+                    : fillOpacity,
+                  yVal,
+                  i,
+                )
+              }
+              stroke={callOrValue(d.stroke || stroke, yVal, i)}
+              strokeWidth={callOrValue(d.strokeWidth || strokeWidth, yVal, i)}
+              onMouseMove={onMouseMove && (() => (event) => {
+                onMouseMove({ event, data, datum: d, index: i, color });
+              })}
+              onMouseLeave={onMouseLeave && (() => onMouseLeave)}
+            />
+          );
+        })}
+        {labels.map(labelProps => React.cloneElement(LabelComponent, labelProps))}
+      </Group>
+    );
+  }
 }
 
 BarSeries.propTypes = propTypes;

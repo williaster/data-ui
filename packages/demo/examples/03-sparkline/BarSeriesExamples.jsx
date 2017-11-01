@@ -8,6 +8,7 @@ import {
 
   HorizontalReferenceLine,
   VerticalReferenceLine,
+  WithTooltip,
 
   PatternLines,
   LinearGradient,
@@ -48,27 +49,41 @@ export default [
           </Sparkline>
         </Example>
 
-        <Example title="Custom fill with label and max line">
-          <Sparkline
-            {...sparklineProps}
-            data={range(35).map((_, i) => i + (5 * Math.random()) + (i === 34 ? 5 : 0))}
-          >
-            <HorizontalReferenceLine
-              reference="max"
-              stroke={allColors.grape[8]}
-              strokeWidth={1}
-              strokeDasharray="3,3"
-              labelPosition="right"
-              labelOffset={12}
-              renderLabel={() => 'max'}
-            />
-            <BarSeries
-              fill={(d, i) => allColors.grape[i === 34 ? 8 : 2]}
-              fillOpacity={0.7}
-              renderLabel={(d, i) => (i === 34 ? '🚀' : null)}
-            />
-          </Sparkline>
-        </Example>
+        {(data => (
+          <Example title="Custom fill with label + ref line bound to tooltip">
+            <WithTooltip>
+              {({ onMouseMove, onMouseLeave, tooltipData }) => (
+                <Sparkline
+                  {...sparklineProps}
+                  onMouseLeave={onMouseLeave}
+                  onMouseMove={onMouseMove}
+                  data={data}
+                >
+                  <BarSeries
+                    fill={(d, i) => {
+                      const indexToHighlight = tooltipData ? tooltipData.index : 34;
+                      return allColors.grape[i === indexToHighlight ? 8 : 2];
+                    }}
+                    fillOpacity={0.7}
+                    renderLabel={(d, i) => {
+                      const indexToHighlight = tooltipData ? tooltipData.index : 34;
+                      return i === indexToHighlight ? '🚀' : null;
+                    }}
+                  />
+                  <HorizontalReferenceLine
+                    reference={tooltipData ? tooltipData.datum.y : 'max'}
+                    stroke={allColors.grape[8]}
+                    strokeWidth={1}
+                    strokeDasharray="3,3"
+                    labelPosition="right"
+                    labelOffset={12}
+                    renderLabel={() => (tooltipData ? tooltipData.datum.y.toFixed(2) : 'max')}
+                  />
+                </Sparkline>
+              )}
+            </WithTooltip>
+          </Example>
+        ))(range(35).map((_, i) => i + (5 * Math.random()) + (i === 34 ? 5 : 0)))}
 
         <Example title="Gradient fill with vertical reference line">
           <Sparkline

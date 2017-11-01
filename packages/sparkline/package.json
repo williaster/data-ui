@@ -48,9 +48,11 @@
     "react": "^15.0.0-0 || ^16.0.0-0"
   },
   "dependencies": {
+    "@data-ui/core": "0.0.0",
     "@data-ui/theme": "0.0.8",
     "@vx/axis": "0.0.140",
     "@vx/curve": "0.0.140",
+    "@vx/event": "0.0.143",
     "@vx/glyph": "0.0.140",
     "@vx/gradient": "0.0.140",
     "@vx/group": "0.0.140",
