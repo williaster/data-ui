@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import { Group } from '@vx/group';
-import WithTooltip, { withTooltipPropTypes } from '../enhancer/WithTooltip';
+import WithTooltip, { withTooltipPropTypes } from '@data-ui/core/build/enhancer/WithTooltip';
 import Layout from '../layout/atlasForce';
 import Links from './Links';
 import Nodes from './Nodes';

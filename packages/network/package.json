@@ -47,6 +47,7 @@
     "react": "^15.0.0-0 || ^16.0.0-0"
   },
   "dependencies": {
+    "@data-ui/core": "0.0.0",
     "@data-ui/theme": "0.0.9",
     "@vx/event": "0.0.141",
     "@vx/glyph": "0.0.140",
