@@ -2,7 +2,7 @@ import { Group } from '@vx/group';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import WithTooltip, { withTooltipPropTypes } from '../enhancer/WithTooltip';
+import WithTooltip, { withTooltipPropTypes } from '@data-ui/core/build/enhancer/WithTooltip';
 
 export const propTypes = {
   ...withTooltipPropTypes,

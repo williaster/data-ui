@@ -1,7 +1,7 @@
 {
-  "name": "@data-ui/histogram",
-  "version": "0.0.8",
-  "description": "React + d3 library for creating histograms",
+  "name": "@data-ui/core",
+  "version": "0.0.0",
+  "description": "Shared @data-ui components used across multiple packages",
   "main": "build/index.js",
   "files": [
     "build"
@@ -20,9 +20,7 @@
     "react",
     "d3",
     "visualization",
-    "histogram",
-    "density",
-    "buckets",
+    "graph",
     "chart",
     "data"
   ],
@@ -49,24 +47,9 @@
     "react": "^15.0.0-0 || ^16.0.0-0"
   },
   "dependencies": {
-    "@data-ui/core": "0.0.0",
-    "@data-ui/theme": "0.0.9",
-    "@vx/axis": "0.0.140",
-    "@vx/curve": "0.0.140",
-    "@vx/event": "0.0.140",
-    "@vx/glyph": "0.0.140",
-    "@vx/gradient": "0.0.140",
-    "@vx/group": "0.0.140",
-    "@vx/pattern": "0.0.140",
-    "@vx/responsive": "0.0.140",
-    "@vx/scale": "0.0.140",
-    "@vx/shape": "0.0.140",
-    "@vx/tooltip": "0.0.140",
-    "airbnb-prop-types": "^2.8.0",
-    "d3-array": "^1.2.0",
-    "d3-scale": "^1.0.6",
-    "prop-types": "^15.5.10",
-    "react-move": "^2.1.0"
+    "@vx/event": "0.0.143",
+    "@vx/tooltip": "0.0.143",
+    "prop-types": "^15.5.10"
   },
   "jest": {
     "setupFiles": [

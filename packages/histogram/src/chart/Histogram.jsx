@@ -11,7 +11,7 @@ import componentName from '../utils/componentName';
 import computeDomainsFromBins from '../utils/computeDomainsFromBins';
 import getValueKey from '../utils/getValueKey';
 import { themeShape } from '../utils/propShapes';
-import WithTooltip, { withTooltipPropTypes } from '../enhancer/WithTooltip';
+import WithTooltip, { withTooltipPropTypes } from '@data-ui/core/build/enhancer/WithTooltip';
 
 export const propTypes = {
   ...withTooltipPropTypes,

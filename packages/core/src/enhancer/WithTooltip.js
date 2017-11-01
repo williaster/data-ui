@@ -25,6 +25,7 @@ const defaultProps = {
   className: null,
   HoverStyles: () => (
     <style type="text/css">{`
+      .vx-arc:hover,
       .vx-bar:hover,
       .vx-glyph-dot:hover {
         opacity: 0.7;

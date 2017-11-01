@@ -13,7 +13,7 @@ export { default as StackedBarSeries } from './series/StackedBarSeries';
 
 export { default as HorizontalReferenceLine } from './annotation/HorizontalReferenceLine';
 export { default as CrossHair } from './chart/CrossHair';
-export { default as WithTooltip, withTooltipPropTypes } from './enhancer/WithTooltip';
+export { default as WithTooltip, withTooltipPropTypes } from '@data-ui/core/build/enhancer/WithTooltip';
 
 export { LinearGradient } from '@vx/gradient';
 export { PatternLines, PatternCircles, PatternWaves, PatternHexagons } from '@vx/pattern';
