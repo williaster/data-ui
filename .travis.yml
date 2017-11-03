@@ -13,9 +13,9 @@ env:
   - PACKAGE=data-ui-theme
   - PACKAGE=forms
   - PACKAGE=network
-  - PACKAGE=core
+  - PACKAGE=shared
 script:
-  - 'cd ./packages/$PACKAGE && npm install && npm run test'
+  - 'cd ./packages/$PACKAGE && npm install && npm prune && npm run test'
   - 'cd ../../'
   - 'eslint --ignore-path=.eslintignore --ext .js,.jsx ./packages/$PACKAGE'
 after_script:
