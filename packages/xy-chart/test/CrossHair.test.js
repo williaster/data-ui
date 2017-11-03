@@ -2,15 +2,22 @@ import React from 'react';
 import { shallow } from 'enzyme';
 
 import Line from '@vx/shape/build/shapes/Line';
+import scaleLinear from '@vx/scale/build/scales/linear';
 
-import CrossHair from '../src/components/CrossHair';
+import CrossHair from '../src/chart/CrossHair';
 
 describe('<CrossHair />', () => {
   const props = {
     top: 20,
     left: 70,
-    xRange: [0, 100],
-    yRange: [0, 100],
+    xScale: scaleLinear({
+      domain: [0, 100],
+      range: [0, 100],
+    }),
+    yScale: scaleLinear({
+      domain: [0, 100],
+      range: [100, 0],
+    }),
   };
 
   test('it should be defined', () => {
@@ -51,15 +58,15 @@ describe('<CrossHair />', () => {
     );
 
     const fullWidthLine = fullWidthWrapper.find(Line).dive();
-    expect(fullWidthLine.prop('x1')).toBe(Math.min(...props.xRange));
-    expect(fullWidthLine.prop('x2')).toBe(Math.max(...props.xRange));
+    expect(fullWidthLine.prop('x1')).toBe(Math.min(...props.xScale.range()));
+    expect(fullWidthLine.prop('x2')).toBe(Math.max(...props.xScale.range()));
 
     const partialWidthWrapper = shallow(
       <CrossHair {...props} showHorizontalLine showVerticalLine={false} />,
     );
 
     const partialWidthLine = partialWidthWrapper.find(Line).dive();
-    expect(partialWidthLine.prop('x1')).toBe(Math.min(...props.xRange));
+    expect(partialWidthLine.prop('x1')).toBe(Math.min(...props.xScale.range()));
     expect(partialWidthLine.prop('x2')).toBe(props.left);
   });
 
@@ -69,15 +76,15 @@ describe('<CrossHair />', () => {
     );
 
     const fullHeightLine = fullHeightWrapper.find(Line).dive();
-    expect(fullHeightLine.prop('y1')).toBe(Math.max(...props.yRange));
-    expect(fullHeightLine.prop('y2')).toBe(Math.min(...props.yRange));
+    expect(fullHeightLine.prop('y1')).toBe(Math.max(...props.yScale.range()));
+    expect(fullHeightLine.prop('y2')).toBe(Math.min(...props.yScale.range()));
 
     const partialHeightWrapper = shallow(
       <CrossHair {...props} showVerticalLine showHorizontalLine={false} />,
     );
 
     const partialHeightLine = partialHeightWrapper.find(Line).dive();
-    expect(partialHeightLine.prop('y1')).toBe(Math.max(...props.yRange));
+    expect(partialHeightLine.prop('y1')).toBe(Math.max(...props.yScale.range()));
     expect(partialHeightLine.prop('y2')).toBe(props.top);
   });
 });

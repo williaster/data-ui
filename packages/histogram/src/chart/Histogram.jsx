@@ -4,6 +4,7 @@ import React from 'react';
 
 import { Group } from '@vx/group';
 import { scaleBand, scaleLinear } from '@vx/scale';
+import WithTooltip, { withTooltipPropTypes } from '@data-ui/shared/build/enhancer/WithTooltip';
 
 import { isAxis, isSeries } from '../utils/componentIsX';
 import collectBinnedDataFromChildSeries from '../utils/collectBinnedDataFromChildSeries';
@@ -11,7 +12,6 @@ import componentName from '../utils/componentName';
 import computeDomainsFromBins from '../utils/computeDomainsFromBins';
 import getValueKey from '../utils/getValueKey';
 import { themeShape } from '../utils/propShapes';
-import WithTooltip, { withTooltipPropTypes } from '@data-ui/shared/build/enhancer/WithTooltip';
 
 export const propTypes = {
   ...withTooltipPropTypes,

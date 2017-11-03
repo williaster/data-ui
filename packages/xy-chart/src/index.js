@@ -12,7 +12,7 @@ export { default as PointSeries, pointComponentPropTypes } from './series/PointS
 export { default as StackedBarSeries } from './series/StackedBarSeries';
 
 export { default as HorizontalReferenceLine } from './annotation/HorizontalReferenceLine';
-export { default as CrossHair } from '@data-ui/shared/build/components/CrossHair';
+export { default as CrossHair } from './chart/CrossHair';
 export { default as WithTooltip, withTooltipPropTypes } from '@data-ui/shared/build/enhancer/WithTooltip';
 
 export { LinearGradient } from '@vx/gradient';
