@@ -11,6 +11,7 @@ import {
   BandLine,
   HorizontalReferenceLine,
   VerticalReferenceLine,
+  WithTooltip,
 
   PatternLines,
   LinearGradient,
@@ -60,24 +61,46 @@ export default [
           </Sparkline>
         </Example>
 
-        <Example title="Filled with gradient">
-          <Sparkline
-            {...sparklineProps}
-            data={range(40).map(() => (Math.random() * (Math.random() > 0.2 ? 1 : 2)))}
-          >
-            <LinearGradient
-              id="area_gradient"
-              to={allColors.pink[1]}
-              from={allColors.pink[6]}
-            />
-            <LineSeries
-              curve="basis"
-              showArea
-              fill="url(#area_gradient)"
-              stroke={allColors.pink[4]}
-            />
-          </Sparkline>
-        </Example>
+        {(data => (
+          <Example title="Filled with gradient + Tooltip">
+            <WithTooltip renderTooltip={({ datum }) => datum.y.toFixed(2)} >
+              {({ onMouseMove, onMouseLeave, tooltipData }) => (
+                <Sparkline
+                  {...sparklineProps}
+                  onMouseLeave={onMouseLeave}
+                  onMouseMove={onMouseMove}
+                  data={data}
+                >
+
+                  <LinearGradient
+                    id="area_gradient"
+                    to={allColors.pink[1]}
+                    from={allColors.pink[6]}
+                  />
+                  <LineSeries
+                    showArea
+                    fill="url(#area_gradient)"
+                    stroke={allColors.pink[4]}
+                  />
+                  {tooltipData && [
+                    <VerticalReferenceLine
+                      key="ref-line"
+                      strokeWidth={1}
+                      reference={tooltipData.index}
+                      stroke={allColors.pink[6]}
+                      strokeDasharray="4 4"
+                    />,
+                    <PointSeries
+                      key="ref-point"
+                      points={[tooltipData.index]}
+                      fill={allColors.pink[6]}
+                    />,
+                  ]}
+                </Sparkline>
+              )}
+            </WithTooltip>
+          </Example>
+        ))(range(40).map(() => (Math.random() * (Math.random() > 0.2 ? 1 : 2))))}
 
         <Example title="Min, max, median, and inner quartiles">
           <Sparkline

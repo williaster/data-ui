@@ -1,7 +1,7 @@
 {
-  "name": "@data-ui/sparkline",
-  "version": "0.0.3",
-  "description": "React + d3 library for creating sparklines",
+  "name": "@data-ui/shared",
+  "version": "0.0.0",
+  "description": "Shared @data-ui components used across multiple packages",
   "main": "build/index.js",
   "files": [
     "build"
@@ -20,7 +20,6 @@
     "react",
     "d3",
     "visualization",
-    "sparkline",
     "graph",
     "chart",
     "data"
@@ -48,20 +47,12 @@
     "react": "^15.0.0-0 || ^16.0.0-0"
   },
   "dependencies": {
-    "@data-ui/shared": "0.0.0",
-    "@data-ui/theme": "0.0.8",
-    "@vx/axis": "0.0.140",
-    "@vx/curve": "0.0.140",
+    "@data-ui/theme": "0.0.9",
     "@vx/event": "0.0.143",
-    "@vx/glyph": "0.0.140",
-    "@vx/gradient": "0.0.140",
-    "@vx/group": "0.0.140",
-    "@vx/pattern": "0.0.140",
-    "@vx/point": "0.0.136",
-    "@vx/responsive": "0.0.140",
-    "@vx/scale": "0.0.140",
-    "@vx/shape": "0.0.140",
-    "d3-array": "^1.2.0",
+    "@vx/group": "0.0.143",
+    "@vx/shape": "0.0.145",
+    "@vx/tooltip": "0.0.143",
+    "d3-array": "^1.2.1",
     "prop-types": "^15.5.10"
   },
   "jest": {

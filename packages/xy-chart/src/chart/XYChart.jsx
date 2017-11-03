@@ -3,9 +3,10 @@ import PropTypes from 'prop-types';
 
 import Grid from '@vx/grid/build/grids/Grid';
 import Group from '@vx/group/build/Group';
+import WithTooltip, { withTooltipPropTypes } from '@data-ui/shared/build/enhancer/WithTooltip';
 
 import Voronoi from './Voronoi';
-import WithTooltip, { withTooltipPropTypes } from '../enhancer/WithTooltip';
+
 
 import {
   collectDataFromChildSeries,
@@ -294,8 +295,8 @@ class XYChart extends React.PureComponent {
                 + (xScale.bandwidth ? xScale.bandwidth() / 2 : 0)
               ),
               top: yScale(getY(tooltipData.datum) || 0),
-              xRange: xScale.range(),
-              yRange: yScale.range(),
+              xScale,
+              yScale,
             })}
         </Group>
       </svg>

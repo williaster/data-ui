@@ -6,6 +6,7 @@ import { extent } from 'd3-array';
 import Group from '@vx/group/build/Group';
 import scaleLinear from '@vx/scale/build/scales/linear';
 
+import BarSeries from '../series/BarSeries';
 import { componentName, isBandLine, isReferenceLine, isSeries } from '../utils/componentIsX';
 import isDefined from '../utils/defined';
 
@@ -23,6 +24,8 @@ const propTypes = {
   }),
   max: PropTypes.number,
   min: PropTypes.number,
+  onMouseMove: PropTypes.func,
+  onMouseLeave: PropTypes.func,
   preserveAspectRatio: PropTypes.string,
   styles: PropTypes.object,
   width: PropTypes.number.isRequired,
@@ -41,28 +44,41 @@ const defaultProps = {
   },
   max: null,
   min: null,
+  onMouseMove: null,
+  onMouseLeave: null,
   preserveAspectRatio: null,
   styles: null,
   valueAccessor: d => d,
   viewBox: null,
 };
 
-const getX = d => d.x;
+const getX = d => d.i;
 const getY = d => d.y;
 
 const parsedDatumThunk = valueAccessor => (d, i) => {
   const y = valueAccessor(d);
-  return { x: i, y, id: y, ...d };
+  return { i, y, id: y, ...d };
 };
 
 class Sparkline extends React.PureComponent {
   constructor(props) {
     super(props);
+    this.getMaxY = this.getMaxY.bind(this);
     this.state = this.getStateFromProps(props);
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState(this.getStateFromProps(nextProps));
+    if ([ // recompute scales if any of the following change
+      'data',
+      'height',
+      'margin',
+      'max',
+      'min',
+      'valueAccessor',
+      'width',
+    ].some(prop => this.props[prop] !== nextProps[prop])) {
+      this.setState(this.getStateFromProps(nextProps));
+    }
   }
 
   getStateFromProps(props) {
@@ -83,7 +99,7 @@ class Sparkline extends React.PureComponent {
       domain: [0, data.length - 1],
       range: [0, innerWidth],
     });
-    const yScale = scaleLinear({ // @TODO introduce props for centering data, etc.
+    const yScale = scaleLinear({
       domain: [
         isDefined(min) ? min : yExtent[0],
         isDefined(max) ? max : yExtent[1],
@@ -91,6 +107,10 @@ class Sparkline extends React.PureComponent {
       range: [innerHeight, 0],
     });
     return { xScale, yScale, data };
+  }
+
+  getMaxY() {
+    return Math.max(...this.state.yScale.domain());
   }
 
   getDimmensions(props) {
@@ -109,12 +129,24 @@ class Sparkline extends React.PureComponent {
       children,
       className,
       height,
+      onMouseMove,
+      onMouseLeave,
       preserveAspectRatio,
       styles,
       width,
       viewBox,
     } = this.props;
+
     const { data, margin, xScale, yScale } = this.state;
+
+    const seriesProps = {
+      xScale,
+      yScale,
+      data,
+      getX,
+      getY,
+    };
+
     return (
       <svg
         aria-label={ariaLabel}
@@ -131,17 +163,25 @@ class Sparkline extends React.PureComponent {
             const name = componentName(Child);
             if (isSeries(name) || isReferenceLine(name) || isBandLine(name)) {
               return (
-                React.cloneElement(Child, {
-                  xScale,
-                  yScale,
-                  data,
-                  getX,
-                  getY,
-                })
+                React.cloneElement(Child, seriesProps)
               );
             }
             return Child;
           })}
+
+          {/* intercept Sparkline-level mouse events with Bars
+              note: this allows event listeners to be overridden on Series-level components */}
+          {(onMouseMove || onMouseLeave) &&
+            <BarSeries
+              fill="transparent"
+              fillOpacity={0}
+              stroke="transparent"
+              strokeWidth={1}
+              {...seriesProps}
+              getY={this.getMaxY}
+              onMouseMove={onMouseMove}
+              onMouseLeave={onMouseLeave}
+            />}
         </Group>
       </svg>
     );

@@ -10,6 +10,7 @@ import {
   BandLine,
   HorizontalReferenceLine,
   VerticalReferenceLine,
+  WithTooltip,
 
   PatternLines,
   withScreenSize,
@@ -130,25 +131,54 @@ export default [
           </Sparkline>
         </Example>
 
-        <Example title="Vertical lines for every point">
-          <Sparkline
-            {...sparklineProps}
-            data={randomData(30)}
-          >
-            {range(30).map((_, i) => (
-              <VerticalReferenceLine
-                key={i}
-                reference={i}
-                stroke={allColors.green[3]}
-                strokeWidth={1}
-                strokeLinecap="square"
-                strokeDasharray="2,2"
-              />
-            ))}
-            <LineSeries stroke={allColors.green[6]} />
-            <PointSeries points={['all']} fill={allColors.green[3]} />
-          </Sparkline>
-        </Example>
+        {(data =>
+          (<Example title="Vertical lines for every point + CrossHair tooltip">
+            <WithTooltip renderTooltip={({ datum }) => datum.y.toFixed(2)}>
+              {({ onMouseMove, onMouseLeave, tooltipData }) => (
+                <Sparkline
+                  {...sparklineProps}
+                  onMouseLeave={onMouseLeave}
+                  onMouseMove={onMouseMove}
+                  data={data}
+                >
+                  {range(30).map((_, i) => (
+                    <VerticalReferenceLine
+                      key={i}
+                      reference={i}
+                      stroke={allColors.green[3]}
+                      strokeWidth={1}
+                      strokeLinecap="square"
+                      strokeDasharray="2,2"
+                    />
+                  ))}
+                  <LineSeries stroke={allColors.green[6]} />
+                  <PointSeries points={['all']} fill={allColors.green[3]} />
+
+                  {tooltipData && [
+                    <HorizontalReferenceLine
+                      key="ref-hline"
+                      strokeWidth={1}
+                      stroke={allColors.pink[8]}
+                      reference={tooltipData.datum.y}
+                      strokeDasharray="4,4"
+                    />,
+                    <VerticalReferenceLine
+                      key="ref-vline"
+                      strokeWidth={1}
+                      stroke={allColors.pink[8]}
+                      reference={tooltipData.index}
+                      strokeDasharray="4,4"
+                    />,
+                    <PointSeries
+                      key="ref-point"
+                      points={[tooltipData.index]}
+                      fill={allColors.pink[8]}
+                    />,
+                  ]}
+                </Sparkline>
+              )}
+            </WithTooltip>
+          </Example>))(randomData(30))}
 
         <Example title="Responsive">
           <ResponsiveSparkline
