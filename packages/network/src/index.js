@@ -14,4 +14,4 @@ export {
 export {
   default as WithTooltip,
   withTooltipPropTypes,
-} from '@data-ui/core/build/enhancer/WithTooltip';
+} from '@data-ui/shared/build/enhancer/WithTooltip';

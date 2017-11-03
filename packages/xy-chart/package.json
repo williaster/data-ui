@@ -21,7 +21,7 @@
   "author": "Chris Williams <chris.williams@airbnb.com>",
   "license": "MIT",
   "dependencies": {
-    "@data-ui/core": "0.0.0",
+    "@data-ui/shared": "0.0.0",
     "@data-ui/theme": "0.0.9",
     "@vx/axis": "0.0.145",
     "@vx/curve": "0.0.140",
