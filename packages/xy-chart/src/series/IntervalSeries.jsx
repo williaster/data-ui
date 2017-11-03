@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Group } from '@vx/group';
-import { Bar } from '@vx/shape';
-import { color } from '@data-ui/theme';
+
+import Group from '@vx/group/build/Group';
+import Bar from '@vx/shape/build/shapes/Bar';
+import color from '@data-ui/theme/build/color';
 
 import { intervalSeriesDataShape } from '../utils/propShapes';
 import { callOrValue } from '../utils/chartUtils';
@@ -29,8 +30,8 @@ const defaultProps = {
   strokeWidth: 1,
   xScale: null,
   yScale: null,
-  onMouseMove: null,
-  onMouseLeave: null,
+  onMouseMove: undefined,
+  onMouseLeave: undefined,
 };
 
 const x0 = d => d.x0;

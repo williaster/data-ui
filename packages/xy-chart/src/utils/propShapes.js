@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import interpolatorLookup from './interpolatorLookup';
 
 export const scaleShape = PropTypes.shape({
   type: PropTypes.oneOf([
@@ -25,6 +26,20 @@ export const lineSeriesDataShape = PropTypes.arrayOf(
       PropTypes.object, // eg a moment() instance
     ]),
     y: PropTypes.number, // null data are not rendered
+  }),
+);
+
+export const areaSeriesDataShape = PropTypes.arrayOf(
+  PropTypes.shape({
+    x: PropTypes.oneOfType([ // data with null x/y are not rendered
+      PropTypes.string,
+      PropTypes.number,
+      PropTypes.instanceOf(Date),
+      PropTypes.object, // eg a moment() instance
+    ]),
+    y: PropTypes.number, // null data are not rendered
+    y0: PropTypes.number,
+    y1: PropTypes.number,
   }),
 );
 
@@ -124,3 +139,5 @@ export const themeShape = PropTypes.shape({
   yAxisStyles: axisStylesShape,
   yTickStyles: tickStylesShape,
 });
+
+export const interpolationShape = PropTypes.oneOf(Object.keys(interpolatorLookup));

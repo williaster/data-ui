@@ -1,7 +1,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 
-import { Line } from '@vx/shape';
+import Line from '@vx/shape/build/shapes/Line';
 
 import CrossHair from '../src/chart/CrossHair';
 

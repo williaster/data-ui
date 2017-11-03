@@ -1,7 +1,7 @@
-import { GlyphDot } from '@vx/glyph';
+import GlyphDot from '@vx/glyph/build/glyphs/Dot';
+import LinePath from '@vx/shape/build/shapes/LinePath';
 import React from 'react';
 import { shallow, mount } from 'enzyme';
-import { LinePath } from '@vx/shape';
 
 import { XYChart, LineSeries } from '../src/';
 

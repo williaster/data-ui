@@ -1,5 +1,5 @@
 import React from 'react';
-import { GlyphDot } from '@vx/glyph';
+import GlyphDot from '@vx/glyph/build/glyphs/Dot';
 
 import { pointComponentPropTypes } from '../series/PointSeries';
 

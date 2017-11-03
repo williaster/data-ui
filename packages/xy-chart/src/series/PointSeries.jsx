@@ -1,7 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Group } from '@vx/group';
-import { chartTheme, color } from '@data-ui/theme';
+import Group from '@vx/group/build/Group';
+
+import chartTheme from '@data-ui/theme/build/chartTheme';
+import color from '@data-ui/theme/build/color';
 
 import { callOrValue, isDefined } from '../utils/chartUtils';
 import { pointSeriesDataShape } from '../utils/propShapes';
@@ -53,8 +55,8 @@ export const defaultProps = {
   strokeWidth: 1,
   xScale: null,
   yScale: null,
-  onMouseMove: null,
-  onMouseLeave: null,
+  onMouseMove: undefined,
+  onMouseLeave: undefined,
 };
 
 export default class PointSeries extends React.PureComponent {

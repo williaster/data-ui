@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { AxisLeft, AxisRight } from '@vx/axis';
+import AxisLeft from '@vx/axis/build/axis/AxisLeft';
+import AxisRight from '@vx/axis/build/axis/AxisRight';
 
 import { axisStylesShape, tickStylesShape } from '../utils/propShapes';
 

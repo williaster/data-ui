@@ -1,6 +1,7 @@
 import React from 'react';
 import { shallow, mount } from 'enzyme';
-import { AreaClosed, LinePath } from '@vx/shape';
+import Area from '@vx/shape/build/shapes/Area';
+import LinePath from '@vx/shape/build/shapes/LinePath';
 
 import { XYChart, AreaSeries } from '../src/';
 
@@ -28,7 +29,7 @@ describe('<AreaSeries />', () => {
     expect(shallow(<AreaSeries label="" data={[]} />).type()).toBeNull();
   });
 
-  test('it should render an AreaClosed for each AreaSeries', () => {
+  test('it should render an Area for each AreaSeries', () => {
     const wrapper = shallow(
       <XYChart {...mockProps} >
         <AreaSeries label="l" data={mockData.map(d => ({ ...d, x: d.date, y: d.num }))} />
@@ -36,7 +37,7 @@ describe('<AreaSeries />', () => {
       </XYChart>,
     );
     expect(wrapper.find(AreaSeries).length).toBe(2);
-    expect(wrapper.find(AreaSeries).first().dive().find(AreaClosed).length).toBe(1);
+    expect(wrapper.find(AreaSeries).first().dive().find(Area).length).toBe(1);
   });
 
   test('it should render a LinePath if strokeWidth is non-zero', () => {
@@ -71,7 +72,7 @@ describe('<AreaSeries />', () => {
     );
 
     // event listener is on area's parent, but .parent().simulate() call throws in enzyme 3
-    const area = wrapper.find(AreaClosed);
+    const area = wrapper.find(Area);
     area.simulate('mousemove');
 
     expect(onMouseMove).toHaveBeenCalledTimes(1);

@@ -1,12 +1,24 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import Group from '@vx/group/build/Group';
 import Line from '@vx/shape/build/shapes/Line';
 import Point from '@vx/point/build/Point';
 
 import color from '@data-ui/theme/build/color';
+import { baseLabel } from '@data-ui/theme/build/svgLabel';
+
+export const defaultLabelProps = {
+  ...baseLabel,
+  textAnchor: 'start',
+  stroke: '#fff',
+  strokeWidth: 2,
+  paintOrder: 'stroke',
+};
 
 export const propTypes = {
+  label: PropTypes.node,
+  labelProps: PropTypes.object,
   reference: PropTypes.number.isRequired,
   stroke: PropTypes.string,
   strokeDasharray: PropTypes.string,
@@ -17,6 +29,8 @@ export const propTypes = {
 };
 
 const defaultProps = {
+  label: null,
+  labelProps: defaultLabelProps,
   stroke: color.darkGray,
   strokeDasharray: null,
   strokeLinecap: 'round',
@@ -26,6 +40,8 @@ const defaultProps = {
 };
 
 function HorizontalReferenceLine({
+  label,
+  labelProps,
   reference,
   stroke,
   strokeDasharray,
@@ -40,15 +56,18 @@ function HorizontalReferenceLine({
   const fromPoint = new Point({ x: x0, y: scaledRef });
   const toPoint = new Point({ x: x1, y: scaledRef });
   return (
-    <Line
-      from={fromPoint}
-      to={toPoint}
-      stroke={stroke}
-      strokeDasharray={strokeDasharray}
-      strokeLinecap={strokeLinecap}
-      strokeWidth={strokeWidth}
-      vectorEffect="non-scaling-stroke"
-    />
+    <Group>
+      <Line
+        from={fromPoint}
+        to={toPoint}
+        stroke={stroke}
+        strokeDasharray={strokeDasharray}
+        strokeLinecap={strokeLinecap}
+        strokeWidth={strokeWidth}
+        vectorEffect="non-scaling-stroke"
+      />
+      {Boolean(label) && <text y={scaledRef} x={0} dy="-0.4em" {...labelProps}>{label}</text>}
+    </Group>
   );
 }
 

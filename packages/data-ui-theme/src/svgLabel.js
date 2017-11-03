@@ -7,6 +7,13 @@ export const baseLabel = {
   pointerEvents: 'none',
 };
 
+export const labelTiny = {
+  ...font.tiny,
+  ...font.bold,
+  ...font.middle,
+  pointerEvents: 'none',
+};
+
 export const baseTickLabel = {
   ...font.small,
   ...font.light,

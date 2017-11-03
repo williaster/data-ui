@@ -1,18 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { curveCardinal, curveLinear } from '@vx/curve';
-import { GlyphDot } from '@vx/glyph';
-import { LinePath } from '@vx/shape';
-import { color } from '@data-ui/theme';
+import GlyphDot from '@vx/glyph/build/glyphs/Dot';
+import LinePath from '@vx/shape/build/shapes/LinePath';
+import color from '@data-ui/theme/build/color';
 
 import { callOrValue, isDefined } from '../utils/chartUtils';
 import findClosestDatum from '../utils/findClosestDatum';
-import { lineSeriesDataShape } from '../utils/propShapes';
+import interpolatorLookup from '../utils/interpolatorLookup';
+import { interpolationShape, lineSeriesDataShape } from '../utils/propShapes';
 
 const propTypes = {
   data: lineSeriesDataShape.isRequired,
-  interpolation: PropTypes.oneOf(['linear', 'cardinal']), // @todo add more
+  interpolation: interpolationShape,
   label: PropTypes.string.isRequired,
   showPoints: PropTypes.bool,
 
@@ -29,7 +29,7 @@ const propTypes = {
 };
 
 const defaultProps = {
-  interpolation: 'cardinal',
+  interpolation: 'monotoneX',
   showPoints: false,
   stroke: color.default,
   strokeDasharray: null,
@@ -37,8 +37,8 @@ const defaultProps = {
   strokeLinecap: 'round',
   xScale: null,
   yScale: null,
-  onMouseMove: null,
-  onMouseLeave: null,
+  onMouseMove: undefined,
+  onMouseLeave: undefined,
 };
 
 const x = d => d.x;
@@ -63,6 +63,7 @@ export default class LineSeries extends React.PureComponent {
     } = this.props;
     if (!xScale || !yScale) return null;
     const strokeValue = callOrValue(stroke);
+    const curve = interpolatorLookup[interpolation] || interpolatorLookup.monotoneX;
     return (
       <LinePath
         key={label}
@@ -75,7 +76,7 @@ export default class LineSeries extends React.PureComponent {
         strokeWidth={callOrValue(strokeWidth)}
         strokeDasharray={callOrValue(strokeDasharray)}
         strokeLinecap={strokeLinecap}
-        curve={interpolation === 'linear' ? curveLinear : curveCardinal}
+        curve={curve}
         defined={defined}
         onMouseMove={onMouseMove && (() => (event) => {
           const d = findClosestDatum({ data, getX: x, event, xScale });

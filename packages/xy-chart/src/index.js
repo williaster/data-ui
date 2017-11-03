@@ -16,7 +16,7 @@ export { default as CrossHair } from './chart/CrossHair';
 export { default as WithTooltip, withTooltipPropTypes } from './enhancer/WithTooltip';
 
 export { LinearGradient } from '@vx/gradient';
-export { PatternLines } from '@vx/pattern';
+export { PatternLines, PatternCircles, PatternWaves, PatternHexagons } from '@vx/pattern';
 export { withScreenSize, withParentSize } from '@vx/responsive';
 
 export { default as withTheme } from './enhancer/withTheme';
