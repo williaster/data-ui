@@ -9,7 +9,7 @@ describe('<BarSeries />', () => {
     width: 100,
     height: 100,
     margin: { top: 0, right: 0, bottom: 0, left: 0 },
-    data: Array(10).fill().map((_, i) => i),
+    data: Array(10).fill().map((_, i) => i + 1),
   };
 
   test('it should be defined', () => {
@@ -71,5 +71,32 @@ describe('<BarSeries />', () => {
     ).find(BarSeries).dive();
 
     expect(wrapper.find('.test-label').length).toBe(2);
+  });
+
+  test('it should call onMouseMove({ datum, data, index, event, color }) and onMouseLeave() on trigger', () => {
+    const onMouseMove = jest.fn();
+    const onMouseLeave = jest.fn();
+
+    const wrapper = shallow(
+      <Sparkline {...sparklineProps}>
+        <BarSeries
+          onMouseMove={onMouseMove}
+          onMouseLeave={onMouseLeave}
+        />
+      </Sparkline>,
+    ).find(BarSeries).dive();
+
+    const bar = wrapper.find(Bar).first().dive();
+    bar.simulate('mousemove', {});
+    bar.simulate('mouseleave', {});
+    expect(onMouseMove).toHaveBeenCalledTimes(1);
+    expect(onMouseLeave).toHaveBeenCalledTimes(1);
+
+    const args = onMouseMove.mock.calls[0][0];
+    expect(args.data).toBeDefined();
+    expect(args.datum).toBeDefined();
+    expect(args.event).toBeDefined();
+    expect(args.color).toBeDefined();
+    expect(args.index).toBe(0);
   });
 });

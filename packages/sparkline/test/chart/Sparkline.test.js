@@ -16,12 +16,12 @@ describe('<Sparkline />', () => {
   });
 
   test('it should render an svg', () => {
-    const wrapper = shallow(<Sparkline {...props} />);
+    const wrapper = shallow(<Sparkline {...props}><g /></Sparkline>);
     expect(wrapper.find('svg').length).toBe(1);
   });
 
   test('it should store parsed data, dimensions, and scales in state', () => {
-    const wrapper = shallow(<Sparkline {...props} />);
+    const wrapper = shallow(<Sparkline {...props}><g /></Sparkline>);
     const state = wrapper.state();
 
     expect(state.innerWidth).toBe(props.width - props.margin.left - props.margin.right);
@@ -35,7 +35,7 @@ describe('<Sparkline />', () => {
   });
 
   test('it should set min/max according to passed values', () => {
-    const wrapper = shallow(<Sparkline {...props} min={101} max={1001} />);
+    const wrapper = shallow(<Sparkline {...props} min={101} max={1001}><g /></Sparkline>);
     const yScale = wrapper.state('yScale');
     const [min, max] = yScale.domain();
     expect(min).toBe(101);
@@ -44,7 +44,7 @@ describe('<Sparkline />', () => {
 
   test('it should determine y values from the passed value accessor', () => {
     const val = -111;
-    const wrapper = shallow(<Sparkline {...props} valueAccessor={() => val} />);
+    const wrapper = shallow(<Sparkline {...props} valueAccessor={() => val}><g /></Sparkline>);
     const yScale = wrapper.state('yScale');
     const [min, max] = yScale.domain();
     expect(min).toBe(val);
@@ -77,5 +77,24 @@ describe('<Sparkline />', () => {
       expect(component.prop('getX')).toEqual(component === g ? undefined : expect.any(Function));
       expect(component.prop('getY')).toEqual(component === g ? undefined : expect.any(Function));
     });
+  });
+
+  test('it should render a BarSeries to intercept onMouseMove and onMouseLeave if passed', () => {
+    const onMouseMove = jest.fn();
+    const onMouseLeave = jest.fn();
+
+    const wrapper = shallow(
+      <Sparkline {...props} onMouseMove={onMouseMove} onMouseLeave={onMouseLeave}><g /></Sparkline>,
+    );
+
+    const bars = wrapper.find(BarSeries);
+    const bar = bars.first();
+    expect(bars.length).toBe(1);
+
+    bar.simulate('mousemove');
+    bar.simulate('mouseleave');
+
+    expect(onMouseMove).toHaveBeenCalledTimes(1);
+    expect(onMouseLeave).toHaveBeenCalledTimes(1);
   });
 });

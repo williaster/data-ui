@@ -95,7 +95,7 @@ class VerticalReferenceLine extends React.PureComponent {
     const label = renderLabel && renderLabel((datum && getY(datum)) || refNumber);
 
     return (
-      <Group>
+      <Group style={{ pointerEvents: 'none' }}>
         <Line
           from={fromPoint}
           to={toPoint}

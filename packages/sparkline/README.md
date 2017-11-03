@@ -86,6 +86,8 @@ height | PropTypes.number.isRequired | - | Height of the svg including top/botto
 margin | PropTypes.shape({ top: PropTypes.number, right: PropTypes.number, bottom: PropTypes.number, left: PropTypes.number }) | { top: 16, right: 16, bottom: 16, left: 16 } | chart margin, leave room for labels! note 0 may clip LineSeries and PointSeries. a partial { top/right/bottom/ left } object is filled with the other default values
 max | PropTypes.number | - | Optionally set the maximum y-value of the chart (e.g., to coordinate axes across multiple Sparklines)
 min | PropTypes.number | - | Optionally set the minimum y-value of the chart (e.g., to coordinate axes across multiple Sparklines)
+onMouseMove | PropTypes.func | - | `func({ data, datum, event, index, color })`, passed to an invisible `BarSeries` that intercepts all mouse events (can pass to individual series for more control)
+onMouseLeave | PropTypes.func | - | `func()`, passed to an invisible `BarSeries` that intercepts all mouse events
 styles | PropTypes.object | - | Optional styles to apply to the svg
 width | PropTypes.number.isRequired | - | Width of the svg including left/right margin
 valueAccessor | PropTypes.func | d => d | Optional accessor function that takes an item from the data array as input and returns the y value of the datum. This value is passed back in e.g., `renderLabel` functions.
@@ -100,8 +102,6 @@ The following series components are available, they are passed the data and scal
 `<PointSeries />` and `<BarSeries />` support labeling of specific data points.
 
 #### `<LineSeries />`
-@TODO picture
-
 This component can be used to create lines and or area sparklines with various `curve` types, and takes the following props:
 
 Name | Type | Default | Description
@@ -109,6 +109,8 @@ Name | Type | Default | Description
 fill | PropTypes.string | `@data-ui/theme`s color.default | If `showArea=true`, this sets the `fill` of the area path.
 fillOpacity | PropTypes.number | 0.3 | If `showArea=true`, this sets the `fillOpacity` of the `area` shape.
 curve | PropTypes.oneOf(['linear', 'cardinal', 'basis', 'monotoneX']) | 'cardinal' | The type of curve interpolator to use.
+onMouseMove | PropTypes.func | - | `func({ data, datum, event, index, color })` called on line mouse move for the closest datum
+onMouseLeave | PropTypes.func | - | `func()` called on line mouse leave
 showArea | PropTypes.bool | false | Boolean indicating whether to render an Area path.
 showLine | PropTypes.bool | true | Boolean indicating whether to render a Line path.
 stroke | PropTypes.string | `@data-ui/theme`s color.default | If `showLine=true`, this sets the `stroke` of the line path.
@@ -117,8 +119,6 @@ strokeLinecap | PropTypes.oneOf(['butt', 'square', 'round', 'inherit']) | 'round
 strokeWidth | PropTypes.number | 2 | If `showLine=true`, this sets the `strokeWidth` attribute of the line path.
 
 #### `<BarSeries />`
-@TODO picture
-
 This component can be used to bar-graph sparklines and takes the following props:
 
 Name | Type | Default | Description
@@ -128,14 +128,14 @@ fillOpacity | PropTypes.oneOfType([PropTypes.func, PropTypes.number]) | `0.7` | 
 LabelComponent | PropTypes.element | `@data-ui/sparkline`'s `<Label />` component | Component to use for labels, if relevant. This component is cloned with appropriate x, y, dx, and dy values for positioning.
 labelOffset | PropTypes.number | `8` | (Absolute) pixel offset to use for positioning a label relative to a `Bar`. `labelPosition` is used to determine direction.
 labelPosition | PropTypes.oneOfType([PropTypes.func, PropTypes.oneOf(['top', 'right', 'bottom', 'left']), ]) | 'top' | A single string indicating how to position a label relative to the top point of a bar, or a function with the following signature `(yVal, i) => position` called for each data point. If the return value is not one of top, right, bottom, left, it is spread on the `LabelComponent` directly (e.g., `{ dx: -100, dy: 100 }`)
+onMouseMove | PropTypes.func | - | `func({ data, datum, event, index, color })` called on bar mouse move
+onMouseLeave | PropTypes.func | - | `func()` called on bar mouse leave
 renderLabel | PropTypes.func | - | Optional function called for each datum, with the following signature `(yVal, i) => node`. If this is passed to the Series and returns a value, a label will be rendered for the passed point. This is used as the child of `LabelComponent` so any valid child of svg `<text>` elements can be returned.
 stroke | PropTypes.oneOfType([PropTypes.func, PropTypes.string]) | `white` | A single `stroke` to use for all `Bar`s or a function with the following signature `(yVal, i) => stroke`. If data objects have a `stroke` property, it overrides this value.
 strokeWidth | PropTypes.oneOfType([PropTypes.func, PropTypes.number]) | `1` | A single `strokeWidth` to use for all `Bar`s or a function with the following signature `(yVal, i) => stroke`. If data objects have a `strokeWidth` property, it overrides this value.
 
 
 #### `<PointSeries />`
-@TODO picture
-
 This component can be used to render all or a subset of points for a sparkline and takes the following props:
 
 Name | Type | Default | Description
@@ -145,11 +145,28 @@ fillOpacity | PropTypes.oneOfType([PropTypes.func, PropTypes.number]) | `1` | A 
 LabelComponent | PropTypes.element | `@data-ui/sparkline`'s `<Label />` component | Component to use for labels, if relevant. This component is cloned with appropriate x, y, dx, and dy values for positioning.
 labelOffset | PropTypes.number | `12` | (Absolute) pixel offset to use for positioning a label relative to a `Point`. `labelPosition` is used to determine direction.
 labelPosition | PropTypes.oneOfType([PropTypes.func, PropTypes.oneOf(['auto', 'top', 'right', 'bottom', 'left']), ]) | 'auto' | A single string indicating how to position a label relative to the center of a point, or a function with the following signature `(yVal, i) => position` called for each data point. 'auto' attempts to position the label on top or bottom of a point depending on the surrounding data points. If the return value is not one of auto, top, right, bottom, left, it is spread on the `LabelComponent` directly (e.g., `{ dx: -100, dy: 100 }`)
-points | PropTypes.arrayOf(PropTypes.oneOf(['all', 'min', 'max', 'first', 'last'])) | `['min', 'max']` | String(s) indicating which point(s) to render. e.g., If `all`, all points are rendered, if `['min', 'max']`, only the minimum and maximum points are rendered.
+onMouseMove | PropTypes.func | - | `func({ data, datum, event, index, color })` called on point mouse move
+onMouseLeave | PropTypes.func | - | `func()` called on point mouse leave
+points | PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.number, PropTypes.oneOf(['all', 'min', 'max', 'first', 'last']), ])) | `['min', 'max']` | String(s) or index(s) indicating which point(s) to render. e.g., If `all`, all points are rendered, if `['min', 'max']`, only the minimum and maximum points are rendered.
 size | PropTypes.oneOfType([PropTypes.func, PropTypes.number]) | `3` | A single `size` to use as the radius of all `Points`s or a function with the following signature `(yVal, i) => size` called for each data point. If data objects have a `size` property, it overrides this value.
 renderLabel | PropTypes.func | - | Optional function called for each datum, with the following signature `(yVal, i) => node`. If this is passed to the Series and returns a value, a label will be rendered for the passed point. This is used as the child of `LabelComponent` so any valid child of svg `<text>` elements can be returned.
 stroke | PropTypes.oneOfType([PropTypes.func, PropTypes.string]) | `white` | A single `stroke` to use for all `Point`s or a function with the following signature `(yVal, i) => stroke`. If data objects have a `stroke` property, it overrides this value.
 strokeWidth | PropTypes.oneOfType([PropTypes.func, PropTypes.number]) | `1` | A single `strokeWidth` to use for all `Point`s or a function with the following signature `(yVal, i) => stroke`. If data objects have a `strokeWidth` property, it overrides this value.
+
+### Tooltips
+You can add tooltips to `<Sparkline />` components by wrapping them with the higher-order `<WithTooltip />` component. This component accepts a `renderTooltip` function whose output is rendered into a boundary-aware (html-based) tooltip. `<WithTooltip />` handles tooltip visibility state and passes `onMouseMove` `onMouseLeave` and `tooltipData` props to its child. If these are passed to `<Sparkline />`, it will render a series of invisible `Bar`s to intercept mouse events. If they are passed to individual series, mouse events will be handled on the series level.
+
+See the <a href="https://williaster.github.io/data-ui" target="_blank">storybook</a> for example usage!
+
+Name | Type | Default | Description
+------------ | ------------- | ------- | ----
+children | PropTypes.func or PropTypes.object | - | Child function (to call) or element (to clone) with onMouseMove, onMouseLeave, and tooltipData props/keys
+className | PropTypes.string | - | Class name to add to the `<div>` container wrapper
+renderTooltip | PropTypes.func.isRequired | - | Renders the _contents_ of the tooltip, signature of `({ event, data, datum, color }) => node`
+styles | PropTypes.object | {} | Styles to add to the `<div>` container wrapper
+TooltipComponent | PropTypes.func or PropTypes.object | `@vx`'s `TooltipWithBounds` | Component (not instance) to use as the tooltip container component. It is passed `top` and `left` numbers for positioning
+tooltipTimeout | PropTypes.number | 200 | Timeout in ms for the tooltip to hide upon calling `onMouseLeave`
+
 
 ### Reference lines and bands
 The following reference line components are exported to support different types of annotations you may want:
@@ -158,8 +175,6 @@ The following reference line components are exported to support different types 
 * `<BandLine />`.
 
 #### `<HorizontalReferenceLine />`
-@TODO picture
-
 This component can be used to render a single horizontal reference line to call out a point of interest. It takes the following props:
 
 Name | Type | Default | Description
@@ -192,8 +207,6 @@ strokeLinecap | PropTypes.oneOf(['butt', 'square', 'round', 'inherit']) | 'round
 strokeWidth | PropTypes.number | 2 | Sets the `strokeWidth` attribute of the line path.
 
 #### `<BandLine />`
-@TODO picture
-
 This component can be used to render _ranges_ of interest as opposed to single values. It may be used to create vertical or horizontal bands and takes the following props:
 
 Name | Type | Default | Description
@@ -211,8 +224,6 @@ These components are exported for convenience from `@vx` to support customizatio
 They take the following props:
 
 #### `<PatternLines />`
-@TODO picture
-
 Name | Type | Default | Description
 ------------ | ------------- | ------- | ----
 id | PropTypes.string.isRequired | - | `id` for the `<defs>` that is created. When used as a fill in another component it can be referenced via `url(#my_id)`.
@@ -228,8 +239,6 @@ background | PropTypes.string | - | Optional background fill for the pattern.
 className | PropTypes.string | - | Optional className added to the pattern `path`'s.
 
 #### `<LinearGradient />`
-@TODO picture
-
 Name | Type | Default | Description
 ------------ | ------------- | ------- | ----
 id | PropTypes.string.isRequired | - | `id` for the `<defs>` that is created. When used as a fill in another component it can be referenced via `url(#my_id)`.

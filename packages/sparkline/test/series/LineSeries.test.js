@@ -1,6 +1,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import { curveCardinal, curveLinear, curveBasis, curveMonotoneX } from '@vx/curve';
+import Group from '@vx/group/build/Group';
 import LinePath from '@vx/shape/build/shapes/LinePath';
 import AreaClosed from '@vx/shape/build/shapes/AreaClosed';
 import { Sparkline, LineSeries } from '../../src/';
@@ -69,5 +70,32 @@ describe('<LineSeries />', () => {
 
     const assertionPerCurve = 2;
     expect.assertions(Object.keys(curves).length * assertionPerCurve);
+  });
+
+  test.only('it should call onMouseMove({ datum, data, index, event, color }) and onMouseLeave() on trigger', () => {
+    const onMouseMove = jest.fn();
+    const onMouseLeave = jest.fn();
+
+    const wrapper = shallow(
+      <Sparkline {...sparklineProps}>
+        <LineSeries
+          onMouseMove={onMouseMove}
+          onMouseLeave={onMouseLeave}
+        />
+      </Sparkline>,
+    ).find(LineSeries).dive();
+
+    const group = wrapper.find(Group);
+    group.simulate('mousemove', {});
+    group.simulate('mouseleave', {});
+    expect(onMouseMove).toHaveBeenCalledTimes(1);
+    expect(onMouseLeave).toHaveBeenCalledTimes(1);
+
+    const args = onMouseMove.mock.calls[0][0];
+    expect(args.data).toBeDefined();
+    expect(args.datum).toBeUndefined();
+    expect(args.event).toBeDefined();
+    expect(args.color).toBeDefined();
+    expect(args.index).toBeUndefined();
   });
 });

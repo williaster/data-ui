@@ -138,7 +138,7 @@ class PointSeries extends React.Component {
               (prevCy !== null && prevCy > cy) || (nextCy !== null && nextCy > cy)
               ? 'top' : 'bottom';
 
-            return defined && (
+            return defined(cx) && defined(cy) && (
               <GlyphDot
                 key={key}
                 cx={cx}

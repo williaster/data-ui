@@ -83,6 +83,7 @@ class BarSeries extends React.PureComponent {
           const y = yScale(yVal);
           const key = `bar-${x}-${y}-${i}`;
           const label = renderLabel && renderLabel(yVal, i);
+          const fillValue = callOrValue(d.fill || fill, yVal, i);
           if (label) {
             labels.push({
               key,
@@ -99,7 +100,7 @@ class BarSeries extends React.PureComponent {
               y={y}
               width={barWidth}
               height={maxBarHeight - y}
-              fill={callOrValue(d.fill || fill, yVal, i)}
+              fill={fillValue}
               fillOpacity={
                 callOrValue(
                   typeof d.fillOpacity !== 'undefined'
@@ -112,7 +113,7 @@ class BarSeries extends React.PureComponent {
               stroke={callOrValue(d.stroke || stroke, yVal, i)}
               strokeWidth={callOrValue(d.strokeWidth || strokeWidth, yVal, i)}
               onMouseMove={onMouseMove && (() => (event) => {
-                onMouseMove({ event, data, datum: d, index: i, color });
+                onMouseMove({ event, data, datum: d, index: i, color: fillValue });
               })}
               onMouseLeave={onMouseLeave && (() => onMouseLeave)}
             />

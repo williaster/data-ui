@@ -85,7 +85,7 @@ class HorizontalReferenceLine extends React.PureComponent {
     const label = renderLabel && renderLabel(refNumber);
 
     return (
-      <Group>
+      <Group style={{ pointerEvents: 'none' }}>
         <Line
           from={fromPoint}
           to={toPoint}

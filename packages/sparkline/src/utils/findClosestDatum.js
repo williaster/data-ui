@@ -2,7 +2,7 @@ import { bisector } from 'd3-array';
 import localPoint from '@vx/event/build/localPoint';
 
 export default function findClosestDatum({ data, getX, xScale, event }) {
-  if (!event || !event.target || !event.target.ownerSVGElement) return null;
+  if (!event || !event.target || !event.target.ownerSVGElement) return {};
   const bisect = bisector(getX).right;
   // if the g element has a transform we need to be in g coords not svg coords
   const gElement = event.target.ownerSVGElement.firstChild;
