@@ -94,9 +94,10 @@ class WithTooltip extends React.PureComponent {
       tooltipData,
     };
 
-    const tooltipContent = renderTooltip && tooltipOpen && TooltipComponent ?
-      renderTooltip(tooltipData)
-      : null;
+    const tooltipContent = renderTooltip
+      && tooltipOpen
+      && TooltipComponent
+      && renderTooltip(tooltipData);
 
     return (
       <div style={styles} className={className}>
