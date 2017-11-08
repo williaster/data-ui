@@ -71,7 +71,7 @@ describe('<GroupedBarSeries />', () => {
     });
   });
 
-  test('it should call onMouseMove({ datum, data, event, key, color }) and onMouseLeave() on trigger', () => {
+  test('it should call onMouseMove({ datum, data, event, seriesKey, color }) and onMouseLeave() on trigger', () => {
     const fills = ['magenta', 'maplesyrup', 'banana'];
     const stackKeys = ['a', 'b', 'c'];
     const onMouseMove = jest.fn();
@@ -95,7 +95,7 @@ describe('<GroupedBarSeries />', () => {
     expect(args.data).toEqual(mockData);
     expect(args.datum).toBe(mockData[0]);
     expect(args.event).toBeDefined();
-    expect(stackKeys.includes(args.key)).toBe(true);
+    expect(stackKeys.includes(args.seriesKey)).toBe(true);
     expect(fills.includes(args.color)).toBe(true);
 
     bar.simulate('mouseleave');
