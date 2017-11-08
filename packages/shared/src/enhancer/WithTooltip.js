@@ -94,6 +94,10 @@ class WithTooltip extends React.PureComponent {
       tooltipData,
     };
 
+    const tooltipContent = renderTooltip && tooltipOpen && TooltipComponent ?
+      renderTooltip(tooltipData)
+      : null;
+
     return (
       <div style={styles} className={className}>
 
@@ -102,13 +106,13 @@ class WithTooltip extends React.PureComponent {
           ? children(childProps)
           : React.cloneElement(React.Children.only(children), childProps)}
 
-        {tooltipOpen && TooltipComponent && renderTooltip &&
+        {Boolean(tooltipContent) &&
           <TooltipComponent
             key={Math.random()}
             top={tooltipTop}
             left={tooltipLeft}
           >
-            {renderTooltip(tooltipData)}
+            {tooltipContent}
           </TooltipComponent>}
 
         {HoverStyles && <HoverStyles />}
