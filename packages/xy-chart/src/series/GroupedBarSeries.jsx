@@ -77,7 +77,7 @@ export default class GroupedBarSeries extends React.PureComponent {
         strokeWidth={strokeWidth}
         onMouseMove={onMouseMove && (d => (event) => {
           const { key, data: datum } = d;
-          onMouseMove({ event, data, datum, key, color: zScale(key) });
+          onMouseMove({ event, data, datum, seriesKey: key, color: zScale(key) });
         })}
         onMouseLeave={onMouseLeave && (() => onMouseLeave)}
       />

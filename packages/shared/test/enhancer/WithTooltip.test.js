@@ -87,6 +87,37 @@ describe('<WithTooltip />', () => {
     expect(wrapper.find('#test').length).toBe(1);
   });
 
+  test('it should not render a tooltip if renderTooltip returns a falsy value', () => {
+    const renderTooltip = jest.fn();
+    renderTooltip.mockReturnValue(<div id="test" />);
+
+    let mouseMove;
+    const wrapper = mount(
+      <WithTooltip
+        TooltipComponent={({ children }) => <div id="tooltip">{children}</div>}
+        renderTooltip={renderTooltip}
+      >
+        {({ onMouseMove }) => {
+          mouseMove = onMouseMove;
+          return <svg />;
+        }}
+      </WithTooltip>,
+    );
+
+    mouseMove({});
+    wrapper.update();
+    expect(renderTooltip).toHaveBeenCalledTimes(1);
+    expect(wrapper.find('#tooltip').length).toBe(1);
+    expect(wrapper.find('#test').length).toBe(1);
+
+    renderTooltip.mockReturnValue(null);
+    mouseMove({});
+    wrapper.update();
+    expect(renderTooltip).toHaveBeenCalledTimes(2);
+    expect(wrapper.find('#tooltip').length).toBe(0);
+    expect(wrapper.find('#test').length).toBe(0);
+  });
+
   test('it should hide the value of renderTooltip on mouse leave', () => {
     jest.useFakeTimers(); // needed for mouseLeave timeout
 
@@ -126,7 +157,7 @@ describe('<WithTooltip />', () => {
     let mouseMove;
     const wrapper = mount(
       <WithTooltip
-        renderTooltip={() => null}
+        renderTooltip={() => 'test'}
         TooltipComponent={Tooltip}
       >
         {({ onMouseMove }) => {

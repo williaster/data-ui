@@ -13,7 +13,7 @@ export const formatDate = timeFormat('%b %d');
 export const dateFormatter = date => formatDate(parseDate(date));
 
 // this is a little messy to handle all cases across series types
-function renderTooltip({ datum, key, color }) {
+function renderTooltip({ datum, seriesKey, color }) {
   const { x, x0, y, value } = datum;
   let xVal = x || x0;
   if (typeof xVal === 'string') {
@@ -21,12 +21,12 @@ function renderTooltip({ datum, key, color }) {
   } else if (typeof xVal !== 'string' && Number(xVal) > 1000000) {
     xVal = formatDate(xVal);
   }
-  const yVal = key && datum[key] ? datum[key] : (y || value || '--');
+  const yVal = seriesKey && datum[seriesKey] ? datum[seriesKey] : (y || value || '--');
   return (
     <div>
-      {key &&
+      {seriesKey &&
         <div>
-          <strong style={{ color }}>{key}</strong>
+          <strong style={{ color }}>{seriesKey}</strong>
         </div>}
       <div>
         <strong style={{ color }}>x </strong>
@@ -44,8 +44,8 @@ function ResponsiveXYChart({ screenWidth, children, ...rest }) {
   return (
     <XYChart
       theme={theme}
-      width={Math.min(1000, screenWidth / 1.5)}
-      height={Math.min(1000 / 2, screenWidth / 1.5 / 2)}
+      width={Math.min(700, screenWidth / 1.5)}
+      height={Math.min(700 / 2, screenWidth / 1.5 / 2)}
       renderTooltip={renderTooltip}
       {...rest}
     >

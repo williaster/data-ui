@@ -188,7 +188,7 @@ Note that only `x` values are needed for `CirclePackSeries`, `y` values are comp
 
 
 ### Tooltips
-Tooltips are supported for all series types, but how you configure them will likely depend on which series combinations you're using and how much customization you need. The _easiest_ way to use tooltips out of the box is by passing a `renderTooltip` function to `<XYChart />` as shown in the above example. This function takes an object with the shape `{ event, datum, data, color }` as input and should return the inner contents of the tooltip (not the tooltip container!) as shown above.
+Tooltips are supported for all series types, but how you configure them will likely depend on which series combinations you're using and how much customization you need. The _easiest_ way to use tooltips out of the box is by passing a `renderTooltip` function to `<XYChart />` as shown in the above example. This function takes an object with the shape `{ event, datum, data, color [, seriesKey] }` as input and should return the inner contents of the tooltip (not the tooltip container!) as shown above. If this function returns a `falsy` value, a tooltip will not be rendered.
 
 Under the covers this will wrap the `<XYChart />` component in the exported `<WithTooltip />` HOC, which wraps the `<svg />` in a `<div />` and handles the positioning and rendering of an HTML-based tooltip with the contents returned by `renderTooltip()`. This tooltip is aware of the bounds of its container and should position itself "smartly".
 
@@ -202,7 +202,7 @@ Name | Type | Default | Description
 ------------ | ------------- | ------- | ----
 children | PropTypes.func or PropTypes.object | - | Child function (to call) or element (to clone) with onMouseMove, onMouseLeave, and tooltipData props/keys
 className | PropTypes.string | - | Class name to add to the `<div>` container wrapper
-renderTooltip | PropTypes.func.isRequired | - | Renders the _contents_ of the tooltip, signature of `({ event, data, datum, color }) => node`
+renderTooltip | PropTypes.func.isRequired | - | Renders the _contents_ of the tooltip, signature of `({ event, data, datum, color }) => node`. If this function returns a `falsy` value, a tooltip will not be rendered.
 styles | PropTypes.object | {} | Styles to add to the `<div>` container wrapper
 TooltipComponent | PropTypes.func or PropTypes.object | `@vx`'s `TooltipWithBounds` | Component (not instance) to use as the tooltip container component. It is passed `top` and `left` numbers for positioning
 tooltipTimeout | PropTypes.number | 200 | Timeout in ms for the tooltip to hide upon calling `onMouseLeave`
