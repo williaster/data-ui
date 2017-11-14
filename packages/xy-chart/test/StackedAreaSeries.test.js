@@ -29,14 +29,14 @@ describe('<StackedAreaSeries />', () => {
 
   test('it should not render without x- and y-scales', () => {
     expect(
-      shallow(<StackedAreaSeries label="" data={[]} stackKeys={[]} />).type(),
+      shallow(<StackedAreaSeries data={[]} stackKeys={[]} />).type(),
     ).toBeNull();
   });
 
   test('it should render a <Stack />', () => {
     const wrapper = shallow(
       <XYChart {...mockProps} >
-        <StackedAreaSeries label="" data={mockData} stackKeys={mockStackKeys} />
+        <StackedAreaSeries data={mockData} stackKeys={mockStackKeys} />
       </XYChart>,
     );
 
@@ -48,7 +48,7 @@ describe('<StackedAreaSeries />', () => {
   test('it should render an path for each stackKey', () => {
     const wrapper = shallow(
       <XYChart {...mockProps} >
-        <StackedAreaSeries label="" data={mockData} stackKeys={mockStackKeys} />
+        <StackedAreaSeries data={mockData} stackKeys={mockStackKeys} />
       </XYChart>,
     );
 
@@ -71,7 +71,6 @@ describe('<StackedAreaSeries />', () => {
         onClick={onClick}
       >
         <StackedAreaSeries
-          label=""
           data={mockData}
           stackKeys={mockStackKeys}
           stackFills={mockStackFills}
@@ -103,5 +102,40 @@ describe('<StackedAreaSeries />', () => {
     expect(args.event).toBeDefined();
     expect(mockStackFills.indexOf(args.color)).toBeGreaterThan(-1);
     expect(mockStackKeys.indexOf(args.seriesKey)).toBeGreaterThan(-1);
+  });
+
+  test('it should not trigger onMouseMove, onMouseLeave, or onClick if disableMouseEvents is true', () => {
+    const onMouseMove = jest.fn();
+    const onMouseLeave = jest.fn();
+    const onClick = jest.fn();
+
+    const wrapper = mount(
+      <XYChart
+        {...mockProps}
+        onMouseMove={onMouseMove}
+        onMouseLeave={onMouseLeave}
+        onClick={onClick}
+      >
+        <StackedAreaSeries
+          data={mockData}
+          stackKeys={mockStackKeys}
+          stackFills={mockStackFills}
+          disableMouseEvents
+        />
+      </XYChart>,
+    );
+
+    const series = wrapper.find(StackedAreaSeries);
+    const stack = series.find(Stack);
+    const path = stack.find('path').first();
+
+    path.simulate('mousemove');
+    expect(onMouseMove).toHaveBeenCalledTimes(0);
+
+    path.simulate('mouseleave');
+    expect(onMouseLeave).toHaveBeenCalledTimes(0);
+
+    path.simulate('click');
+    expect(onClick).toHaveBeenCalledTimes(0);
   });
 });

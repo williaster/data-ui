@@ -12,9 +12,9 @@ import { lineSeriesDataShape, interpolationShape } from '../utils/propShapes';
 
 const propTypes = {
   data: lineSeriesDataShape.isRequired,
+  disableMouseEvents: PropTypes.bool,
   fillOpacity: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
   interpolation: interpolationShape,
-  label: PropTypes.string.isRequired,
   stackKeys: PropTypes.arrayOf(PropTypes.string).isRequired,
   stackFills: PropTypes.arrayOf(PropTypes.string),
   stroke: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
@@ -28,9 +28,10 @@ const propTypes = {
 };
 
 const defaultProps = {
-  interpolation: 'monotoneX',
+  disableMouseEvents: false,
   fill: color.default,
-  fillOpacity: 0.3,
+  fillOpacity: 0.7,
+  interpolation: 'monotoneX',
   stackFills: color.categories,
   stroke: '#fff',
   strokeWidth: 1,
@@ -45,11 +46,13 @@ const x = d => d.x;
 const y0 = d => d[0];
 const y1 = d => d[1];
 const defined = d => isDefined(d[0]) && isDefined(d[1]);
+const noEventsStyles = { pointerEvents: 'none' };
 
 export default class StackedAreaSeries extends React.PureComponent {
   render() {
     const {
       data,
+      disableMouseEvents,
       xScale,
       yScale,
       stackKeys,
@@ -58,14 +61,13 @@ export default class StackedAreaSeries extends React.PureComponent {
       stroke,
       strokeWidth,
       interpolation,
-      label,
       onClick,
       onMouseMove,
       onMouseLeave,
     } = this.props;
     if (!xScale || !yScale) return null;
     return (
-      <Group key={label}>
+      <Group style={disableMouseEvents ? noEventsStyles : null}>
         <Stack
           data={data}
           x={d => xScale(x(d.data))}
@@ -78,7 +80,7 @@ export default class StackedAreaSeries extends React.PureComponent {
           strokeWidth={({ datum, index }) => callOrValue(strokeWidth, { datum, index })}
           curve={interpolatorLookup[interpolation] || interpolatorLookup.monotoneX}
           defined={defined}
-          onClick={onClick && (({ series, index }) => (event) => {
+          onClick={disableMouseEvents ? null : onClick && (({ series, index }) => (event) => {
             const datum = findClosestDatum({ data: series, getX: d => x(d.data), event, xScale });
             onClick({
               event,
@@ -88,17 +90,19 @@ export default class StackedAreaSeries extends React.PureComponent {
               color: stackFills[index],
             });
           })}
-          onMouseMove={onMouseMove && (({ series, index }) => (event) => {
-            const datum = findClosestDatum({ data: series, getX: d => x(d.data), event, xScale });
-            onMouseMove({
-              event,
-              data,
-              seriesKey: series.key,
-              datum: datum && datum.data,
-              color: stackFills[index],
-            });
-          })}
-          onMouseLeave={() => onMouseLeave}
+          onMouseMove={disableMouseEvents ? null : onMouseMove &&
+            (({ series, index }) => (event) => {
+              const datum = findClosestDatum({ data: series, getX: d => x(d.data), event, xScale });
+              onMouseMove({
+                event,
+                data,
+                seriesKey: series.key,
+                datum: datum && datum.data,
+                color: stackFills[index],
+              });
+            })
+          }
+          onMouseLeave={disableMouseEvents ? null : () => onMouseLeave}
         />
       </Group>
     );

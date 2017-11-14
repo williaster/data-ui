@@ -75,7 +75,7 @@ class XYChart extends React.PureComponent {
   static collectScalesFromProps(props) {
     const { xScale: xScaleObject, yScale: yScaleObject, children } = props;
     const { innerWidth, innerHeight } = XYChart.getDimmensions(props);
-    const { allData, dataBySeriesType } = collectDataFromChildSeries(children);
+    const { allData, dataBySeriesType, dataByIndex, data } = collectDataFromChildSeries(children);
 
     const xScale = getScaleForAccessor({
       allData,
@@ -97,7 +97,8 @@ class XYChart extends React.PureComponent {
       const name = componentName(Child);
       if (isBarSeries(name) && xScale.type !== 'band') {
         const dummyBand = getScaleForAccessor({
-          allData: dataBySeriesType[name],
+          // allData: dataBySeriesType[name],
+          allData,
           minAccessor: xString,
           maxAccessor: xString,
           type: 'band',
@@ -116,7 +117,7 @@ class XYChart extends React.PureComponent {
     });
 
     return {
-      allData,
+      dataByIndex,
       xScale,
       yScale,
     };
@@ -134,15 +135,24 @@ class XYChart extends React.PureComponent {
 
   static getStateFromProps(props) {
     const { margin, innerWidth, innerHeight } = XYChart.getDimmensions(props);
-    const { allData, xScale, yScale } = XYChart.collectScalesFromProps(props);
+    const { xScale, yScale } = XYChart.collectScalesFromProps(props);
+
+    const voronoiData = React.Children.toArray(props.children).reduce((result, Child) => {
+      if (isSeries(componentName(Child)) && !Child.props.disableMouseEvents) {
+        return result.concat(
+          Child.props.data.filter(d => isDefined(getX(d)) && isDefined(getY(d))),
+        );
+      }
+      return result;
+    }, []);
 
     return {
-      allData,
       innerHeight,
       innerWidth,
       margin,
       xScale,
       yScale,
+      voronoiData,
       voronoiX: d => xScale(getX(d)),
       voronoiY: d => yScale(getY(d)),
     };
@@ -203,10 +213,10 @@ class XYChart extends React.PureComponent {
     } = this.props;
 
     const {
-      allData,
       innerWidth,
       innerHeight,
       margin,
+      voronoiData,
       voronoiX,
       voronoiY,
       xScale,
@@ -252,14 +262,13 @@ class XYChart extends React.PureComponent {
                 tickStyles: { ...theme[`${styleKey}TickStyles`], ...Child.props.tickStyles },
               });
             } else if (isSeries(name)) {
-              const { disableMouseEvents: noMouseEvents } = Child.props;
               return React.cloneElement(Child, {
                 xScale,
                 yScale,
                 barWidth,
-                onClick: noMouseEvents ? null : (Child.props.onClick || onClick),
-                onMouseLeave: noMouseEvents ? null : (Child.props.onMouseLeave || onMouseLeave),
-                onMouseMove: noMouseEvents ? null : (Child.props.onMouseMove || onMouseMove),
+                onClick: Child.props.onClick || onClick,
+                onMouseLeave: Child.props.onMouseLeave || onMouseLeave,
+                onMouseMove: Child.props.onMouseMove || onMouseMove,
               });
             } else if (isCrossHair(name)) {
               CrossHairs.push(Child);
@@ -272,7 +281,7 @@ class XYChart extends React.PureComponent {
 
           {useVoronoi &&
             <Voronoi
-              data={allData.filter(d => isDefined(d.x) && isDefined(d.y))}
+              data={voronoiData}
               x={voronoiX}
               y={voronoiY}
               width={innerWidth}

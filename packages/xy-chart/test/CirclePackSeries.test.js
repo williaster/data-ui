@@ -26,7 +26,7 @@ describe('<CirclePackSeries />', () => {
   test('it should render a PointSeries', () => {
     const wrapper = shallow(
       <XYChart {...mockProps} >
-        <CirclePackSeries label="" data={mockData} />
+        <CirclePackSeries data={mockData} />
       </XYChart>,
     );
     const circleSeries = wrapper.find(CirclePackSeries);
@@ -37,7 +37,7 @@ describe('<CirclePackSeries />', () => {
   test('data passed to PointSeries should include computed y values', () => {
     const wrapper = shallow(
       <XYChart {...mockProps} >
-        <CirclePackSeries label="" data={mockData} />
+        <CirclePackSeries data={mockData} />
       </XYChart>,
     );
     const circleSeries = wrapper.find(CirclePackSeries);
@@ -59,7 +59,7 @@ describe('<CirclePackSeries />', () => {
         onMouseLeave={onMouseLeave}
         onClick={onClick}
       >
-        <CirclePackSeries label="" data={mockData} fill="army-green" />
+        <CirclePackSeries data={mockData} fill="army-green" />
       </XYChart>,
     );
 
@@ -85,13 +85,41 @@ describe('<CirclePackSeries />', () => {
     expect(args.color).toBe('army-green');
   });
 
+  test('it should not trigger onMouseMove, onMouseLeave, or onClick if disableMouseEvents is true', () => {
+    const onMouseMove = jest.fn();
+    const onMouseLeave = jest.fn();
+    const onClick = jest.fn();
+
+    const wrapper = mount(
+      <XYChart
+        {...mockProps}
+        onMouseMove={onMouseMove}
+        onMouseLeave={onMouseLeave}
+        onClick={onClick}
+      >
+        <CirclePackSeries data={mockData} disableMouseEvents />
+      </XYChart>,
+    );
+
+    const point = wrapper.find('circle').first();
+
+    point.simulate('mousemove');
+    expect(onMouseMove).toHaveBeenCalledTimes(0);
+
+    point.simulate('mouseleave');
+    expect(onMouseLeave).toHaveBeenCalledTimes(0);
+
+    point.simulate('click');
+    expect(onClick).toHaveBeenCalledTimes(0);
+  });
+
   test('it should invoke layoutCallback if passed with y-range and -domain arguments', () => {
     jest.useFakeTimers();
     const layoutCallback = jest.fn();
 
     mount(
       <XYChart {...mockProps} >
-        <CirclePackSeries label="" data={mockData} layoutCallback={layoutCallback} />
+        <CirclePackSeries data={mockData} layoutCallback={layoutCallback} />
       </XYChart>,
     );
 

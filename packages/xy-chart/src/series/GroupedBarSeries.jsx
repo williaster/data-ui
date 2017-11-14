@@ -9,6 +9,7 @@ import { scaleTypeToScale } from '../utils/chartUtils';
 
 const propTypes = {
   data: groupedBarSeriesDataShape.isRequired,
+  disableMouseEvents: PropTypes.bool,
   groupKeys: PropTypes.arrayOf(PropTypes.string).isRequired,
   groupFills: PropTypes.arrayOf(PropTypes.string),
   stroke: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
@@ -24,6 +25,7 @@ const propTypes = {
 };
 
 const defaultProps = {
+  disableMouseEvents: false,
   groupKeys: null,
   groupFills: color.categories,
   groupPadding: 0.1,
@@ -37,11 +39,13 @@ const defaultProps = {
 };
 
 const x = d => d.x;
+const noEventsStyles = { pointerEvents: 'none' };
 
 export default class GroupedBarSeries extends React.PureComponent {
   render() {
     const {
       data,
+      disableMouseEvents,
       groupKeys,
       groupFills,
       groupPadding,
@@ -67,6 +71,7 @@ export default class GroupedBarSeries extends React.PureComponent {
     const zScale = scaleTypeToScale.ordinal({ range: groupFills, domain: groupKeys });
     return (
       <BarGroup
+        style={disableMouseEvents ? noEventsStyles : null}
         data={data}
         keys={groupKeys}
         height={maxHeight}
@@ -78,15 +83,15 @@ export default class GroupedBarSeries extends React.PureComponent {
         rx={2}
         stroke={stroke}
         strokeWidth={strokeWidth}
-        onClick={onClick && (d => (event) => {
+        onClick={disableMouseEvents ? null : onClick && (d => (event) => {
           const { key: seriesKey, data: datum } = d;
           onClick({ event, data, datum, seriesKey, color: zScale(seriesKey) });
         })}
-        onMouseMove={onMouseMove && (d => (event) => {
+        onMouseMove={disableMouseEvents ? null : onMouseMove && (d => (event) => {
           const { key, data: datum } = d;
           onMouseMove({ event, data, datum, seriesKey: key, color: zScale(key) });
         })}
-        onMouseLeave={onMouseLeave && (() => onMouseLeave)}
+        onMouseLeave={disableMouseEvents ? null : onMouseLeave && (() => onMouseLeave)}
       />
     );
   }

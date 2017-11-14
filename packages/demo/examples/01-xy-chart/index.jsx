@@ -96,31 +96,41 @@ export default {
           y: Math.random() > 0.5 ? d.y * 2 : d.y / 2,
         }));
         return (
-          <WithToggle id="lineseries_toggle" label="Show voronoi" initialChecked>
-            {showVoronoi => (
-              <ResponsiveXYChart
-                ariaLabel="Required label"
-                xScale={{ type: 'time' }}
-                yScale={{ type: 'linear' }}
-                useVoronoi
-                showVoronoi={showVoronoi}
-              >
-                <YAxis label="Price ($)" numTicks={4} />
-                <LineSeries
-                  data={timeSeriesData}
-                  label="Apple Stock"
-                  showPoints
-                />
-                <LineSeries
-                  data={data2}
-                  label="Apple Stock 2"
-                  stroke={colors.categories[2]}
-                  strokeDasharray="3 3"
-                  strokeLinecap="butt"
-                />
-                <CrossHair />
-                <XAxis label="Time" numTicks={5} />
-              </ResponsiveXYChart>
+          <WithToggle id="line_use_voronoi_toggle" label="Use voronoi" initialChecked>
+            {useVoronoi => (
+              <WithToggle id="line_show_voronoi_toggle" label="Show voronoi" initialChecked>
+                {showVoronoi => (
+                  <WithToggle id="line_m_events_toggle" label="Disable mouse events" initialChecked>
+                    {disableMouseEvents => (
+                      <ResponsiveXYChart
+                        ariaLabel="Required label"
+                        xScale={{ type: 'time' }}
+                        yScale={{ type: 'linear' }}
+                        useVoronoi={useVoronoi}
+                        showVoronoi={showVoronoi}
+                      >
+                        <YAxis label="Price ($)" numTicks={4} />
+                        <LineSeries
+                          data={timeSeriesData}
+                          label="Apple Stock"
+                          showPoints
+                          disableMouseEvents={disableMouseEvents}
+                        />
+                        <LineSeries
+                          data={data2}
+                          label="Apple Stock 2"
+                          stroke={colors.categories[2]}
+                          strokeDasharray="3 3"
+                          strokeLinecap="butt"
+                          disableMouseEvents={disableMouseEvents}
+                        />
+                        <CrossHair />
+                        <XAxis label="Time" numTicks={5} />
+                      </ResponsiveXYChart>
+                    )}
+                  </WithToggle>
+                )}
+              </WithToggle>
             )}
           </WithToggle>
         );

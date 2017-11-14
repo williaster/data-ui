@@ -12,10 +12,9 @@ import { interpolationShape, lineSeriesDataShape } from '../utils/propShapes';
 
 const propTypes = {
   data: lineSeriesDataShape.isRequired,
+  disableMouseEvents: PropTypes.bool,
   interpolation: interpolationShape,
-  label: PropTypes.string.isRequired,
   showPoints: PropTypes.bool,
-
   stroke: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   strokeDasharray: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   strokeWidth: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
@@ -30,6 +29,7 @@ const propTypes = {
 };
 
 const defaultProps = {
+  disableMouseEvents: false,
   interpolation: 'monotoneX',
   showPoints: false,
   stroke: color.default,
@@ -46,13 +46,14 @@ const defaultProps = {
 const x = d => d.x;
 const y = d => d.y;
 const defined = d => isDefined(y(d));
+const noEventsStyles = { pointerEvents: 'none' };
 
 export default class LineSeries extends React.PureComponent {
   render() {
     const {
       data,
+      disableMouseEvents,
       interpolation,
-      label,
       showPoints,
       stroke,
       strokeDasharray,
@@ -69,7 +70,7 @@ export default class LineSeries extends React.PureComponent {
     const curve = interpolatorLookup[interpolation] || interpolatorLookup.monotoneX;
     return (
       <LinePath
-        key={label}
+        style={disableMouseEvents ? noEventsStyles : null}
         data={data}
         xScale={xScale}
         yScale={yScale}
@@ -81,19 +82,19 @@ export default class LineSeries extends React.PureComponent {
         strokeLinecap={strokeLinecap}
         curve={curve}
         defined={defined}
-        onClick={onClick && (() => (event) => {
+        onClick={disableMouseEvents ? null : onClick && (() => (event) => {
           const d = findClosestDatum({ data, getX: x, event, xScale });
           onClick({ event, data, datum: d, color: strokeValue });
         })}
-        onMouseMove={onMouseMove && (() => (event) => {
+        onMouseMove={disableMouseEvents ? null : onMouseMove && (() => (event) => {
           const d = findClosestDatum({ data, getX: x, event, xScale });
           onMouseMove({ event, data, datum: d, color: strokeValue });
         })}
-        onMouseLeave={onMouseLeave && (() => onMouseLeave)}
+        onMouseLeave={disableMouseEvents ? null : onMouseLeave && (() => onMouseLeave)}
         glyph={showPoints && ((d, i) => (
           isDefined(x(d)) && isDefined(y(d)) &&
             <GlyphDot
-              key={`${label}-${i}-${x(d)}`}
+              key={`${i}-${x(d)}`}
               cx={xScale(x(d))}
               cy={yScale(y(d))}
               r={4}

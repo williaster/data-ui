@@ -10,8 +10,7 @@ import { callOrValue } from '../utils/chartUtils';
 
 const propTypes = {
   data: intervalSeriesDataShape.isRequired,
-  label: PropTypes.string.isRequired,
-
+  disableMouseEvents: PropTypes.bool,
   // overridden by data props
   fill: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   fillOpacity: PropTypes.number,
@@ -27,6 +26,7 @@ const propTypes = {
 };
 
 const defaultProps = {
+  disableMouseEvents: false,
   fill: color.default,
   fillOpacity: 1,
   stroke: 'none',
@@ -40,14 +40,15 @@ const defaultProps = {
 
 const x0 = d => d.x0;
 const x1 = d => d.x1;
+const noEventsStyles = { pointerEvents: 'none' };
 
 export default class IntervalSeries extends React.PureComponent {
   render() {
     const {
       data,
+      disableMouseEvents,
       fill,
       fillOpacity,
-      label,
       stroke,
       strokeWidth,
       xScale,
@@ -60,14 +61,14 @@ export default class IntervalSeries extends React.PureComponent {
 
     const barHeight = (yScale.range() || [0])[0];
     return (
-      <Group key={label}>
+      <Group style={disableMouseEvents ? noEventsStyles : null}>
         {data.map((d, i) => {
           const x = xScale(x0(d));
           const barWidth = xScale(x1(d)) - x;
           const intervalFill = d.fill || callOrValue(fill, d, i);
           return (
             <Bar
-              key={`interval-${label}-${x}`}
+              key={`interval-${x}`}
               x={x}
               y={0}
               width={barWidth}
@@ -76,13 +77,13 @@ export default class IntervalSeries extends React.PureComponent {
               fillOpacity={fillOpacity}
               stroke={d.stroke || callOrValue(stroke, d, i)}
               strokeWidth={d.strokeWidth || callOrValue(strokeWidth, d, i)}
-              onClick={onClick && (() => (event) => {
+              onClick={disableMouseEvents ? null : onClick && (() => (event) => {
                 onClick({ event, datum: d, index: i, data, color: intervalFill });
               })}
-              onMouseMove={onMouseMove && (() => (event) => {
+              onMouseMove={disableMouseEvents ? null : onMouseMove && (() => (event) => {
                 onMouseMove({ event, datum: d, index: i, data, color: intervalFill });
               })}
-              onMouseLeave={onMouseLeave && (() => onMouseLeave)}
+              onMouseLeave={disableMouseEvents ? null : onMouseLeave && (() => onMouseLeave)}
             />
           );
         })}

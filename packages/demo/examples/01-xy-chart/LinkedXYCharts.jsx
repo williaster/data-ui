@@ -94,7 +94,7 @@ class LinkedXYCharts extends React.Component {
   }
 
   render() {
-    const { screenWidth } = this.props;
+    const { screenWidth } = this.props; // eslint-disable-line react/prop-types
     const { mousedOverDatum, mousedOverKey, selectedDatum } = this.state;
     const width = Math.max(400, Math.min(700, screenWidth / 1.5));
     const height = 100;
@@ -161,7 +161,7 @@ class LinkedXYCharts extends React.Component {
               data={[selectedDatum]}
               stackKeys={['y']}
               stackFills={[`url(#${PATTERN_ID})`]}
-              onClick={this.onClick}
+              disableMouseEvents
             />}
           {stackCrossHairData &&
             <CrossHair

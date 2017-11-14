@@ -26,14 +26,14 @@ describe('<AreaSeries />', () => {
   });
 
   test('it should not render without x- and y-scales', () => {
-    expect(shallow(<AreaSeries label="" data={[]} />).type()).toBeNull();
+    expect(shallow(<AreaSeries data={[]} />).type()).toBeNull();
   });
 
   test('it should render an Area for each AreaSeries', () => {
     const wrapper = shallow(
       <XYChart {...mockProps} >
-        <AreaSeries label="l" data={mockData.map(d => ({ ...d, x: d.date, y: d.num }))} />
-        <AreaSeries label="l2" data={mockData.map(d => ({ ...d, x: d.date, y: d.num }))} />
+        <AreaSeries data={mockData.map(d => ({ ...d, x: d.date, y: d.num }))} />
+        <AreaSeries data={mockData.map(d => ({ ...d, x: d.date, y: d.num }))} />
       </XYChart>,
     );
     expect(wrapper.find(AreaSeries).length).toBe(2);
@@ -44,7 +44,7 @@ describe('<AreaSeries />', () => {
     const data = mockData.map(d => ({ ...d, x: d.date, y: d.num }));
     const wrapperWithLine = shallow(
       <XYChart {...mockProps} >
-        <AreaSeries label="l" data={data} strokeWidth={3} />
+        <AreaSeries data={data} strokeWidth={3} />
       </XYChart>,
     );
     const areaSeriesWithLinePath = wrapperWithLine.find(AreaSeries).dive();
@@ -52,7 +52,7 @@ describe('<AreaSeries />', () => {
 
     const wrapperNoLine = shallow(
       <XYChart {...mockProps} >
-        <AreaSeries label="l" data={data} strokeWidth={0} />
+        <AreaSeries data={data} strokeWidth={0} />
       </XYChart>,
     );
 
@@ -73,7 +73,7 @@ describe('<AreaSeries />', () => {
         onMouseLeave={onMouseLeave}
         onClick={onClick}
       >
-        <AreaSeries label="l" data={data} fill="hot-pink" />
+        <AreaSeries data={data} fill="hot-pink" />
       </XYChart>,
     );
 
@@ -97,5 +97,34 @@ describe('<AreaSeries />', () => {
     expect(args.datum).toBeNull(); // @TODO depends on mocking out findClosestDatum
     expect(args.event).toBeDefined();
     expect(args.color).toBe('hot-pink');
+  });
+
+  test('it should not trigger onMouseMove, onMouseLeave, or onClick if disableMouseEvents is true', () => {
+    const data = mockData.map(d => ({ ...d, x: d.date, y: d.num }));
+    const onMouseMove = jest.fn();
+    const onMouseLeave = jest.fn();
+    const onClick = jest.fn();
+
+    const wrapper = mount(
+      <XYChart
+        {...mockProps}
+        onMouseMove={onMouseMove}
+        onMouseLeave={onMouseLeave}
+        onClick={onClick}
+      >
+        <AreaSeries disableMouseEvents data={data} fill="hot-pink" />
+      </XYChart>,
+    );
+
+    const area = wrapper.find(AreaSeries);
+
+    area.simulate('mousemove');
+    expect(onMouseMove).toHaveBeenCalledTimes(0);
+
+    area.simulate('mouseleave');
+    expect(onMouseLeave).toHaveBeenCalledTimes(0);
+
+    area.simulate('click');
+    expect(onClick).toHaveBeenCalledTimes(0);
   });
 });

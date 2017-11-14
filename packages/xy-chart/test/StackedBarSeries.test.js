@@ -116,4 +116,39 @@ describe('<GroupedBarSeries />', () => {
     expect(stackKeys.includes(args.seriesKey)).toBe(true);
     expect(fills.includes(args.color)).toBe(true);
   });
+
+  test('it should not trigger onMouseMove, onMouseLeave, or onClick if disableMouseEvents is true', () => {
+    const fills = ['magenta', 'maplesyrup', 'banana'];
+    const stackKeys = ['a', 'b', 'c'];
+    const onMouseMove = jest.fn();
+    const onMouseLeave = jest.fn();
+    const onClick = jest.fn();
+
+    const wrapper = mount(
+      <XYChart
+        {...mockProps}
+        onMouseMove={onMouseMove}
+        onMouseLeave={onMouseLeave}
+        onClick={onClick}
+      >
+        <StackedBarSeries
+          stackKeys={stackKeys}
+          stackFills={fills}
+          data={mockData}
+          disableMouseEvents
+        />
+      </XYChart>,
+    );
+
+    const bar = wrapper.find(Bar).first();
+
+    bar.simulate('mousemove');
+    expect(onMouseMove).toHaveBeenCalledTimes(0);
+
+    bar.simulate('mouseleave');
+    expect(onMouseLeave).toHaveBeenCalledTimes(0);
+
+    bar.simulate('click');
+    expect(onClick).toHaveBeenCalledTimes(0);
+  });
 });

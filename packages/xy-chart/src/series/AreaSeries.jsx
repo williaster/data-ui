@@ -13,10 +13,10 @@ import { areaSeriesDataShape, interpolationShape } from '../utils/propShapes';
 
 const propTypes = {
   data: areaSeriesDataShape.isRequired,
+  disableMouseEvents: PropTypes.bool,
   fill: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   fillOpacity: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
   interpolation: interpolationShape,
-  label: PropTypes.string.isRequired,
   stroke: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   strokeDasharray: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   strokeWidth: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
@@ -30,6 +30,7 @@ const propTypes = {
 };
 
 const defaultProps = {
+  disableMouseEvents: false,
   interpolation: 'monotoneX',
   stroke: color.default,
   strokeWidth: 3,
@@ -50,11 +51,13 @@ const getY0 = d => d.y0;
 const getY1 = d => d.y1;
 const definedClosed = d => isDefined(getY(d));
 const definedOpen = d => isDefined(getY0(d)) && isDefined(getY1(d));
+const noEventsStyles = { pointerEvents: 'none' };
 
 export default class AreaSeries extends React.PureComponent {
   render() {
     const {
       data,
+      disableMouseEvents,
       xScale,
       yScale,
       stroke,
@@ -64,7 +67,6 @@ export default class AreaSeries extends React.PureComponent {
       fill,
       fillOpacity,
       interpolation,
-      label,
       onClick,
       onMouseMove,
       onMouseLeave,
@@ -83,16 +85,16 @@ export default class AreaSeries extends React.PureComponent {
     const curve = interpolatorLookup[interpolation] || interpolatorLookup.monotoneX;
     return (
       <Group
-        key={label}
-        onClick={onClick && ((event) => {
+        style={disableMouseEvents ? noEventsStyles : null}
+        onClick={disableMouseEvents ? null : onClick && ((event) => {
           const d = findClosestDatum({ data, getX: x, event, xScale });
           onClick({ event, data, datum: d, color: fillValue });
         })}
-        onMouseMove={onMouseMove && ((event) => {
+        onMouseMove={disableMouseEvents ? null : onMouseMove && ((event) => {
           const d = findClosestDatum({ data, getX: x, event, xScale });
           onMouseMove({ event, data, datum: d, color: fillValue });
         })}
-        onMouseLeave={onMouseLeave}
+        onMouseLeave={disableMouseEvents ? null : onMouseLeave}
       >
         <Area
           data={data}

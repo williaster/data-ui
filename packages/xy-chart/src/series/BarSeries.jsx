@@ -10,8 +10,7 @@ import { callOrValue, isDefined } from '../utils/chartUtils';
 
 const propTypes = {
   data: barSeriesDataShape.isRequired,
-  label: PropTypes.string.isRequired,
-
+  disableMouseEvents: PropTypes.bool,
   // overridden by data props
   fill: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   fillOpacity: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
@@ -30,6 +29,7 @@ const propTypes = {
 
 const defaultProps = {
   barWidth: null,
+  disableMouseEvents: false,
   fill: themeColors.default,
   fillOpacity: null,
   stackBy: null,
@@ -44,17 +44,18 @@ const defaultProps = {
 
 const x = d => d.x;
 const y = d => d.y;
+const noEventsStyles = { pointerEvents: 'none' };
 
 export default class BarSeries extends React.PureComponent {
   render() {
     const {
       barWidth,
       data,
+      disableMouseEvents,
       fill,
       fillOpacity,
       stroke,
       strokeWidth,
-      label,
       xScale,
       yScale,
       onClick,
@@ -67,13 +68,13 @@ export default class BarSeries extends React.PureComponent {
     const maxHeight = (yScale.range() || [0])[0];
     const offset = xScale.offset || 0;
     return (
-      <Group key={label}>
+      <Group style={disableMouseEvents ? noEventsStyles : null}>
         {data.map((d, i) => {
           const barHeight = maxHeight - yScale(y(d));
           const color = d.fill || callOrValue(fill, d, i);
           return isDefined(d.y) && (
             <Bar
-              key={`bar-${label}-${xScale(x(d))}`}
+              key={`bar-${xScale(x(d))}`}
               x={xScale(x(d)) - offset}
               y={maxHeight - barHeight}
               width={barWidth}
@@ -82,13 +83,13 @@ export default class BarSeries extends React.PureComponent {
               fillOpacity={d.fillOpacity || callOrValue(fillOpacity, d, i)}
               stroke={d.stroke || callOrValue(stroke, d, i)}
               strokeWidth={d.strokeWidth || callOrValue(strokeWidth, d, i)}
-              onClick={onClick && (() => (event) => {
+              onClick={disableMouseEvents ? null : onClick && (() => (event) => {
                 onClick({ event, data, datum: d, color, index: i });
               })}
-              onMouseMove={onMouseMove && (() => (event) => {
+              onMouseMove={disableMouseEvents ? null : onMouseMove && (() => (event) => {
                 onMouseMove({ event, data, datum: d, color, index: i });
               })}
-              onMouseLeave={onMouseLeave && (() => onMouseLeave)}
+              onMouseLeave={disableMouseEvents ? null : onMouseLeave && (() => onMouseLeave)}
             />
           );
         })}

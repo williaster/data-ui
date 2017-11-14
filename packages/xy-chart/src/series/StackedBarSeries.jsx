@@ -9,6 +9,7 @@ import { scaleTypeToScale } from '../utils/chartUtils';
 
 const propTypes = {
   data: stackedBarSeriesDataShape.isRequired,
+  disableMouseEvents: PropTypes.bool,
   stackKeys: PropTypes.arrayOf(PropTypes.string).isRequired,
   stackFills: PropTypes.arrayOf(PropTypes.string),
   stroke: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
@@ -23,6 +24,7 @@ const propTypes = {
 };
 
 const defaultProps = {
+  disableMouseEvents: false,
   stackFills: color.categories,
   stroke: '#FFFFFF',
   strokeWidth: 1,
@@ -34,11 +36,13 @@ const defaultProps = {
 };
 
 const x = d => d.x;
+const noEventsStyles = { pointerEvents: 'none' };
 
 export default class StackedBarSeries extends React.PureComponent {
   render() {
     const {
       data,
+      disableMouseEvents,
       stackKeys,
       stackFills,
       stroke,
@@ -57,6 +61,7 @@ export default class StackedBarSeries extends React.PureComponent {
     const zScale = scaleTypeToScale.ordinal({ range: stackFills, domain: stackKeys });
     return (
       <BarStack
+        style={disableMouseEvents ? noEventsStyles : null}
         data={data}
         keys={stackKeys}
         height={maxHeight}
@@ -66,15 +71,15 @@ export default class StackedBarSeries extends React.PureComponent {
         zScale={zScale}
         stroke={stroke}
         strokeWidth={strokeWidth}
-        onClick={onMouseMove && (d => (event) => {
+        onClick={disableMouseEvents ? null : onMouseMove && (d => (event) => {
           const { data: datum, key: seriesKey } = d;
           onClick({ event, data, datum, seriesKey, color: zScale(seriesKey) });
         })}
-        onMouseMove={onMouseMove && (d => (event) => {
+        onMouseMove={disableMouseEvents ? null : onMouseMove && (d => (event) => {
           const { data: datum, key } = d;
           onMouseMove({ event, data, datum, seriesKey: key, color: zScale(key) });
         })}
-        onMouseLeave={onMouseLeave && (() => onMouseLeave)}
+        onMouseLeave={disableMouseEvents ? null : onMouseLeave && (() => onMouseLeave)}
       />
     );
   }

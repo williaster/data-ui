@@ -27,7 +27,7 @@ export const pointComponentPropTypes = {
 
 export const propTypes = {
   data: pointSeriesDataShape.isRequired,
-  label: PropTypes.string.isRequired,
+  disableMouseEvents: PropTypes.bool,
   labelComponent: PropTypes.element,
   pointComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
   onClick: PropTypes.func,
@@ -47,6 +47,7 @@ export const propTypes = {
 };
 
 export const defaultProps = {
+  disableMouseEvents: false,
   labelComponent: <text {...chartTheme.labelStyles} />,
   pointComponent: GlyphDotComponent,
   size: 4,
@@ -62,11 +63,13 @@ export const defaultProps = {
   onMouseLeave: null,
 };
 
+const noEventsStyles = { pointerEvents: 'none' };
+
 export default class PointSeries extends React.PureComponent {
   render() {
     const {
       data,
-      label,
+      disableMouseEvents,
       labelComponent,
       fill,
       fillOpacity,
@@ -84,7 +87,7 @@ export default class PointSeries extends React.PureComponent {
     if (!xScale || !yScale) return null;
     const labels = [];
     return (
-      <Group key={label}>
+      <Group style={disableMouseEvents ? noEventsStyles : null}>
         {data.map((d, i) => {
           const xVal = d.x;
           const yVal = d.y;
@@ -92,7 +95,7 @@ export default class PointSeries extends React.PureComponent {
           const x = xScale(xVal);
           const y = yScale(yVal);
           const computedFill = d.fill || callOrValue(fill, d, i);
-          const key = `${label}-${d.x}-${i}`;
+          const key = `${d.x}-${i}`;
           if (defined && d.label) {
             labels.push({ x, y, label: d.label, key: `${key}-label` });
           }
@@ -111,9 +114,9 @@ export default class PointSeries extends React.PureComponent {
             stroke: computedStroke,
             strokeWidth: computedStrokeWidth,
             strokeDasharray: computedStrokeDasharray,
-            onClick,
-            onMouseMove,
-            onMouseLeave,
+            onClick: disableMouseEvents ? null : onClick,
+            onMouseMove: disableMouseEvents ? null : onMouseMove,
+            onMouseLeave: disableMouseEvents ? null : onMouseLeave,
             data,
             datum: d,
           };
