@@ -1,6 +1,6 @@
 {
   "name": "@data-ui/shared",
-  "version": "0.0.47",
+  "version": "0.0.48",
   "description": "Shared @data-ui components used across multiple packages",
   "main": "build/index.js",
   "files": [
@@ -47,7 +47,7 @@
     "react": "^15.0.0-0 || ^16.0.0-0"
   },
   "dependencies": {
-    "@data-ui/theme": "0.0.47",
+    "@data-ui/theme": "0.0.48",
     "@vx/event": "0.0.143",
     "@vx/group": "0.0.143",
     "@vx/shape": "0.0.145",
