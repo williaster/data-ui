@@ -95,7 +95,7 @@ class XYChart extends React.PureComponent {
 
     React.Children.forEach(children, (Child) => { // Child-specific scales or adjustments here
       const name = componentName(Child);
-      if (isBarSeries(name) && xScale.type !== 'band') {
+      if (isBarSeries(name) && xScaleObject.type !== 'band') {
         const dummyBand = getScaleForAccessor({
           allData,
           minAccessor: xString,
@@ -104,7 +104,7 @@ class XYChart extends React.PureComponent {
           rangeRound: [0, innerWidth],
           paddingOuter: 1,
         });
-
+        
         const offset = dummyBand.bandwidth() / 2;
         xScale.range([offset, innerWidth - offset]);
         xScale.barWidth = dummyBand.bandwidth();

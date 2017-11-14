@@ -45,10 +45,10 @@ const defaultProps = {
   onMouseLeave: null,
 };
 
-const x = d => d.x;
-const getY = d => d.y;
-const getY0 = d => d.y0;
-const getY1 = d => d.y1;
+const x = d => d && d.x;
+const getY = d => d && d.y;
+const getY0 = d => d && d.y0;
+const getY1 = d => d && d.y1;
 const definedClosed = d => isDefined(getY(d));
 const definedOpen = d => isDefined(getY0(d)) && isDefined(getY1(d));
 const noEventsStyles = { pointerEvents: 'none' };

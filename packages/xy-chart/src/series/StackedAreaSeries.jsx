@@ -42,9 +42,9 @@ const defaultProps = {
   onMouseLeave: null,
 };
 
-const x = d => d.x;
-const y0 = d => d[0];
-const y1 = d => d[1];
+const x = d => d && d.x;
+const y0 = d => d && d[0];
+const y1 = d => d && d[1];
 const defined = d => isDefined(d[0]) && isDefined(d[1]);
 const noEventsStyles = { pointerEvents: 'none' };
 
