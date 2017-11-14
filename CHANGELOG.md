@@ -1,6 +1,39 @@
 # Changelog
 
+- [v0.0.48](#v0048)
 - [v0.0.47](#v0047)
+
+## v0.0.48
+💔 Breaking Changes
+- [xy-chart] use `seriesKey` instead of `key` in `onMouseMove` event signature (relevant to `StackedAreaSeries`, `StackedBarSeries`, and `GroupedBarSeries` only) #73 
+
+🏆 Enhancements
+- [xy-chart] add `<StackedAreaSeries />` and example #74 
+- [xy-chart] add `onClick` support to all series and voronoi #74
+- [xy-chart] remove previously-required `label` prop from series #74
+- [shared][tooltip] don't render a tooltip if the output of renderTooltip is `falsy` #73
+- [demo] add `<LinkedXYCharts />` example with custom click handling and mouse overs #74
+- [demo] add `disableMouseEvents` prop to all series #74
+- removes enumeration of `@data-ui` packages in `readme`s #74
+
+🐛 Bug Fix
+- fix an offset bug for `BarSeries` with band scales #74
+
+🏠 Internal
+- [shared] bump `@vx/tooltip` to `0.0.147` for [smarter tooltips](https://github.com/hshoff/vx/blob/master/CHANGELOG.md#v00147) #74
+
+```
+ - @data-ui/data-table: 0.0.25 => 0.0.48
+ - @data-ui/theme: 0.0.47 => 0.0.48
+ - @data-ui/demo: 0.0.47 => 0.0.48 (private)
+ - @data-ui/event-flow: 0.0.47 => 0.0.48
+ - @data-ui/histogram: 0.0.47 => 0.0.48
+ - @data-ui/network: 0.0.47 => 0.0.48
+ - @data-ui/radial-chart: 0.0.47 => 0.0.48
+ - @data-ui/shared: 0.0.47 => 0.0.48
+ - @data-ui/sparkline: 0.0.47 => 0.0.48
+ - @data-ui/xy-chart: 0.0.47 => 0.0.48
+```
 
 ## v0.0.47
 
