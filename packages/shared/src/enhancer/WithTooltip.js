@@ -59,8 +59,8 @@ class WithTooltip extends React.PureComponent {
     }
 
     this.props.showTooltip({
-      tooltipLeft: coords.x + 10,
-      tooltipTop: coords.y + 10,
+      tooltipLeft: coords.x,
+      tooltipTop: coords.y,
       tooltipData: {
         event,
         datum,

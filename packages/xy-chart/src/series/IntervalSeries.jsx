@@ -10,43 +10,50 @@ import { callOrValue } from '../utils/chartUtils';
 
 const propTypes = {
   data: intervalSeriesDataShape.isRequired,
-  label: PropTypes.string.isRequired,
-
+  disableMouseEvents: PropTypes.bool,
   // overridden by data props
   fill: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+  fillOpacity: PropTypes.number,
   stroke: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   strokeWidth: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
+  onClick: PropTypes.func,
+  onMouseMove: PropTypes.func,
+  onMouseLeave: PropTypes.func,
 
   // likely be injected by the parent xychart
   xScale: PropTypes.func,
   yScale: PropTypes.func,
-  onMouseMove: PropTypes.func,
-  onMouseLeave: PropTypes.func,
 };
 
 const defaultProps = {
+  disableMouseEvents: false,
   fill: color.default,
+  fillOpacity: 1,
   stroke: 'none',
   strokeWidth: 1,
   xScale: null,
   yScale: null,
-  onMouseMove: undefined,
-  onMouseLeave: undefined,
+  onClick: null,
+  onMouseMove: null,
+  onMouseLeave: null,
 };
 
 const x0 = d => d.x0;
 const x1 = d => d.x1;
+const noEventsStyles = { pointerEvents: 'none' };
 
 export default class IntervalSeries extends React.PureComponent {
   render() {
     const {
       data,
+      disableMouseEvents,
       fill,
-      label,
+      fillOpacity,
       stroke,
       strokeWidth,
       xScale,
       yScale,
+      onClick,
       onMouseMove,
       onMouseLeave,
     } = this.props;
@@ -54,25 +61,29 @@ export default class IntervalSeries extends React.PureComponent {
 
     const barHeight = (yScale.range() || [0])[0];
     return (
-      <Group key={label}>
+      <Group style={disableMouseEvents ? noEventsStyles : null}>
         {data.map((d, i) => {
           const x = xScale(x0(d));
           const barWidth = xScale(x1(d)) - x;
           const intervalFill = d.fill || callOrValue(fill, d, i);
           return (
             <Bar
-              key={`interval-${label}-${x}`}
+              key={`interval-${x}`}
               x={x}
               y={0}
               width={barWidth}
               height={barHeight}
               fill={intervalFill}
+              fillOpacity={fillOpacity}
               stroke={d.stroke || callOrValue(stroke, d, i)}
               strokeWidth={d.strokeWidth || callOrValue(strokeWidth, d, i)}
-              onMouseMove={onMouseMove && (() => (event) => {
-                onMouseMove({ event, datum: d, data, color: intervalFill });
+              onClick={disableMouseEvents ? null : onClick && (() => (event) => {
+                onClick({ event, datum: d, index: i, data, color: intervalFill });
               })}
-              onMouseLeave={onMouseLeave && (() => onMouseLeave)}
+              onMouseMove={disableMouseEvents ? null : onMouseMove && (() => (event) => {
+                onMouseMove({ event, datum: d, index: i, data, color: intervalFill });
+              })}
+              onMouseLeave={disableMouseEvents ? null : onMouseLeave && (() => onMouseLeave)}
             />
           );
         })}

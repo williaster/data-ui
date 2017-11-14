@@ -71,14 +71,20 @@ describe('<GroupedBarSeries />', () => {
     });
   });
 
-  test('it should call onMouseMove({ datum, data, event, seriesKey, color }) and onMouseLeave() on trigger', () => {
+  test('it should call onMouseMove({ datum, data, event, seriesKey, color }), onMouseLeave(), and onClick({ datum, data, event, seriesKey, color }) on trigger', () => {
     const fills = ['magenta', 'maplesyrup', 'banana'];
     const stackKeys = ['a', 'b', 'c'];
     const onMouseMove = jest.fn();
     const onMouseLeave = jest.fn();
+    const onClick = jest.fn();
 
     const wrapper = mount(
-      <XYChart {...mockProps} onMouseMove={onMouseMove} onMouseLeave={onMouseLeave}>
+      <XYChart
+        {...mockProps}
+        onMouseMove={onMouseMove}
+        onMouseLeave={onMouseLeave}
+        onClick={onClick}
+      >
         <StackedBarSeries
           stackKeys={stackKeys}
           stackFills={fills}
@@ -88,10 +94,10 @@ describe('<GroupedBarSeries />', () => {
     );
 
     const bar = wrapper.find(Bar).first();
-    bar.simulate('mousemove');
 
+    bar.simulate('mousemove');
     expect(onMouseMove).toHaveBeenCalledTimes(1);
-    const args = onMouseMove.mock.calls[0][0];
+    let args = onMouseMove.mock.calls[0][0];
     expect(args.data).toEqual(mockData);
     expect(args.datum).toBe(mockData[0]);
     expect(args.event).toBeDefined();
@@ -100,5 +106,49 @@ describe('<GroupedBarSeries />', () => {
 
     bar.simulate('mouseleave');
     expect(onMouseLeave).toHaveBeenCalledTimes(1);
+
+    bar.simulate('click');
+    expect(onClick).toHaveBeenCalledTimes(1);
+    args = onClick.mock.calls[0][0];
+    expect(args.data).toEqual(mockData);
+    expect(args.datum).toBe(mockData[0]);
+    expect(args.event).toBeDefined();
+    expect(stackKeys.includes(args.seriesKey)).toBe(true);
+    expect(fills.includes(args.color)).toBe(true);
+  });
+
+  test('it should not trigger onMouseMove, onMouseLeave, or onClick if disableMouseEvents is true', () => {
+    const fills = ['magenta', 'maplesyrup', 'banana'];
+    const stackKeys = ['a', 'b', 'c'];
+    const onMouseMove = jest.fn();
+    const onMouseLeave = jest.fn();
+    const onClick = jest.fn();
+
+    const wrapper = mount(
+      <XYChart
+        {...mockProps}
+        onMouseMove={onMouseMove}
+        onMouseLeave={onMouseLeave}
+        onClick={onClick}
+      >
+        <StackedBarSeries
+          stackKeys={stackKeys}
+          stackFills={fills}
+          data={mockData}
+          disableMouseEvents
+        />
+      </XYChart>,
+    );
+
+    const bar = wrapper.find(Bar).first();
+
+    bar.simulate('mousemove');
+    expect(onMouseMove).toHaveBeenCalledTimes(0);
+
+    bar.simulate('mouseleave');
+    expect(onMouseLeave).toHaveBeenCalledTimes(0);
+
+    bar.simulate('click');
+    expect(onClick).toHaveBeenCalledTimes(0);
   });
 });

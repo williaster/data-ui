@@ -7,7 +7,6 @@ import WithTooltip, { withTooltipPropTypes } from '@data-ui/shared/build/enhance
 
 import Voronoi from './Voronoi';
 
-
 import {
   collectDataFromChildSeries,
   componentName,
@@ -61,29 +60,22 @@ const defaultProps = {
   showXGrid: false,
   showYGrid: false,
   theme: {},
+  // @TODO tooltipProps
+  //  voronoi
   useVoronoi: false,
   showVoronoi: false,
 };
 
 // accessors
 const getX = d => d.x;
-//   if (isDefined(d.x)) return d.x;
-//   else if (isDefined(d.x0 && d.x1)) return (d.x0 + d.x1) / 2;
-//   return 0;
-// };
 const getY = d => d.y;
-//   if (isDefined(d.y)) return d.y;
-//   else if (isDefined(d.y0 && d.y1)) return (d.y0 + d.y1) / 2;
-//   return 0;
-// };
-
 const xString = d => getX(d).toString();
 
 class XYChart extends React.PureComponent {
   static collectScalesFromProps(props) {
     const { xScale: xScaleObject, yScale: yScaleObject, children } = props;
     const { innerWidth, innerHeight } = XYChart.getDimmensions(props);
-    const { allData, dataBySeriesType } = collectDataFromChildSeries(children);
+    const { allData } = collectDataFromChildSeries(children);
 
     const xScale = getScaleForAccessor({
       allData,
@@ -103,9 +95,9 @@ class XYChart extends React.PureComponent {
 
     React.Children.forEach(children, (Child) => { // Child-specific scales or adjustments here
       const name = componentName(Child);
-      if (isBarSeries(name) && xScale.type !== 'band') {
+      if (isBarSeries(name) && xScaleObject.type !== 'band') {
         const dummyBand = getScaleForAccessor({
-          allData: dataBySeriesType[name],
+          allData,
           minAccessor: xString,
           maxAccessor: xString,
           type: 'band',
@@ -124,7 +116,6 @@ class XYChart extends React.PureComponent {
     });
 
     return {
-      allData,
       xScale,
       yScale,
     };
@@ -142,15 +133,24 @@ class XYChart extends React.PureComponent {
 
   static getStateFromProps(props) {
     const { margin, innerWidth, innerHeight } = XYChart.getDimmensions(props);
-    const { allData, xScale, yScale } = XYChart.collectScalesFromProps(props);
+    const { xScale, yScale } = XYChart.collectScalesFromProps(props);
+
+    const voronoiData = React.Children.toArray(props.children).reduce((result, Child) => {
+      if (isSeries(componentName(Child)) && !Child.props.disableMouseEvents) {
+        return result.concat(
+          Child.props.data.filter(d => isDefined(getX(d)) && isDefined(getY(d))),
+        );
+      }
+      return result;
+    }, []);
 
     return {
-      allData,
       innerHeight,
       innerWidth,
       margin,
       xScale,
       yScale,
+      voronoiData,
       voronoiX: d => xScale(getX(d)),
       voronoiY: d => yScale(getY(d)),
     };
@@ -165,13 +165,13 @@ class XYChart extends React.PureComponent {
 
   componentWillReceiveProps(nextProps) {
     if ([ // recompute scales if any of the following change
-      'children',
       'height',
       'margin',
       'width',
       'xScale',
       'yScale',
     ].some(prop => this.props[prop] !== nextProps[prop])) {
+      // @TODO update only on children updates that require new scales
       this.setState(XYChart.getStateFromProps(nextProps));
     }
   }
@@ -202,6 +202,7 @@ class XYChart extends React.PureComponent {
       theme,
       height,
       width,
+      onClick,
       onMouseLeave,
       onMouseMove,
       tooltipData,
@@ -210,10 +211,10 @@ class XYChart extends React.PureComponent {
     } = this.props;
 
     const {
-      allData,
       innerWidth,
       innerHeight,
       margin,
+      voronoiData,
       voronoiX,
       voronoiY,
       xScale,
@@ -222,7 +223,7 @@ class XYChart extends React.PureComponent {
 
     const { numXTicks, numYTicks } = this.getNumTicks(innerWidth, innerHeight);
     const barWidth = xScale.barWidth || (xScale.bandwidth && xScale.bandwidth()) || 0;
-    let CrossHair; // ensure this is the top-most layer
+    const CrossHairs = []; // ensure these are the top-most layer
 
     return innerWidth > 0 && innerHeight > 0 && (
       <svg
@@ -259,16 +260,16 @@ class XYChart extends React.PureComponent {
                 tickStyles: { ...theme[`${styleKey}TickStyles`], ...Child.props.tickStyles },
               });
             } else if (isSeries(name)) {
-              const { onMouseLeave: childMouseLeave, onMouseMove: childMouseMove } = Child.props;
               return React.cloneElement(Child, {
                 xScale,
                 yScale,
                 barWidth,
-                onMouseLeave: typeof childMouseLeave !== 'undefined' ? childMouseLeave : onMouseLeave,
-                onMouseMove: typeof childMouseMove !== 'undefined' ? childMouseMove : onMouseMove,
+                onClick: Child.props.onClick || onClick,
+                onMouseLeave: Child.props.onMouseLeave || onMouseLeave,
+                onMouseMove: Child.props.onMouseMove || onMouseMove,
               });
             } else if (isCrossHair(name)) {
-              CrossHair = Child;
+              CrossHairs.push(Child);
               return null;
             } else if (isReferenceLine(name)) {
               return React.cloneElement(Child, { xScale, yScale });
@@ -278,18 +279,20 @@ class XYChart extends React.PureComponent {
 
           {useVoronoi &&
             <Voronoi
-              data={allData.filter(d => isDefined(d.x) && isDefined(d.y))}
+              data={voronoiData}
               x={voronoiX}
               y={voronoiY}
               width={innerWidth}
               height={innerHeight}
+              onClick={onClick}
               onMouseMove={onMouseMove}
               onMouseLeave={onMouseLeave}
               showVoronoi={showVoronoi}
             />}
 
-          {CrossHair && tooltipData &&
+          {tooltipData && CrossHairs.length > 0 && CrossHairs.map((CrossHair, i) => (
             React.cloneElement(CrossHair, {
+              key: `crosshair-${i}`, // eslint-disable-line react/no-array-index-key
               left: (
                 xScale(getX(tooltipData.datum) || 0)
                 + (xScale.bandwidth ? xScale.bandwidth() / 2 : 0)
@@ -297,7 +300,8 @@ class XYChart extends React.PureComponent {
               top: yScale(getY(tooltipData.datum) || 0),
               xScale,
               yScale,
-            })}
+            })
+          ))}
         </Group>
       </svg>
     );

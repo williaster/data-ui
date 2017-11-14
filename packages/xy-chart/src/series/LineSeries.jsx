@@ -12,23 +12,24 @@ import { interpolationShape, lineSeriesDataShape } from '../utils/propShapes';
 
 const propTypes = {
   data: lineSeriesDataShape.isRequired,
+  disableMouseEvents: PropTypes.bool,
   interpolation: interpolationShape,
-  label: PropTypes.string.isRequired,
   showPoints: PropTypes.bool,
-
   stroke: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   strokeDasharray: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   strokeWidth: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
   strokeLinecap: PropTypes.oneOf(['butt', 'square', 'round', 'inherit']),
+  onClick: PropTypes.func,
+  onMouseMove: PropTypes.func,
+  onMouseLeave: PropTypes.func,
 
   // these will likely be injected by the parent chart
   xScale: PropTypes.func,
   yScale: PropTypes.func,
-  onMouseMove: PropTypes.func,
-  onMouseLeave: PropTypes.func,
 };
 
 const defaultProps = {
+  disableMouseEvents: false,
   interpolation: 'monotoneX',
   showPoints: false,
   stroke: color.default,
@@ -37,20 +38,22 @@ const defaultProps = {
   strokeLinecap: 'round',
   xScale: null,
   yScale: null,
-  onMouseMove: undefined,
-  onMouseLeave: undefined,
+  onClick: null,
+  onMouseMove: null,
+  onMouseLeave: null,
 };
 
 const x = d => d.x;
 const y = d => d.y;
 const defined = d => isDefined(y(d));
+const noEventsStyles = { pointerEvents: 'none' };
 
 export default class LineSeries extends React.PureComponent {
   render() {
     const {
       data,
+      disableMouseEvents,
       interpolation,
-      label,
       showPoints,
       stroke,
       strokeDasharray,
@@ -58,6 +61,7 @@ export default class LineSeries extends React.PureComponent {
       strokeLinecap,
       xScale,
       yScale,
+      onClick,
       onMouseMove,
       onMouseLeave,
     } = this.props;
@@ -66,7 +70,7 @@ export default class LineSeries extends React.PureComponent {
     const curve = interpolatorLookup[interpolation] || interpolatorLookup.monotoneX;
     return (
       <LinePath
-        key={label}
+        style={disableMouseEvents ? noEventsStyles : null}
         data={data}
         xScale={xScale}
         yScale={yScale}
@@ -78,15 +82,19 @@ export default class LineSeries extends React.PureComponent {
         strokeLinecap={strokeLinecap}
         curve={curve}
         defined={defined}
-        onMouseMove={onMouseMove && (() => (event) => {
+        onClick={disableMouseEvents ? null : onClick && (() => (event) => {
+          const d = findClosestDatum({ data, getX: x, event, xScale });
+          onClick({ event, data, datum: d, color: strokeValue });
+        })}
+        onMouseMove={disableMouseEvents ? null : onMouseMove && (() => (event) => {
           const d = findClosestDatum({ data, getX: x, event, xScale });
           onMouseMove({ event, data, datum: d, color: strokeValue });
         })}
-        onMouseLeave={onMouseLeave && (() => onMouseLeave)}
+        onMouseLeave={disableMouseEvents ? null : onMouseLeave && (() => onMouseLeave)}
         glyph={showPoints && ((d, i) => (
           isDefined(x(d)) && isDefined(y(d)) &&
             <GlyphDot
-              key={`${label}-${i}-${x(d)}`}
+              key={`${i}-${x(d)}`}
               cx={xScale(x(d))}
               cy={yScale(y(d))}
               r={4}

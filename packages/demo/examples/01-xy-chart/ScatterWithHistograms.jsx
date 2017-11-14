@@ -91,7 +91,6 @@ class ScatterWithHistogram extends React.PureComponent {
           {datasets.map((dataset, i) => (
             <PointSeries
               key={i}
-              label={String(i)}
               data={dataset}
               fill={datasetColors[i]}
               opacity={0.7}

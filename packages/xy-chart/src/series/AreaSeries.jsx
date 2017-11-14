@@ -13,22 +13,24 @@ import { areaSeriesDataShape, interpolationShape } from '../utils/propShapes';
 
 const propTypes = {
   data: areaSeriesDataShape.isRequired,
+  disableMouseEvents: PropTypes.bool,
   fill: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   fillOpacity: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
   interpolation: interpolationShape,
-  label: PropTypes.string.isRequired,
   stroke: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   strokeDasharray: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   strokeWidth: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
   strokeLinecap: PropTypes.oneOf(['butt', 'square', 'round', 'inherit']),
+  onClick: PropTypes.func,
+  onMouseMove: PropTypes.func,
+  onMouseLeave: PropTypes.func,
   // these will likely be injected by the parent chart
   xScale: PropTypes.func,
   yScale: PropTypes.func,
-  onMouseMove: PropTypes.func,
-  onMouseLeave: PropTypes.func,
 };
 
 const defaultProps = {
+  disableMouseEvents: false,
   interpolation: 'monotoneX',
   stroke: color.default,
   strokeWidth: 3,
@@ -38,21 +40,24 @@ const defaultProps = {
   fillOpacity: 0.3,
   xScale: null,
   yScale: null,
-  onMouseMove: undefined,
-  onMouseLeave: undefined,
+  onClick: null,
+  onMouseMove: null,
+  onMouseLeave: null,
 };
 
-const x = d => d.x;
-const getY = d => d.y;
-const getY0 = d => d.y0;
-const getY1 = d => d.y1;
+const x = d => d && d.x;
+const getY = d => d && d.y;
+const getY0 = d => d && d.y0;
+const getY1 = d => d && d.y1;
 const definedClosed = d => isDefined(getY(d));
 const definedOpen = d => isDefined(getY0(d)) && isDefined(getY1(d));
+const noEventsStyles = { pointerEvents: 'none' };
 
 export default class AreaSeries extends React.PureComponent {
   render() {
     const {
       data,
+      disableMouseEvents,
       xScale,
       yScale,
       stroke,
@@ -62,7 +67,7 @@ export default class AreaSeries extends React.PureComponent {
       fill,
       fillOpacity,
       interpolation,
-      label,
+      onClick,
       onMouseMove,
       onMouseLeave,
     } = this.props;
@@ -80,12 +85,16 @@ export default class AreaSeries extends React.PureComponent {
     const curve = interpolatorLookup[interpolation] || interpolatorLookup.monotoneX;
     return (
       <Group
-        key={label}
-        onMouseMove={onMouseMove && ((event) => {
+        style={disableMouseEvents ? noEventsStyles : null}
+        onClick={disableMouseEvents ? null : onClick && ((event) => {
+          const d = findClosestDatum({ data, getX: x, event, xScale });
+          onClick({ event, data, datum: d, color: fillValue });
+        })}
+        onMouseMove={disableMouseEvents ? null : onMouseMove && ((event) => {
           const d = findClosestDatum({ data, getX: x, event, xScale });
           onMouseMove({ event, data, datum: d, color: fillValue });
         })}
-        onMouseLeave={onMouseLeave}
+        onMouseLeave={disableMouseEvents ? null : onMouseLeave}
       >
         <Area
           data={data}

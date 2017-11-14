@@ -64,6 +64,7 @@ width | PropTypes.number.isRequired | - | Required width of the chart (including
 height | PropTypes.number.isRequired | - | Required height of the chart (including margin). Check out `withParentSize` in the examples for responsive charts.
 margin | PropTypes.shape({ top: PropTypes.number, right: PropTypes.number, bottom: PropTypes.number, left: PropTypes.number }) | { top: 64, right: 64, bottom: 64, left: 64 } | chart margin, leave room for axes and labels! note 0 may clip LineSeries and PointSeries.
 renderTooltip | PropTypes.func | - | `({ data, datum, event, color }) => node`, should return the inner tooltip contents on trigger.
+onClick | PropTypes.func | - | `func({ data, datum, event, color [, seriesKey] })`, passed to all child series (or voronoi)
 onMouseMove | PropTypes.func | - | `func({ data, datum, event, color })`, passed to all child series (or voronoi). only needed if you are rolling your own tooltips (see below)
 onMouseLeave | PropTypes.func | - | `func()`, passed to all child series (or voronoi). only needed if you are rolling your own tooltips (see below)
 xScale | scaleShape.isRequired | - | scale config, see below.
@@ -165,6 +166,7 @@ Series | supported x scale type | supported y scale types | data shape | voronoi
 `<BarSeries/>` | time, linear, band | linear | `{ x, y [, fill, stroke] }` | no
 `<LineSeries/>` | time, linear | linear | `{ x, y [, stroke] }` | yes
 `<PointSeries/>` | time, linear | time, linear | `{ x, y [size, fill, stroke, label] }` | yes
+`<AreaSeries/>` | time, linear | linear | `{ x, y [, [stackKey(s)]] }`* | no
 `<StackedBarSeries/>` | band | linear | `{ x, y }` (colors controlled with stackFills & stackKeys) | no
 `<GroupedBarSeries/>` | band | linear | `{ x, y }` (colors controlled with groupFills & groupKeys) | no
 `<CirclePackSeries/>` | time, linear | y is computed | `{ x [, size] }` | no
@@ -174,7 +176,7 @@ Series | supported x scale type | supported y scale types | data shape | voronoi
  - defined `y0` and `y1` values or
  - a single `y` value, in which case its lower bound is set to 0 (a "closed" area series)
 
-It is worth noting that voronoi overlays require a defined `y` attribute, so use of voronoi with only `y0` and `y1` values will not work.
+It is worth noting that voronoi overlays require a defined `y` attribute, so use of voronoi with only `y0` and `y1` values will not work.  
 
 #### CirclePackSeries
 
@@ -187,14 +189,19 @@ This series implements the Circle packing algorithm described by <a href="https:
 Note that only `x` values are needed for `CirclePackSeries`, `y` values are computed based on `x` and `size` (if specified). Similar to `PointSeries`, `size`, `fill`, and `fillOpacity` may be set on datum themseleves or passed as props to the `CirclePackSeries` component.
 
 
-### Tooltips
-Tooltips are supported for all series types, but how you configure them will likely depend on which series combinations you're using and how much customization you need. The _easiest_ way to use tooltips out of the box is by passing a `renderTooltip` function to `<XYChart />` as shown in the above example. This function takes an object with the shape `{ event, datum, data, color [, seriesKey] }` as input and should return the inner contents of the tooltip (not the tooltip container!) as shown above. If this function returns a `falsy` value, a tooltip will not be rendered.
+### Mouse events
+
+#### Overview
+`XYChart` and all series support `onMouseMove({ data, datum, event, color [, seriesKey] })`, `onMouseLeave()`, and `onClick({ data, datum, event, color [, seriesKey] })` event handlers. `XYChart` will pass along event handlers to its child series unless a series has `disableMouseEvents` set to `true`, and any event handlers defined at the series level will override those defined at the `XYChart` level.
+
+#### Tooltips
+Tooltips are supported for all series types, but how you configure them will likely depend on which series combinations you're using and how much customization you need. The _easiest_ way to use tooltips out of the box is by passing a `renderTooltip` function to `<XYChart />` as shown in the above example. This function takes an object with the shape `{ data, datum, event, color [, seriesKey] }` as input and should return the inner contents of the tooltip (not the tooltip container!) as shown above.
 
 Under the covers this will wrap the `<XYChart />` component in the exported `<WithTooltip />` HOC, which wraps the `<svg />` in a `<div />` and handles the positioning and rendering of an HTML-based tooltip with the contents returned by `renderTooltip()`. This tooltip is aware of the bounds of its container and should position itself "smartly".
 
 If you'd like more customizability over tooltip rendering you can do either of the following:
 
-1) Roll your own tooltip positioning logic and pass `onMouseMove` and `onMouseLeave` functions to `XYChart`. These functions are passed to series-type children and are called with the signature `onMouseMove({ data, datum, event, color })` and `onMouseLeave()` upon appropriate trigger. Note that you must also pass `tooltipData` to `XYChart` if you are using the `CrossHair` component, which has an expected shape of `{ datum }` containing the datum to emphasize.
+1) Roll your own tooltip positioning logic and pass `onMouseMove` and `onMouseLeave` functions to `XYChart`. These functions are passed to series-type children and are called with the signature `onMouseMove({ data, datum, event, color [, seriesKey] })` and `onMouseLeave()` upon appropriate trigger. Note that you must also pass `tooltipData` to `XYChart` if you are using the `CrossHair` component, which has an expected shape of `{ datum }` containing the datum to emphasize.
 
 2) Wrap `<XYChart />` with `<WithTooltip />` yourself, which accepts props for additional customization:
 
@@ -245,20 +252,15 @@ More on the way.
 
 ### Other
 - <a href="https://github.com/hshoff/vx/blob/master/packages/vx-pattern/src/patterns/Lines.js" target="_blank">`<PatternLines />`</a>
+- <a href="https://github.com/hshoff/vx/blob/master/packages/vx-pattern/src/patterns/Circles.js" target="_blank">`<PatternCircles />`</a>
+- <a href="https://github.com/hshoff/vx/blob/master/packages/vx-pattern/src/patterns/Waves.js" target="_blank">`<PatternWaves />`</a>
+- <a href="https://github.com/hshoff/vx/blob/master/packages/vx-pattern/src/patterns/Hexagons.js" target="_blank">`<PatternHexagons />`</a>
 - <a href="https://github.com/hshoff/vx/blob/master/packages/vx-gradient/src/gradients/LinearGradient.js" target="_blank">`<LinearGradient />`</a>
 
-These <a href="https://github.com/hshoff/vx/blob/master/" target="_blank">vx</a> gradients and patterns are exported in `@data-ui/xy-chart` to customize the style of series. These components create `<def>` elements in the chart SVG with `id`s that you can reference in another component. See the storybook for example usage!
+These <a href="https://github.com/hshoff/vx/blob/master/" target="_blank">vx</a> gradients and patterns are exported in `@data-ui/xy-chart` to customize the style of series. These components create `<defs>` elements in the chart SVG with `id`s that you can reference in another component. See the storybook for example usage!
 
 ## Development
 ```
 npm install
 npm run dev # or 'build'
 ```
-
-## @data-ui packages
-- @data-ui/xy-chart
-- <a href="https://github.com/williaster/data-ui/tree/master/packages/histogram" target="_blank">@data-ui/histogram</a> [![Version](https://img.shields.io/npm/v/@data-ui/histogram.svg?style=flat)](https://img.shields.io/npm/v/@data-ui/histogram.svg?style=flat)
-- <a href="https://github.com/williaster/data-ui/tree/master/packages/radial-chart" target="_blank">@data-ui/radial-chart</a> [![Version](https://img.shields.io/npm/v/@data-ui/radial-chart.svg?style=flat)](https://img.shields.io/npm/v/@data-ui/radial-chart.svg?style=flat)
-- <a href="https://github.com/williaster/data-ui/tree/master/packages/data-table" target="_blank">@data-ui/data-table</a> [![Version](https://img.shields.io/npm/v/@data-ui/data-table.svg?style=flat)](https://img.shields.io/npm/v/@data-ui/data-table.svg?style=flat)
-- <a href="https://github.com/williaster/data-ui/tree/master/packages/data-ui-theme" target="_blank">@data-ui/theme</a> [![Version](https://img.shields.io/npm/v/@data-ui/theme.svg?style=flat)](https://img.shields.io/npm/v/@data-ui/theme.svg?style=flat)
-- <a href="https://github.com/williaster/data-ui/tree/master/packages/demo" target="_blank">@data-ui/demo</a>

@@ -18,6 +18,7 @@ export const pointComponentPropTypes = {
   stroke: PropTypes.string.isRequired,
   strokeWidth: PropTypes.number.isRequired,
   strokeDasharray: PropTypes.string,
+  onClick: PropTypes.func,
   onMouseMove: PropTypes.func,
   onMouseLeave: PropTypes.func,
   data: pointSeriesDataShape.isRequired,
@@ -26,9 +27,12 @@ export const pointComponentPropTypes = {
 
 export const propTypes = {
   data: pointSeriesDataShape.isRequired,
-  label: PropTypes.string.isRequired,
+  disableMouseEvents: PropTypes.bool,
   labelComponent: PropTypes.element,
   pointComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
+  onClick: PropTypes.func,
+  onMouseMove: PropTypes.func,
+  onMouseLeave: PropTypes.func,
   // attributes on data points will override these
   fill: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   fillOpacity: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
@@ -40,11 +44,10 @@ export const propTypes = {
   // likely be injected by the parent chart
   xScale: PropTypes.func,
   yScale: PropTypes.func,
-  onMouseMove: PropTypes.func,
-  onMouseLeave: PropTypes.func,
 };
 
 export const defaultProps = {
+  disableMouseEvents: false,
   labelComponent: <text {...chartTheme.labelStyles} />,
   pointComponent: GlyphDotComponent,
   size: 4,
@@ -55,15 +58,18 @@ export const defaultProps = {
   strokeWidth: 1,
   xScale: null,
   yScale: null,
-  onMouseMove: undefined,
-  onMouseLeave: undefined,
+  onClick: null,
+  onMouseMove: null,
+  onMouseLeave: null,
 };
+
+const noEventsStyles = { pointerEvents: 'none' };
 
 export default class PointSeries extends React.PureComponent {
   render() {
     const {
       data,
-      label,
+      disableMouseEvents,
       labelComponent,
       fill,
       fillOpacity,
@@ -73,6 +79,7 @@ export default class PointSeries extends React.PureComponent {
       strokeDasharray,
       xScale,
       yScale,
+      onClick,
       onMouseMove,
       onMouseLeave,
       pointComponent,
@@ -80,7 +87,7 @@ export default class PointSeries extends React.PureComponent {
     if (!xScale || !yScale) return null;
     const labels = [];
     return (
-      <Group key={label}>
+      <Group style={disableMouseEvents ? noEventsStyles : null}>
         {data.map((d, i) => {
           const xVal = d.x;
           const yVal = d.y;
@@ -88,7 +95,7 @@ export default class PointSeries extends React.PureComponent {
           const x = xScale(xVal);
           const y = yScale(yVal);
           const computedFill = d.fill || callOrValue(fill, d, i);
-          const key = `${label}-${d.x}-${i}`;
+          const key = `${d.x}-${i}`;
           if (defined && d.label) {
             labels.push({ x, y, label: d.label, key: `${key}-label` });
           }
@@ -107,13 +114,13 @@ export default class PointSeries extends React.PureComponent {
             stroke: computedStroke,
             strokeWidth: computedStrokeWidth,
             strokeDasharray: computedStrokeDasharray,
-            onMouseMove,
-            onMouseLeave,
+            onClick: disableMouseEvents ? null : onClick,
+            onMouseMove: disableMouseEvents ? null : onMouseMove,
+            onMouseLeave: disableMouseEvents ? null : onMouseLeave,
             data,
             datum: d,
           };
-          return defined &&
-            React.createElement(pointComponent, props);
+          return defined && React.createElement(pointComponent, props);
         })}
         {/* Put labels on top */}
         {labels.map(d => React.cloneElement(labelComponent, d, d.label))}

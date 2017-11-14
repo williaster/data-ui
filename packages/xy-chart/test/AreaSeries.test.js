@@ -26,14 +26,14 @@ describe('<AreaSeries />', () => {
   });
 
   test('it should not render without x- and y-scales', () => {
-    expect(shallow(<AreaSeries label="" data={[]} />).type()).toBeNull();
+    expect(shallow(<AreaSeries data={[]} />).type()).toBeNull();
   });
 
   test('it should render an Area for each AreaSeries', () => {
     const wrapper = shallow(
       <XYChart {...mockProps} >
-        <AreaSeries label="l" data={mockData.map(d => ({ ...d, x: d.date, y: d.num }))} />
-        <AreaSeries label="l2" data={mockData.map(d => ({ ...d, x: d.date, y: d.num }))} />
+        <AreaSeries data={mockData.map(d => ({ ...d, x: d.date, y: d.num }))} />
+        <AreaSeries data={mockData.map(d => ({ ...d, x: d.date, y: d.num }))} />
       </XYChart>,
     );
     expect(wrapper.find(AreaSeries).length).toBe(2);
@@ -44,7 +44,7 @@ describe('<AreaSeries />', () => {
     const data = mockData.map(d => ({ ...d, x: d.date, y: d.num }));
     const wrapperWithLine = shallow(
       <XYChart {...mockProps} >
-        <AreaSeries label="l" data={data} strokeWidth={3} />
+        <AreaSeries data={data} strokeWidth={3} />
       </XYChart>,
     );
     const areaSeriesWithLinePath = wrapperWithLine.find(AreaSeries).dive();
@@ -52,7 +52,7 @@ describe('<AreaSeries />', () => {
 
     const wrapperNoLine = shallow(
       <XYChart {...mockProps} >
-        <AreaSeries label="l" data={data} strokeWidth={0} />
+        <AreaSeries data={data} strokeWidth={0} />
       </XYChart>,
     );
 
@@ -60,26 +60,71 @@ describe('<AreaSeries />', () => {
     expect(areaSeriesNoLinePath.find(LinePath).length).toBe(0);
   });
 
-  test('it should call onMouseMove({ datum, data, event, color }) on trigger', () => {
+  test('it should call onMouseMove({ datum, data, event, color }), onMouseLeave(), and onClick({ datum, data, event, color }) on trigger', () => {
     const data = mockData.map(d => ({ ...d, x: d.date, y: d.num }));
     const onMouseMove = jest.fn();
     const onMouseLeave = jest.fn();
+    const onClick = jest.fn();
 
     const wrapper = mount(
-      <XYChart {...mockProps} onMouseMove={onMouseMove} onMouseLeave={onMouseLeave}>
-        <AreaSeries label="l" data={data} fill="hot-pink" />
+      <XYChart
+        {...mockProps}
+        onMouseMove={onMouseMove}
+        onMouseLeave={onMouseLeave}
+        onClick={onClick}
+      >
+        <AreaSeries data={data} fill="hot-pink" />
       </XYChart>,
     );
 
-    // event listener is on area's parent, but .parent().simulate() call throws in enzyme 3
-    const area = wrapper.find(Area);
-    area.simulate('mousemove');
+    const area = wrapper.find(AreaSeries);
 
+    area.simulate('mousemove');
     expect(onMouseMove).toHaveBeenCalledTimes(1);
-    const args = onMouseMove.mock.calls[0][0];
+    let args = onMouseMove.mock.calls[0][0];
     expect(args.data).toBe(data);
     expect(args.datum).toBeNull(); // @TODO depends on mocking out findClosestDatum
     expect(args.event).toBeDefined();
     expect(args.color).toBe('hot-pink');
+
+    area.simulate('mouseleave');
+    expect(onMouseLeave).toHaveBeenCalledTimes(1);
+
+    area.simulate('click');
+    expect(onClick).toHaveBeenCalledTimes(1);
+    args = onClick.mock.calls[0][0];
+    expect(args.data).toBe(data);
+    expect(args.datum).toBeNull(); // @TODO depends on mocking out findClosestDatum
+    expect(args.event).toBeDefined();
+    expect(args.color).toBe('hot-pink');
+  });
+
+  test('it should not trigger onMouseMove, onMouseLeave, or onClick if disableMouseEvents is true', () => {
+    const data = mockData.map(d => ({ ...d, x: d.date, y: d.num }));
+    const onMouseMove = jest.fn();
+    const onMouseLeave = jest.fn();
+    const onClick = jest.fn();
+
+    const wrapper = mount(
+      <XYChart
+        {...mockProps}
+        onMouseMove={onMouseMove}
+        onMouseLeave={onMouseLeave}
+        onClick={onClick}
+      >
+        <AreaSeries disableMouseEvents data={data} fill="hot-pink" />
+      </XYChart>,
+    );
+
+    const area = wrapper.find(AreaSeries);
+
+    area.simulate('mousemove');
+    expect(onMouseMove).toHaveBeenCalledTimes(0);
+
+    area.simulate('mouseleave');
+    expect(onMouseLeave).toHaveBeenCalledTimes(0);
+
+    area.simulate('click');
+    expect(onClick).toHaveBeenCalledTimes(0);
   });
 });

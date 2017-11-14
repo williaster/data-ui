@@ -1,5 +1,5 @@
 import { Children } from 'react';
-import { scaleLinear, scaleTime, scaleBand, scaleOrdinal } from '@vx/scale';
+import { scaleLinear, scaleTime, scaleUtc, scaleBand, scaleOrdinal } from '@vx/scale';
 import { extent } from 'd3-array';
 
 export function callOrValue(maybeFn, ...args) {
@@ -55,6 +55,7 @@ export function isStackedSeries(name) {
 
 export const scaleTypeToScale = {
   time: scaleTime,
+  timeUtc: scaleUtc,
   linear: scaleLinear,
   band: scaleBand,
   ordinal: scaleOrdinal,
@@ -92,7 +93,7 @@ export function getScaleForAccessor({
   if (type === 'band' || type === 'ordinal') {
     domain = allData.map(minAccessor);
   }
-  if (type === 'linear' || type === 'time') {
+  if (type === 'linear' || type === 'time' || type === 'timeUtc') {
     const [min, max] = extent([
       ...extent(allData, minAccessor),
       ...extent(allData, maxAccessor),

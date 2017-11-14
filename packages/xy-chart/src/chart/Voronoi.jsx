@@ -8,6 +8,7 @@ import VoronoiPolygon from '@vx/voronoi/build/components/VoronoiPolygon';
 
 const propTypes = {
   data: PropTypes.array.isRequired,
+  onClick: PropTypes.func,
   onMouseMove: PropTypes.func,
   onMouseLeave: PropTypes.func,
   showVoronoi: PropTypes.bool,
@@ -18,8 +19,9 @@ const propTypes = {
 };
 
 const defaultProps = {
-  onMouseMove: () => {},
-  onMouseLeave: () => {},
+  onClick: null,
+  onMouseMove: null,
+  onMouseLeave: null,
   showVoronoi: false,
 };
 
@@ -43,7 +45,7 @@ class Voronoi extends React.PureComponent {
   }
 
   render() {
-    const { onMouseLeave, onMouseMove, showVoronoi } = this.props;
+    const { onMouseLeave, onMouseMove, onClick, showVoronoi } = this.props;
     const { voronoi } = this.state;
     return (
       <Group>
@@ -54,10 +56,13 @@ class Voronoi extends React.PureComponent {
             fill="transparent"
             stroke={showVoronoi ? '#ddd' : 'transparent'}
             strokeWidth={1}
-            onMouseMove={() => (event) => {
+            onClick={onClick && (() => (event) => {
+              onClick({ event, datum: polygon.data });
+            })}
+            onMouseMove={onMouseMove && (() => (event) => {
               onMouseMove({ event, datum: polygon.data });
-            }}
-            onMouseLeave={() => onMouseLeave}
+            })}
+            onMouseLeave={onMouseLeave && (() => onMouseLeave)}
           />
         ))}
       </Group>

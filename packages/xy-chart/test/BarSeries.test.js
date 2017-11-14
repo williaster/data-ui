@@ -24,13 +24,13 @@ describe('<BarSeries />', () => {
   });
 
   test('it should not render without x- and y-scales', () => {
-    expect(shallow(<BarSeries label="" data={[]} />).type()).toBeNull();
+    expect(shallow(<BarSeries data={[]} />).type()).toBeNull();
   });
 
   test('it should render one bar per datum', () => {
     const wrapper = shallow(
       <XYChart {...mockProps} >
-        <BarSeries label="l" data={mockData.map(d => ({ ...d, x: d.date, y: d.num }))} />
+        <BarSeries data={mockData.map(d => ({ ...d, x: d.date, y: d.num }))} />
       </XYChart>,
     );
     const barSeries = wrapper.find(BarSeries).dive();
@@ -38,7 +38,7 @@ describe('<BarSeries />', () => {
 
     const noDataWrapper = shallow(
       <XYChart {...mockProps} >
-        <BarSeries label="l" data={[]} />
+        <BarSeries data={[]} />
       </XYChart>,
     );
     const noDataBarSeries = noDataWrapper.find(BarSeries).dive();
@@ -49,7 +49,6 @@ describe('<BarSeries />', () => {
     const wrapper = shallow(
       <XYChart {...mockProps} >
         <BarSeries
-          label="l"
           data={mockData.map((d, i) => ({
             x: d.date,
             y: i === 0 ? null : d.num,
@@ -64,7 +63,7 @@ describe('<BarSeries />', () => {
   test('it should work with time or band scales', () => {
     const timeWrapper = shallow(
       <XYChart {...mockProps} xScale={{ type: 'time' }}>
-        <BarSeries label="l" data={mockData.map(d => ({ ...d, x: d.date, y: d.num }))} />
+        <BarSeries data={mockData.map(d => ({ ...d, x: d.date, y: d.num }))} />
       </XYChart>,
     );
     expect(timeWrapper.find(BarSeries).length).toBe(1);
@@ -72,29 +71,35 @@ describe('<BarSeries />', () => {
 
     const bandWrapper = shallow(
       <XYChart {...mockProps} xScale={{ type: 'band' }}>
-        <BarSeries label="l" data={mockData.map(d => ({ ...d, x: d.cat, y: d.num }))} />
+        <BarSeries data={mockData.map(d => ({ ...d, x: d.cat, y: d.num }))} />
       </XYChart>,
     );
     expect(bandWrapper.find(BarSeries).length).toBe(1);
     expect(bandWrapper.find(BarSeries).dive().find(Bar).length).toBe(mockData.length);
   });
 
-  test('it should call onMouseMove({ datum, data, event, color }) and onMouseLeave() on trigger', () => {
+  test('it should call onMouseMove({ datum, data, event, color }), onMouseLeave(), and onClick({ datum, data, event, color }) on trigger', () => {
     const data = mockData.map(d => ({ ...d, x: d.date, y: d.num }));
     const onMouseMove = jest.fn();
     const onMouseLeave = jest.fn();
+    const onClick = jest.fn();
 
     const wrapper = mount(
-      <XYChart {...mockProps} onMouseMove={onMouseMove} onMouseLeave={onMouseLeave}>
-        <BarSeries fill="banana" label="l" data={data} />
+      <XYChart
+        {...mockProps}
+        onMouseMove={onMouseMove}
+        onMouseLeave={onMouseLeave}
+        onClick={onClick}
+      >
+        <BarSeries fill="banana" data={data} />
       </XYChart>,
     );
 
     const bar = wrapper.find(Bar).first();
-    bar.simulate('mousemove');
 
+    bar.simulate('mousemove');
     expect(onMouseMove).toHaveBeenCalledTimes(1);
-    const args = onMouseMove.mock.calls[0][0];
+    let args = onMouseMove.mock.calls[0][0];
     expect(args.data).toBe(data);
     expect(args.datum).toBe(data[0]);
     expect(args.event).toBeDefined();
@@ -102,5 +107,42 @@ describe('<BarSeries />', () => {
 
     bar.simulate('mouseleave');
     expect(onMouseLeave).toHaveBeenCalledTimes(1);
+
+    bar.simulate('click');
+    expect(onClick).toHaveBeenCalledTimes(1);
+    args = onClick.mock.calls[0][0];
+    expect(args.data).toBe(data);
+    expect(args.datum).toBe(data[0]);
+    expect(args.event).toBeDefined();
+    expect(args.color).toBe('banana');
+  });
+
+  test('it should not trigger onMouseMove, onMouseLeave, or onClick if disableMouseEvents is true', () => {
+    const data = mockData.map(d => ({ ...d, x: d.date, y: d.num }));
+    const onMouseMove = jest.fn();
+    const onMouseLeave = jest.fn();
+    const onClick = jest.fn();
+
+    const wrapper = mount(
+      <XYChart
+        {...mockProps}
+        onMouseMove={onMouseMove}
+        onMouseLeave={onMouseLeave}
+        onClick={onClick}
+      >
+        <BarSeries data={data} disableMouseEvents />
+      </XYChart>,
+    );
+
+    const bar = wrapper.find(Bar).first();
+
+    bar.simulate('mousemove');
+    expect(onMouseMove).toHaveBeenCalledTimes(0);
+
+    bar.simulate('mouseleave');
+    expect(onMouseLeave).toHaveBeenCalledTimes(0);
+
+    bar.simulate('click');
+    expect(onClick).toHaveBeenCalledTimes(0);
   });
 });
