@@ -18,6 +18,23 @@ export const scaleShape = PropTypes.shape({
   domain: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.number, PropTypes.string])),
 });
 
+export const boxPlotSeriesDataShape = PropTypes.arrayOf(
+  PropTypes.shape({
+    x: PropTypes.oneOfType([ // data with null x/y are not rendered
+      PropTypes.string,
+      PropTypes.number,
+      PropTypes.instanceOf(Date),
+      PropTypes.object, // eg a moment() instance
+    ]),
+    median: PropTypes.number.isRequired,
+    min: PropTypes.number.isRequired,
+    max: PropTypes.number.isRequired,
+    firstQuartile: PropTypes.number.isRequired,
+    thirdQuartile: PropTypes.number.isRequired,
+    outliers: PropTypes.array.isRequired,
+  }),
+);
+
 export const lineSeriesDataShape = PropTypes.arrayOf(
   PropTypes.shape({
     x: PropTypes.oneOfType([ // data with null x/y are not rendered

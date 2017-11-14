@@ -11,6 +11,8 @@ export { default as LineSeries } from './series/LineSeries';
 export { default as PointSeries, pointComponentPropTypes } from './series/PointSeries';
 export { default as StackedAreaSeries } from './series/StackedAreaSeries';
 export { default as StackedBarSeries } from './series/StackedBarSeries';
+export { default as BoxPlotSeries } from './series/BoxPlotSeries';
+export { default as ViolinPlotSeries } from './series/ViolinPlotSeries';
 
 export { default as HorizontalReferenceLine } from './annotation/HorizontalReferenceLine';
 export { default as CrossHair } from './chart/CrossHair';

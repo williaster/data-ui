@@ -32,7 +32,7 @@
     "@storybook/addon-options": "^3.1.6",
     "@storybook/react": "3.2.12",
     "@vx/legend": "0.0.140",
-    "@vx/mock-data": "0.0.136",
+    "@vx/mock-data": "0.0.147",
     "@vx/responsive": "0.0.140",
     "@vx/scale": "0.0.140",
     "aphrodite": "^1.2.0",
