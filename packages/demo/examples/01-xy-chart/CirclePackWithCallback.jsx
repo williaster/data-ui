@@ -48,7 +48,6 @@ export default class CirclePackWithCallback extends React.Component {
 
         <CirclePackSeries
           data={circlePackData.concat(circlePackData)}
-          label="Circle time pack"
           size={d => d.r}
           pointComponent={RectPointComponent}
           layoutCallback={this.resizeCallback}

@@ -83,9 +83,9 @@ class LinkedXYCharts extends React.Component {
     }));
   }
 
-  onMouseMove({ datum, key }) {
-    if (this.state.mousedOverDatum !== datum || this.state.mousedOverKey !== key) {
-      this.setState(() => ({ mousedOverDatum: datum, mousedOverKey: key }));
+  onMouseMove({ datum, seriesKey }) {
+    if (this.state.mousedOverDatum !== datum || this.state.mousedOverKey !== seriesKey) {
+      this.setState(() => ({ mousedOverDatum: datum, mousedOverKey: seriesKey }));
     }
   }
 
@@ -172,10 +172,10 @@ class LinkedXYCharts extends React.Component {
           <XAxis tickFormat={formatDate} />
         </XYChart>
 
-        {stackKeys.map((stackKey, stackIndex) => (
+        {stackKeys.map((seriesKey, stackIndex) => (
           <XYChart
-            key={stackKey}
-            ariaLabel={stackKey}
+            key={seriesKey}
+            ariaLabel={seriesKey}
             {...areaChartProps}
             width={width}
             height={height}
@@ -184,18 +184,16 @@ class LinkedXYCharts extends React.Component {
           >
             <XAxis tickFormat={formatDate} tickValues={tickValues} />
             <AreaSeries
-              label={stackKey}
-              data={stackedData.map(d => ({ ...d, y: d[stackKey] }))}
+              data={stackedData.map(d => ({ ...d, y: d[seriesKey] }))}
               fill={stackFills[stackIndex]}
               fillOpacity={0.9}
               strokeWidth={1}
               stroke={stackFills[stackIndex]}
-              onMouseMove={({ datum }) => { this.onMouseMove({ datum, key: stackKey }); }}
+              onMouseMove={({ datum }) => { this.onMouseMove({ datum, seriesKey }); }}
               onMouseLeave={this.onMouseLeave}
             />
             {intervalData &&
               <IntervalSeries
-                label={stackKey}
                 fill={`url(#${PATTERN_ID})`}
                 opacity={0.3}
                 data={intervalData}
@@ -204,7 +202,7 @@ class LinkedXYCharts extends React.Component {
               <CrossHair
                 fullHeight
                 showHorizontalLine={false}
-                showCircle={stackKey === mousedOverKey}
+                showCircle={seriesKey === mousedOverKey}
                 circleFill={stackFills[stackIndex]}
               />}
           </XYChart>

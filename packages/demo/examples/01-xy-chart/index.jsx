@@ -81,7 +81,6 @@ export default {
               ...d,
               fill: `url(#${i === 2 ? 'lines' : 'gradient'})`,
             }))}
-            label="Apple Stock"
             fill="url(#aqua_lightaqua_gradient)"
           />
         </ResponsiveXYChart>
@@ -100,7 +99,7 @@ export default {
             {useVoronoi => (
               <WithToggle id="line_show_voronoi_toggle" label="Show voronoi" initialChecked>
                 {showVoronoi => (
-                  <WithToggle id="line_m_events_toggle" label="Disable mouse events" initialChecked>
+                  <WithToggle id="line_m_events_toggle" label="Disable mouse events">
                     {disableMouseEvents => (
                       <ResponsiveXYChart
                         ariaLabel="Required label"
@@ -112,13 +111,11 @@ export default {
                         <YAxis label="Price ($)" numTicks={4} />
                         <LineSeries
                           data={timeSeriesData}
-                          label="Apple Stock"
                           showPoints
                           disableMouseEvents={disableMouseEvents}
                         />
                         <LineSeries
                           data={data2}
-                          label="Apple Stock 2"
                           stroke={colors.categories[2]}
                           strokeDasharray="3 3"
                           strokeLinecap="butt"
@@ -160,13 +157,11 @@ export default {
           />
           <AreaSeries
             data={timeSeriesData}
-            label="Apple Stock"
             fill="url(#area_gradient)"
             strokeWidth={null}
           />
           <AreaSeries
             data={timeSeriesData}
-            label="Apple Stock 2"
             fill="url(#area_pattern)"
             stroke={colors.categories[2]}
           />
@@ -201,7 +196,6 @@ export default {
             />,
             <AreaSeries
               key={`band-${data[0].key}`}
-              label="Temperature range"
               data={data}
               strokeWidth={0.5}
               stroke={colors.categories[i + 1]}
@@ -211,7 +205,6 @@ export default {
               key={`line-${data[0].key}`}
               data={data}
               stroke={colors.categories[i + 1]}
-              label="Temperature avg"
             />,
           ]))}
           <YAxis label="Temperature (°F)" numTicks={4} />
@@ -248,19 +241,16 @@ export default {
             strokeLinecap="butt"
           />
           <AreaSeries
-            label="band"
             data={priceBandData.band}
             fill="url(#confidence-interval-fill)"
             strokeWidth={0}
           />
           <LineSeries
-            label="line"
             data={priceBandData.points.map(d => (d.y >= reference ? d : { ...d, y: reference }))}
             stroke={colors.categories[3]}
             strokeWidth={2}
           />
           <PointSeries
-            label="line"
             data={priceBandData.points.filter(d => d.y < reference)}
             fill="#fff"
             fillOpacity={1}
@@ -316,7 +306,6 @@ export default {
               <XAxis label="X" numTicks={4} />
               <PointSeries
                 data={pointData}
-                label="Random"
                 size={d => d.size}
               />
               <CrossHair fullWidth fullHeight showCircle={false} />
@@ -338,7 +327,6 @@ export default {
           <XAxis label="X" numTicks={4} />
           <PointSeries
             data={pointData}
-            label="Random"
             size={d => d.size}
             pointComponent={RectPointComponent}
           />
@@ -357,7 +345,6 @@ export default {
           <YAxis label="Temperature (°F)" numTicks={4} />
           <StackedBarSeries
             data={stackedData}
-            label="City Temperature"
             stackKeys={groupKeys}
           />
           <XAxis tickFormat={dateFormatter} />
@@ -377,7 +364,6 @@ export default {
           <YAxis label="Temperature (°F)" numTicks={4} />
           <GroupedBarSeries
             data={groupedData}
-            label="City Temperature"
             groupKeys={groupKeys}
           />
           <XAxis tickFormat={dateFormatter} />
@@ -400,7 +386,6 @@ export default {
           />
           <BarSeries
             data={categoricalData}
-            label="Apple Stock"
             fill="url(#aqua_lightaqua_gradient)"
           />
           <XAxis numTicks={categoricalData.length} />
@@ -433,12 +418,10 @@ export default {
           />
           <LineSeries
             data={intervalLineData}
-            label="Line interval"
             showPoints
           />
           <IntervalSeries
             data={intervalData}
-            label="Temperature interval"
             fill="url(#interval_pattern)"
           />
           <XAxis numTicks={0} />
@@ -456,7 +439,6 @@ export default {
         >
           <CirclePackSeries
             data={circlePackData}
-            label="Circle time pack"
             size={d => d.r}
           />
           <HorizontalReferenceLine
@@ -495,12 +477,10 @@ export default {
           />
           <BarSeries
             data={timeSeriesData}
-            label="Apple Stock"
             fill="url(#aqua_lightaqua_gradient)"
           />
           <LineSeries
             data={timeSeriesData}
-            label="Apple Stock"
             stroke={colors.text}
           />
           <XAxis label="Time" numTicks={5} />
@@ -525,7 +505,6 @@ export default {
           />
           <BarSeries
             data={timeSeriesData}
-            label="Apple Stock"
             fill="url(#aqua_lightaqua_gradient)"
           />
           <XAxis label="Time" numTicks={5} orientation="top" />
@@ -549,7 +528,6 @@ export default {
           />
           <BarSeries
             data={timeSeriesData}
-            label="Apple Stock"
             fill="url(#aqua_lightaqua_gradient)"
           />
           <XAxis numTicks={0} />
@@ -569,12 +547,10 @@ export default {
           <YAxis label="Price ($)" numTicks={4} />
           <BarSeries
             data={timeSeriesData.filter((d, i) => i % 2 === 0)}
-            label="Apple Stock"
             fill="#484848"
           />
           <BarSeries
             data={timeSeriesData.filter((d, i) => i % 2 !== 0 && i !== 5)}
-            label="Apple Stock ii"
             fill="#767676"
           />
           <XAxis label="Time" numTicks={5} />

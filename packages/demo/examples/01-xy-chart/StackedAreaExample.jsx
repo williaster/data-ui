@@ -103,7 +103,6 @@ export default function StackedAreaExample() {
               fill={'#fff'}
             />
             <StackedAreaSeries
-              label="City Temperature"
               data={asPercent ? percentStackedData : stackedData}
               strokeWidth={2}
               stackKeys={stackKeys}
