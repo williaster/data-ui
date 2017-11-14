@@ -25,8 +25,10 @@ import {
 import readme from '../../node_modules/@data-ui/xy-chart/README.md';
 
 import CirclePackWithCallback from './CirclePackWithCallback';
+import LinkedXYCharts from './LinkedXYCharts';
 import RectPointComponent from './RectPointComponent';
 import ResponsiveXYChart, { dateFormatter } from './ResponsiveXYChart';
+import StackedAreaExample from './StackedAreaExample';
 import ScatterWithHistogram from './ScatterWithHistograms';
 
 import {
@@ -269,6 +271,20 @@ export default {
       components: [PointSeries],
       example: () => (
         <ScatterWithHistogram />
+      ),
+    },
+    {
+      description: 'Linked charts',
+      components: [XYChart, StackedBarSeries, AreaSeries, CrossHair],
+      example: () => (
+        <LinkedXYCharts />
+      ),
+    },
+    {
+      description: 'StackedAreaSeries',
+      components: [XYChart],
+      example: () => (
+        <StackedAreaExample />
       ),
     },
     {

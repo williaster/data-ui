@@ -11,7 +11,8 @@ export const categoricalData = letterFrequency.map(d => ({ x: d.letter, y: d.fre
 // stacked data
 export const groupKeys = Object.keys(cityTemperature[0]).filter(attr => attr !== 'date');
 export const stackedData = cityTemperature.slice(0, 12).map(d => ({
-  ...d,
+  // convert all keys to numbers
+  ...(groupKeys.reduce((obj, key) => ({ ...obj, [key]: Number(d[key]) }), {})),
   x: d.date,
   y: groupKeys.reduce((ret, curr) => ret + Number(d[curr]), 0),
 }));
