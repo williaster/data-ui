@@ -104,7 +104,7 @@ class XYChart extends React.PureComponent {
           rangeRound: [0, innerWidth],
           paddingOuter: 1,
         });
-        
+
         const offset = dummyBand.bandwidth() / 2;
         xScale.range([offset, innerWidth - offset]);
         xScale.barWidth = dummyBand.bandwidth();
