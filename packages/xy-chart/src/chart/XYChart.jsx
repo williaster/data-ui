@@ -75,7 +75,7 @@ class XYChart extends React.PureComponent {
   static collectScalesFromProps(props) {
     const { xScale: xScaleObject, yScale: yScaleObject, children } = props;
     const { innerWidth, innerHeight } = XYChart.getDimmensions(props);
-    const { allData, dataBySeriesType, dataByIndex, data } = collectDataFromChildSeries(children);
+    const { allData } = collectDataFromChildSeries(children);
 
     const xScale = getScaleForAccessor({
       allData,
@@ -97,7 +97,6 @@ class XYChart extends React.PureComponent {
       const name = componentName(Child);
       if (isBarSeries(name) && xScale.type !== 'band') {
         const dummyBand = getScaleForAccessor({
-          // allData: dataBySeriesType[name],
           allData,
           minAccessor: xString,
           maxAccessor: xString,
@@ -117,7 +116,6 @@ class XYChart extends React.PureComponent {
     });
 
     return {
-      dataByIndex,
       xScale,
       yScale,
     };

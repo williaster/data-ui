@@ -47,6 +47,17 @@ describe('<Voronoi />', () => {
     expect(onMouseLeave).toHaveBeenCalledTimes(1);
   });
 
+  test('it should pass the relevant datum to onClick on trigger', () => {
+    const onClick = jest.fn();
+    const wrapper = mount(<Voronoi {...props} onClick={onClick} />);
+    const polygon = wrapper.find(VoronoiPolygon).first();
+    polygon.simulate('click');
+
+    expect(onClick).toHaveBeenCalledTimes(1);
+    const datum = onClick.mock.calls[0][0].datum;
+    expect(props.data.includes(datum)).toBe(true);
+  });
+
   test('it should update its voronoi if the data update', () => {
     const wrapper = shallow(<Voronoi {...props} />);
     const voronoi0 = wrapper.state('voronoi');
