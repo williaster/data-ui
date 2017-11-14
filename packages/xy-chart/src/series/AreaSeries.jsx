@@ -21,11 +21,12 @@ const propTypes = {
   strokeDasharray: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   strokeWidth: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
   strokeLinecap: PropTypes.oneOf(['butt', 'square', 'round', 'inherit']),
+  onClick: PropTypes.func,
+  onMouseMove: PropTypes.func,
+  onMouseLeave: PropTypes.func,
   // these will likely be injected by the parent chart
   xScale: PropTypes.func,
   yScale: PropTypes.func,
-  onMouseMove: PropTypes.func,
-  onMouseLeave: PropTypes.func,
 };
 
 const defaultProps = {
@@ -38,8 +39,9 @@ const defaultProps = {
   fillOpacity: 0.3,
   xScale: null,
   yScale: null,
-  onMouseMove: undefined,
-  onMouseLeave: undefined,
+  onClick: null,
+  onMouseMove: null,
+  onMouseLeave: null,
 };
 
 const x = d => d.x;
@@ -63,6 +65,7 @@ export default class AreaSeries extends React.PureComponent {
       fillOpacity,
       interpolation,
       label,
+      onClick,
       onMouseMove,
       onMouseLeave,
     } = this.props;
@@ -81,6 +84,10 @@ export default class AreaSeries extends React.PureComponent {
     return (
       <Group
         key={label}
+        onClick={onClick && ((event) => {
+          const d = findClosestDatum({ data, getX: x, event, xScale });
+          onClick({ event, data, datum: d, color: fillValue });
+        })}
         onMouseMove={onMouseMove && ((event) => {
           const d = findClosestDatum({ data, getX: x, event, xScale });
           onMouseMove({ event, data, datum: d, color: fillValue });

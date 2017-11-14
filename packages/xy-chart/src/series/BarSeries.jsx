@@ -14,27 +14,32 @@ const propTypes = {
 
   // overridden by data props
   fill: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+  fillOpacity: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
   stroke: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   strokeWidth: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
+
+  onClick: PropTypes.func,
+  onMouseMove: PropTypes.func,
+  onMouseLeave: PropTypes.func,
 
   // probably injected by the parent xychart
   barWidth: PropTypes.number,
   xScale: PropTypes.func,
   yScale: PropTypes.func,
-  onMouseMove: PropTypes.func,
-  onMouseLeave: PropTypes.func,
 };
 
 const defaultProps = {
   barWidth: null,
   fill: themeColors.default,
+  fillOpacity: null,
   stackBy: null,
   stroke: '#FFFFFF',
   strokeWidth: 1,
   xScale: null,
   yScale: null,
-  onMouseMove: undefined,
-  onMouseLeave: undefined,
+  onClick: null,
+  onMouseMove: null,
+  onMouseLeave: null,
 };
 
 const x = d => d.x;
@@ -46,11 +51,13 @@ export default class BarSeries extends React.PureComponent {
       barWidth,
       data,
       fill,
+      fillOpacity,
       stroke,
       strokeWidth,
       label,
       xScale,
       yScale,
+      onClick,
       onMouseMove,
       onMouseLeave,
     } = this.props;
@@ -72,10 +79,14 @@ export default class BarSeries extends React.PureComponent {
               width={barWidth}
               height={barHeight}
               fill={color}
+              fillOpacity={d.fillOpacity || callOrValue(fillOpacity, d, i)}
               stroke={d.stroke || callOrValue(stroke, d, i)}
               strokeWidth={d.strokeWidth || callOrValue(strokeWidth, d, i)}
+              onClick={onClick && (() => (event) => {
+                onClick({ event, data, datum: d, color, index: i });
+              })}
               onMouseMove={onMouseMove && (() => (event) => {
-                onMouseMove({ event, data, datum: d, color });
+                onMouseMove({ event, data, datum: d, color, index: i });
               })}
               onMouseLeave={onMouseLeave && (() => onMouseLeave)}
             />

@@ -72,22 +72,28 @@ describe('<PointSeries />', () => {
     expect(label.text()).toBe('LABEL');
   });
 
-  test('it should call onMouseMove({ datum, data, event, color }) and onMouseLeave() on trigger', () => {
+  test('it should call onMouseMove({ datum, data, event, color }), onMouseLeave(), and onClick({ datum, data, event, color }) on trigger', () => {
     const data = mockData.map(d => ({ ...d, x: d.date, y: d.num }));
     const onMouseMove = jest.fn();
     const onMouseLeave = jest.fn();
+    const onClick = jest.fn();
 
     const wrapper = mount(
-      <XYChart {...mockProps} onMouseMove={onMouseMove} onMouseLeave={onMouseLeave}>
+      <XYChart
+        {...mockProps}
+        onMouseMove={onMouseMove}
+        onMouseLeave={onMouseLeave}
+        onClick={onClick}
+      >
         <PointSeries label="" data={data} fill="army-green" />
       </XYChart>,
     );
 
     const point = wrapper.find('circle').first();
-    point.simulate('mousemove');
 
+    point.simulate('mousemove');
     expect(onMouseMove).toHaveBeenCalledTimes(1);
-    const args = onMouseMove.mock.calls[0][0];
+    let args = onMouseMove.mock.calls[0][0];
     expect(args.data).toBe(data);
     expect(args.datum).toBe(data[0]);
     expect(args.event).toBeDefined();
@@ -95,5 +101,13 @@ describe('<PointSeries />', () => {
 
     point.simulate('mouseleave');
     expect(onMouseLeave).toHaveBeenCalledTimes(1);
+
+    point.simulate('click');
+    expect(onClick).toHaveBeenCalledTimes(1);
+    args = onClick.mock.calls[0][0];
+    expect(args.data).toBe(data);
+    expect(args.datum).toBe(data[0]);
+    expect(args.event).toBeDefined();
+    expect(args.color).toBe('army-green');
   });
 });

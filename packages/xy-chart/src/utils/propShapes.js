@@ -4,6 +4,7 @@ import interpolatorLookup from './interpolatorLookup';
 export const scaleShape = PropTypes.shape({
   type: PropTypes.oneOf([
     'time',
+    'timeUtc',
     'linear',
     'band',
   ]).isRequired,

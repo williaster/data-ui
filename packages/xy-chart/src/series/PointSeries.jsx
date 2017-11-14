@@ -18,6 +18,7 @@ export const pointComponentPropTypes = {
   stroke: PropTypes.string.isRequired,
   strokeWidth: PropTypes.number.isRequired,
   strokeDasharray: PropTypes.string,
+  onClick: PropTypes.func,
   onMouseMove: PropTypes.func,
   onMouseLeave: PropTypes.func,
   data: pointSeriesDataShape.isRequired,
@@ -29,6 +30,9 @@ export const propTypes = {
   label: PropTypes.string.isRequired,
   labelComponent: PropTypes.element,
   pointComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
+  onClick: PropTypes.func,
+  onMouseMove: PropTypes.func,
+  onMouseLeave: PropTypes.func,
   // attributes on data points will override these
   fill: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   fillOpacity: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
@@ -40,8 +44,6 @@ export const propTypes = {
   // likely be injected by the parent chart
   xScale: PropTypes.func,
   yScale: PropTypes.func,
-  onMouseMove: PropTypes.func,
-  onMouseLeave: PropTypes.func,
 };
 
 export const defaultProps = {
@@ -55,8 +57,9 @@ export const defaultProps = {
   strokeWidth: 1,
   xScale: null,
   yScale: null,
-  onMouseMove: undefined,
-  onMouseLeave: undefined,
+  onClick: null,
+  onMouseMove: null,
+  onMouseLeave: null,
 };
 
 export default class PointSeries extends React.PureComponent {
@@ -73,6 +76,7 @@ export default class PointSeries extends React.PureComponent {
       strokeDasharray,
       xScale,
       yScale,
+      onClick,
       onMouseMove,
       onMouseLeave,
       pointComponent,
@@ -107,13 +111,13 @@ export default class PointSeries extends React.PureComponent {
             stroke: computedStroke,
             strokeWidth: computedStrokeWidth,
             strokeDasharray: computedStrokeDasharray,
+            onClick,
             onMouseMove,
             onMouseLeave,
             data,
             datum: d,
           };
-          return defined &&
-            React.createElement(pointComponent, props);
+          return defined && React.createElement(pointComponent, props);
         })}
         {/* Put labels on top */}
         {labels.map(d => React.cloneElement(labelComponent, d, d.label))}

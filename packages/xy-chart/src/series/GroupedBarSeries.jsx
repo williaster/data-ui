@@ -14,12 +14,13 @@ const propTypes = {
   stroke: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   strokeWidth: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
   groupPadding: PropTypes.number, // see https://github.com/d3/d3-scale#band-scales
+  onClick: PropTypes.func,
+  onMouseMove: PropTypes.func,
+  onMouseLeave: PropTypes.func,
 
   // these will likely be injected by the parent xychart
   xScale: PropTypes.func,
   yScale: PropTypes.func,
-  onMouseMove: PropTypes.func,
-  onMouseLeave: PropTypes.func,
 };
 
 const defaultProps = {
@@ -30,8 +31,9 @@ const defaultProps = {
   strokeWidth: 1,
   xScale: null,
   yScale: null,
-  onMouseMove: undefined,
-  onMouseLeave: undefined,
+  onClick: null,
+  onMouseMove: null,
+  onMouseLeave: null,
 };
 
 const x = d => d.x;
@@ -47,6 +49,7 @@ export default class GroupedBarSeries extends React.PureComponent {
       strokeWidth,
       xScale,
       yScale,
+      onClick,
       onMouseMove,
       onMouseLeave,
     } = this.props;
@@ -75,6 +78,10 @@ export default class GroupedBarSeries extends React.PureComponent {
         rx={2}
         stroke={stroke}
         strokeWidth={strokeWidth}
+        onClick={onClick && (d => (event) => {
+          const { key: seriesKey, data: datum } = d;
+          onClick({ event, data, datum, seriesKey, color: zScale(seriesKey) });
+        })}
         onMouseMove={onMouseMove && (d => (event) => {
           const { key, data: datum } = d;
           onMouseMove({ event, data, datum, seriesKey: key, color: zScale(key) });

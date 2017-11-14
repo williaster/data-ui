@@ -60,23 +60,39 @@ describe('<AreaSeries />', () => {
     expect(areaSeriesNoLinePath.find(LinePath).length).toBe(0);
   });
 
-  test('it should call onMouseMove({ datum, data, event, color }) on trigger', () => {
+  test('it should call onMouseMove({ datum, data, event, color }), onMouseLeave(), and onClick({ datum, data, event, color }) on trigger', () => {
     const data = mockData.map(d => ({ ...d, x: d.date, y: d.num }));
     const onMouseMove = jest.fn();
     const onMouseLeave = jest.fn();
+    const onClick = jest.fn();
 
     const wrapper = mount(
-      <XYChart {...mockProps} onMouseMove={onMouseMove} onMouseLeave={onMouseLeave}>
+      <XYChart
+        {...mockProps}
+        onMouseMove={onMouseMove}
+        onMouseLeave={onMouseLeave}
+        onClick={onClick}
+      >
         <AreaSeries label="l" data={data} fill="hot-pink" />
       </XYChart>,
     );
 
-    // event listener is on area's parent, but .parent().simulate() call throws in enzyme 3
-    const area = wrapper.find(Area);
-    area.simulate('mousemove');
+    const area = wrapper.find(AreaSeries);
 
+    area.simulate('mousemove');
     expect(onMouseMove).toHaveBeenCalledTimes(1);
-    const args = onMouseMove.mock.calls[0][0];
+    let args = onMouseMove.mock.calls[0][0];
+    expect(args.data).toBe(data);
+    expect(args.datum).toBeNull(); // @TODO depends on mocking out findClosestDatum
+    expect(args.event).toBeDefined();
+    expect(args.color).toBe('hot-pink');
+
+    area.simulate('mouseleave');
+    expect(onMouseLeave).toHaveBeenCalledTimes(1);
+
+    area.simulate('click');
+    expect(onClick).toHaveBeenCalledTimes(1);
+    args = onClick.mock.calls[0][0];
     expect(args.data).toBe(data);
     expect(args.datum).toBeNull(); // @TODO depends on mocking out findClosestDatum
     expect(args.event).toBeDefined();

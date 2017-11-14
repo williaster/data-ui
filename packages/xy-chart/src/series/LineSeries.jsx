@@ -20,12 +20,13 @@ const propTypes = {
   strokeDasharray: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   strokeWidth: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
   strokeLinecap: PropTypes.oneOf(['butt', 'square', 'round', 'inherit']),
+  onClick: PropTypes.func,
+  onMouseMove: PropTypes.func,
+  onMouseLeave: PropTypes.func,
 
   // these will likely be injected by the parent chart
   xScale: PropTypes.func,
   yScale: PropTypes.func,
-  onMouseMove: PropTypes.func,
-  onMouseLeave: PropTypes.func,
 };
 
 const defaultProps = {
@@ -37,8 +38,9 @@ const defaultProps = {
   strokeLinecap: 'round',
   xScale: null,
   yScale: null,
-  onMouseMove: undefined,
-  onMouseLeave: undefined,
+  onClick: null,
+  onMouseMove: null,
+  onMouseLeave: null,
 };
 
 const x = d => d.x;
@@ -58,6 +60,7 @@ export default class LineSeries extends React.PureComponent {
       strokeLinecap,
       xScale,
       yScale,
+      onClick,
       onMouseMove,
       onMouseLeave,
     } = this.props;
@@ -78,6 +81,10 @@ export default class LineSeries extends React.PureComponent {
         strokeLinecap={strokeLinecap}
         curve={curve}
         defined={defined}
+        onClick={onClick && (() => (event) => {
+          const d = findClosestDatum({ data, getX: x, event, xScale });
+          onClick({ event, data, datum: d, color: strokeValue });
+        })}
         onMouseMove={onMouseMove && (() => (event) => {
           const d = findClosestDatum({ data, getX: x, event, xScale });
           onMouseMove({ event, data, datum: d, color: strokeValue });

@@ -18,6 +18,7 @@ export default function GlyphDotComponent({
   stroke,
   strokeWidth,
   strokeDasharray,
+  onClick,
   onMouseMove,
   onMouseLeave,
   data,
@@ -33,6 +34,9 @@ export default function GlyphDotComponent({
       stroke={stroke}
       strokeWidth={strokeWidth}
       strokeDasharray={strokeDasharray}
+      onClick={onClick && ((event) => {
+        onClick({ event, data, datum, color: fill });
+      })}
       onMouseMove={onMouseMove && ((event) => {
         onMouseMove({ event, data, datum, color: fill });
       })}
@@ -41,5 +45,7 @@ export default function GlyphDotComponent({
   );
 }
 
-GlyphDotComponent.propTypes = pointComponentPropTypes;
+GlyphDotComponent.propTypes = {
+  ...pointComponentPropTypes,
+};
 GlyphDotComponent.defaultProps = defaultPropTypes;
