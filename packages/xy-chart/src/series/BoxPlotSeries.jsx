@@ -12,6 +12,7 @@ const propTypes = {
   data: boxPlotSeriesDataShape.isRequired,
 
   // attributes on data points will override these
+  disableMouseEvents: PropTypes.bool,
   fill: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   stroke: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   strokeWidth: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
@@ -22,6 +23,7 @@ const propTypes = {
   yScale: PropTypes.func,
   horizontal: PropTypes.bool,
   widthRatio: PropTypes.number,
+  onClick: PropTypes.func,
   onMouseMove: PropTypes.func,
   onMouseLeave: PropTypes.func,
 };
@@ -36,8 +38,10 @@ const defaultProps = {
   yScale: null,
   horizontal: false,
   widthRatio: 1,
+  disableMouseEvents: false,
   onMouseMove: undefined,
   onMouseLeave: undefined,
+  onClick: undefined,
 };
 
 const MAX_BOX_WIDTH = 50;
@@ -62,6 +66,8 @@ export default function BoxPlotSeries({
   fillOpacity,
   onMouseMove,
   onMouseLeave,
+  disableMouseEvents,
+  onClick,
 }) {
   if (!xScale || !yScale) return null;
   const offsetScale = horizontal ? yScale : xScale;
@@ -96,10 +102,13 @@ export default function BoxPlotSeries({
             valueScale={valueScale}
             horizontal={horizontal}
             boxProps={{
-              onMouseMove: onMouseMove && (() => (event) => {
+              onMouseMove: disableMouseEvents ? null : onMouseMove && (() => (event) => {
                 onMouseMove({ event, data, datum: d });
               }),
-              onMouseLeave: onMouseLeave && (() => onMouseLeave),
+              onMouseLeave: disableMouseEvents ? null : onMouseLeave && (() => onMouseLeave),
+              onClick: disableMouseEvents ? null : onClick && (() => (event) => {
+                onClick({ event, data, datum: d, index: i });
+              }),
             }}
           />
         )

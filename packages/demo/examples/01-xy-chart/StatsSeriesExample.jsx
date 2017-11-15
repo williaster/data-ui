@@ -17,6 +17,21 @@ import { statsData } from './data';
 
 const { colors } = theme;
 
+function renderViolinPlotTooltip({ datum, color }) {
+  const { x, y, binData } = datum;
+  const label = x || y;
+  return (
+    <div>
+      <div>
+        <strong style={{ color }}>{label}</strong>
+      </div>
+      <div>
+        <strong style={{ color }}>Bin Number </strong>
+        {binData.length}
+      </div>
+    </div>
+  );
+}
 function renderBoxPlotTooltip({ datum, color }) {
   const {
     x,
@@ -194,6 +209,7 @@ export function HorizontalBoxPlotViolinPlotSeriesExample() {
         stroke="#22b8cf"
         strokeWidth={0.5}
         horizontal
+        disableMouseEvents
       />
       <BoxPlotSeries
         data={boxPlotData}
@@ -209,7 +225,7 @@ export function HorizontalBoxPlotViolinPlotSeriesExample() {
   );
 }
 
-export function BoxPlotViolinPlotSeriesExample() {
+export function ViolinPlotSeriesExample() {
   const boxPlotData = statsData.map(s => s.boxPlot);
   const violinData = statsData.map(s => ({ x: s.boxPlot.x, binData: s.binData }));
   const values = boxPlotData.reduce((r, e) => r.push(e.min, e.max, ...e.outliers) && r, []);
@@ -229,7 +245,7 @@ export function BoxPlotViolinPlotSeriesExample() {
       yScale={{ type: 'linear',
         domain: yDomain,
       }}
-      renderTooltip={renderBoxPlotTooltip}
+      renderTooltip={renderViolinPlotTooltip}
       showYGrid
     >
       <PatternLines
@@ -247,14 +263,6 @@ export function BoxPlotViolinPlotSeriesExample() {
         fill="url(#hViolinLines)"
         stroke="#22b8cf"
         strokeWidth={0.5}
-      />
-      <BoxPlotSeries
-        data={boxPlotData}
-        fill={colors.categories[0]}
-        stroke={colors.categories[0]}
-        widthRatio={0.5}
-        fillOpacity={0.2}
-        strokeWidth={1}
       />
       <XAxis />
     </ResponsiveXYChart>

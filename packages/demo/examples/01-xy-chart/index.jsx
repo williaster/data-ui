@@ -36,7 +36,7 @@ import {
   SimpleBoxPlotSeriesExample,
   SingleBoxPlotSeriesExample,
   HorizontalBoxPlotViolinPlotSeriesExample,
-  BoxPlotViolinPlotSeriesExample,
+  ViolinPlotSeriesExample,
 } from './StatsSeriesExample';
 
 import {
@@ -518,10 +518,10 @@ export default {
       ),
     },
     {
-      description: 'BoxPlot With ViolinPlot Example',
-      components: [BoxPlotSeries, ViolinPlotSeries],
+      description: 'ViolinPlot Example',
+      components: [ViolinPlotSeries],
       example: () => (
-        <BoxPlotViolinPlotSeriesExample />
+        <ViolinPlotSeriesExample />
       ),
     },
     {

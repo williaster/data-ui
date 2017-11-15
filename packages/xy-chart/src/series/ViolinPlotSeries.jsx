@@ -22,6 +22,10 @@ const propTypes = {
   yScale: PropTypes.func,
   horizontal: PropTypes.bool,
   widthRatio: PropTypes.number,
+  disableMouseEvents: PropTypes.bool,
+  onMouseMove: PropTypes.func,
+  onMouseLeave: PropTypes.func,
+  onClick: PropTypes.func,
 };
 
 const defaultProps = {
@@ -33,6 +37,10 @@ const defaultProps = {
   yScale: null,
   horizontal: false,
   widthRatio: 1,
+  disableMouseEvents: false,
+  onMouseMove: undefined,
+  onMouseLeave: undefined,
+  onClick: undefined,
 };
 
 const MAX_BOX_WIDTH = 50;
@@ -48,6 +56,10 @@ export default function ViolinPlotSeries({
   yScale,
   horizontal,
   widthRatio,
+  disableMouseEvents,
+  onMouseMove,
+  onMouseLeave,
+  onClick,
 }) {
   if (!xScale || !yScale) return null;
   const offsetScale = horizontal ? yScale : xScale;
@@ -74,6 +86,13 @@ export default function ViolinPlotSeries({
           strokeWidth={d.strokeWidth || callOrValue(strokeWidth, d, i)}
           valueScale={valueScale}
           horizontal={horizontal}
+          onMouseMove={disableMouseEvents ? null : onMouseMove && (() => (event) => {
+            onMouseMove({ event, data, datum: d });
+          })}
+          onMouseLeave={disableMouseEvents ? null : onMouseLeave && (() => onMouseLeave)}
+          onClick={disableMouseEvents ? null : onClick && (() => (event) => {
+            onClick({ event, data, datum: d, index: i });
+          })}
         />
       ))
     }
