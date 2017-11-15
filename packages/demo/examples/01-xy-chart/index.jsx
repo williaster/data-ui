@@ -493,6 +493,7 @@ export default {
     },
     {
       description: 'Box Plot Example',
+      components: [BoxPlotSeries],
       example: () => {
         const boxPlotData = statsData.map(s => s.boxPlot);
         const values = boxPlotData.reduce((r, e) => r.push(e.min, e.max, ...e.outliers) && r, []);
@@ -534,6 +535,7 @@ export default {
     },
     {
       description: 'Single Horizontal Box Plot Example',
+      components: [BoxPlotSeries],
       example: () => {
         const singleStats = [statsData[0]];
         const boxPlotData = singleStats.map((s) => {
@@ -583,6 +585,7 @@ export default {
     },
     {
       description: 'Horizontal BoxPlot With ViolinPlot Example',
+      components: [BoxPlotSeries, ViolinPlotSeries],
       example: () => {
         const boxPlotData = statsData.map((s) => {
           const { boxPlot } = s;
@@ -646,6 +649,7 @@ export default {
     },
     {
       description: 'BoxPlot With ViolinPlot Example',
+      components: [BoxPlotSeries, ViolinPlotSeries],
       example: () => {
         const boxPlotData = statsData.map(s => s.boxPlot);
         const violinData = statsData.map(s => ({ x: s.boxPlot.x, binData: s.binData }));

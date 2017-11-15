@@ -23,6 +23,8 @@ const propTypes = {
   yScale: PropTypes.func,
   horizontal: PropTypes.bool,
   widthRatio: PropTypes.number,
+  onMouseMove: PropTypes.func,
+  onMouseLeave: PropTypes.func,
 };
 
 const defaultProps = {
@@ -35,6 +37,8 @@ const defaultProps = {
   yScale: null,
   horizontal: false,
   widthRatio: 1,
+  onMouseMove: undefined,
+  onMouseLeave: undefined,
 };
 
 const MAX_BOX_WIDTH = 50;
@@ -58,6 +62,8 @@ export default function BoxPlotSeries({
   horizontal,
   widthRatio,
   fillOpacity,
+  onMouseMove,
+  onMouseLeave,
 }) {
   if (!xScale || !yScale) return null;
   const offsetScale = horizontal ? yScale : xScale;
@@ -91,6 +97,13 @@ export default function BoxPlotSeries({
             fillOpacity={d.fillOpacity || callOrValue(fillOpacity, d, i)}
             valueScale={valueScale}
             horizontal={horizontal}
+            boxProps={{
+              onMouseMove: onMouseMove && (() => (event) => {
+                onMouseMove({ event, data, datum: d });
+              }),
+              onMouseLeave: onMouseLeave && (() => onMouseLeave),
+            }}
+
           />
         )
       ))}
