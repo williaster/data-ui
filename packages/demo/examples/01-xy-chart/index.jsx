@@ -669,12 +669,12 @@ export default {
             showYGrid
           >
             <PatternLines
-              id='hViolinLines'
+              id="hViolinLines"
               height={3}
               width={3}
-              stroke='#ced4da'
+              stroke="#ced4da"
               strokeWidth={1}
-              fill='rgba(0,0,0,0.3)'
+              fill="rgba(0,0,0,0.3)"
               orientation={['horizontal']}
             />
             <YAxis numTicks={4} />
