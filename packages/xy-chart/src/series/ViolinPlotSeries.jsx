@@ -26,7 +26,7 @@ const propTypes = {
 
 const defaultProps = {
   boxWidth: null,
-  stroke: '#000000',
+  stroke: themeColors.darkGray,
   strokeWidth: 2,
   fill: themeColors.default,
   xScale: null,
@@ -54,12 +54,12 @@ export default function ViolinPlotSeries({
   const offsetValue = horizontal ? y : x;
   const valueScale = horizontal ? xScale : yScale;
   const boxWidth = offsetScale.bandwidth();
-  const actualyWidth = Math.min(MAX_BOX_WIDTH, boxWidth);
-  const offset = (offsetScale.offset || 0) - ((boxWidth - actualyWidth) / 2);
+  const actualWidth = Math.min(MAX_BOX_WIDTH, boxWidth);
+  const offset = (offsetScale.offset || 0) - ((boxWidth - actualWidth) / 2);
   const offsetPropName = horizontal ? 'top' : 'left';
   const offsetProp = d => ({
     [offsetPropName]: (offsetScale(offsetValue(d)) - offset) +
-     (((1 - widthRatio) / 2) * actualyWidth),
+     (((1 - widthRatio) / 2) * actualWidth),
   });
   return (
     <Group>
@@ -68,7 +68,7 @@ export default function ViolinPlotSeries({
           key={offsetValue(d)}
           {...offsetProp(d)}
           binData={d.binData}
-          width={actualyWidth * widthRatio}
+          width={actualWidth * widthRatio}
           fill={d.fill || callOrValue(fill, d, i)}
           stroke={d.stroke || callOrValue(stroke, d, i)}
           strokeWidth={d.strokeWidth || callOrValue(strokeWidth, d, i)}

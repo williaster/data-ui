@@ -28,7 +28,7 @@ const propTypes = {
 
 const defaultProps = {
   boxWidth: null,
-  stroke: '#000000',
+  stroke: themeColors.darkGray,
   strokeWidth: 2,
   fill: themeColors.default,
   fillOpacity: 1,
@@ -68,12 +68,12 @@ export default function BoxPlotSeries({
   const offsetValue = horizontal ? y : x;
   const valueScale = horizontal ? xScale : yScale;
   const boxWidth = offsetScale.bandwidth();
-  const actualyWidth = Math.min(MAX_BOX_WIDTH, boxWidth);
-  const offset = (offsetScale.offset || 0) - ((boxWidth - actualyWidth) / 2);
+  const actualWidth = Math.min(MAX_BOX_WIDTH, boxWidth);
+  const offset = (offsetScale.offset || 0) - ((boxWidth - actualWidth) / 2);
   const offsetPropName = horizontal ? 'top' : 'left';
   const offsetProp = d => ({
     [offsetPropName]: (offsetScale(offsetValue(d)) - offset) +
-     (((1 - widthRatio) / 2) * actualyWidth),
+     (((1 - widthRatio) / 2) * actualWidth),
   });
   return (
     <Group>
@@ -87,7 +87,7 @@ export default function BoxPlotSeries({
             firstQuartile={firstQuartile(d)}
             thirdQuartile={thirdQuartile(d)}
             median={median(d)}
-            boxWidth={actualyWidth * widthRatio}
+            boxWidth={actualWidth * widthRatio}
             outliers={outliers(d)}
             fill={d.fill || callOrValue(fill, d, i)}
             stroke={d.stroke || callOrValue(stroke, d, i)}
@@ -101,7 +101,6 @@ export default function BoxPlotSeries({
               }),
               onMouseLeave: onMouseLeave && (() => onMouseLeave),
             }}
-
           />
         )
       ))}
