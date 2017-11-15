@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Group } from '@vx/group';
-import { BoxPlot } from '@vx/stats';
+import Group from '@vx/group/build/Group';
+import BoxPlot from '@vx/stats/build/boxplot/BoxPlot';
 import themeColors from '@data-ui/theme/build/color';
 
 import { callOrValue, isDefined } from '../utils/chartUtils';
@@ -10,7 +10,6 @@ import { boxPlotSeriesDataShape } from '../utils/propShapes';
 
 const propTypes = {
   data: boxPlotSeriesDataShape.isRequired,
-  label: PropTypes.string.isRequired,
 
   // attributes on data points will override these
   fill: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
@@ -53,7 +52,6 @@ const outliers = d => d.outliers || [];
 
 export default function BoxPlotSeries({
   data,
-  label,
   fill,
   stroke,
   strokeWidth,
@@ -78,7 +76,7 @@ export default function BoxPlotSeries({
      (((1 - widthRatio) / 2) * actualyWidth),
   });
   return (
-    <Group key={label}>
+    <Group>
       {data.map((d, i) => (
         isDefined(min(d)) && (
           <BoxPlot

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Group } from '@vx/group';
-import { ViolinPlot } from '@vx/stats';
+import Group from '@vx/group/build/Group';
+import ViolinPlot from '@vx/stats/build/violinplot/ViolinPlot';
 import themeColors from '@data-ui/theme/build/color';
 
 import { callOrValue } from '../utils/chartUtils';
@@ -11,7 +11,6 @@ import { violinPlotSeriesDataShape } from '../utils/propShapes';
 
 const propTypes = {
   data: violinPlotSeriesDataShape.isRequired,
-  label: PropTypes.string.isRequired,
 
   // attributes on data points will override these
   fill: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
@@ -42,7 +41,6 @@ const y = d => d.y;
 
 export default function ViolinPlotSeries({
   data,
-  label,
   fill,
   stroke,
   strokeWidth,
@@ -64,7 +62,7 @@ export default function ViolinPlotSeries({
      (((1 - widthRatio) / 2) * actualyWidth),
   });
   return (
-    <Group key={label}>
+    <Group>
       {data.map((d, i) => (
         <ViolinPlot
           key={offsetValue(d)}

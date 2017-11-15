@@ -93,7 +93,6 @@ export function SimpleBoxPlotSeriesExample() {
       <YAxis numTicks={4} />
       <BoxPlotSeries
         data={boxPlotData}
-        label="Test"
         fill="url(#aqua_lightaqua_gradient)"
         stroke="#22b8cf"
         strokeWidth={1.5}
@@ -140,7 +139,6 @@ export function SingleBoxPlotSeriesExample() {
       />
       <BoxPlotSeries
         data={boxPlotData}
-        label="Test"
         fill="url(#aqua_lightaqua_gradient)"
         stroke="#22b8cf"
         strokeWidth={1.5}
@@ -192,7 +190,6 @@ export function HorizontalBoxPlotViolinPlotSeriesExample() {
       <YAxis numTicks={4} />
       <ViolinPlotSeries
         data={violinData}
-        label="Test"
         fill="url(#vViolinLines)"
         stroke="#22b8cf"
         strokeWidth={0.5}
@@ -200,7 +197,6 @@ export function HorizontalBoxPlotViolinPlotSeriesExample() {
       />
       <BoxPlotSeries
         data={boxPlotData}
-        label="Test"
         fill={colors.categories[0]}
         stroke={colors.categories[0]}
         widthRatio={0.5}
@@ -248,14 +244,12 @@ export function BoxPlotViolinPlotSeriesExample() {
       <YAxis numTicks={4} />
       <ViolinPlotSeries
         data={violinData}
-        label="Test"
         fill="url(#hViolinLines)"
         stroke="#22b8cf"
         strokeWidth={0.5}
       />
       <BoxPlotSeries
         data={boxPlotData}
-        label="Test"
         fill={colors.categories[0]}
         stroke={colors.categories[0]}
         widthRatio={0.5}
