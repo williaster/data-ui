@@ -35,6 +35,19 @@ export const boxPlotSeriesDataShape = PropTypes.arrayOf(
   }),
 );
 
+export const violinPlotSeriesDataShape = PropTypes.arrayOf(
+  PropTypes.shape({
+    x: PropTypes.oneOfType([ // data with null x/y are not rendered
+      PropTypes.string,
+      PropTypes.number,
+      PropTypes.instanceOf(Date),
+      PropTypes.object, // eg a moment() instance
+    ]),
+    binData: PropTypes.array.isRequired,
+  }),
+);
+
+
 export const lineSeriesDataShape = PropTypes.arrayOf(
   PropTypes.shape({
     x: PropTypes.oneOfType([ // data with null x/y are not rendered

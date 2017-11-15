@@ -6,8 +6,11 @@ import themeColors from '@data-ui/theme/build/color';
 
 import { callOrValue } from '../utils/chartUtils';
 
+import { violinPlotSeriesDataShape } from '../utils/propShapes';
+
+
 const propTypes = {
-  data: PropTypes.object.isRequired,
+  data: violinPlotSeriesDataShape.isRequired,
   label: PropTypes.string.isRequired,
 
   // attributes on data points will override these
@@ -64,7 +67,7 @@ export default function ViolinPlotSeries({
     <Group key={label}>
       {data.map((d, i) => (
         <ViolinPlot
-          key={d.x}
+          key={offsetValue(d)}
           {...offsetProp(d)}
           binData={d.binData}
           width={actualyWidth * widthRatio}

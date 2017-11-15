@@ -93,8 +93,7 @@ export default function BoxPlotSeries({
             horizontal={horizontal}
           />
         )
-      ))
-    }
+      ))}
     </Group>
   );
 }
