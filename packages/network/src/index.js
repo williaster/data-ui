@@ -1,4 +1,4 @@
-export { withScreenSize, withParentSize } from '@vx/responsive';
+export { withScreenSize, withParentSize, ParentSize } from '@vx/responsive';
 export { nodeShape, linkShape } from './utils/propShapes';
 export { default as Node } from './chart/Node';
 export { default as Nodes } from './chart/Nodes';

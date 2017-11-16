@@ -9,4 +9,4 @@ export { default as WithTooltip, withTooltipPropTypes } from '@data-ui/shared/bu
 
 export { LinearGradient } from '@vx/gradient';
 export { PatternLines } from '@vx/pattern';
-export { withScreenSize, withParentSize } from '@vx/responsive';
+export { withScreenSize, withParentSize, ParentSize } from '@vx/responsive';
