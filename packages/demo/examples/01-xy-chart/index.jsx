@@ -15,6 +15,8 @@ import {
   LineSeries,
   PointSeries,
   StackedBarSeries,
+  BoxPlotSeries,
+  ViolinPlotSeries,
 
   HorizontalReferenceLine,
   PatternLines,
@@ -30,6 +32,12 @@ import RectPointComponent from './RectPointComponent';
 import ResponsiveXYChart, { dateFormatter } from './ResponsiveXYChart';
 import StackedAreaExample from './StackedAreaExample';
 import ScatterWithHistogram from './ScatterWithHistograms';
+import {
+  SimpleBoxPlotSeriesExample,
+  SingleBoxPlotSeriesExample,
+  HorizontalBoxPlotViolinPlotSeriesExample,
+  ViolinPlotSeriesExample,
+} from './StatsSeriesExample';
 
 import {
   circlePackData,
@@ -486,6 +494,34 @@ export default {
           <XAxis label="Time" numTicks={5} />
           <CrossHair />
         </ResponsiveXYChart>
+      ),
+    },
+    {
+      description: 'Box Plot Example',
+      components: [BoxPlotSeries],
+      example: () => (
+        <SimpleBoxPlotSeriesExample />
+      ),
+    },
+    {
+      description: 'Single Horizontal Box Plot Example',
+      components: [BoxPlotSeries],
+      example: () => (
+        <SingleBoxPlotSeriesExample />
+      ),
+    },
+    {
+      description: 'Horizontal BoxPlot With ViolinPlot Example',
+      components: [BoxPlotSeries, ViolinPlotSeries],
+      example: () => (
+        <HorizontalBoxPlotViolinPlotSeriesExample />
+      ),
+    },
+    {
+      description: 'ViolinPlot Example',
+      components: [ViolinPlotSeries],
+      example: () => (
+        <ViolinPlotSeriesExample />
       ),
     },
     {

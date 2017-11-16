@@ -1,4 +1,4 @@
-import { cityTemperature, appleStock, genRandomNormalPoints, letterFrequency } from '@vx/mock-data';
+import { cityTemperature, appleStock, genRandomNormalPoints, letterFrequency, genStats } from '@vx/mock-data';
 import { theme } from '@data-ui/xy-chart';
 
 export const timeSeriesData = appleStock.filter((d, i) => i % 120 === 0).map(d => ({
@@ -123,3 +123,5 @@ export const circlePackData = Array(400).fill(null).map((_, i) => ({
   fillOpacity: Math.max(0.4, Math.random()),
   fill: theme.colors.categories[i % 2 === 0 ? 1 : 3],
 }));
+
+export const statsData = genStats(5);

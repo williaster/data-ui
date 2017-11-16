@@ -35,6 +35,7 @@
     "@vx/responsive": "0.0.140",
     "@vx/scale": "0.0.140",
     "@vx/shape": "0.0.145",
+    "@vx/stats": "0.0.147",
     "@vx/tooltip": "0.0.140",
     "@vx/voronoi": "0.0.140",
     "d3-array": "^1.2.0",

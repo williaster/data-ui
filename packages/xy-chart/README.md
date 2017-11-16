@@ -171,6 +171,9 @@ Series | supported x scale type | supported y scale types | data shape | voronoi
 `<GroupedBarSeries/>` | band | linear | `{ x, y }` (colors controlled with groupFills & groupKeys) | no
 `<CirclePackSeries/>` | time, linear | y is computed | `{ x [, size] }` | no
 `<IntervalSeries/>` | time, linear | linear | `{ x0, x1 [, fill, stroke] }` | no
+`<BoxPlotSeries/>` | linear, band | band, linear | `{ x (or y), min, max, median, firstQuartile, thirdQuartile, outliers [, fill, stroke] }` | no
+`<ViolinPlotSeries/>` | linear, band | band, linear | `{ x (or y), binData [, fill, stroke] }` | no
+
 
 \* The y boundaries of the `<AreaSeries/>` may be specified by either
  - defined `y0` and `y1` values or
