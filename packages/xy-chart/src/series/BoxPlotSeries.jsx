@@ -9,27 +9,33 @@ import { callOrValue, isDefined } from '../utils/chartUtils';
 import { boxPlotSeriesDataShape } from '../utils/propShapes';
 
 const propTypes = {
+  containerEvents: PropTypes.bool,
   data: boxPlotSeriesDataShape.isRequired,
-
-  // attributes on data points will override these
   disableMouseEvents: PropTypes.bool,
   fill: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   stroke: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   strokeWidth: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
   fillOpacity: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
+  onClick: PropTypes.func,
+  onMouseMove: PropTypes.func,
+  onMouseLeave: PropTypes.func,
+  widthRatio: PropTypes.number,
+  containerProps: PropTypes.object,
+  outlierProps: PropTypes.object,
+  boxProps: PropTypes.object,
+  minProps: PropTypes.object,
+  maxProps: PropTypes.object,
+  medianProps: PropTypes.object,
 
   // likely be injected by the parent chart
   xScale: PropTypes.func,
   yScale: PropTypes.func,
   horizontal: PropTypes.bool,
-  widthRatio: PropTypes.number,
-  onClick: PropTypes.func,
-  onMouseMove: PropTypes.func,
-  onMouseLeave: PropTypes.func,
 };
 
 const defaultProps = {
   boxWidth: null,
+  containerEvents: true,
   stroke: themeColors.darkGray,
   strokeWidth: 2,
   fill: themeColors.default,
@@ -38,6 +44,12 @@ const defaultProps = {
   yScale: null,
   horizontal: false,
   widthRatio: 1,
+  containerProps: null,
+  outlierProps: null,
+  boxProps: null,
+  minProps: null,
+  maxProps: null,
+  medianProps: null,
   disableMouseEvents: false,
   onMouseMove: undefined,
   onMouseLeave: undefined,
@@ -54,67 +66,104 @@ const firstQuartile = d => d.firstQuartile;
 const thirdQuartile = d => d.thirdQuartile;
 const outliers = d => d.outliers || [];
 
-export default function BoxPlotSeries({
-  data,
-  fill,
-  stroke,
-  strokeWidth,
-  xScale,
-  yScale,
-  horizontal,
-  widthRatio,
-  fillOpacity,
-  onMouseMove,
-  onMouseLeave,
-  disableMouseEvents,
-  onClick,
-}) {
-  if (!xScale || !yScale) return null;
-  const offsetScale = horizontal ? yScale : xScale;
-  const offsetValue = horizontal ? y : x;
-  const valueScale = horizontal ? xScale : yScale;
-  const boxWidth = offsetScale.bandwidth();
-  const actualWidth = Math.min(MAX_BOX_WIDTH, boxWidth);
-  const offset = (offsetScale.offset || 0) - ((boxWidth - actualWidth) / 2);
-  const offsetPropName = horizontal ? 'top' : 'left';
-  const offsetProp = d => ({
-    [offsetPropName]: (offsetScale(offsetValue(d)) - offset) +
-     (((1 - widthRatio) / 2) * actualWidth),
-  });
-  return (
-    <Group>
-      {data.map((d, i) => (
-        isDefined(min(d)) && (
-          <BoxPlot
-            key={offsetValue(d)}
-            min={min(d)}
-            max={max(d)}
-            {...offsetProp(d)}
-            firstQuartile={firstQuartile(d)}
-            thirdQuartile={thirdQuartile(d)}
-            median={median(d)}
-            boxWidth={actualWidth * widthRatio}
-            outliers={outliers(d)}
-            fill={d.fill || callOrValue(fill, d, i)}
-            stroke={d.stroke || callOrValue(stroke, d, i)}
-            strokeWidth={d.strokeWidth || callOrValue(strokeWidth, d, i)}
-            fillOpacity={d.fillOpacity || callOrValue(fillOpacity, d, i)}
-            valueScale={valueScale}
-            horizontal={horizontal}
-            boxProps={{
-              onMouseMove: disableMouseEvents ? null : onMouseMove && (() => (event) => {
-                onMouseMove({ event, data, datum: d });
-              }),
-              onMouseLeave: disableMouseEvents ? null : onMouseLeave && (() => onMouseLeave),
-              onClick: disableMouseEvents ? null : onClick && (() => (event) => {
-                onClick({ event, data, datum: d, index: i });
-              }),
-            }}
-          />
-        )
-      ))}
-    </Group>
-  );
+export default class BoxPlotSeries extends React.PureComponent {
+  render() {
+    const {
+      containerEvents,
+      data,
+      fill,
+      stroke,
+      strokeWidth,
+      xScale,
+      yScale,
+      horizontal,
+      widthRatio,
+      fillOpacity,
+      containerProps,
+      outlierProps,
+      boxProps,
+      minProps,
+      maxProps,
+      medianProps,
+      onMouseMove,
+      onMouseLeave,
+      disableMouseEvents,
+      onClick,
+    } = this.props;
+
+    if (!xScale || !yScale) return null;
+    const offsetScale = horizontal ? yScale : xScale;
+    const offsetValue = horizontal ? y : x;
+    const valueScale = horizontal ? xScale : yScale;
+    const boxWidth = offsetScale.bandwidth();
+    const actualWidth = Math.min(MAX_BOX_WIDTH, boxWidth);
+    const offset = (offsetScale.offset || 0) - ((boxWidth - actualWidth) / 2);
+    const offsetPropName = horizontal ? 'top' : 'left';
+    const offsetProp = d => ({
+      [offsetPropName]: (offsetScale(offsetValue(d)) - offset) +
+       (((1 - widthRatio) / 2) * actualWidth),
+    });
+    const mouseEventProps = (d, i) => ({
+      onMouseMove: disableMouseEvents ? null : onMouseMove && (() => (event) => {
+        onMouseMove({ event, data, datum: d, index: i });
+      }),
+      onMouseLeave: disableMouseEvents ? null : onMouseLeave && (() => onMouseLeave),
+      onClick: disableMouseEvents ? null : onClick && (() => (event) => {
+        onClick({ event, data, datum: d, index: i });
+      }),
+    });
+    return (
+      <Group>
+        {data.map((d, i) => {
+          const mouseEvents = mouseEventProps(d, i);
+          return isDefined(min(d)) && (
+            <BoxPlot
+              key={offsetValue(d)}
+              min={min(d)}
+              max={max(d)}
+              {...offsetProp(d)}
+              firstQuartile={firstQuartile(d)}
+              thirdQuartile={thirdQuartile(d)}
+              median={median(d)}
+              boxWidth={actualWidth * widthRatio}
+              outliers={outliers(d)}
+              fill={d.fill || callOrValue(fill, d, i)}
+              stroke={d.stroke || callOrValue(stroke, d, i)}
+              strokeWidth={d.strokeWidth || callOrValue(strokeWidth, d, i)}
+              fillOpacity={d.fillOpacity || callOrValue(fillOpacity, d, i)}
+              valueScale={valueScale}
+              horizontal={horizontal}
+              container={containerEvents}
+              containerProps={
+                (containerEvents || containerProps || undefined)
+                && { ...containerProps, ...(containerEvents && mouseEvents) }
+              }
+              outlierProps={
+                (!containerEvents || outlierProps || undefined)
+                && { ...outlierProps, ...(!containerEvents && mouseEvents) }
+              }
+              boxProps={
+                (!containerEvents || boxProps || undefined)
+                && { ...boxProps, ...(!containerEvents && mouseEvents) }
+              }
+              minProps={
+                (!containerEvents || minProps || undefined)
+                && { ...minProps, ...(!containerEvents && mouseEvents) }
+              }
+              maxProps={
+                (!containerEvents || maxProps || undefined)
+                && { ...maxProps, ...(!containerEvents && mouseEvents) }
+              }
+              medianProps={
+                (!containerEvents || medianProps || undefined)
+                && { ...medianProps, ...(!containerEvents && mouseEvents) }
+              }
+            />
+          );
+        })}
+      </Group>
+    );
+  }
 }
 
 BoxPlotSeries.propTypes = propTypes;

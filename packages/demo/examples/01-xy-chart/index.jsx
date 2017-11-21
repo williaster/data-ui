@@ -34,7 +34,6 @@ import StackedAreaExample from './StackedAreaExample';
 import ScatterWithHistogram from './ScatterWithHistograms';
 import {
   SimpleBoxPlotSeriesExample,
-  SingleBoxPlotSeriesExample,
   HorizontalBoxPlotViolinPlotSeriesExample,
   ViolinPlotSeriesExample,
 } from './StatsSeriesExample';
@@ -501,13 +500,6 @@ export default {
       components: [BoxPlotSeries],
       example: () => (
         <SimpleBoxPlotSeriesExample />
-      ),
-    },
-    {
-      description: 'Single Horizontal Box Plot Example',
-      components: [BoxPlotSeries],
-      example: () => (
-        <SingleBoxPlotSeriesExample />
       ),
     },
     {
