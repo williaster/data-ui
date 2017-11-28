@@ -87,7 +87,7 @@ export default function ViolinPlotSeries({
           valueScale={valueScale}
           horizontal={horizontal}
           onMouseMove={disableMouseEvents ? null : onMouseMove && (() => (event) => {
-            onMouseMove({ event, data, datum: d });
+            onMouseMove({ event, data, datum: d, index: i });
           })}
           onMouseLeave={disableMouseEvents ? null : onMouseLeave && (() => onMouseLeave)}
           onClick={disableMouseEvents ? null : onClick && (() => (event) => {
