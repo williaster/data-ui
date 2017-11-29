@@ -21,6 +21,7 @@ const propTypes = {
   renderTooltip: PropTypes.func,
   styles: PropTypes.object,
   TooltipComponent: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
+  tooltipProps: PropTypes.object,
 };
 
 const defaultProps = {
@@ -37,6 +38,7 @@ const defaultProps = {
   renderTooltip: null,
   styles: { display: 'inline-block', position: 'relative' },
   TooltipComponent: TooltipWithBounds,
+  tooltipProps: null,
   tooltipTimeout: 200,
 };
 
@@ -46,6 +48,12 @@ class WithTooltip extends React.PureComponent {
     this.handleMouseMove = this.handleMouseMove.bind(this);
     this.handleMouseLeave = this.handleMouseLeave.bind(this);
     this.tooltipTimeout = null;
+  }
+
+  componentWillUnmount() {
+    if (this.tooltipTimeout) {
+      clearTimeout(this.tooltipTimeout);
+    }
   }
 
   handleMouseMove({ event, datum, ...rest }) {
@@ -83,6 +91,7 @@ class WithTooltip extends React.PureComponent {
       tooltipOpen,
       tooltipLeft,
       tooltipTop,
+      tooltipProps,
       renderTooltip,
       styles,
       TooltipComponent,
@@ -112,6 +121,7 @@ class WithTooltip extends React.PureComponent {
             key={Math.random()}
             top={tooltipTop}
             left={tooltipLeft}
+            {...tooltipProps}
           >
             {tooltipContent}
           </TooltipComponent>}

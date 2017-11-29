@@ -21,6 +21,7 @@ import {
   HorizontalReferenceLine,
   PatternLines,
   LinearGradient,
+  WithTooltip,
   theme,
 } from '@data-ui/xy-chart';
 
@@ -64,32 +65,44 @@ export default {
       description: 'BarSeries -- no axes',
       components: [XYChart, BarSeries, LinearGradient, PatternLines],
       example: () => (
-        <ResponsiveXYChart
-          ariaLabel="Required label"
-          xScale={{ type: 'time' }}
-          yScale={{ type: 'linear' }}
+        <WithTooltip
+          renderTooltip={({ datum }) => datum.y}
+          tooltipProps={{
+            offsetTop: 0,
+            style: {
+              backgroundColor: 'pink',
+              opacity: 0.9,
+            },
+          }}
         >
-          <LinearGradient
-            id="gradient"
-            from={colors.default}
-            to={colors.dark}
-          />
-          <PatternLines
-            id="lines"
-            height={8}
-            width={8}
-            stroke={colors.categories[2]}
-            strokeWidth={1}
-            orientation={['horizontal', 'vertical']}
-          />
-          <BarSeries
-            data={timeSeriesData.map((d, i) => ({
-              ...d,
-              fill: `url(#${i === 2 ? 'lines' : 'gradient'})`,
-            }))}
-            fill="url(#aqua_lightaqua_gradient)"
-          />
-        </ResponsiveXYChart>
+          <ResponsiveXYChart
+            ariaLabel="Required label"
+            xScale={{ type: 'time' }}
+            yScale={{ type: 'linear' }}
+            renderTooltip={null}
+          >
+            <LinearGradient
+              id="gradient"
+              from={colors.default}
+              to={colors.dark}
+            />
+            <PatternLines
+              id="lines"
+              height={8}
+              width={8}
+              stroke={colors.categories[2]}
+              strokeWidth={1}
+              orientation={['horizontal', 'vertical']}
+            />
+            <BarSeries
+              data={timeSeriesData.map((d, i) => ({
+                ...d,
+                fill: `url(#${i === 2 ? 'lines' : 'gradient'})`,
+              }))}
+              fill="url(#aqua_lightaqua_gradient)"
+            />
+          </ResponsiveXYChart>
+        </WithTooltip>
       ),
     },
     {

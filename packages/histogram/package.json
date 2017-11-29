@@ -58,7 +58,7 @@
     "@vx/gradient": "0.0.140",
     "@vx/group": "0.0.140",
     "@vx/pattern": "0.0.140",
-    "@vx/responsive": "0.0.140",
+    "@vx/responsive": "0.0.147",
     "@vx/scale": "0.0.140",
     "@vx/shape": "0.0.140",
     "@vx/tooltip": "0.0.140",

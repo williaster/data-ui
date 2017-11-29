@@ -148,6 +148,8 @@ describe('<WithTooltip />', () => {
   });
 
   test('it should render the passed TooltipComponent and pass it left and top props', () => {
+    expect.assertions(3);
+
     function Tooltip({ left, top }) { // eslint-disable-line
       expect(left).toEqual(expect.any(Number));
       expect(top).toEqual(expect.any(Number));
@@ -188,5 +190,38 @@ describe('<WithTooltip />', () => {
     const container = wrapper.find(`.${className}`);
     expect(container.length).toBe(1);
     expect(container.prop('style')).toMatchObject(styles);
+  });
+
+  test('it should pass tooltipProps to TooltipComponent', () => {
+    const tooltipProps = {
+      fill: 'pink',
+      minWidth: 200,
+    };
+
+    const propsToCheck = Object.keys(tooltipProps);
+
+    function Tooltip(props) { // eslint-disable-line
+      propsToCheck.forEach((prop) => {
+        expect(props[prop]).toBe(tooltipProps[prop]);
+      });
+      return <div />;
+    }
+
+    let mouseMove;
+    const wrapper = mount(
+      <WithTooltip
+        renderTooltip={() => 'test'}
+        TooltipComponent={Tooltip}
+        tooltipProps={tooltipProps}
+      >
+        {({ onMouseMove }) => {
+          mouseMove = onMouseMove;
+        }}
+      </WithTooltip>,
+    );
+
+    mouseMove({});
+    wrapper.update();
+    expect.assertions(propsToCheck.length);
   });
 });

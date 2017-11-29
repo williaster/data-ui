@@ -52,7 +52,7 @@
     "@vx/event": "0.0.141",
     "@vx/glyph": "0.0.140",
     "@vx/group": "0.0.140",
-    "@vx/responsive": "0.0.140",
+    "@vx/responsive": "0.0.147",
     "@vx/shape": "0.0.142",
     "@vx/tooltip": "0.0.141",
     "airbnb-prop-types": "^2.8.0",

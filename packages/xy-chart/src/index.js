@@ -21,7 +21,7 @@ export { default as WithTooltip, withTooltipPropTypes } from '@data-ui/shared/bu
 
 export { LinearGradient } from '@vx/gradient';
 export { PatternLines, PatternCircles, PatternWaves, PatternHexagons } from '@vx/pattern';
-export { withScreenSize, withParentSize } from '@vx/responsive';
+export { withScreenSize, withParentSize, ParentSize } from '@vx/responsive';
 
 export { default as withTheme } from './enhancer/withTheme';
 export { chartTheme as theme } from '@data-ui/theme';
