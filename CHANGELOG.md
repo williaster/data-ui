@@ -1,7 +1,31 @@
 # Changelog
 
+- [v0.0.49](#v0049)
 - [v0.0.48](#v0048)
 - [v0.0.47](#v0047)
+
+## v0.0.49
+🏆  Enhancements
+- Allows additional customization Adds `tooltipProps` to the `<WithTooltip />`which will be passed to its `TooltipComponent` (and adds example in demo) [#79](https://github.com/williaster/data-ui/pull/79)
+- Exposes `@vx/responsive`'s [new observer-based `<ParentSize />` HOC](https://github.com/hshoff/vx/pull/198) [#79](https://github.com/williaster/data-ui/pull/79)
+- Exposes the following props on `<BoxplotSeries />` to enable more customization: `containerProps`, `boxProps`, `outlierProps`, `minProps`, `maxProps`, `medianProps` (https://github.com/hshoff/vx/pull/198) [#80](https://github.com/williaster/data-ui/pull/80)
+- Adds the ability to set mouse events on the boxplot container or on its component parts (whiskers, etc) [#80](https://github.com/williaster/data-ui/pull/80)
+- Consolidates some of examples for [demo][boxplot] [#80](https://github.com/williaster/data-ui/pull/80)
+
+🐛  Bug fix
+- bumps `@vx/tooltip` to 0.0.148 for [bounds bug fix](https://github.com/hshoff/vx/pull/204) [#79](https://github.com/williaster/data-ui/pull/79)
+
+```
+Changes
+ - @data-ui/demo: 0.0.48 => 0.0.49 (private)
+ - @data-ui/event-flow: 0.0.48 => 0.0.49
+ - @data-ui/histogram: 0.0.48 => 0.0.49
+ - @data-ui/network: 0.0.48 => 0.0.49
+ - @data-ui/radial-chart: 0.0.48 => 0.0.49
+ - @data-ui/shared: 0.0.48 => 0.0.49
+ - @data-ui/sparkline: 0.0.48 => 0.0.49
+ - @data-ui/xy-chart: 0.0.48 => 0.0.49
+```
 
 ## v0.0.48
 💔 Breaking Changes
