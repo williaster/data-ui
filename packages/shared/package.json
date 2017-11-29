@@ -51,7 +51,7 @@
     "@vx/event": "0.0.143",
     "@vx/group": "0.0.143",
     "@vx/shape": "0.0.145",
-    "@vx/tooltip": "0.0.147",
+    "@vx/tooltip": "0.0.148",
     "d3-array": "^1.2.1",
     "prop-types": "^15.5.10"
   },
