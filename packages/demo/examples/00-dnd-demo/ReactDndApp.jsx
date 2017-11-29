@@ -9,6 +9,8 @@ import Header from './components/Header';
 import Separator from './components/Separator';
 import Tabs from './components/Tabs';
 
+import Resizable from './components/Resizable';
+
 import { reorder, reorderRows } from './reorder';
 
 const COMPONENT_LOOKUP = {
@@ -35,11 +37,12 @@ const getNewType = (id) => {
   return match && match[1];
 };
 
-const containerStyles = {
+const pageStyles = {
   fontSize: 14,
   display: 'flex',
   flexDirection: 'row',
   position: 'relative',
+  background: '#efefef',
 };
 
 const gridStyles = {
@@ -48,6 +51,25 @@ const gridStyles = {
   flexGrow: 1,
   height: '100%',
   position: 'relative',
+};
+
+const rowStyles = {
+  // margin: 24,
+  position: 'relative',
+};
+
+const itemStyles = {
+  margin: 16,
+  position: 'relative',
+};
+
+const sidePanelStyles = {
+  height: '100%',
+  padding: 16,
+  display: 'flex',
+  flexDirection: 'column',
+  flexBasis: '30%',
+  borderLeft: '1px solid #e0e0e0',
 };
 
 const deleteItemStyles = {
@@ -74,6 +96,8 @@ class App extends React.Component {
     this.handleDragEnd = this.handleDragEnd.bind(this);
     this.handleDragStart = this.handleDragStart.bind(this);
     this.handleToggleEditMode = this.handleToggleEditMode.bind(this);
+    this.handleResizeStart = this.handleResizeStart.bind(this);
+    this.handleResizeStop = this.handleResizeStop.bind(this);
   }
 
   handleDeleteEntity(id) {
@@ -118,7 +142,7 @@ class App extends React.Component {
         type,
         props: {},
         children: isRow ? [] : null,
-        direction: isRow ? VERTICAL_DIRECTION : null,
+        direction: isRow ? HORIZONTAL_DIRECTION : null,
       };
 
       if (needsContainer) {
@@ -127,7 +151,7 @@ class App extends React.Component {
           id: containerId,
           type: Container.name,
           children: [id],
-          direction: VERTICAL_DIRECTION,
+          direction: HORIZONTAL_DIRECTION,
         };
         nextRows = [
           ...rows.slice(0, destination.index),
@@ -192,6 +216,14 @@ class App extends React.Component {
     this.setState(({ editMode }) => ({ editMode: !editMode }));
   }
 
+  handleResizeStart(id) {
+    this.setState(() => ({ resizeId: id }));
+  }
+
+  handleResizeStop() {
+    this.setState(() => ({ resizeId: null }));
+  }
+
   hanldeToggleRowDirection(id) {
     console.log(this.state.entities[id]);
     this.setState(({ entities }) => ({
@@ -219,16 +251,7 @@ class App extends React.Component {
 
   renderSidePanel() {
     return !this.state.editMode ? null : (
-      <div
-        style={{
-          height: '100%',
-          padding: 16,
-          display: 'flex',
-          flexDirection: 'column',
-          flexBasis: '30%',
-          background: '#eaeaea',
-        }}
-      >
+      <div style={sidePanelStyles}>
         {[Chart, Tabs, Container, Separator, Header].map(Component => (
           <Droppable
             droppableId={`${NEW_PREFIX}${Component.name}`}
@@ -287,7 +310,7 @@ class App extends React.Component {
               ref={provided.innerRef}
               style={{
                 position: 'relative',
-                backgroundColor: snapshot.isDraggingOver ? '#e0e0e0' : '#fff',
+                backgroundColor: snapshot.isDraggingOver ? '#e0e0e0' : null,
                 minHeight: 100,
                 height: '100%',
               }}
@@ -313,7 +336,7 @@ class App extends React.Component {
         isDragDisabled={!this.state.editMode}
       >
         {(provided, snapshot) => (
-          <div style={{ position: 'relative' }}>
+          <div style={rowStyles}>
             <div
               ref={provided.innerRef}
               style={{
@@ -328,12 +351,12 @@ class App extends React.Component {
                 direction={direction}
                 isDragDisabled={!this.state.editMode}
               >
-                {(provided, snapshot) => (
+                {(providedDrop, snapshotDrop) => (
                   <div
-                    ref={provided.innerRef}
+                    ref={providedDrop.innerRef}
                     style={{
                       position: 'relative',
-                      backgroundColor: snapshot.isDraggingOver ? '#e0e0e0' : '#fff',
+                      backgroundColor: snapshotDrop.isDraggingOver ? '#e0e0e0' : null,
                     }}
                   >
                     {this.state.editMode &&
@@ -350,26 +373,14 @@ class App extends React.Component {
                           label="Row orientation"
                           checked={direction === VERTICAL_DIRECTION}
                           onChange={(e) => {
-                            e.preventDefault();
                             this.hanldeToggleRowDirection(id);
                           }}
                         />
                       </div>}
+
                     <Component {...props} editMode={this.state.editMode} direction={direction}>
-                      {children.map(childId => (
-                        <div
-                          key={childId}
-                          style={{
-                            padding: 8,
-                            width: 'inherit',
-                            height: 'inherit',
-                            flex: 1,
-                          }}
-                        >
-                          {this.renderRowItem(childId)}
-                        </div>
-                      ))}
-                      {provided.placeholder}
+                      {children.map(childId => this.renderRowItem(childId))}
+                      {providedDrop.placeholder}
                     </Component>
                   </div>
                 )}
@@ -385,15 +396,15 @@ class App extends React.Component {
   renderRowItem(id) {
     const { type, props } = this.state.entities[id];
     const Component = COMPONENT_LOOKUP[type];
-
+    const isResizable = type === Chart.name;
     return (
       <Draggable
         key={id}
         draggableId={id}
-        isDragDisabled={!this.state.editMode}
+        isDragDisabled={!this.state.editMode || this.state.resizeId === id}
       >
         {(provided, snapshot) => (
-          <div style={{ position: 'relative' }}>
+          <div style={itemStyles}>
             {this.state.editMode &&
               <div
                 onClick={() => { this.handleDeleteEntity(id); }}
@@ -409,7 +420,16 @@ class App extends React.Component {
               }}
               {...provided.dragHandleProps}
             >
-              <Component {...props} editMode={this.state.editMode} />
+              {isResizable ?
+                <Resizable
+                  onResizeStart={() => { this.handleResizeStart(id); }}
+                  onResizeStop={() => { this.handleResizeStop(id); }}
+                >
+                  <Component {...props} editMode={this.state.editMode} />
+                </Resizable>
+                : <Component {...props} editMode={this.state.editMode} />
+              }
+
             </div>
             {provided.placeholder}
           </div>
@@ -429,7 +449,7 @@ class App extends React.Component {
         onDragStart={this.handleDragStart}
       >
         {this.renderCheckbox()}
-        <div style={{ height, width, ...containerStyles }}>
+        <div style={{ height, ...pageStyles }}>
           {this.renderGrid()}
           {this.renderSidePanel()}
         </div>

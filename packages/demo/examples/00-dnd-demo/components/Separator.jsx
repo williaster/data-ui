@@ -10,7 +10,6 @@ export default class Separator extends React.PureComponent {
           width: '100%',
           flexGrow: 1,
           flexShrink: 0,
-          margin: '8px 0',
         }}
       />
     );
