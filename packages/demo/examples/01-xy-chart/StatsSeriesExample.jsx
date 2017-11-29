@@ -6,7 +6,6 @@ import {
   YAxis,
   BoxPlotSeries,
   ViolinPlotSeries,
-  PatternCircles,
   PatternLines,
   LinearGradient,
   theme,
@@ -28,7 +27,7 @@ function renderViolinPlotTooltip({ datum, color }) {
         <strong style={{ color }}>{label}</strong>
       </div>
       <div>
-        <strong style={{ color }}>Bin count</strong>
+        <strong style={{ color }}>Bin count </strong>
         {binData.length}
       </div>
     </div>
@@ -112,33 +111,36 @@ function MouseEventTargetStyles({ containerEvents, color = colors.categories[7] 
   );
 }
 
-export function SimpleBoxPlotSeriesExample() {
-  const verticalBoxPlotData = statsData.map(s => s.boxPlot);
-  const horizontalBoxPlotData = statsData.map((s) => {
-    const { boxPlot } = s;
-    const { x, ...rest } = boxPlot;
-    return {
-      y: x,
-      ...rest,
-    };
-  });
-  const values = verticalBoxPlotData.reduce((r, e) => r.push(e.min, e.max, ...e.outliers) && r, []);
-  const minValue = Math.min(...values);
-  const maxValue = Math.max(...values);
-  const valueDomain = [
-    minValue - (0.1 * Math.abs(minValue)),
-    maxValue + (0.1 * Math.abs(minValue)),
-  ];
-  const bandScaleConfig = {
-    type: 'band',
-    paddingInner: 0.15,
-    paddingOuter: 0.3,
+// Boxplot example
+const verticalBoxPlotData = statsData.map(s => s.boxPlot);
+const horizontalBoxPlotData = statsData.map((s) => {
+  const { boxPlot } = s;
+  const { x, ...rest } = boxPlot;
+  return {
+    y: x,
+    ...rest,
   };
-  const valueScaleConfig = {
-    type: 'linear',
-    domain: valueDomain,
-  };
+});
+const boxPlotValues = verticalBoxPlotData.reduce((r, e) => (
+  r.push(e.min, e.max, ...e.outliers) && r
+), []);
+const minBoxPlotValue = Math.min(...boxPlotValues);
+const maxBoxPlotValue = Math.max(...boxPlotValues);
+const valueDomain = [
+  minBoxPlotValue - (0.1 * Math.abs(minBoxPlotValue)),
+  maxBoxPlotValue + (0.1 * Math.abs(maxBoxPlotValue)),
+];
+const boxPlotBandScaleConfig = {
+  type: 'band',
+  paddingInner: 0.15,
+  paddingOuter: 0.3,
+};
+const boxPlotValueScaleConfig = {
+  type: 'linear',
+  domain: valueDomain,
+};
 
+export function BoxPlotSeriesExample() {
   return (
     <WithToggle id="toggle_boxplot_horizontal" label="Horizontal" initialChecked>
       {horizontal => (
@@ -146,11 +148,13 @@ export function SimpleBoxPlotSeriesExample() {
           {containerEvents => (
             <WithToggle id="toggle_boxplot_show_container" label="Show mouse targets">
               {showTargets => ([
-                showTargets && <MouseEventTargetStyles containerEvents={containerEvents} />,
+                showTargets &&
+                  <MouseEventTargetStyles key="mouse_styles" containerEvents={containerEvents} />,
                 <ResponsiveXYChart
+                  key="boxplot_chart"
                   ariaLabel="Boxplot example"
-                  xScale={horizontal ? valueScaleConfig : bandScaleConfig}
-                  yScale={horizontal ? bandScaleConfig : valueScaleConfig}
+                  xScale={horizontal ? boxPlotValueScaleConfig : boxPlotBandScaleConfig}
+                  yScale={horizontal ? boxPlotBandScaleConfig : boxPlotValueScaleConfig}
                   renderTooltip={renderBoxPlotTooltip}
                   margin={{ right: 80, left: 16, top: 16 }}
                   showYGrid
@@ -165,7 +169,7 @@ export function SimpleBoxPlotSeriesExample() {
                     id="boxplot_lines"
                     height={4}
                     width={4}
-                    stroke={colors.categories[4]}
+                    stroke={colors.categories[5]}
                     strokeWidth={1}
                     orientation={['diagonal']}
                   />
@@ -188,23 +192,24 @@ export function SimpleBoxPlotSeriesExample() {
   );
 }
 
-export function HorizontalBoxPlotViolinPlotSeriesExample() {
-  const boxPlotData = statsData.map((s) => {
-    const { boxPlot } = s;
-    const { x, ...rest } = boxPlot;
-    return {
-      y: x,
-      ...rest,
-    };
-  });
-  const violinData = statsData.map(s => ({ y: s.boxPlot.x, binData: s.binData }));
-  const values = boxPlotData.reduce((r, e) => r.push(e.min, e.max, ...e.outliers) && r, []);
-  const minXValue = Math.min(...values);
-  const maxXValue = Math.max(...values);
-  const xDomain = [
-    minXValue - (0.1 * Math.abs(minXValue)),
-    maxXValue + (0.1 * Math.abs(maxXValue)),
-  ];
+// Violin + boxplot
+const boxPlotData = statsData.map((s) => {
+  const { boxPlot } = s;
+  const { x, ...rest } = boxPlot;
+  return {
+    y: x,
+    ...rest,
+  };
+});
+const violinData = statsData.map(s => ({ y: s.boxPlot.x, binData: s.binData }));
+const values = boxPlotData.reduce((r, e) => r.push(e.min, e.max, ...e.outliers) && r, []);
+const minXValue = Math.min(...values);
+const maxXValue = Math.max(...values);
+const xDomain = [
+  minXValue - (0.1 * Math.abs(minXValue)),
+  maxXValue + (0.1 * Math.abs(maxXValue)),
+];
+export function BoxPlotViolinPlotSeriesExample() {
   return (
     <WithToggle id="boxplot_violin_box_toggle" label="Show boxplot" initialChecked>
       {showBoxplot => (
@@ -221,8 +226,8 @@ export function HorizontalBoxPlotViolinPlotSeriesExample() {
                 type: 'linear',
                 domain: xDomain,
               }}
-              margin={{ right: 70, left: 16 }}
-              renderTooltip={renderBoxPlotTooltip}
+              margin={{ right: 70, left: 16, top: 16 }}
+              renderTooltip={showBoxplot ? renderBoxPlotTooltip : renderViolinPlotTooltip}
               showYGrid
             >
               <PatternLines
@@ -242,7 +247,7 @@ export function HorizontalBoxPlotViolinPlotSeriesExample() {
                   stroke="#22b8cf"
                   strokeWidth={1}
                   horizontal
-                  disableMouseEvents
+                  disableMouseEvents={showBoxplot}
                 />}
               {showBoxplot &&
                 <BoxPlotSeries
@@ -253,7 +258,6 @@ export function HorizontalBoxPlotViolinPlotSeriesExample() {
                   fillOpacity={0.2}
                   strokeWidth={1}
                   horizontal
-                  containerEvents={false}
                 />}
               <XAxis />
             </ResponsiveXYChart>
@@ -261,48 +265,5 @@ export function HorizontalBoxPlotViolinPlotSeriesExample() {
         </WithToggle>
       )}
     </WithToggle>
-  );
-}
-
-export function ViolinPlotSeriesExample() {
-  const boxPlotData = statsData.map(s => s.boxPlot);
-  const violinData = statsData.map(s => ({ x: s.boxPlot.x, binData: s.binData }));
-  const values = boxPlotData.reduce((r, e) => r.push(e.min, e.max, ...e.outliers) && r, []);
-  const minYValue = Math.min(...values);
-  const maxYValue = Math.max(...values);
-  const yDomain = [minYValue - (0.1 * Math.abs(minYValue)),
-    maxYValue + (0.1 * Math.abs(minYValue))];
-  return (
-    <ResponsiveXYChart
-      ariaLabel="Violin plot"
-      xScale={{
-        type: 'band',
-        paddingInner: 0.15,
-        paddingOuter: 0.3,
-      }}
-      yScale={{
-        type: 'linear',
-        domain: yDomain,
-      }}
-      renderTooltip={renderViolinPlotTooltip}
-      showYGrid
-    >
-      <PatternCircles
-        id="violin_plot_circles"
-        height={3}
-        width={3}
-        radius={2}
-        stroke={colors.categories[3]}
-        fill="#fff"
-      />
-      <YAxis numTicks={4} />
-      <ViolinPlotSeries
-        data={violinData}
-        fill="url(#violin_plot_circles)"
-        stroke={colors.categories[3]}
-        strokeWidth={1}
-      />
-      <XAxis />
-    </ResponsiveXYChart>
   );
 }

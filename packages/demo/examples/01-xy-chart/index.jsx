@@ -33,9 +33,8 @@ import ResponsiveXYChart, { dateFormatter } from './ResponsiveXYChart';
 import StackedAreaExample from './StackedAreaExample';
 import ScatterWithHistogram from './ScatterWithHistograms';
 import {
-  SimpleBoxPlotSeriesExample,
-  HorizontalBoxPlotViolinPlotSeriesExample,
-  ViolinPlotSeriesExample,
+  BoxPlotSeriesExample,
+  BoxPlotViolinPlotSeriesExample,
 } from './StatsSeriesExample';
 
 import {
@@ -468,6 +467,20 @@ export default {
       example: () => <CirclePackWithCallback />,
     },
     {
+      description: 'Box Plot Example',
+      components: [BoxPlotSeries],
+      example: () => (
+        <BoxPlotSeriesExample />
+      ),
+    },
+    {
+      description: 'Horizontal BoxPlot With ViolinPlot Example',
+      components: [BoxPlotSeries, ViolinPlotSeries],
+      example: () => (
+        <BoxPlotViolinPlotSeriesExample />
+      ),
+    },
+    {
       description: 'Mixed series',
       components: [BarSeries, LineSeries, XAxis, YAxis, CrossHair],
       example: () => (
@@ -493,27 +506,6 @@ export default {
           <XAxis label="Time" numTicks={5} />
           <CrossHair />
         </ResponsiveXYChart>
-      ),
-    },
-    {
-      description: 'Box Plot Example',
-      components: [BoxPlotSeries],
-      example: () => (
-        <SimpleBoxPlotSeriesExample />
-      ),
-    },
-    {
-      description: 'Horizontal BoxPlot With ViolinPlot Example',
-      components: [BoxPlotSeries, ViolinPlotSeries],
-      example: () => (
-        <HorizontalBoxPlotViolinPlotSeriesExample />
-      ),
-    },
-    {
-      description: 'ViolinPlot Example',
-      components: [ViolinPlotSeries],
-      example: () => (
-        <ViolinPlotSeriesExample />
       ),
     },
     {
