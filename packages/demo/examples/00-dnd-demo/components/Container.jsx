@@ -11,7 +11,7 @@ export default class Container extends React.PureComponent {
           flexWrap: 'wrap',
           flexGrow: 1,
           border: this.props.editMode ? '1px dashed #aaa' : null,
-          minHeight: 64,
+          minHeight: 32,
           background: '#fff',
         }}
       >

@@ -2,6 +2,7 @@
 import React from 'react';
 
 import ReactDndApp from './ReactDndApp';
+import ReactGridApp from './ReactGridApp';
 
 export default {
   examples: [
@@ -9,6 +10,12 @@ export default {
       description: 'react-dnd-beautiful',
       example: () => (
         <ReactDndApp />
+      ),
+    },
+    {
+      description: 'react-grid-layout',
+      example: () => (
+        <ReactGridApp />
       ),
     },
   ],

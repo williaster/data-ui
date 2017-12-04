@@ -19,6 +19,7 @@ export default class Tabs extends React.PureComponent {
           flexDirection: 'column',
           width: '100%',
           height: '100%',
+          background: '#fff',
         }}
       >
         <div
@@ -35,7 +36,7 @@ export default class Tabs extends React.PureComponent {
               style={{
                 borderBottom: i === tabIndex ? '2px solid #777' : null,
                 padding: 12,
-                background: '#ccc',
+                background: '#ddd',
               }}
             >
               <button

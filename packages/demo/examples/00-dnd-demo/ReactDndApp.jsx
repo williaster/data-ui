@@ -7,6 +7,7 @@ import Chart from './components/Chart';
 import Container from './components/Container';
 import Header from './components/Header';
 import Separator from './components/Separator';
+import Spacer from './components/Spacer';
 import Tabs from './components/Tabs';
 
 import Resizable from './components/Resizable';
@@ -19,6 +20,7 @@ const COMPONENT_LOOKUP = {
   Separator,
   Tabs,
   Container,
+  Spacer,
 };
 
 const NEW_PREFIX = 'new-';
@@ -59,8 +61,8 @@ const rowStyles = {
 };
 
 const itemStyles = {
-  margin: 16,
   position: 'relative',
+  margin: '16px 0',
 };
 
 const sidePanelStyles = {
@@ -252,7 +254,7 @@ class App extends React.Component {
   renderSidePanel() {
     return !this.state.editMode ? null : (
       <div style={sidePanelStyles}>
-        {[Chart, Tabs, Container, Separator, Header].map(Component => (
+        {[Tabs, Container, Header, Chart, Separator, Spacer].map(Component => (
           <Droppable
             droppableId={`${NEW_PREFIX}${Component.name}`}
             isDropDisabled
@@ -325,7 +327,7 @@ class App extends React.Component {
   }
 
   renderRow(id) {
-    const { type, props, children, direction } = this.state.entities[id];
+    const { type, props, children, direction, margins } = this.state.entities[id];
     const Component = COMPONENT_LOOKUP[type];
 
     return (
@@ -336,13 +338,13 @@ class App extends React.Component {
         isDragDisabled={!this.state.editMode}
       >
         {(provided, snapshot) => (
-          <div style={rowStyles}>
+          <div style={{ ...rowStyles, margin: margins ? '0 24px 24px 0' : null }}>
             <div
               ref={provided.innerRef}
               style={{
                 ...provided.draggableStyle,
                 cursor: this.state.editMode ? 'move' : 'initial',
-                minHeight: 40,
+                minHeight: 32,
               }}
               {...provided.dragHandleProps}
             >
@@ -396,7 +398,7 @@ class App extends React.Component {
   renderRowItem(id) {
     const { type, props } = this.state.entities[id];
     const Component = COMPONENT_LOOKUP[type];
-    const isResizable = type === Chart.name;
+    const isResizable = type === Chart.name || type === Spacer.name;
     return (
       <Draggable
         key={id}

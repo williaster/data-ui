@@ -4,8 +4,8 @@ import Resizable from 're-resizable';
 
 const UNIT = 16;
 const GRID = [UNIT, UNIT];
-const MIN_WIDTH = 100;
-const MIN_HEIGHT = null;
+const MIN_WIDTH = UNIT;
+const MIN_HEIGHT = UNIT;
 const MAX_WIDTH = 1440;
 const MAX_HEIGHT = 500;
 
@@ -19,6 +19,8 @@ const propTypes = {
   minHeight: PropTypes.number,
   maxHeight: PropTypes.number,
   grid: PropTypes.arrayOf(PropTypes.number),
+  onResizeStart: PropTypes.func,
+  onResizeStop: PropTypes.func,
 };
 
 export default class ResizableContainer extends React.PureComponent {
@@ -38,6 +40,7 @@ export default class ResizableContainer extends React.PureComponent {
   }
 
   handleResizeStop(event, direction, ref, delta) {
+    console.log(delta)
     this.setState(({ width, height }) => ({
       width: width + delta.width,
       height: height + delta.height,
@@ -86,4 +89,6 @@ ResizableContainer.defaultProps = {
   minHeight: MIN_HEIGHT,
   maxHeight: MAX_HEIGHT,
   grid: GRID,
+  onResizeStop: null,
+  onResizeStart: null,
 };
