@@ -10,7 +10,7 @@ import {
 
 export const parseDate = timeParse('%Y%m%d');
 export const formatDate = timeFormat('%b %d');
-export const formatYear = timeFormat('%b %d');
+export const formatYear = timeFormat('%Y');
 export const dateFormatter = date => formatDate(parseDate(date));
 
 // this is a little messy to handle all cases across series types
@@ -41,13 +41,14 @@ export function renderTooltip({ datum, seriesKey, color }) {
   );
 }
 
-function ResponsiveXYChart({ screenWidth, children, ...rest }) {
+function ResponsiveXYChart({ screenWidth, children, innerRef, ...rest }) {
   return (
     <XYChart
       theme={theme}
       width={Math.min(700, screenWidth / 1.5)}
       height={Math.min(700 / 2, screenWidth / 1.5 / 2)}
       renderTooltip={renderTooltip}
+      ref={innerRef}
       {...rest}
     >
       {children}

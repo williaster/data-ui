@@ -62,7 +62,7 @@ class WithTooltip extends React.PureComponent {
     }
   }
 
-  handleMouseMove({ event, datum, dataCoords, ...rest }) {
+  handleMouseMove({ event, datum, dataCoords, overrideCoords, ...rest }) {
     if (this.tooltipTimeout) {
       clearTimeout(this.tooltipTimeout);
     }
@@ -72,13 +72,15 @@ class WithTooltip extends React.PureComponent {
       coords = localPoint(event.target.ownerSVGElement, event);
     }
 
-    if (this.props.snapToDataX && dataCoords) {
+    if (this.props.snapToDataX && dataCoords && typeof dataCoords.x === 'number') {
       coords.x = dataCoords.x;
     }
 
-    if (this.props.snapToDataY && dataCoords) {
+    if (this.props.snapToDataY && dataCoords && typeof dataCoords.y === 'number') {
       coords.y = dataCoords.y;
     }
+
+    coords = { ...coords, ...overrideCoords };
 
     this.props.showTooltip({
       tooltipLeft: coords.x,

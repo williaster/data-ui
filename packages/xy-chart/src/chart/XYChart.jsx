@@ -34,25 +34,30 @@ export const propTypes = {
   children: PropTypes.node,
   width: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired,
+  innerRef: PropTypes.func,
   margin: PropTypes.shape({
     top: PropTypes.number,
     right: PropTypes.number,
     bottom: PropTypes.number,
     left: PropTypes.number,
   }),
-  // @TODO consolidate tooltipProps
+  // @TODO tooltipProps
+  // tooltipProps: tooltipPropsShape,
   renderTooltip: PropTypes.func,
   xScale: scaleShape.isRequired,
   yScale: scaleShape.isRequired,
   showXGrid: PropTypes.bool,
   showYGrid: PropTypes.bool,
   theme: themeShape,
+  // @TODO
+  // eventTrigger: PropTypes.oneOf(['voronoi', 'series', 'container']),
   useVoronoi: PropTypes.bool,
   showVoronoi: PropTypes.bool,
 };
 
 const defaultProps = {
   children: null,
+  innerRef: null,
   margin: {
     top: 64,
     right: 64,
@@ -68,8 +73,8 @@ const defaultProps = {
 };
 
 // accessors
-const getX = d => d.x;
-const getY = d => d.y;
+const getX = d => d && d.x;
+const getY = d => d && d.y;
 const xString = d => getX(d).toString();
 
 class XYChart extends React.PureComponent {
@@ -194,7 +199,7 @@ class XYChart extends React.PureComponent {
     const series = {};
     const { xScale, yScale } = this.state;
 
-    // @TODO abstract to helper
+    // @TODO abstract to helper; error
     const gElement = event.target.ownerSVGElement.firstChild;
     const { y: mouseY } = localPoint(gElement, event);
     let closestDatum;
@@ -260,6 +265,7 @@ class XYChart extends React.PureComponent {
       theme,
       height,
       width,
+      innerRef,
       onClick,
       tooltipData,
       showVoronoi,
@@ -286,6 +292,7 @@ class XYChart extends React.PureComponent {
         role="img"
         width={width}
         height={height}
+        ref={innerRef}
       >
         <Group left={margin.left} top={margin.top}>
           {(showXGrid || showYGrid) && (numXTicks || numYTicks) &&
@@ -320,7 +327,7 @@ class XYChart extends React.PureComponent {
                 yScale,
                 barWidth,
                 onClick: Child.props.onClick
-                  || (Child.props.disableMouseEvents ? undefined : onClick),
+                  || (Child.props.disableMouseEvents ? undefined : this.handleOnClick),
                 onMouseLeave: Child.props.onMouseLeave
                   || (Child.props.disableMouseEvents ? undefined : this.handleMouseLeave),
                 onMouseMove: Child.props.onMouseMove
@@ -342,7 +349,7 @@ class XYChart extends React.PureComponent {
               y={voronoiY}
               width={innerWidth}
               height={innerHeight}
-              onClick={onClick}
+              onClick={this.handleOnClick}
               onMouseMove={this.handleMouseMove}
               onMouseLeave={this.handleMouseLeave}
               showVoronoi={showVoronoi}
@@ -356,6 +363,7 @@ class XYChart extends React.PureComponent {
               height={innerHeight}
               fill="transparent"
               fillOpacity={0}
+              onClick={onClick}
               onMouseMove={this.handleContainerMouseMove}
               onMouseLeave={this.handleMouseLeave}
             />}

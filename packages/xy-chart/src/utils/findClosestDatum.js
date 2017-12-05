@@ -14,7 +14,10 @@ export default function findClosestDatum({ data, getX, xScale, event }) {
     // Ordinal scales don't have an invert function so we do it maually
     const xDomain = xScale.domain();
     const scaledXValues = xDomain.map(val => xScale(val));
-    const index = Math.min(scaledXValues.length - 1, d3BisectLeft(scaledXValues, mouseX));
+    const index = Math.min(
+      scaledXValues.length - 1,
+      d3BisectLeft(scaledXValues, mouseX),
+    );
     const d0 = data[index - 1];
     const d1 = data[index] || {};
     d = d0 || d1;

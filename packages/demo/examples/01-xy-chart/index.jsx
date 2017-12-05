@@ -24,13 +24,11 @@ import {
   WithTooltip,
 } from '@data-ui/xy-chart';
 
-import { Button } from '@data-ui/forms';
-
-import colors, { allColors } from '@data-ui/theme/build/color';
-import { withState } from 'recompose';
+import colors from '@data-ui/theme/build/color';
 import readme from '../../node_modules/@data-ui/xy-chart/README.md';
 
 import CirclePackWithCallback from './CirclePackWithCallback';
+import LineSeriesExample from './LineSeriesExample';
 import LinkedXYCharts from './LinkedXYCharts';
 import RectPointComponent from './RectPointComponent';
 import ResponsiveXYChart, { parseDate, formatYear, dateFormatter, renderTooltip } from './ResponsiveXYChart';
@@ -110,132 +108,7 @@ export default {
     {
       description: 'LineSeries',
       components: [LineSeries, CrossHair],
-      example: () => {
-        const seriesProps = [
-          {
-            label: 'Stock 1',
-            key: 'Stock 1',
-            data: timeSeriesData,
-            stroke: allColors.grape[9],
-            showPoints: true,
-            dashType: 'solid',
-          },
-          {
-            label: 'Stock 2',
-            key: 'Stock 2',
-            data: timeSeriesData.map(d => ({
-              ...d,
-              y: Math.random() > 0.5 ? d.y * 2 : d.y / 2,
-            })),
-            stroke: allColors.grape[7],
-            strokeDasharray: '6 4',
-            dashType: 'dashed',
-            strokeLinecap: 'butt',
-          },
-          {
-            label: 'Stock 3',
-            key: 'Stock 3',
-            data: timeSeriesData.map(d => ({
-              ...d,
-              y: Math.random() < 0.3 ? d.y * 3 : d.y / 3,
-            })),
-            stroke: allColors.grape[4],
-            strokeDasharray: '2 2',
-            dashType: 'dotted',
-            strokeLinecap: 'butt',
-          },
-        ];
-        const withTooltipTrigger = withState('trigger', 'setTrigger', 'shared');
-
-        return React.createElement(
-          withTooltipTrigger(({ trigger, setTrigger }) => (
-            <WithToggle id="line_m_events_toggle" label="Disable mouse events">
-              {disableMouseEvents => (
-                <div>
-                  <div style={{ display: 'flex' }}>
-                    <Button
-                      small
-                      rounded
-                      active={!disableMouseEvents && trigger === 'shared'}
-                      disabled={disableMouseEvents}
-                      onClick={() => { setTrigger('shared'); }}
-                    > Shared Tooltip
-                    </Button>
-                    <div style={{ width: 8 }} />
-                    <Button
-                      small
-                      rounded
-                      active={!disableMouseEvents && trigger === 'voronoi'}
-                      disabled={disableMouseEvents}
-                      onClick={() => { setTrigger('voronoi'); }}
-                    > Voronoi Tooltip
-                    </Button>
-                  </div>
-                  <WithTooltip
-                    snapToDataY={trigger === 'voronoi'}
-                    renderTooltip={({ datum, series }) => (
-                      <div>
-                        <div>
-                          {formatYear(parseDate(datum.x))}
-                          {(!series || Object.keys(series).length === 0) &&
-                            <div>
-                              {datum.y.toFixed(2)}
-                            </div>}
-                        </div>
-                        {trigger !== 'voronoi' && <br />}
-                        {seriesProps.map(({ label, stroke: color, dashType }) => (
-                          series && series[label] &&
-                            <div key={label}>
-                              <span
-                                style={{
-                                  color,
-                                  textDecoration: series[label] === datum
-                                    ? `underline ${dashType} ${color}` : null,
-                                  fontWeight: series[label] === datum ? 600 : 200,
-                                }}
-                              >
-                                {`${label} `}
-                              </span>
-                              {series[label].y.toFixed(2)}
-                            </div>
-                        ))}
-                      </div>
-                    )}
-                  >
-                    <ResponsiveXYChart
-                      ariaLabel="Required label"
-                      xScale={{ type: 'time' }}
-                      yScale={{ type: 'linear' }}
-                      useVoronoi={trigger === 'voronoi'}
-                      showVoronoi={trigger === 'voronoi'}
-                      margin={{ left: 8, top: 8 }}
-                      renderTooltip={null}
-                    >
-                      <XAxis label="Time" numTicks={5} />
-                      <YAxis label="Stock price ($)" numTicks={4} />
-                      {seriesProps.map(props => (
-                        <LineSeries
-                          {...props}
-                          disableMouseEvents={disableMouseEvents}
-                        />
-                      ))}
-                      <CrossHair
-                        fullHeight
-                        showHorizontalLine={false}
-                        strokeDasharray=""
-                        stroke={allColors.grape[7]}
-                        circleStroke={allColors.grape[7]}
-                        circleFill="#fff"
-                      />
-                    </ResponsiveXYChart>
-                  </WithTooltip>
-                </div>
-              )}
-            </WithToggle>
-          ),
-          ),
-        );
-      },
+      example: () => <LineSeriesExample />,
     },
     {
       description: 'AreaSeries -- closed',
@@ -304,6 +177,37 @@ export default {
           ariaLabel="Required label"
           xScale={{ type: 'time' }}
           yScale={{ type: 'linear' }}
+          renderTooltip={({ datum, series }) => (
+            <div>
+              <div>
+                {formatYear(parseDate(datum.x))}
+                {(!series || Object.keys(series).length === 0) &&
+                  <div>
+                    {datum.y.toFixed(2)}
+                  </div>}
+              </div>
+              <br />
+              {temperatureBands.map((_, i) => {
+                const key = `band-${i}`;
+                return (
+                  series && series[`band-${i}`] &&
+                    <div key={key}>
+                      <span
+                        style={{
+                          color: colors.categories[i + 1],
+                          textDecoration: series[key] === datum
+                            ? `underline solid ${colors.categories[i + 1]}` : null,
+                          fontWeight: series[key] === datum ? 600 : 200,
+                        }}
+                      >
+                        {`${key} `}
+                      </span>
+                      {series[key].y.toFixed(2)}
+                    </div>
+                );
+              })}
+            </div>
+          )}
         >
           {temperatureBands.map((data, i) => ([
             <PatternLines
@@ -315,6 +219,7 @@ export default {
               orientation={['diagonal']}
             />,
             <AreaSeries
+              label={`band-${i}`}
               key={`band-${data[0].key}`}
               data={data}
               strokeWidth={0.5}
@@ -325,6 +230,7 @@ export default {
               key={`line-${data[0].key}`}
               data={data}
               stroke={colors.categories[i + 1]}
+              disableMouseEvents
             />,
           ]))}
           <YAxis label="Temperature (°F)" numTicks={4} />
