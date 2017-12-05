@@ -24,6 +24,10 @@ const styles = StyleSheet.create({
     },
   },
 
+  active: {
+    background: '#eaeaea',
+  },
+
   border: {
     boxShadow: 'inset 0 0 0 1px #ddd',
   },
@@ -97,6 +101,7 @@ const styles = StyleSheet.create({
 });
 
 const propTypes = {
+  active: PropTypes.bool,
   block: PropTypes.bool,
   children: PropTypes.node,
   onClick: PropTypes.func,
@@ -109,6 +114,7 @@ const propTypes = {
 };
 
 const defaultProps = {
+  active: false,
   block: false,
   children: null,
   onClick: () => {},
@@ -121,6 +127,7 @@ const defaultProps = {
 };
 
 function Button({
+  active,
   block,
   children,
   onClick,
@@ -144,6 +151,7 @@ function Button({
         rounded && styles.rounded,
         round && small ? styles.round_small : (round && styles.round),
         disabled && styles.disabled,
+        active && styles.active,
       )}
     >
       <span

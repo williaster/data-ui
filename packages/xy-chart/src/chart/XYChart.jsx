@@ -204,7 +204,12 @@ class XYChart extends React.PureComponent {
     React.Children.forEach(this.props.children, (Child, childIndex) => {
       const { disableMouseEvents, data, label } = Child.props;
       if (isSeries(componentName(Child)) && !disableMouseEvents) {
-        const datum = findClosestDatum({ data, getX, xScale, event });
+        const datum = findClosestDatum({
+          data,
+          getX: xScale.invert ? getX : d => getX(d) + ((xScale.barWidth || 0) / 2),
+          xScale,
+          event,
+        });
         const key = label || childIndex;
         if (datum) {
           series[key] = datum;
@@ -314,9 +319,12 @@ class XYChart extends React.PureComponent {
                 xScale,
                 yScale,
                 barWidth,
-                onClick: Child.props.onClick || onClick,
-                onMouseLeave: Child.props.onMouseLeave || this.handleMouseLeave,
-                onMouseMove: Child.props.onMouseMove || this.handleMouseMove,
+                onClick: Child.props.onClick
+                  || (Child.props.disableMouseEvents ? undefined : onClick),
+                onMouseLeave: Child.props.onMouseLeave
+                  || (Child.props.disableMouseEvents ? undefined : this.handleMouseLeave),
+                onMouseMove: Child.props.onMouseMove
+                  || (Child.props.disableMouseEvents ? undefined : this.handleMouseMove),
               });
             } else if (isCrossHair(name)) {
               CrossHairs.push(Child);

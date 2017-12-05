@@ -24,13 +24,16 @@ import {
   WithTooltip,
 } from '@data-ui/xy-chart';
 
+import { Button } from '@data-ui/forms';
+
 import colors, { allColors } from '@data-ui/theme/build/color';
+import { withState } from 'recompose';
 import readme from '../../node_modules/@data-ui/xy-chart/README.md';
 
 import CirclePackWithCallback from './CirclePackWithCallback';
 import LinkedXYCharts from './LinkedXYCharts';
 import RectPointComponent from './RectPointComponent';
-import ResponsiveXYChart, { dateFormatter } from './ResponsiveXYChart';
+import ResponsiveXYChart, { parseDate, formatYear, dateFormatter, renderTooltip } from './ResponsiveXYChart';
 import StackedAreaExample from './StackedAreaExample';
 import ScatterWithHistogram from './ScatterWithHistograms';
 import {
@@ -110,100 +113,127 @@ export default {
       example: () => {
         const seriesProps = [
           {
-            label: 'Series 1',
-            key: 'Series 1',
+            label: 'Stock 1',
+            key: 'Stock 1',
             data: timeSeriesData,
-            stroke: allColors.grape[5],
+            stroke: allColors.grape[9],
             showPoints: true,
+            dashType: 'solid',
           },
           {
-            label: 'Series 2',
-            key: 'Series 2',
+            label: 'Stock 2',
+            key: 'Stock 2',
             data: timeSeriesData.map(d => ({
               ...d,
               y: Math.random() > 0.5 ? d.y * 2 : d.y / 2,
             })),
-            stroke: allColors.orange[5],
+            stroke: allColors.grape[7],
             strokeDasharray: '6 4',
+            dashType: 'dashed',
             strokeLinecap: 'butt',
           },
           {
-            label: 'Series 3',
-            key: 'Series 3',
+            label: 'Stock 3',
+            key: 'Stock 3',
             data: timeSeriesData.map(d => ({
               ...d,
               y: Math.random() < 0.3 ? d.y * 3 : d.y / 3,
             })),
-            stroke: allColors.pink[5],
+            stroke: allColors.grape[4],
             strokeDasharray: '2 2',
+            dashType: 'dotted',
             strokeLinecap: 'butt',
           },
         ];
-        return (
-          <WithToggle id="line_use_voronoi_toggle" label="Use voronoi" initialChecked>
-            {useVoronoi => (
-              <WithToggle id="line_show_voronoi_toggle" label="Show voronoi" initialChecked>
-                {showVoronoi => (
-                  <WithToggle id="line_m_events_toggle" label="Disable mouse events">
-                    {disableMouseEvents => (
-                      <ResponsiveXYChart
-                        ariaLabel="Required label"
-                        xScale={{ type: 'time' }}
-                        yScale={{ type: 'linear' }}
-                        useVoronoi={useVoronoi}
-                        showVoronoi={showVoronoi}
-                        renderTooltip={({ datum, series }) => (
-                          <div>
+        const withTooltipTrigger = withState('trigger', 'setTrigger', 'shared');
+
+        return React.createElement(
+          withTooltipTrigger(({ trigger, setTrigger }) => (
+            <WithToggle id="line_m_events_toggle" label="Disable mouse events">
+              {disableMouseEvents => (
+                <div>
+                  <div style={{ display: 'flex' }}>
+                    <Button
+                      small
+                      rounded
+                      active={!disableMouseEvents && trigger === 'shared'}
+                      disabled={disableMouseEvents}
+                      onClick={() => { setTrigger('shared'); }}
+                    > Shared Tooltip
+                    </Button>
+                    <div style={{ width: 8 }} />
+                    <Button
+                      small
+                      rounded
+                      active={!disableMouseEvents && trigger === 'voronoi'}
+                      disabled={disableMouseEvents}
+                      onClick={() => { setTrigger('voronoi'); }}
+                    > Voronoi Tooltip
+                    </Button>
+                  </div>
+                  <WithTooltip
+                    snapToDataY={trigger === 'voronoi'}
+                    renderTooltip={({ datum, series }) => (
+                      <div>
+                        <div>
+                          {formatYear(parseDate(datum.x))}
+                          {(!series || Object.keys(series).length === 0) &&
                             <div>
-                              {dateFormatter(datum.x)}
+                              {datum.y.toFixed(2)}
+                            </div>}
+                        </div>
+                        {trigger !== 'voronoi' && <br />}
+                        {seriesProps.map(({ label, stroke: color, dashType }) => (
+                          series && series[label] &&
+                            <div key={label}>
+                              <span
+                                style={{
+                                  color,
+                                  textDecoration: series[label] === datum
+                                    ? `underline ${dashType} ${color}` : null,
+                                  fontWeight: series[label] === datum ? 600 : 200,
+                                }}
+                              >
+                                {`${label} `}
+                              </span>
+                              {series[label].y.toFixed(2)}
                             </div>
-                            <br />
-                            {seriesProps.map(({ label, stroke: color }) => (
-                              series && series[label] &&
-                                <div key={label}>
-                                  <span
-                                    style={{
-                                      color,
-                                      textDecoration: series[label] === datum
-                                        ? `underline ${color}` : null,
-                                    }}
-                                  >
-                                    {`${label} `}
-                                  </span>
-                                  {series[label].y.toFixed(2)}
-                                </div>
-                            ))}
-                            {(!series || Object.keys(series).length === 0) &&
-                              <div>
-                                <strong>y </strong>
-                                {datum.y.toFixed(2)}
-                              </div>}
-                          </div>
-                        )}
-                      >
-                        {seriesProps.map(props => (
-                          <LineSeries
-                            {...props}
-                            disableMouseEvents={disableMouseEvents}
-                          />
                         ))}
-                        <CrossHair
-                          fullHeight
-                          showHorizontalLine={false}
-                          strokeDasharray=""
-                          stroke={colors.grays[7]}
-                          circleStroke={colors.grays[7]}
-                          circleFill="#fff"
-                        />
-                        <XAxis label="Time" numTicks={5} />
-                        <YAxis label="Price ($)" numTicks={4} />
-                      </ResponsiveXYChart>
+                      </div>
                     )}
-                  </WithToggle>
-                )}
-              </WithToggle>
-            )}
-          </WithToggle>
+                  >
+                    <ResponsiveXYChart
+                      ariaLabel="Required label"
+                      xScale={{ type: 'time' }}
+                      yScale={{ type: 'linear' }}
+                      useVoronoi={trigger === 'voronoi'}
+                      showVoronoi={trigger === 'voronoi'}
+                      margin={{ left: 8, top: 8 }}
+                      renderTooltip={null}
+                    >
+                      <XAxis label="Time" numTicks={5} />
+                      <YAxis label="Stock price ($)" numTicks={4} />
+                      {seriesProps.map(props => (
+                        <LineSeries
+                          {...props}
+                          disableMouseEvents={disableMouseEvents}
+                        />
+                      ))}
+                      <CrossHair
+                        fullHeight
+                        showHorizontalLine={false}
+                        strokeDasharray=""
+                        stroke={allColors.grape[7]}
+                        circleStroke={allColors.grape[7]}
+                        circleFill="#fff"
+                      />
+                    </ResponsiveXYChart>
+                  </WithTooltip>
+                </div>
+              )}
+            </WithToggle>
+          ),
+          ),
         );
       },
     },
@@ -211,43 +241,59 @@ export default {
       description: 'AreaSeries -- closed',
       components: [AreaSeries],
       example: () => (
-        <ResponsiveXYChart
-          ariaLabel="Required label"
-          xScale={{ type: 'time' }}
-          yScale={{ type: 'linear' }}
-        >
-          <LinearGradient
-            id="area_gradient"
-            from={colors.categories[2]}
-            to="#fff"
-          />
-          <PatternLines
-            id="area_pattern"
-            height={12}
-            width={12}
-            stroke={colors.categories[2]}
-            strokeWidth={1}
-            orientation={['diagonal']}
-          />
-          <AreaSeries
-            data={timeSeriesData}
-            fill="url(#area_gradient)"
-            strokeWidth={null}
-          />
-          <AreaSeries
-            data={timeSeriesData}
-            fill="url(#area_pattern)"
-            stroke={colors.categories[2]}
-          />
-          <CrossHair
-            showHorizontalLine={false}
-            fullHeight
-            stroke={colors.darkGray}
-            circleFill="white"
-            circleStroke={colors.darkGray}
-          />
-          <XAxis label="Time" numTicks={5} />
-        </ResponsiveXYChart>
+        <WithToggle id="area_snap_data_x" label="Snap tooltip to x" initialChecked>
+          {snapToDataX => (
+            <WithToggle id="area_snap_data_y" label="Snap tooltip to y">
+              {snapToDataY => (
+                <WithTooltip
+                  snapToDataX={snapToDataX}
+                  snapToDataY={snapToDataY}
+                  renderTooltip={renderTooltip}
+                >
+                  <ResponsiveXYChart
+                    ariaLabel="Required label"
+                    xScale={{ type: 'time' }}
+                    yScale={{ type: 'linear' }}
+                    margin={{ left: 8, top: 8 }}
+                    renderTooltip={null}
+                  >
+                    <LinearGradient
+                      id="area_gradient"
+                      from={colors.categories[2]}
+                      to="#fff"
+                    />
+                    <PatternLines
+                      id="area_pattern"
+                      height={12}
+                      width={12}
+                      stroke={colors.categories[2]}
+                      strokeWidth={1}
+                      orientation={['diagonal']}
+                    />
+                    <AreaSeries
+                      data={timeSeriesData}
+                      fill="url(#area_gradient)"
+                      strokeWidth={null}
+                    />
+                    <AreaSeries
+                      data={timeSeriesData}
+                      fill="url(#area_pattern)"
+                      stroke={colors.categories[2]}
+                    />
+                    <CrossHair
+                      showHorizontalLine={false}
+                      fullHeight
+                      stroke={colors.darkGray}
+                      circleFill={colors.categories[2]}
+                      circleStroke="white"
+                    />
+                    <XAxis label="Time" numTicks={5} />
+                  </ResponsiveXYChart>
+                </WithTooltip>
+              )}
+            </WithToggle>
+          )}
+        </WithToggle>
       ),
     },
     {
