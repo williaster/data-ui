@@ -13,12 +13,14 @@ export const withTooltipPropTypes = {
   tooltipData: PropTypes.any,
 };
 
-const propTypes = {
+export const propTypes = {
   ...vxTooltipPropTypes,
   children: PropTypes.oneOfType([PropTypes.object, PropTypes.func]).isRequired,
   className: PropTypes.string,
   HoverStyles: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
   renderTooltip: PropTypes.func,
+  snapToDataX: PropTypes.bool,
+  snapToDataY: PropTypes.bool,
   styles: PropTypes.object,
   TooltipComponent: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
   tooltipProps: PropTypes.object,
@@ -36,9 +38,13 @@ const defaultProps = {
     `}</style>
   ),
   renderTooltip: null,
+  snapToDataX: true,
+  snapToDataY: false,
   styles: { display: 'inline-block', position: 'relative' },
   TooltipComponent: TooltipWithBounds,
-  tooltipProps: null,
+  tooltipProps: {
+    opacity: 0.9,
+  },
   tooltipTimeout: 200,
 };
 
@@ -56,7 +62,7 @@ class WithTooltip extends React.PureComponent {
     }
   }
 
-  handleMouseMove({ event, datum, ...rest }) {
+  handleMouseMove({ event, datum, dataCoords, ...rest }) {
     if (this.tooltipTimeout) {
       clearTimeout(this.tooltipTimeout);
     }
@@ -64,6 +70,14 @@ class WithTooltip extends React.PureComponent {
     let coords = { x: 0, y: 0 };
     if (event && event.target && event.target.ownerSVGElement) {
       coords = localPoint(event.target.ownerSVGElement, event);
+    }
+
+    if (this.props.snapToDataX && dataCoords) {
+      coords.x = dataCoords.x;
+    }
+
+    if (this.props.snapToDataY && dataCoords) {
+      coords.y = dataCoords.y;
     }
 
     this.props.showTooltip({
