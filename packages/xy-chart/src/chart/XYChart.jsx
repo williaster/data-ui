@@ -3,8 +3,10 @@ import PropTypes from 'prop-types';
 
 import Grid from '@vx/grid/build/grids/Grid';
 import Group from '@vx/group/build/Group';
+import localPoint from '@vx/event/build/localPoint';
 import WithTooltip, { withTooltipPropTypes } from '@data-ui/shared/build/enhancer/WithTooltip';
 
+import findClosestDatum from '../utils/findClosestDatum';
 import Voronoi from './Voronoi';
 
 import {
@@ -38,6 +40,7 @@ export const propTypes = {
     bottom: PropTypes.number,
     left: PropTypes.number,
   }),
+  // @TODO consolidate tooltipProps
   renderTooltip: PropTypes.func,
   xScale: scaleShape.isRequired,
   yScale: scaleShape.isRequired,
@@ -60,8 +63,6 @@ const defaultProps = {
   showXGrid: false,
   showYGrid: false,
   theme: {},
-  // @TODO tooltipProps
-  //  voronoi
   useVoronoi: false,
   showVoronoi: false,
 };
@@ -161,6 +162,10 @@ class XYChart extends React.PureComponent {
     // if renderTooltip is passed we return another XYChart wrapped in WithTooltip
     // therefore we don't want to compute state if the nested chart will do so
     this.state = props.renderTooltip ? {} : XYChart.getStateFromProps(props);
+
+    this.handleMouseLeave = this.handleMouseLeave.bind(this);
+    this.handleMouseMove = this.handleMouseMove.bind(this);
+    this.handleContainerMouseMove = this.handleContainerMouseMove.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -185,6 +190,54 @@ class XYChart extends React.PureComponent {
     };
   }
 
+  handleContainerMouseMove(event) {
+    const series = {};
+    const { xScale, yScale } = this.state;
+
+    // @TODO abstract to helper
+    const gElement = event.target.ownerSVGElement.firstChild;
+    const { y: mouseY } = localPoint(gElement, event);
+    let closestDatum;
+    let minDelta = Infinity;
+
+    // collect data from all series that have an x value near this point
+    React.Children.forEach(this.props.children, (Child, childIndex) => {
+      const { disableMouseEvents, data, label } = Child.props;
+      if (isSeries(componentName(Child)) && !disableMouseEvents) {
+        const datum = findClosestDatum({ data, getX, xScale, event });
+        const key = label || childIndex;
+        if (datum) {
+          series[key] = datum;
+          const deltaY = Math.abs(yScale(getY(datum)) - mouseY);
+          closestDatum = !closestDatum || deltaY < minDelta ? datum : closestDatum;
+          minDelta = Math.min(deltaY, minDelta);
+        }
+      }
+    });
+
+    if (Object.keys(series).length > 0) {
+      this.handleMouseMove({ event, datum: closestDatum, series });
+    }
+  }
+
+  handleMouseMove(args) {
+    if (this.props.onMouseMove) {
+      const { xScale, yScale, margin } = this.state;
+      const dataCoords = {
+        x: xScale(getX(args.datum)) + margin.left,
+        y: yScale(getY(args.datum)) + margin.top,
+      };
+      this.props.onMouseMove({
+        dataCoords,
+        ...args,
+      });
+    }
+  }
+
+  handleMouseLeave() {
+    if (this.props.onMouseLeave) this.props.onMouseLeave();
+  }
+
   render() {
     if (this.props.renderTooltip) {
       return (
@@ -203,8 +256,6 @@ class XYChart extends React.PureComponent {
       height,
       width,
       onClick,
-      onMouseLeave,
-      onMouseMove,
       tooltipData,
       showVoronoi,
       useVoronoi,
@@ -224,7 +275,6 @@ class XYChart extends React.PureComponent {
     const { numXTicks, numYTicks } = this.getNumTicks(innerWidth, innerHeight);
     const barWidth = xScale.barWidth || (xScale.bandwidth && xScale.bandwidth()) || 0;
     const CrossHairs = []; // ensure these are the top-most layer
-
     return innerWidth > 0 && innerHeight > 0 && (
       <svg
         aria-label={ariaLabel}
@@ -265,8 +315,8 @@ class XYChart extends React.PureComponent {
                 yScale,
                 barWidth,
                 onClick: Child.props.onClick || onClick,
-                onMouseLeave: Child.props.onMouseLeave || onMouseLeave,
-                onMouseMove: Child.props.onMouseMove || onMouseMove,
+                onMouseLeave: Child.props.onMouseLeave || this.handleMouseLeave,
+                onMouseMove: Child.props.onMouseMove || this.handleMouseMove,
               });
             } else if (isCrossHair(name)) {
               CrossHairs.push(Child);
@@ -285,9 +335,21 @@ class XYChart extends React.PureComponent {
               width={innerWidth}
               height={innerHeight}
               onClick={onClick}
-              onMouseMove={onMouseMove}
-              onMouseLeave={onMouseLeave}
+              onMouseMove={this.handleMouseMove}
+              onMouseLeave={this.handleMouseLeave}
               showVoronoi={showVoronoi}
+            />}
+
+          {!useVoronoi &&
+            <rect
+              x={0}
+              y={0}
+              width={innerWidth}
+              height={innerHeight}
+              fill="transparent"
+              fillOpacity={0}
+              onMouseMove={this.handleContainerMouseMove}
+              onMouseLeave={this.handleMouseLeave}
             />}
 
           {tooltipData && CrossHairs.length > 0 && CrossHairs.map((CrossHair, i) => (

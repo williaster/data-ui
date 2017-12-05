@@ -22,9 +22,9 @@ import {
   PatternLines,
   LinearGradient,
   WithTooltip,
-  theme,
 } from '@data-ui/xy-chart';
 
+import colors, { allColors } from '@data-ui/theme/build/color';
 import readme from '../../node_modules/@data-ui/xy-chart/README.md';
 
 import CirclePackWithCallback from './CirclePackWithCallback';
@@ -54,7 +54,6 @@ import {
 
 import WithToggle from '../shared/WithToggle';
 
-const { colors } = theme;
 PatternLines.displayName = 'PatternLines';
 LinearGradient.displayName = 'LinearGradient';
 
@@ -109,10 +108,37 @@ export default {
       description: 'LineSeries',
       components: [LineSeries, CrossHair],
       example: () => {
-        const data2 = timeSeriesData.map(d => ({
-          ...d,
-          y: Math.random() > 0.5 ? d.y * 2 : d.y / 2,
-        }));
+        const seriesProps = [
+          {
+            label: 'Series 1',
+            key: 'Series 1',
+            data: timeSeriesData,
+            stroke: allColors.grape[5],
+            showPoints: true,
+          },
+          {
+            label: 'Series 2',
+            key: 'Series 2',
+            data: timeSeriesData.map(d => ({
+              ...d,
+              y: Math.random() > 0.5 ? d.y * 2 : d.y / 2,
+            })),
+            stroke: allColors.orange[5],
+            strokeDasharray: '6 4',
+            strokeLinecap: 'butt',
+          },
+          {
+            label: 'Series 3',
+            key: 'Series 3',
+            data: timeSeriesData.map(d => ({
+              ...d,
+              y: Math.random() < 0.3 ? d.y * 3 : d.y / 3,
+            })),
+            stroke: allColors.pink[5],
+            strokeDasharray: '2 2',
+            strokeLinecap: 'butt',
+          },
+        ];
         return (
           <WithToggle id="line_use_voronoi_toggle" label="Use voronoi" initialChecked>
             {useVoronoi => (
@@ -126,22 +152,51 @@ export default {
                         yScale={{ type: 'linear' }}
                         useVoronoi={useVoronoi}
                         showVoronoi={showVoronoi}
+                        renderTooltip={({ datum, series }) => (
+                          <div>
+                            <div>
+                              {dateFormatter(datum.x)}
+                            </div>
+                            <br />
+                            {seriesProps.map(({ label, stroke: color }) => (
+                              series && series[label] &&
+                                <div key={label}>
+                                  <span
+                                    style={{
+                                      color,
+                                      textDecoration: series[label] === datum
+                                        ? `underline ${color}` : null,
+                                    }}
+                                  >
+                                    {`${label} `}
+                                  </span>
+                                  {series[label].y.toFixed(2)}
+                                </div>
+                            ))}
+                            {(!series || Object.keys(series).length === 0) &&
+                              <div>
+                                <strong>y </strong>
+                                {datum.y.toFixed(2)}
+                              </div>}
+                          </div>
+                        )}
                       >
-                        <YAxis label="Price ($)" numTicks={4} />
-                        <LineSeries
-                          data={timeSeriesData}
-                          showPoints
-                          disableMouseEvents={disableMouseEvents}
+                        {seriesProps.map(props => (
+                          <LineSeries
+                            {...props}
+                            disableMouseEvents={disableMouseEvents}
+                          />
+                        ))}
+                        <CrossHair
+                          fullHeight
+                          showHorizontalLine={false}
+                          strokeDasharray=""
+                          stroke={colors.grays[7]}
+                          circleStroke={colors.grays[7]}
+                          circleFill="#fff"
                         />
-                        <LineSeries
-                          data={data2}
-                          stroke={colors.categories[2]}
-                          strokeDasharray="3 3"
-                          strokeLinecap="butt"
-                          disableMouseEvents={disableMouseEvents}
-                        />
-                        <CrossHair />
                         <XAxis label="Time" numTicks={5} />
+                        <YAxis label="Price ($)" numTicks={4} />
                       </ResponsiveXYChart>
                     )}
                   </WithToggle>
