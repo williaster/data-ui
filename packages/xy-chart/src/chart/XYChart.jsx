@@ -125,7 +125,11 @@ class XYChart extends React.PureComponent {
 
   componentWillReceiveProps(nextProps) {
     let shouldComputeScales = false;
-    if (this.props.width !== nextProps.width || this.props.height !== nextProps.height) {
+    if ([
+      'width',
+      'height',
+      'children',
+    ].some(prop => this.props[prop] !== nextProps[prop])) {
       shouldComputeScales = true;
     }
     if ([

@@ -36,15 +36,9 @@ const defaultProps = {
     `}</style>
   ),
   renderTooltip: null,
-  snapToDataX: true,
-  snapToDataY: false,
   styles: { display: 'inline-block', position: 'relative' },
   TooltipComponent: TooltipWithBounds,
-  tooltipProps: {
-    style: {
-      opacity: 0.9,
-    },
-  },
+  tooltipProps: null,
   tooltipTimeout: 200,
 };
 

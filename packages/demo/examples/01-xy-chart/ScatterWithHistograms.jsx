@@ -85,7 +85,7 @@ class ScatterWithHistogram extends React.PureComponent {
           margin={marginScatter}
           theme={theme}
           renderTooltip={renderTooltip}
-          useVoronoi
+          eventTrigger="voronoi"
           showVoronoi={this.state.showVoronoi}
         >
           {datasets.map((dataset, i) => (

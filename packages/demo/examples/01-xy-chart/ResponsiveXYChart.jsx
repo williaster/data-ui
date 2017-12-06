@@ -41,14 +41,13 @@ export function renderTooltip({ datum, seriesKey, color }) {
   );
 }
 
-function ResponsiveXYChart({ screenWidth, children, innerRef, ...rest }) {
+function ResponsiveXYChart({ screenWidth, children, ...rest }) {
   return (
     <XYChart
       theme={theme}
       width={Math.min(700, screenWidth / 1.5)}
       height={Math.min(700 / 2, screenWidth / 1.5 / 2)}
       renderTooltip={renderTooltip}
-      ref={innerRef}
       {...rest}
     >
       {children}

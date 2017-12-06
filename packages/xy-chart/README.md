@@ -61,21 +61,24 @@ Name | Type | Default | Description
 ------------ | ------------- | ------- | ----
 ariaLabel | PropTypes.string.isRequired | - | Required aria-label for accessibility.
 children | PropTypes.node | - | Any node; axes, crosshair, and series children are cloned with additional props such as scales.
-width | PropTypes.number.isRequired | - | Required width of the chart (including margin). Check out `withParentSize` in the examples for responsive charts.
+eventTrigger | PropTypes.oneOf(['series', 'container', 'voronoi']) | `series` | Specifies the triggers for mouse events, see below.
+eventTriggerRefs | PropTypes.func | - | Callback invoked on mount, which receives an object containing references to the instances event handlers `{ click, mousemove, mouseleave }`, to support programmatic invocation (see below)
 height | PropTypes.number.isRequired | - | Required height of the chart (including margin). Check out `withParentSize` in the examples for responsive charts.
-margin | PropTypes.shape({ top: PropTypes.number, right: PropTypes.number, bottom: PropTypes.number, left: PropTypes.number }) | { top: 64, right: 64, bottom: 64, left: 64 } | chart margin, leave room for axes and labels! note 0 may clip LineSeries and PointSeries.
-renderTooltip | PropTypes.func | - | `({ data, datum, event, color }) => node`, should return the inner tooltip contents on trigger.
-onClick | PropTypes.func | - | `func({ data, datum, event, color [, seriesKey] })`, passed to all child series (or voronoi)
-onMouseMove | PropTypes.func | - | `func({ data, datum, event, color })`, passed to all child series (or voronoi). only needed if you are rolling your own tooltips (see below)
+innerRef | PropTypes.func | - | Callback ref that is set on the inner `svg` element
+margin | PropTypes.shape({ top: PropTypes.number, right: PropTypes.number, bottom: PropTypes.number, left: PropTypes.number }) | { top: 64, right: 64, bottom: 64, left: 64 } | chart margin, leave room for axes and labels! a "complete" margin will be created using the default top/right/bottom/left values meaning that you have to explicitly set each dimension for full control. also note that a value of `0` may clip LineSeries and PointSeries.
+onClick | PropTypes.func | - | `func({ datum, event [, coords [, data, [, color [, series [, seriesKey]]]]] })`, passed to all child series (or voronoi)
+onMouseMove | PropTypes.func | - | `func({ datum, event [, coords [, data, [, color [, series [, seriesKey]]]]] })`, passed to all child series (or voronoi). only needed if you are rolling your own tooltips (see below)
 onMouseLeave | PropTypes.func | - | `func()`, passed to all child series (or voronoi). only needed if you are rolling your own tooltips (see below)
-xScale | scaleShape.isRequired | - | scale config, see below.
-yScale | scaleShape.isRequired | - | scale config, see below.
+renderTooltip | PropTypes.func | - | `({ datum, event [, coords [, data, [, color [, series [, seriesKey]]]]] }) => node`, should return the inner tooltip contents on trigger.
 showXGrid | PropTypes.bool | false | whether to show vertical gridlines
 showYGrid | PropTypes.bool | false | whether to show vertical gridlines
+showVoronoi | PropTypes.bool | false | convenience prop for debugging to view the underlying voronoi if eventTrigger='voronoi'
+snapTooltipToDataX | PropTypes.bool | false | whether to pass coords.x in event callbacks, which has the effect of snapping a tooltip to data x values
+snapTooltipToDataY | PropTypes.bool | false | whether to pass coords.y in event callbacks, which has the effect of snapping a tooltip to data y values
 theme | themeShape | false | theme shape, see below
-useVoronoi | PropTypes.bool | false | whether to compute and use a voronoi for all datapoints (with x, y values) / mouse interactions
-showVoronoi | PropTypes.bool | false | convenience prop for debugging to view the underlying voronoi if used
-
+width | PropTypes.number.isRequired | - | Required width of the chart (including margin). Check out `withParentSize` in the examples for responsive charts.
+xScale | scaleShape.isRequired | - | scale config, see below.
+yScale | scaleShape.isRequired | - | scale config, see below.
 
 #### Scale config
 X and y-scales are configured using `xScale` and `yScale` config props which essentially configure d3/vx scales:
@@ -125,7 +128,7 @@ Series | supported x scale type | supported y scale types | data shape | support
 `<AreaSeries />` | `time`, `linear` | `linear` | `{ x, y [, y0, y1, fill, stroke] }`* | `series`, `container`, `voronoi`* | yes
 `<BarSeries />` | `time`, `linear`, `band` | `linear` | `{ x, y [, fill, stroke] }` | `series`, `container` | yes
 `<LineSeries />` | `time`, `linear` | `linear` | `{ x, y [, stroke] }` | `series`, `container`, `voronoi` | yes
-`<PointSeries />` | `time`, `linear` | `time`, `linear` | `{ x, y [size, fill, stroke, label] }` | `series`, `container`, `voronoi` | yes
+`<PointSeries />` | `time`, `linear` | `time`, `linear` | `{ x, y [size, fill, stroke, label] }` | `series`, `container` (not best for dense data) `voronoi` | yes
 `<StackedAreaSeries />` | `time`, `linear` | `linear` | `{ x, y [, [stackKey(s)]] }`* | `series` | data for all stack keys should be in passed `datum`
 `<StackedBarSeries />` | `band` | `linear` | `{ x, y }` (colors controlled with stackFills & stackKeys) | `series` | data for all stack keys should be in passed `datum`
 `<GroupedBarSeries />` | `band` | `linear` | `{ x, y }` (colors controlled with groupFills & groupKeys) | `series` | data for all group keys should be in passed `datum`
@@ -204,7 +207,7 @@ strokeWidth | PropTypes.oneOfType([PropTypes.func, PropTypes.number]) | 1 | The 
 For the `series` event trigger, `XYChart` will pass along event handlers to its child series unless a series has `disableMouseEvents` set to `true`, and any event handlers defined at the series level will _override_ those defined at the `XYChart` level. Series-level events are triggered by interactions with the series DOM elements themselves.
 
 ##### eventTrigger='container'
-For the `container` event trigger, the `XYChart` container will intercept all mouse events and event handlers will be called with all `datum`s nearest the hovered x value. This type of event trigger is useful if you want to implement a shared tooltip.
+For the `container` event trigger, the `XYChart` container will intercept all mouse events and event handlers will be called with all `datum`s nearest the hovered x value. This type of event trigger is useful if you want to implement a shared tooltip. Note that `data` passed to series should be sorted by x-value for this to work correctly.
 
 ##### eventTrigger='voronoi'
 <p align="center">
@@ -234,7 +237,7 @@ onMouseLeave()
 
 A `seriesKey` is passed when `eventTrigger=series` for `<StackedAreaSeries />`, `<StackedBarSeries />`, or `<GroupedBarSeries />`. It corresponds to the relevant `stackKey` or `groupKey` that triggered the event.
 
-`series` is passed when `eventTrigger=container` and represents an object of `datum`s across all series components nearest the current mouse `x`. The _closest_ `datum` across all series components is passed as `datum` in the function signature. Within the `series` object, `datum`s are keyed on the `seriesKey` prop set on the series component itself. **if `seriesKey` is not set, no datum will be passed for that series.**
+`series` is passed when `eventTrigger=container` and represents an object of `datum`s across all series components nearest the current mouse `x`. The _closest_ `datum` across all series components is passed as `datum` in the function signature. Within the `series` object, `datum`s are keyed on the `seriesKey` prop set on the series component itself. **similar to React, if `seriesKey` is not set its index as a child of `XYChart` will be used which is more error prone**
 
 `coords` is an object of the form `{ x: Number, y: Number }`. `XYChart` passes `x` and `y` only if `snapTooltipToDataX` or `snapTooltipToDataY` are `true`, respectively.
 

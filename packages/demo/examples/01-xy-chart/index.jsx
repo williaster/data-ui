@@ -31,7 +31,7 @@ import CirclePackWithCallback from './CirclePackWithCallback';
 import LineSeriesExample from './LineSeriesExample';
 import LinkedXYCharts from './LinkedXYCharts';
 import RectPointComponent from './RectPointComponent';
-import ResponsiveXYChart, { parseDate, formatYear, dateFormatter } from './ResponsiveXYChart';
+import ResponsiveXYChart, { dateFormatter } from './ResponsiveXYChart';
 import StackedAreaExample from './StackedAreaExample';
 import ScatterWithHistogram from './ScatterWithHistograms';
 import {
@@ -141,11 +141,13 @@ export default {
                     orientation={['diagonal']}
                   />
                   <AreaSeries
+                    seriesKey="one"
                     data={timeSeriesData}
                     fill="url(#area_gradient)"
                     strokeWidth={null}
                   />
                   <AreaSeries
+                    seriesKey="two"
                     data={timeSeriesData}
                     fill="url(#area_pattern)"
                     stroke={colors.categories[2]}
@@ -173,10 +175,11 @@ export default {
           ariaLabel="Required label"
           xScale={{ type: 'time' }}
           yScale={{ type: 'linear' }}
+          eventTrigger="container"
           renderTooltip={({ datum, series }) => (
             <div>
               <div>
-                {formatYear(parseDate(datum.x))}
+                <strong>{dateFormatter(datum.x)}</strong>
                 {(!series || Object.keys(series).length === 0) &&
                   <div>
                     {datum.y.toFixed(2)}
@@ -186,7 +189,7 @@ export default {
               {temperatureBands.map((_, i) => {
                 const key = `band-${i}`;
                 return (
-                  series && series[`band-${i}`] &&
+                  series && series[key] &&
                     <div key={key}>
                       <span
                         style={{
@@ -215,7 +218,7 @@ export default {
               orientation={['diagonal']}
             />,
             <AreaSeries
-              label={`band-${i}`}
+              seriesKey={`band-${i}`}
               key={`band-${data[0].key}`}
               data={data}
               strokeWidth={0.5}
@@ -223,7 +226,7 @@ export default {
               fill={`url(#band-${i})`}
             />,
             <LineSeries
-              key={`line-${data[0].key}`}
+              seriesKey={`line-${data[0].key}`}
               data={data}
               stroke={colors.categories[i + 1]}
               disableMouseEvents
@@ -233,8 +236,9 @@ export default {
           <CrossHair
             showHorizontalLine={false}
             fullHeight
-            stroke={colors.gray}
-            circleStroke={colors.gray}
+            stroke={colors.darkGray}
+            circleStroke={colors.darkGray}
+            circleFill="white"
           />
         </ResponsiveXYChart>
       ),
@@ -247,7 +251,7 @@ export default {
           ariaLabel="Required label"
           xScale={{ type: 'time' }}
           yScale={{ type: 'linear' }}
-          useVoronoi
+          eventTrigger="container"
         >
           <XAxis numTicks={5} />
           <YAxis label="Price" tickFormat={val => `$${val}`} />
@@ -266,6 +270,7 @@ export default {
             data={priceBandData.band}
             fill="url(#confidence-interval-fill)"
             strokeWidth={0}
+            disableMouseEvents
           />
           <LineSeries
             data={priceBandData.points.map(d => (d.y >= reference ? d : { ...d, y: reference }))}
@@ -282,8 +287,8 @@ export default {
             showHorizontalLine={false}
             fullHeight
             stroke={colors.categories[3]}
-            circleStroke={colors.categories[3]}
-            circleFill="transparent"
+            circleStroke="white"
+            circleFill="white"
           />
         </ResponsiveXYChart>
       ),
@@ -321,7 +326,7 @@ export default {
               yScale={{ type: 'linear', nice: true }}
               showXGrid={false}
               showYGrid={false}
-              useVoronoi
+              eventTrigger="voronoi"
               showVoronoi={showVoronoi}
             >
               <YAxis label="Y" numTicks={4} />
@@ -344,6 +349,7 @@ export default {
           ariaLabel="Required label"
           xScale={{ type: 'linear', nice: true }}
           yScale={{ type: 'linear', nice: true }}
+          eventTrigger="voronoi"
         >
           <YAxis label="Y" numTicks={4} />
           <XAxis label="X" numTicks={4} />
@@ -428,6 +434,7 @@ export default {
           ariaLabel="Required label"
           xScale={{ type: 'time' }}
           yScale={{ type: 'linear', domain: [40, 80] }}
+          eventTrigger="container"
         >
           <YAxis label="Temperature (°F)" numTicks={4} />
           <PatternLines
