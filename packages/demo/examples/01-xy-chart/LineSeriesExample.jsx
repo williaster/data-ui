@@ -1,14 +1,13 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { allColors } from '@data-ui/theme/build/color';
 import { Button } from '@data-ui/forms';
 
 import {
   CrossHair,
-  XAxis,
-  YAxis,
   LineSeries,
   WithTooltip,
+  XAxis,
+  YAxis,
 } from '@data-ui/xy-chart';
 
 import ResponsiveXYChart, { formatYear } from './ResponsiveXYChart';
@@ -50,7 +49,8 @@ const seriesProps = [
   },
 ];
 
-const TOOLTIP_TIMEOUT = 350;
+const MARGIN = { left: 8, top: 16 };
+const TOOLTIP_TIMEOUT = 250;
 const CONTAINER_TRIGGER = 'CONTAINER_TRIGGER';
 const VORONOI_TRIGGER = 'VORONOI_TRIGGER';
 
@@ -61,12 +61,14 @@ class LineSeriesExample extends React.PureComponent {
       index: 0,
       programmaticTrigger: false,
       trigger: CONTAINER_TRIGGER,
+      stickyTooltip: false,
     };
-    this.ref = this.ref.bind(this);
+    this.eventTriggerRefs = this.eventTriggerRefs.bind(this);
     this.triggerTooltip = this.triggerTooltip.bind(this);
     this.renderTooltip = this.renderTooltip.bind(this);
     this.restartProgrammaticTooltip = this.restartProgrammaticTooltip.bind(this);
     this.setTrigger = this.setTrigger.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
 
   componentWillUnmount() {
@@ -77,24 +79,33 @@ class LineSeriesExample extends React.PureComponent {
     this.setState(() => ({ trigger: nextTrigger }));
   }
 
-  ref(ref) {
-    this.chart = ref;
+  handleClick(args) {
+    if (this.triggers) {
+      this.setState(({ stickyTooltip }) => ({
+        stickyTooltip: !stickyTooltip,
+      }), () => {
+        this.triggers.mousemove(args);
+      });
+    }
+  }
+
+  eventTriggerRefs(triggers) {
+    this.triggers = triggers;
     this.triggerTooltip();
   }
 
   triggerTooltip() {
-    if (this.chart && this.state.index < seriesProps[0].data.length) {
+    if (this.triggers && this.state.index < seriesProps[0].data.length) {
       if (this.timeout) clearTimeout(this.timeout);
-
       this.setState(({ index, trigger }) => {
-        this.chart.handleMouseMove({
+        this.triggers.mousemove({
           datum: seriesProps[2].data[index],
           series: trigger === VORONOI_TRIGGER ? null : {
             [seriesProps[0].label]: seriesProps[0].data[index],
             [seriesProps[1].label]: seriesProps[1].data[index],
             [seriesProps[2].label]: seriesProps[2].data[index],
           },
-          overrideCoords: trigger === VORONOI_TRIGGER ? null : {
+          coords: trigger === VORONOI_TRIGGER ? null : {
             y: 50,
           },
         });
@@ -103,8 +114,8 @@ class LineSeriesExample extends React.PureComponent {
 
         return { index: index + 1, programmaticTrigger: true };
       });
-    } else if (this.chart) {
-      this.chart.handleMouseLeave();
+    } else if (this.triggers) {
+      this.triggers.mouseleave();
       this.timeout = setTimeout(() => {
         this.setState(() => ({
           index: 0,
@@ -117,16 +128,16 @@ class LineSeriesExample extends React.PureComponent {
 
   restartProgrammaticTooltip() {
     if (this.timeout) clearTimeout(this.timeout);
-    if (this.chart) {
-      this.setState(() => ({ index: 0 }), this.triggerTooltip);
+    if (this.triggers) {
+      this.setState(() => ({ stickyTooltip: false, index: 0 }), this.triggerTooltip);
     }
   }
 
   renderControls(disableMouseEvents) {
-    const { trigger } = this.state;
+    const { trigger, stickyTooltip } = this.state;
     const useVoronoiTrigger = trigger === VORONOI_TRIGGER;
-    return (
-      <div style={{ display: 'flex' }}>
+    return ([
+      <div key="buttons" style={{ display: 'flex' }}>
         <Button
           small
           rounded
@@ -152,8 +163,18 @@ class LineSeriesExample extends React.PureComponent {
           onClick={() => { this.restartProgrammaticTooltip(); }}
         > Programatically trigger tooltip
         </Button>
-      </div>
-    );
+      </div>,
+      <div key="sticky" style={{ margin: '8px 0', fontSize: 14 }}>
+        Click chart for a&nbsp;
+        <span
+          style={{
+            fontWeight: stickyTooltip && 600,
+            textDecoration: stickyTooltip && `underline ${allColors.grape[4]}`,
+          }}
+        >sticky tooltip
+        </span>
+      </div>,
+    ]);
   }
 
   renderTooltip({ datum, series }) {
@@ -161,10 +182,10 @@ class LineSeriesExample extends React.PureComponent {
     return (
       <div>
         <div>
-          {formatYear(datum.x)}
+          <strong>{formatYear(datum.x)}</strong>
           {(!series || Object.keys(series).length === 0) &&
             <div>
-              {datum.y.toFixed(2)}
+              ${datum.y.toFixed(2)}
             </div>}
         </div>
         {trigger === CONTAINER_TRIGGER && <br />}
@@ -181,7 +202,7 @@ class LineSeriesExample extends React.PureComponent {
               >
                 {`${label} `}
               </span>
-              {series[label].y.toFixed(2)}
+              ${series[label].y.toFixed(2)}
             </div>
         ))}
       </div>
@@ -189,45 +210,49 @@ class LineSeriesExample extends React.PureComponent {
   }
 
   render() {
-    const { trigger } = this.state;
+    const { trigger, stickyTooltip } = this.state;
     const useVoronoiTrigger = trigger === VORONOI_TRIGGER;
     return (
       <WithToggle id="line_mouse_events_toggle" label="Disable mouse events">
         {disableMouseEvents => (
           <div>
             {this.renderControls(disableMouseEvents)}
-            <WithTooltip
-              snapToDataY={useVoronoiTrigger}
-              renderTooltip={this.renderTooltip}
-            >
-              <ResponsiveXYChart
-                ariaLabel="Required label"
-                xScale={{ type: 'time' }}
-                yScale={{ type: 'linear' }}
-                useVoronoi={useVoronoiTrigger}
-                showVoronoi={useVoronoiTrigger}
-                margin={{ left: 8, top: 16 }}
-                renderTooltip={null}
-                innerRef={this.ref}
-              >
-                <XAxis label="Time" numTicks={5} />
-                <YAxis label="Stock price ($)" numTicks={4} />
-                {seriesProps.map(props => (
-                  <LineSeries
-                    {...props}
-                    disableMouseEvents={disableMouseEvents}
+
+            {/* Use WithTooltip to intercept onMouseLeave when in "clicked" state */}
+            <WithTooltip renderTooltip={this.renderTooltip}>
+              {({ onMouseLeave, onMouseMove, tooltipData }) => (
+                <ResponsiveXYChart
+                  ariaLabel="Required label"
+                  eventTrigger={useVoronoiTrigger ? 'voronoi' : 'container'}
+                  eventTriggerRefs={this.eventTriggerRefs}
+                  margin={MARGIN}
+                  onClick={disableMouseEvents ? null : this.handleClick}
+                  onMouseMove={disableMouseEvents || stickyTooltip ? null : onMouseMove}
+                  onMouseLeave={disableMouseEvents || stickyTooltip ? null : onMouseLeave}
+                  renderTooltip={null}
+                  showVoronoi={useVoronoiTrigger}
+                  snapTooltipToDataX
+                  snapTooltipToDataY={useVoronoiTrigger}
+                  tooltipData={tooltipData}
+                  xScale={{ type: 'time' }}
+                  yScale={{ type: 'linear' }}
+                >
+                  <XAxis label="Time" numTicks={5} />
+                  <YAxis label="Stock price ($)" numTicks={4} />
+                  {seriesProps.map(props => (
+                    <LineSeries {...props} disableMouseEvents={disableMouseEvents} />
+                  ))}
+                  <CrossHair
+                    fullHeight
+                    showHorizontalLine={false}
+                    strokeDasharray=""
+                    stroke={allColors.grape[4]}
+                    circleStroke={allColors.grape[4]}
+                    circleFill="#fff"
+                    showCircle={useVoronoiTrigger || !this.state.programmaticTrigger}
                   />
-                ))}
-                <CrossHair
-                  fullHeight
-                  showHorizontalLine={false}
-                  strokeDasharray=""
-                  stroke={allColors.grape[4]}
-                  circleStroke={allColors.grape[4]}
-                  circleFill="#fff"
-                  showCircle={useVoronoiTrigger || !this.state.programmaticTrigger}
-                />
-              </ResponsiveXYChart>
+                </ResponsiveXYChart>
+              )}
             </WithTooltip>
           </div>
         )}

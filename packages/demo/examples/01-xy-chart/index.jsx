@@ -31,7 +31,7 @@ import CirclePackWithCallback from './CirclePackWithCallback';
 import LineSeriesExample from './LineSeriesExample';
 import LinkedXYCharts from './LinkedXYCharts';
 import RectPointComponent from './RectPointComponent';
-import ResponsiveXYChart, { parseDate, formatYear, dateFormatter, renderTooltip } from './ResponsiveXYChart';
+import ResponsiveXYChart, { parseDate, formatYear, dateFormatter } from './ResponsiveXYChart';
 import StackedAreaExample from './StackedAreaExample';
 import ScatterWithHistogram from './ScatterWithHistograms';
 import {
@@ -118,51 +118,47 @@ export default {
           {snapToDataX => (
             <WithToggle id="area_snap_data_y" label="Snap tooltip to y">
               {snapToDataY => (
-                <WithTooltip
-                  snapToDataX={snapToDataX}
-                  snapToDataY={snapToDataY}
-                  renderTooltip={renderTooltip}
+                <ResponsiveXYChart
+                  eventTrigger="container"
+                  ariaLabel="Required label"
+                  xScale={{ type: 'time' }}
+                  yScale={{ type: 'linear' }}
+                  margin={{ left: 8, top: 8, bottom: 64 }}
+                  snapTooltipToDataX={snapToDataX}
+                  snapTooltipToDataY={snapToDataY}
                 >
-                  <ResponsiveXYChart
-                    ariaLabel="Required label"
-                    xScale={{ type: 'time' }}
-                    yScale={{ type: 'linear' }}
-                    margin={{ left: 8, top: 8 }}
-                    renderTooltip={null}
-                  >
-                    <LinearGradient
-                      id="area_gradient"
-                      from={colors.categories[2]}
-                      to="#fff"
-                    />
-                    <PatternLines
-                      id="area_pattern"
-                      height={12}
-                      width={12}
-                      stroke={colors.categories[2]}
-                      strokeWidth={1}
-                      orientation={['diagonal']}
-                    />
-                    <AreaSeries
-                      data={timeSeriesData}
-                      fill="url(#area_gradient)"
-                      strokeWidth={null}
-                    />
-                    <AreaSeries
-                      data={timeSeriesData}
-                      fill="url(#area_pattern)"
-                      stroke={colors.categories[2]}
-                    />
-                    <CrossHair
-                      showHorizontalLine={false}
-                      fullHeight
-                      stroke={colors.darkGray}
-                      circleFill={colors.categories[2]}
-                      circleStroke="white"
-                    />
-                    <XAxis label="Time" numTicks={5} />
-                  </ResponsiveXYChart>
-                </WithTooltip>
+                  <LinearGradient
+                    id="area_gradient"
+                    from={colors.categories[2]}
+                    to="#fff"
+                  />
+                  <PatternLines
+                    id="area_pattern"
+                    height={12}
+                    width={12}
+                    stroke={colors.categories[2]}
+                    strokeWidth={1}
+                    orientation={['diagonal']}
+                  />
+                  <AreaSeries
+                    data={timeSeriesData}
+                    fill="url(#area_gradient)"
+                    strokeWidth={null}
+                  />
+                  <AreaSeries
+                    data={timeSeriesData}
+                    fill="url(#area_pattern)"
+                    stroke={colors.categories[2]}
+                  />
+                  <CrossHair
+                    showHorizontalLine={false}
+                    fullHeight
+                    stroke={colors.darkGray}
+                    circleFill={colors.categories[2]}
+                    circleStroke="white"
+                  />
+                  <XAxis label="Time" numTicks={5} />
+                </ResponsiveXYChart>
               )}
             </WithToggle>
           )}

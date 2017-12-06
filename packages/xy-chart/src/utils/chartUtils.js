@@ -1,6 +1,4 @@
 import { Children } from 'react';
-import { scaleLinear, scaleTime, scaleUtc, scaleBand, scaleOrdinal } from '@vx/scale';
-import { extent } from 'd3-array';
 
 export function callOrValue(maybeFn, ...args) {
   if (typeof maybeFn === 'function') {
@@ -51,59 +49,6 @@ export function isSeries(name) {
 
 export function isStackedSeries(name) {
   return (/stacked/gi).test(name);
-}
-
-export const scaleTypeToScale = {
-  time: scaleTime,
-  timeUtc: scaleUtc,
-  linear: scaleLinear,
-  band: scaleBand,
-  ordinal: scaleOrdinal,
-};
-
-export function collectDataFromChildSeries(children) {
-  let allData = [];
-  const dataByIndex = {};
-  const dataBySeriesType = {};
-
-  Children.forEach(children, (Child, i) => {
-    if (Child && Child.props && Child.props.data) {
-      const name = componentName(Child);
-      const { data } = Child.props;
-      if (data && isSeries(name)) {
-        dataByIndex[i] = data;
-        allData = allData.concat(data);
-        dataBySeriesType[name] = (dataBySeriesType[name] || []).concat(data);
-      }
-    }
-  });
-  return { dataByIndex, allData, dataBySeriesType };
-}
-
-export function getScaleForAccessor({
-  allData,
-  minAccessor,
-  maxAccessor,
-  type,
-  includeZero = true,
-  range,
-  ...rest
-}) {
-  let domain;
-  if (type === 'band' || type === 'ordinal') {
-    domain = allData.map(minAccessor);
-  }
-  if (type === 'linear' || type === 'time' || type === 'timeUtc') {
-    const [min, max] = extent([
-      ...extent(allData, minAccessor),
-      ...extent(allData, maxAccessor),
-    ]);
-    domain = [
-      type === 'linear' && includeZero ? Math.min(0, min) : min,
-      type === 'linear' && includeZero ? Math.max(0, max) : max,
-    ];
-  }
-  return scaleTypeToScale[type]({ domain, range, ...rest });
 }
 
 export function numTicksForHeight(height) {

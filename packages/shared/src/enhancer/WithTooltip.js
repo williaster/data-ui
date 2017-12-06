@@ -19,8 +19,6 @@ export const propTypes = {
   className: PropTypes.string,
   HoverStyles: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
   renderTooltip: PropTypes.func,
-  snapToDataX: PropTypes.bool,
-  snapToDataY: PropTypes.bool,
   styles: PropTypes.object,
   TooltipComponent: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
   tooltipProps: PropTypes.object,
@@ -43,7 +41,9 @@ const defaultProps = {
   styles: { display: 'inline-block', position: 'relative' },
   TooltipComponent: TooltipWithBounds,
   tooltipProps: {
-    opacity: 0.9,
+    style: {
+      opacity: 0.9,
+    },
   },
   tooltipTimeout: 200,
 };
@@ -62,29 +62,21 @@ class WithTooltip extends React.PureComponent {
     }
   }
 
-  handleMouseMove({ event, datum, dataCoords, overrideCoords, ...rest }) {
+  handleMouseMove({ event, datum, coords, ...rest }) {
     if (this.tooltipTimeout) {
       clearTimeout(this.tooltipTimeout);
     }
 
-    let coords = { x: 0, y: 0 };
+    let tooltipCoords = { x: 0, y: 0 };
     if (event && event.target && event.target.ownerSVGElement) {
-      coords = localPoint(event.target.ownerSVGElement, event);
+      tooltipCoords = localPoint(event.target.ownerSVGElement, event);
     }
 
-    if (this.props.snapToDataX && dataCoords && typeof dataCoords.x === 'number') {
-      coords.x = dataCoords.x;
-    }
-
-    if (this.props.snapToDataY && dataCoords && typeof dataCoords.y === 'number') {
-      coords.y = dataCoords.y;
-    }
-
-    coords = { ...coords, ...overrideCoords };
+    tooltipCoords = { ...tooltipCoords, ...coords };
 
     this.props.showTooltip({
-      tooltipLeft: coords.x,
-      tooltipTop: coords.y,
+      tooltipLeft: tooltipCoords.x,
+      tooltipTop: tooltipCoords.y,
       tooltipData: {
         event,
         datum,
