@@ -87,6 +87,33 @@ describe('<WithTooltip />', () => {
     expect(wrapper.find('#test').length).toBe(1);
   });
 
+  test.only('it should use the provided `coords` if passed to onMouseMove', () => {
+    let mouseMove;
+    const wrapper = mount(
+      <WithTooltip
+        TooltipComponent={({ top, left, children }) => (
+          <div style={{ top, left }} id="tooltip">{children}</div>
+        )}
+        renderTooltip={() => <div id="test" />}
+      >
+        {({ onMouseMove }) => {
+          mouseMove = onMouseMove;
+          return <svg />;
+        }}
+      </WithTooltip>,
+    );
+
+    mouseMove({ coords: {} });
+    wrapper.update();
+    expect(wrapper.find('#tooltip').prop('style').top).toBe(0);
+    expect(wrapper.find('#tooltip').prop('style').left).toBe(0);
+
+    mouseMove({ coords: { x: 27, y: 13 } });
+    wrapper.update();
+    expect(wrapper.find('#tooltip').prop('style').top).toBe(13);
+    expect(wrapper.find('#tooltip').prop('style').left).toBe(27);
+  });
+
   test('it should not render a tooltip if renderTooltip returns a falsy value', () => {
     const renderTooltip = jest.fn();
     renderTooltip.mockReturnValue(<div id="test" />);
