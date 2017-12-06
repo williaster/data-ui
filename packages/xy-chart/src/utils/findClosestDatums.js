@@ -25,17 +25,15 @@ export default function findClosestDatums({
   Children.forEach(children, (Child, childIndex) => {
     const { disableMouseEvents, data, seriesKey } = Child.props;
     if (isSeries(componentName(Child)) && !disableMouseEvents) {
-      const adjustedGetX = xScale.invert ? getX : d => getX(d) + ((xScale.barWidth || 0) / 2);
-
       // @TODO data should be sorted, come up with a way to enforce+cache instead of relying on user
       const datum = findClosestDatum({
         data,
-        getX: adjustedGetX,
+        getX,
         xScale,
         event,
       });
 
-      const deltaX = Math.abs(xScale(adjustedGetX(datum || {})) - mouseX);
+      const deltaX = Math.abs(xScale(getX(datum || {})) - mouseX);
 
       if (datum && deltaX <= maxXDistancePx) {
         const key = seriesKey || childIndex; // fall back to child index

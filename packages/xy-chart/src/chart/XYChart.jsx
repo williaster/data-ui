@@ -172,7 +172,6 @@ class XYChart extends React.PureComponent {
       xScale,
       yScale,
     });
-
     if (closestDatum || Object.keys(series).length > 0) {
       event.persist();
       const args = { event, datum: closestDatum, series };

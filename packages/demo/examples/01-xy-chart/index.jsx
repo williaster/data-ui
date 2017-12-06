@@ -406,6 +406,7 @@ export default {
           ariaLabel="Required label"
           xScale={{ type: 'band' }}
           yScale={{ type: 'linear' }}
+          eventTrigger="container"
         >
           <LinearGradient
             id="aqua_lightaqua_gradient"
