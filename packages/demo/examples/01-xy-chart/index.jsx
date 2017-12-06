@@ -399,7 +399,7 @@ export default {
       ),
     },
     {
-      description: 'Categorical BarSeries',
+      description: 'Categorical BarSeries With Snapping Tooltip',
       components: [XYChart, BarSeries, CrossHair],
       example: () => (
         <ResponsiveXYChart
@@ -407,6 +407,8 @@ export default {
           xScale={{ type: 'band' }}
           yScale={{ type: 'linear' }}
           eventTrigger="container"
+          snapTooltipToDataX
+          snapTooltipToDataY
         >
           <LinearGradient
             id="aqua_lightaqua_gradient"

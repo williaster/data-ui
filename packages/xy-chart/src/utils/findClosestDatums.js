@@ -23,8 +23,8 @@ export default function findClosestDatums({
 
   // collect data from all series that have an x value near this point
   Children.forEach(children, (Child, childIndex) => {
-    const { disableMouseEvents, data, seriesKey } = Child.props;
-    if (isSeries(componentName(Child)) && !disableMouseEvents) {
+    if (isSeries(componentName(Child)) && !Child.props.disableMouseEvents) {
+      const { data, seriesKey } = Child.props;
       // @TODO data should be sorted, come up with a way to enforce+cache instead of relying on user
       const datum = findClosestDatum({
         data,
