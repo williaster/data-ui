@@ -16,7 +16,7 @@ import WithToggle from '../shared/WithToggle';
 
 const seriesProps = [
   {
-    label: 'Stock 1',
+    seriesKey: 'Stock 1',
     key: 'Stock 1',
     data: timeSeriesData,
     stroke: allColors.grape[9],
@@ -24,7 +24,7 @@ const seriesProps = [
     dashType: 'solid',
   },
   {
-    label: 'Stock 2',
+    seriesKey: 'Stock 2',
     key: 'Stock 2',
     data: timeSeriesData.map(d => ({
       ...d,
@@ -36,7 +36,7 @@ const seriesProps = [
     strokeLinecap: 'butt',
   },
   {
-    label: 'Stock 3',
+    seriesKey: 'Stock 3',
     key: 'Stock 3',
     data: timeSeriesData.map(d => ({
       ...d,
@@ -101,9 +101,9 @@ class LineSeriesExample extends React.PureComponent {
         this.triggers.mousemove({
           datum: seriesProps[2].data[index],
           series: trigger === VORONOI_TRIGGER ? null : {
-            [seriesProps[0].label]: seriesProps[0].data[index],
-            [seriesProps[1].label]: seriesProps[1].data[index],
-            [seriesProps[2].label]: seriesProps[2].data[index],
+            [seriesProps[0].seriesKey]: seriesProps[0].data[index],
+            [seriesProps[1].seriesKey]: seriesProps[1].data[index],
+            [seriesProps[2].seriesKey]: seriesProps[2].data[index],
           },
           coords: trigger === VORONOI_TRIGGER ? null : {
             y: 50,
@@ -189,20 +189,20 @@ class LineSeriesExample extends React.PureComponent {
             </div>}
         </div>
         {trigger === CONTAINER_TRIGGER && <br />}
-        {seriesProps.map(({ label, stroke: color, dashType }) => (
-          series && series[label] &&
-            <div key={label}>
+        {seriesProps.map(({ seriesKey, stroke: color, dashType }) => (
+          series && series[seriesKey] &&
+            <div key={seriesKey}>
               <span
                 style={{
                   color,
-                  textDecoration: !programmaticTrigger && series[label] === datum
+                  textDecoration: !programmaticTrigger && series[seriesKey] === datum
                     ? `underline ${dashType} ${color}` : null,
-                  fontWeight: series[label] === datum ? 600 : 200,
+                  fontWeight: series[seriesKey] === datum ? 600 : 200,
                 }}
               >
-                {`${label} `}
+                {`${seriesKey} `}
               </span>
-              ${series[label].y.toFixed(2)}
+              ${series[seriesKey].y.toFixed(2)}
             </div>
         ))}
       </div>
@@ -218,7 +218,7 @@ class LineSeriesExample extends React.PureComponent {
           <div>
             {this.renderControls(disableMouseEvents)}
 
-            {/* Use WithTooltip to intercept onMouseLeave when in "clicked" state */}
+            {/* Use WithTooltip to intercept mouse events in stickyTooltip state */}
             <WithTooltip renderTooltip={this.renderTooltip}>
               {({ onMouseLeave, onMouseMove, tooltipData }) => (
                 <ResponsiveXYChart

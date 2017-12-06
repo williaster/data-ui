@@ -7,35 +7,22 @@ import color from '@data-ui/theme/build/color';
 
 import { intervalSeriesDataShape } from '../utils/propShapes';
 import { callOrValue } from '../utils/chartUtils';
+import sharedSeriesProps from '../utils/sharedSeriesProps';
 
 const propTypes = {
+  ...sharedSeriesProps,
   data: intervalSeriesDataShape.isRequired,
-  disableMouseEvents: PropTypes.bool,
-  // overridden by data props
   fill: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   fillOpacity: PropTypes.number,
   stroke: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   strokeWidth: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
-  onClick: PropTypes.func,
-  onMouseMove: PropTypes.func,
-  onMouseLeave: PropTypes.func,
-
-  // likely be injected by the parent xychart
-  xScale: PropTypes.func,
-  yScale: PropTypes.func,
 };
 
 const defaultProps = {
-  disableMouseEvents: false,
   fill: color.default,
   fillOpacity: 1,
   stroke: 'none',
   strokeWidth: 1,
-  xScale: null,
-  yScale: null,
-  onClick: null,
-  onMouseMove: null,
-  onMouseLeave: null,
 };
 
 const x0 = d => d.x0;

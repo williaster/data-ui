@@ -5,20 +5,18 @@ import BoxPlot from '@vx/stats/build/boxplot/BoxPlot';
 import themeColors from '@data-ui/theme/build/color';
 
 import { callOrValue, isDefined } from '../utils/chartUtils';
-
 import { boxPlotSeriesDataShape } from '../utils/propShapes';
+import sharedSeriesProps from '../utils/sharedSeriesProps';
 
 const propTypes = {
+  ...sharedSeriesProps,
   containerEvents: PropTypes.bool,
   data: boxPlotSeriesDataShape.isRequired,
-  disableMouseEvents: PropTypes.bool,
   fill: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+  horizontal: PropTypes.bool,
   stroke: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   strokeWidth: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
   fillOpacity: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
-  onClick: PropTypes.func,
-  onMouseMove: PropTypes.func,
-  onMouseLeave: PropTypes.func,
   widthRatio: PropTypes.number,
   containerProps: PropTypes.object,
   outlierProps: PropTypes.object,
@@ -26,11 +24,6 @@ const propTypes = {
   minProps: PropTypes.object,
   maxProps: PropTypes.object,
   medianProps: PropTypes.object,
-
-  // likely be injected by the parent chart
-  xScale: PropTypes.func,
-  yScale: PropTypes.func,
-  horizontal: PropTypes.bool,
 };
 
 const defaultProps = {
@@ -40,8 +33,6 @@ const defaultProps = {
   strokeWidth: 2,
   fill: themeColors.default,
   fillOpacity: 1,
-  xScale: null,
-  yScale: null,
   horizontal: false,
   widthRatio: 1,
   containerProps: null,
@@ -50,10 +41,6 @@ const defaultProps = {
   minProps: null,
   maxProps: null,
   medianProps: null,
-  disableMouseEvents: false,
-  onMouseMove: undefined,
-  onMouseLeave: undefined,
-  onClick: undefined,
 };
 
 const MAX_BOX_WIDTH = 50;

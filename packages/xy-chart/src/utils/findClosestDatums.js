@@ -13,18 +13,17 @@ export default function findClosestDatums({ children, xScale, yScale, getX, getY
   let minDelta = Infinity;
 
   // collect data from all series that have an x value near this point
-  Children.forEach(children, (Child, childIndex) => {
-    const { disableMouseEvents, data, label } = Child.props;
-    if (isSeries(componentName(Child)) && !disableMouseEvents) {
+  Children.forEach(children, (Child) => {
+    const { disableMouseEvents, data, seriesKey } = Child.props;
+    if (seriesKey && isSeries(componentName(Child)) && !disableMouseEvents) {
       const datum = findClosestDatum({
         data,
         getX: xScale.invert ? getX : d => getX(d) + ((xScale.barWidth || 0) / 2),
         xScale,
         event,
       });
-      const key = label || childIndex;
       if (datum) {
-        series[key] = datum;
+        series[seriesKey] = datum;
         const deltaY = Math.abs(yScale(getY(datum)) - mouseY);
         closestDatum = !closestDatum || deltaY < minDelta ? datum : closestDatum;
         minDelta = Math.min(deltaY, minDelta);

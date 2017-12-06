@@ -34,7 +34,6 @@ export const propTypes = {
   ...withTooltipPropTypes,
   ariaLabel: PropTypes.string.isRequired,
   children: PropTypes.node,
-  disableMouseEvents: PropTypes.bool,
   eventTrigger: PropTypes.oneOf([CONTAINER_TRIGGER, SERIES_TRIGGER, VORONOI_TRIGGER]),
   eventTriggerRefs: PropTypes.func,
   height: PropTypes.number.isRequired,
