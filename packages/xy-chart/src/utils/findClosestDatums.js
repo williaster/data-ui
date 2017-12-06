@@ -5,6 +5,7 @@ import findClosestDatum from './findClosestDatum';
 import { componentName, isSeries } from '../utils/chartUtils';
 
 export default function findClosestDatums({ children, xScale, yScale, getX, getY, event }) {
+  if (!event || !event.target || !event.target.ownerSVGElement) return null;
   const series = {};
 
   const gElement = event.target.ownerSVGElement.firstChild;

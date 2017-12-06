@@ -2,7 +2,7 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import ViolinPlot from '@vx/stats/build/violinplot/ViolinPlot';
 
-import { XYChart, ViolinPlotSeries, computeStats } from '../src/';
+import { XYChart, ViolinPlotSeries, computeStats } from '../../src/';
 
 describe('<ViolinPlotSeries />', () => {
   const mockData = [1, 2, 3, 4, 5, 5, 5, 5, 5, 6, 9, 5, 1];

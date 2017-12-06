@@ -3,7 +3,7 @@ import LinePath from '@vx/shape/build/shapes/LinePath';
 import React from 'react';
 import { shallow, mount } from 'enzyme';
 
-import { XYChart, LineSeries } from '../src/';
+import { XYChart, LineSeries } from '../../src/';
 
 describe('<LineSeries />', () => {
   const mockProps = {

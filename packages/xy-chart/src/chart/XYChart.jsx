@@ -189,8 +189,8 @@ class XYChart extends React.PureComponent {
     }
   }
 
-  handleMouseLeave() {
-    if (this.props.onMouseLeave) this.props.onMouseLeave();
+  handleMouseLeave(args) {
+    if (this.props.onMouseLeave) this.props.onMouseLeave(args);
   }
 
   handleClick(args) {

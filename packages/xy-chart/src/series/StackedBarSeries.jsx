@@ -5,7 +5,7 @@ import BarStack from '@vx/shape/build/shapes/BarStack';
 import color from '@data-ui/theme/build/color';
 
 import { stackedBarSeriesDataShape } from '../utils/propShapes';
-import { scaleTypeToScale } from '../utils/chartUtils';
+import { scaleTypeToScale } from '../utils/getScaleForAccessor';
 import sharedSeriesProps from '../utils/sharedSeriesProps';
 
 const propTypes = {

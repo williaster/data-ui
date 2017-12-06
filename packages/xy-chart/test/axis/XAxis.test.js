@@ -2,7 +2,7 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import AxisBottom from '@vx/axis/build/axis/AxisBottom';
 import AxisTop from '@vx/axis/build/axis/AxisTop';
-import { XYChart, XAxis, LineSeries } from '../src/';
+import { XYChart, XAxis, LineSeries } from '../../src/';
 
 describe('<XAxis />', () => {
   const chartProps = {

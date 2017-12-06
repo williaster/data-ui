@@ -2,7 +2,7 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import BoxPlot from '@vx/stats/build/boxplot/BoxPlot';
 
-import { XYChart, BoxPlotSeries, computeStats } from '../src/';
+import { XYChart, BoxPlotSeries, computeStats } from '../../src/';
 
 describe('<BoxPlotSeries />', () => {
   const mockData = [1, 2, 3, 4, 5, 5, 5, 5, 5, 6, 9, 5, 1];

@@ -1,11 +1,10 @@
 import { defaultProps } from '../chart/XYChart';
 
-export default function getChartDimensions(props) {
-  const { margin, width, height } = props;
+export default function getChartDimensions({ margin, width, height }) {
   const completeMargin = { ...defaultProps.margin, ...margin };
   return {
     margin: completeMargin,
-    innerHeight: height - completeMargin.top - completeMargin.bottom,
-    innerWidth: width - completeMargin.left - completeMargin.right,
+    innerHeight: Math.max(0, height - completeMargin.top - completeMargin.bottom),
+    innerWidth: Math.max(0, width - completeMargin.left - completeMargin.right),
   };
 }

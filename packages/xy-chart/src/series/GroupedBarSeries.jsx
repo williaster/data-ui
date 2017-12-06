@@ -5,7 +5,7 @@ import BarGroup from '@vx/shape/build/shapes/BarGroup';
 import color from '@data-ui/theme/build/color';
 
 import { groupedBarSeriesDataShape } from '../utils/propShapes';
-import { scaleTypeToScale } from '../utils/chartUtils';
+import { scaleTypeToScale } from '../utils/getScaleForAccessor';
 import sharedSeriesProps from '../utils/sharedSeriesProps';
 
 const propTypes = {

@@ -2,7 +2,7 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import Line from '@vx/shape/build/shapes/Line';
 
-import { XYChart, HorizontalReferenceLine } from '../src/';
+import { XYChart, HorizontalReferenceLine } from '../../src/';
 
 describe('<HorizontalReferenceLine />', () => {
   const reference = 12;

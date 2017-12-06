@@ -1,10 +1,10 @@
 import Grid from '@vx/grid/build/grids/Grid';
 import Group from '@vx/group/build/Group';
 import React from 'react';
-import { shallow } from 'enzyme';
+import { shallow, mount } from 'enzyme';
 
-import { XYChart, xyChartPropTypes, XAxis, YAxis, LineSeries, WithTooltip } from '../src';
-import Voronoi from '../src/chart/Voronoi';
+import { XYChart, xyChartPropTypes, XAxis, YAxis, LineSeries, WithTooltip } from '../../src';
+import Voronoi from '../../src/chart/Voronoi';
 
 describe('<XYChart />', () => {
   const mockProps = {
@@ -169,9 +169,64 @@ describe('<XYChart />', () => {
     expect(yScale.domain()).toEqual([-mockData[2].num, 0]);
   });
 
-  test('it should render a Voronoi if useVoronoi is true', () => {
+  test('it should call the eventTriggerRefs callback on mount', () => {
+    expect.assertions(4);
+
+    function eventTriggerRefs(refs) {
+      expect(refs).toEqual(expect.any(Object));
+      expect(refs.click).toEqual(expect.any(Function));
+      expect(refs.mousemove).toEqual(expect.any(Function));
+      expect(refs.mouseleave).toEqual(expect.any(Function));
+    }
+
+    mount(<XYChart {...mockProps} eventTriggerRefs={eventTriggerRefs} />);
+  });
+
+  test('it should set the passed innerRef callback on the svg', () => {
+    expect.assertions(1);
+
+    function innerRef(ref) {
+      expect(ref.tagName).toBe('svg');
+    }
+
+    mount(<XYChart {...mockProps} innerRef={innerRef} />);
+  });
+
+  test('calls to eventTriggerRefs should invoke the corresponding event handlers passed to XYChart', () => {
+    const onMouseMove = jest.fn();
+    const onMouseLeave = jest.fn();
+    const onClick = jest.fn();
+
+    const callbackArgs = { test: 'object' };
+    function eventTriggerRefs(refs) {
+      refs.click(callbackArgs);
+      refs.mousemove(callbackArgs);
+      refs.mouseleave(callbackArgs);
+    }
+
+    mount(
+      <XYChart
+        {...mockProps}
+        onMouseMove={onMouseMove}
+        onMouseLeave={onMouseLeave}
+        onClick={onClick}
+        eventTriggerRefs={eventTriggerRefs}
+      />,
+    );
+
+    expect(onMouseMove).toHaveBeenCalledTimes(1);
+    expect(onMouseMove.mock.calls[0][0]).toMatchObject(callbackArgs);
+
+    expect(onMouseLeave).toHaveBeenCalledTimes(1);
+    expect(onMouseLeave.mock.calls[0][0]).toMatchObject(callbackArgs);
+
+    expect(onClick).toHaveBeenCalledTimes(1);
+    expect(onClick.mock.calls[0][0]).toMatchObject(callbackArgs);
+  });
+
+  test('it should render a Voronoi if eventTrigger="voronoi"', () => {
     const wrapper = shallow(
-      <XYChart {...mockProps} useVoronoi>
+      <XYChart {...mockProps} eventTrigger="voronoi">
         <LineSeries
           label="label"
           data={mockData.map(d => ({ ...d, x: d.date, y: d.num }))}
@@ -180,5 +235,90 @@ describe('<XYChart />', () => {
     );
 
     expect(wrapper.find(Voronoi).length).toBe(1);
+  });
+
+  test('it should render a rect to intercept events if eventTrigger="container"', () => {
+    const wrapper = shallow(
+      <XYChart {...mockProps} eventTrigger="container">
+        <LineSeries
+          label="label"
+          data={mockData.map(d => ({ ...d, x: d.date, y: d.num }))}
+        />
+      </XYChart>,
+    );
+
+    expect(wrapper.find('rect').length).toBe(1);
+  });
+
+  test('it should pass appropriate coords in mouse event handlers if snapTooltipToDataX or snapTooltipToDataY is true', () => {
+    const onMouseMove = jest.fn();
+    const onClick = jest.fn();
+    const data = mockData.map(d => ({ x: d.date, y: d.num }));
+    const callbackArgs = { datum: data[1] };
+
+    function eventTriggerRefs(refs) {
+      refs.click(callbackArgs);
+      refs.mousemove(callbackArgs);
+    }
+
+    mount(
+      <XYChart
+        {...mockProps}
+        onClick={onClick}
+        onMouseMove={onMouseMove}
+        eventTriggerRefs={eventTriggerRefs}
+        snapTooltipToDataX={false}
+        snapTooltipToDataY={false}
+      >
+        <LineSeries data={data} />
+      </XYChart>,
+    );
+
+    mount(
+      <XYChart
+        {...mockProps}
+        onClick={onClick}
+        onMouseMove={onMouseMove}
+        eventTriggerRefs={eventTriggerRefs}
+        snapTooltipToDataX
+        snapTooltipToDataY={false}
+      >
+        <LineSeries data={data} />
+      </XYChart>,
+    );
+
+    mount(
+      <XYChart
+        {...mockProps}
+        onClick={onClick}
+        onMouseMove={onMouseMove}
+        eventTriggerRefs={eventTriggerRefs}
+        snapTooltipToDataX={false}
+        snapTooltipToDataY
+      >
+        <LineSeries data={data} />
+      </XYChart>,
+    );
+
+    expect(onMouseMove).toHaveBeenCalledTimes(3);
+    expect(onClick).toHaveBeenCalledTimes(3);
+
+    // first call, no x/y
+    expect(onMouseMove.mock.calls[0][0].coords.x).toBeUndefined();
+    expect(onMouseMove.mock.calls[0][0].coords.y).toBeUndefined();
+    expect(onClick.mock.calls[0][0].coords.x).toBeUndefined();
+    expect(onClick.mock.calls[0][0].coords.y).toBeUndefined();
+
+    // second call, just x
+    expect(onMouseMove.mock.calls[1][0].coords.x).toEqual(expect.any(Number));
+    expect(onMouseMove.mock.calls[1][0].coords.y).toBeUndefined();
+    expect(onClick.mock.calls[1][0].coords.x).toEqual(expect.any(Number));
+    expect(onClick.mock.calls[1][0].coords.y).toBeUndefined();
+
+    // third call, just y
+    expect(onMouseMove.mock.calls[2][0].coords.x).toBeUndefined();
+    expect(onMouseMove.mock.calls[2][0].coords.y).toEqual(expect.any(Number));
+    expect(onClick.mock.calls[2][0].coords.x).toBeUndefined();
+    expect(onClick.mock.calls[2][0].coords.y).toEqual(expect.any(Number));
   });
 });
