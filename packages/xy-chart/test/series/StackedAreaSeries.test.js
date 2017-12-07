@@ -2,7 +2,7 @@ import React from 'react';
 import { shallow, mount } from 'enzyme';
 import Stack from '@vx/shape/build/shapes/Stack';
 
-import { XYChart, StackedAreaSeries } from '../src/';
+import { XYChart, StackedAreaSeries } from '../../src/';
 
 describe('<StackedAreaSeries />', () => {
   const mockProps = {

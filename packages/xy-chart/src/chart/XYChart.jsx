@@ -5,33 +5,39 @@ import Grid from '@vx/grid/build/grids/Grid';
 import Group from '@vx/group/build/Group';
 import WithTooltip, { withTooltipPropTypes } from '@data-ui/shared/build/enhancer/WithTooltip';
 
+import collectVoronoiData from '../utils/collectVoronoiData';
+import findClosestDatums from '../utils/findClosestDatums';
+import shallowCompareObjectEntries from '../utils/shallowCompareObjectEntries';
 import Voronoi from './Voronoi';
 
 import {
-  collectDataFromChildSeries,
   componentName,
   isAxis,
-  isBarSeries,
-  isCirclePackSeries,
   isCrossHair,
-  isDefined,
   isReferenceLine,
   isSeries,
   getChildWithName,
-  getScaleForAccessor,
   numTicksForWidth,
   numTicksForHeight,
   propOrFallback,
 } from '../utils/chartUtils';
 
+import collectScalesFromProps from '../utils/collectScalesFromProps';
+import getChartDimensions from '../utils/getChartDimensions';
 import { scaleShape, themeShape } from '../utils/propShapes';
+
+export const CONTAINER_TRIGGER = 'container';
+export const SERIES_TRIGGER = 'series';
+export const VORONOI_TRIGGER = 'voronoi';
 
 export const propTypes = {
   ...withTooltipPropTypes,
   ariaLabel: PropTypes.string.isRequired,
   children: PropTypes.node,
-  width: PropTypes.number.isRequired,
+  eventTrigger: PropTypes.oneOf([CONTAINER_TRIGGER, SERIES_TRIGGER, VORONOI_TRIGGER]),
+  eventTriggerRefs: PropTypes.func,
   height: PropTypes.number.isRequired,
+  innerRef: PropTypes.func,
   margin: PropTypes.shape({
     top: PropTypes.number,
     right: PropTypes.number,
@@ -39,17 +45,23 @@ export const propTypes = {
     left: PropTypes.number,
   }),
   renderTooltip: PropTypes.func,
-  xScale: scaleShape.isRequired,
-  yScale: scaleShape.isRequired,
   showXGrid: PropTypes.bool,
   showYGrid: PropTypes.bool,
-  theme: themeShape,
-  useVoronoi: PropTypes.bool,
   showVoronoi: PropTypes.bool,
+  snapTooltipToDataX: PropTypes.bool,
+  snapTooltipToDataY: PropTypes.bool,
+  theme: themeShape,
+  width: PropTypes.number.isRequired,
+  xScale: scaleShape.isRequired,
+  yScale: scaleShape.isRequired,
 };
 
-const defaultProps = {
+export const defaultProps = {
   children: null,
+  disableMouseEvents: false,
+  eventTrigger: SERIES_TRIGGER,
+  eventTriggerRefs: null,
+  innerRef: null,
   margin: {
     top: 64,
     right: 64,
@@ -57,92 +69,24 @@ const defaultProps = {
     left: 64,
   },
   renderTooltip: null,
+  showVoronoi: false,
   showXGrid: false,
   showYGrid: false,
+  snapTooltipToDataX: false,
+  snapTooltipToDataY: false,
+  styles: null,
   theme: {},
-  // @TODO tooltipProps
-  //  voronoi
-  useVoronoi: false,
-  showVoronoi: false,
 };
 
 // accessors
-const getX = d => d.x;
-const getY = d => d.y;
-const xString = d => getX(d).toString();
+const getX = d => d && d.x;
+const getY = d => d && d.y;
 
 class XYChart extends React.PureComponent {
-  static collectScalesFromProps(props) {
-    const { xScale: xScaleObject, yScale: yScaleObject, children } = props;
-    const { innerWidth, innerHeight } = XYChart.getDimmensions(props);
-    const { allData } = collectDataFromChildSeries(children);
-
-    const xScale = getScaleForAccessor({
-      allData,
-      minAccessor: d => (typeof d.x0 !== 'undefined' ? d.x0 : d.x),
-      maxAccessor: d => (typeof d.x1 !== 'undefined' ? d.x1 : d.x),
-      range: [0, innerWidth],
-      ...xScaleObject,
-    });
-
-    const yScale = getScaleForAccessor({
-      allData,
-      minAccessor: d => (typeof d.y0 !== 'undefined' ? d.y0 : d.y),
-      maxAccessor: d => (typeof d.y1 !== 'undefined' ? d.y1 : d.y),
-      range: [innerHeight, 0],
-      ...yScaleObject,
-    });
-
-    React.Children.forEach(children, (Child) => { // Child-specific scales or adjustments here
-      const name = componentName(Child);
-      if (isBarSeries(name) && xScaleObject.type !== 'band') {
-        const dummyBand = getScaleForAccessor({
-          allData,
-          minAccessor: xString,
-          maxAccessor: xString,
-          type: 'band',
-          rangeRound: [0, innerWidth],
-          paddingOuter: 1,
-        });
-
-        const offset = dummyBand.bandwidth() / 2;
-        xScale.range([offset, innerWidth - offset]);
-        xScale.barWidth = dummyBand.bandwidth();
-        xScale.offset = offset;
-      }
-      if (isCirclePackSeries(name)) {
-        yScale.domain([-innerHeight / 2, innerHeight / 2]);
-      }
-    });
-
-    return {
-      xScale,
-      yScale,
-    };
-  }
-
-  static getDimmensions(props) {
-    const { margin, width, height } = props;
-    const completeMargin = { ...defaultProps.margin, ...margin };
-    return {
-      margin: completeMargin,
-      innerHeight: height - completeMargin.top - completeMargin.bottom,
-      innerWidth: width - completeMargin.left - completeMargin.right,
-    };
-  }
-
   static getStateFromProps(props) {
-    const { margin, innerWidth, innerHeight } = XYChart.getDimmensions(props);
-    const { xScale, yScale } = XYChart.collectScalesFromProps(props);
-
-    const voronoiData = React.Children.toArray(props.children).reduce((result, Child) => {
-      if (isSeries(componentName(Child)) && !Child.props.disableMouseEvents) {
-        return result.concat(
-          Child.props.data.filter(d => isDefined(getX(d)) && isDefined(getY(d))),
-        );
-      }
-      return result;
-    }, []);
+    const { margin, innerWidth, innerHeight } = getChartDimensions(props);
+    const { xScale, yScale } = collectScalesFromProps(props);
+    const voronoiData = collectVoronoiData({ children: props.children, getX, getY });
 
     return {
       innerHeight,
@@ -161,19 +105,41 @@ class XYChart extends React.PureComponent {
     // if renderTooltip is passed we return another XYChart wrapped in WithTooltip
     // therefore we don't want to compute state if the nested chart will do so
     this.state = props.renderTooltip ? {} : XYChart.getStateFromProps(props);
+
+    this.getDatumCoords = this.getDatumCoords.bind(this);
+    this.handleClick = this.handleClick.bind(this);
+    this.handleMouseLeave = this.handleMouseLeave.bind(this);
+    this.handleMouseMove = this.handleMouseMove.bind(this);
+    this.handleContainerEvent = this.handleContainerEvent.bind(this);
+  }
+
+  componentDidMount() {
+    if (!this.props.renderTooltip && this.props.eventTriggerRefs) {
+      this.props.eventTriggerRefs({
+        mousemove: this.handleMouseMove,
+        mouseleave: this.handleMouseLeave,
+        click: this.handleClick,
+      });
+    }
   }
 
   componentWillReceiveProps(nextProps) {
-    if ([ // recompute scales if any of the following change
-      'height',
-      'margin',
+    let shouldComputeScales = false;
+    if ([
       'width',
+      'height',
+      'children',
+    ].some(prop => this.props[prop] !== nextProps[prop])) {
+      shouldComputeScales = true;
+    }
+    if ([
+      'margin',
       'xScale',
       'yScale',
-    ].some(prop => this.props[prop] !== nextProps[prop])) {
-      // @TODO update only on children updates that require new scales
-      this.setState(XYChart.getStateFromProps(nextProps));
+    ].some(prop => !shallowCompareObjectEntries(this.props[prop], nextProps[prop]))) {
+      shouldComputeScales = true;
     }
+    if (shouldComputeScales) this.setState(XYChart.getStateFromProps(nextProps));
   }
 
   getNumTicks(innerWidth, innerHeight) {
@@ -183,6 +149,63 @@ class XYChart extends React.PureComponent {
       numXTicks: propOrFallback(xAxis && xAxis.props, 'numTicks', numTicksForWidth(innerWidth)),
       numYTicks: propOrFallback(yAxis && yAxis.props, 'numTicks', numTicksForHeight(innerHeight)),
     };
+  }
+
+  getDatumCoords(datum) {
+    const { snapTooltipToDataX, snapTooltipToDataY } = this.props;
+    const { xScale, yScale, margin } = this.state;
+    const coords = {};
+    // tooltip operates in full width/height space so we must account for margins
+    if (datum && snapTooltipToDataX) coords.x = xScale(getX(datum)) + margin.left;
+    if (datum && snapTooltipToDataY) coords.y = yScale(getY(datum)) + margin.top;
+    return coords;
+  }
+
+  handleContainerEvent(event) {
+    const { xScale, yScale } = this.state;
+    const { children } = this.props;
+    const { closestDatum, series } = findClosestDatums({
+      children,
+      event,
+      getX,
+      getY,
+      xScale,
+      yScale,
+    });
+    if (closestDatum || Object.keys(series).length > 0) {
+      event.persist();
+      const args = { event, datum: closestDatum, series };
+      if (event.type === 'mousemove') this.handleMouseMove(args);
+      else if (event.type === 'click') this.handleClick(args);
+    }
+  }
+
+  handleMouseMove(args) {
+    if (this.props.onMouseMove) {
+      this.props.onMouseMove({
+        ...args,
+        coords: {
+          ...this.getDatumCoords(args.datum),
+          ...args.coords,
+        },
+      });
+    }
+  }
+
+  handleMouseLeave(args) {
+    if (this.props.onMouseLeave) this.props.onMouseLeave(args);
+  }
+
+  handleClick(args) {
+    if (this.props.onClick) {
+      this.props.onClick({
+        ...args,
+        coords: {
+          ...this.getDatumCoords(args.datum),
+          ...args.coords,
+        },
+      });
+    }
   }
 
   render() {
@@ -196,18 +219,16 @@ class XYChart extends React.PureComponent {
 
     const {
       ariaLabel,
+      eventTrigger,
       children,
       showXGrid,
       showYGrid,
       theme,
       height,
       width,
-      onClick,
-      onMouseLeave,
-      onMouseMove,
+      innerRef,
       tooltipData,
       showVoronoi,
-      useVoronoi,
     } = this.props;
 
     const {
@@ -224,13 +245,13 @@ class XYChart extends React.PureComponent {
     const { numXTicks, numYTicks } = this.getNumTicks(innerWidth, innerHeight);
     const barWidth = xScale.barWidth || (xScale.bandwidth && xScale.bandwidth()) || 0;
     const CrossHairs = []; // ensure these are the top-most layer
-
     return innerWidth > 0 && innerHeight > 0 && (
       <svg
         aria-label={ariaLabel}
         role="img"
         width={width}
         height={height}
+        ref={innerRef}
       >
         <Group left={margin.left} top={margin.top}>
           {(showXGrid || showYGrid) && (numXTicks || numYTicks) &&
@@ -264,9 +285,12 @@ class XYChart extends React.PureComponent {
                 xScale,
                 yScale,
                 barWidth,
-                onClick: Child.props.onClick || onClick,
-                onMouseLeave: Child.props.onMouseLeave || onMouseLeave,
-                onMouseMove: Child.props.onMouseMove || onMouseMove,
+                onClick: Child.props.onClick
+                  || (Child.props.disableMouseEvents ? undefined : this.handleClick),
+                onMouseLeave: Child.props.onMouseLeave
+                  || (Child.props.disableMouseEvents ? undefined : this.handleMouseLeave),
+                onMouseMove: Child.props.onMouseMove
+                  || (Child.props.disableMouseEvents ? undefined : this.handleMouseMove),
               });
             } else if (isCrossHair(name)) {
               CrossHairs.push(Child);
@@ -277,17 +301,30 @@ class XYChart extends React.PureComponent {
             return Child;
           })}
 
-          {useVoronoi &&
+          {eventTrigger === VORONOI_TRIGGER &&
             <Voronoi
               data={voronoiData}
               x={voronoiX}
               y={voronoiY}
               width={innerWidth}
               height={innerHeight}
-              onClick={onClick}
-              onMouseMove={onMouseMove}
-              onMouseLeave={onMouseLeave}
+              onClick={this.handleClick}
+              onMouseMove={this.handleMouseMove}
+              onMouseLeave={this.handleMouseLeave}
               showVoronoi={showVoronoi}
+            />}
+
+          {eventTrigger === CONTAINER_TRIGGER &&
+            <rect
+              x={0}
+              y={0}
+              width={innerWidth}
+              height={innerHeight}
+              fill="transparent"
+              fillOpacity={0}
+              onClick={this.handleContainerEvent}
+              onMouseMove={this.handleContainerEvent}
+              onMouseLeave={this.handleMouseLeave}
             />}
 
           {tooltipData && CrossHairs.length > 0 && CrossHairs.map((CrossHair, i) => (

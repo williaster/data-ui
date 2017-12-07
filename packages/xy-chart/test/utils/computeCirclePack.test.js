@@ -1,5 +1,5 @@
 import scaleLinear from '@vx/scale/build/scales/linear';
-import computeCirclePack from '../src/utils/computeCirclePack';
+import computeCirclePack from '../../src/utils/computeCirclePack';
 
 describe('computeCirclePack', () => {
   const mockData = [

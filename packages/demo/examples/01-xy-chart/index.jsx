@@ -22,12 +22,13 @@ import {
   PatternLines,
   LinearGradient,
   WithTooltip,
-  theme,
 } from '@data-ui/xy-chart';
 
+import colors from '@data-ui/theme/build/color';
 import readme from '../../node_modules/@data-ui/xy-chart/README.md';
 
 import CirclePackWithCallback from './CirclePackWithCallback';
+import LineSeriesExample from './LineSeriesExample';
 import LinkedXYCharts from './LinkedXYCharts';
 import RectPointComponent from './RectPointComponent';
 import ResponsiveXYChart, { dateFormatter } from './ResponsiveXYChart';
@@ -54,7 +55,6 @@ import {
 
 import WithToggle from '../shared/WithToggle';
 
-const { colors } = theme;
 PatternLines.displayName = 'PatternLines';
 LinearGradient.displayName = 'LinearGradient';
 
@@ -108,91 +108,63 @@ export default {
     {
       description: 'LineSeries',
       components: [LineSeries, CrossHair],
-      example: () => {
-        const data2 = timeSeriesData.map(d => ({
-          ...d,
-          y: Math.random() > 0.5 ? d.y * 2 : d.y / 2,
-        }));
-        return (
-          <WithToggle id="line_use_voronoi_toggle" label="Use voronoi" initialChecked>
-            {useVoronoi => (
-              <WithToggle id="line_show_voronoi_toggle" label="Show voronoi" initialChecked>
-                {showVoronoi => (
-                  <WithToggle id="line_m_events_toggle" label="Disable mouse events">
-                    {disableMouseEvents => (
-                      <ResponsiveXYChart
-                        ariaLabel="Required label"
-                        xScale={{ type: 'time' }}
-                        yScale={{ type: 'linear' }}
-                        useVoronoi={useVoronoi}
-                        showVoronoi={showVoronoi}
-                      >
-                        <YAxis label="Price ($)" numTicks={4} />
-                        <LineSeries
-                          data={timeSeriesData}
-                          showPoints
-                          disableMouseEvents={disableMouseEvents}
-                        />
-                        <LineSeries
-                          data={data2}
-                          stroke={colors.categories[2]}
-                          strokeDasharray="3 3"
-                          strokeLinecap="butt"
-                          disableMouseEvents={disableMouseEvents}
-                        />
-                        <CrossHair />
-                        <XAxis label="Time" numTicks={5} />
-                      </ResponsiveXYChart>
-                    )}
-                  </WithToggle>
-                )}
-              </WithToggle>
-            )}
-          </WithToggle>
-        );
-      },
+      example: () => <LineSeriesExample />,
     },
     {
       description: 'AreaSeries -- closed',
       components: [AreaSeries],
       example: () => (
-        <ResponsiveXYChart
-          ariaLabel="Required label"
-          xScale={{ type: 'time' }}
-          yScale={{ type: 'linear' }}
-        >
-          <LinearGradient
-            id="area_gradient"
-            from={colors.categories[2]}
-            to="#fff"
-          />
-          <PatternLines
-            id="area_pattern"
-            height={12}
-            width={12}
-            stroke={colors.categories[2]}
-            strokeWidth={1}
-            orientation={['diagonal']}
-          />
-          <AreaSeries
-            data={timeSeriesData}
-            fill="url(#area_gradient)"
-            strokeWidth={null}
-          />
-          <AreaSeries
-            data={timeSeriesData}
-            fill="url(#area_pattern)"
-            stroke={colors.categories[2]}
-          />
-          <CrossHair
-            showHorizontalLine={false}
-            fullHeight
-            stroke={colors.darkGray}
-            circleFill="white"
-            circleStroke={colors.darkGray}
-          />
-          <XAxis label="Time" numTicks={5} />
-        </ResponsiveXYChart>
+        <WithToggle id="area_snap_data_x" label="Snap tooltip to x" initialChecked>
+          {snapToDataX => (
+            <WithToggle id="area_snap_data_y" label="Snap tooltip to y">
+              {snapToDataY => (
+                <ResponsiveXYChart
+                  eventTrigger="container"
+                  ariaLabel="Required label"
+                  xScale={{ type: 'time' }}
+                  yScale={{ type: 'linear' }}
+                  margin={{ left: 8, top: 8, bottom: 64 }}
+                  snapTooltipToDataX={snapToDataX}
+                  snapTooltipToDataY={snapToDataY}
+                >
+                  <LinearGradient
+                    id="area_gradient"
+                    from={colors.categories[2]}
+                    to="#fff"
+                  />
+                  <PatternLines
+                    id="area_pattern"
+                    height={12}
+                    width={12}
+                    stroke={colors.categories[2]}
+                    strokeWidth={1}
+                    orientation={['diagonal']}
+                  />
+                  <AreaSeries
+                    seriesKey="one"
+                    data={timeSeriesData}
+                    fill="url(#area_gradient)"
+                    strokeWidth={null}
+                  />
+                  <AreaSeries
+                    seriesKey="two"
+                    data={timeSeriesData}
+                    fill="url(#area_pattern)"
+                    stroke={colors.categories[2]}
+                  />
+                  <CrossHair
+                    showHorizontalLine={false}
+                    fullHeight
+                    stroke={colors.darkGray}
+                    circleFill={colors.categories[2]}
+                    circleStroke="white"
+                  />
+                  <XAxis label="Time" numTicks={5} />
+                </ResponsiveXYChart>
+              )}
+            </WithToggle>
+          )}
+        </WithToggle>
       ),
     },
     {
@@ -203,6 +175,38 @@ export default {
           ariaLabel="Required label"
           xScale={{ type: 'time' }}
           yScale={{ type: 'linear' }}
+          eventTrigger="container"
+          renderTooltip={({ datum, series }) => (
+            <div>
+              <div>
+                <strong>{dateFormatter(datum.x)}</strong>
+                {(!series || Object.keys(series).length === 0) &&
+                  <div>
+                    {datum.y.toFixed(2)}
+                  </div>}
+              </div>
+              <br />
+              {temperatureBands.map((_, i) => {
+                const key = `band-${i}`;
+                return (
+                  series && series[key] &&
+                    <div key={key}>
+                      <span
+                        style={{
+                          color: colors.categories[i + 1],
+                          textDecoration: series[key] === datum
+                            ? `underline solid ${colors.categories[i + 1]}` : null,
+                          fontWeight: series[key] === datum ? 600 : 200,
+                        }}
+                      >
+                        {`${key} `}
+                      </span>
+                      {series[key].y.toFixed(2)}
+                    </div>
+                );
+              })}
+            </div>
+          )}
         >
           {temperatureBands.map((data, i) => ([
             <PatternLines
@@ -214,6 +218,7 @@ export default {
               orientation={['diagonal']}
             />,
             <AreaSeries
+              seriesKey={`band-${i}`}
               key={`band-${data[0].key}`}
               data={data}
               strokeWidth={0.5}
@@ -221,17 +226,19 @@ export default {
               fill={`url(#band-${i})`}
             />,
             <LineSeries
-              key={`line-${data[0].key}`}
+              seriesKey={`line-${data[0].key}`}
               data={data}
               stroke={colors.categories[i + 1]}
+              disableMouseEvents
             />,
           ]))}
           <YAxis label="Temperature (°F)" numTicks={4} />
           <CrossHair
             showHorizontalLine={false}
             fullHeight
-            stroke={colors.gray}
-            circleStroke={colors.gray}
+            stroke={colors.darkGray}
+            circleStroke={colors.darkGray}
+            circleFill="white"
           />
         </ResponsiveXYChart>
       ),
@@ -244,7 +251,7 @@ export default {
           ariaLabel="Required label"
           xScale={{ type: 'time' }}
           yScale={{ type: 'linear' }}
-          useVoronoi
+          eventTrigger="container"
         >
           <XAxis numTicks={5} />
           <YAxis label="Price" tickFormat={val => `$${val}`} />
@@ -263,6 +270,7 @@ export default {
             data={priceBandData.band}
             fill="url(#confidence-interval-fill)"
             strokeWidth={0}
+            disableMouseEvents
           />
           <LineSeries
             data={priceBandData.points.map(d => (d.y >= reference ? d : { ...d, y: reference }))}
@@ -279,8 +287,8 @@ export default {
             showHorizontalLine={false}
             fullHeight
             stroke={colors.categories[3]}
-            circleStroke={colors.categories[3]}
-            circleFill="transparent"
+            circleStroke="white"
+            circleFill="white"
           />
         </ResponsiveXYChart>
       ),
@@ -318,7 +326,7 @@ export default {
               yScale={{ type: 'linear', nice: true }}
               showXGrid={false}
               showYGrid={false}
-              useVoronoi
+              eventTrigger="voronoi"
               showVoronoi={showVoronoi}
             >
               <YAxis label="Y" numTicks={4} />
@@ -341,6 +349,7 @@ export default {
           ariaLabel="Required label"
           xScale={{ type: 'linear', nice: true }}
           yScale={{ type: 'linear', nice: true }}
+          eventTrigger="voronoi"
         >
           <YAxis label="Y" numTicks={4} />
           <XAxis label="X" numTicks={4} />
@@ -390,13 +399,16 @@ export default {
       ),
     },
     {
-      description: 'Categorical BarSeries',
+      description: 'Categorical BarSeries With Snapping Tooltip',
       components: [XYChart, BarSeries, CrossHair],
       example: () => (
         <ResponsiveXYChart
           ariaLabel="Required label"
           xScale={{ type: 'band' }}
           yScale={{ type: 'linear' }}
+          eventTrigger="container"
+          snapTooltipToDataX
+          snapTooltipToDataY
         >
           <LinearGradient
             id="aqua_lightaqua_gradient"
@@ -425,6 +437,7 @@ export default {
           ariaLabel="Required label"
           xScale={{ type: 'time' }}
           yScale={{ type: 'linear', domain: [40, 80] }}
+          eventTrigger="container"
         >
           <YAxis label="Temperature (°F)" numTicks={4} />
           <PatternLines

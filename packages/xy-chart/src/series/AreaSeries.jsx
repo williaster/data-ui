@@ -10,10 +10,11 @@ import interpolatorLookup from '../utils/interpolatorLookup';
 import { callOrValue, isDefined } from '../utils/chartUtils';
 import findClosestDatum from '../utils/findClosestDatum';
 import { areaSeriesDataShape, interpolationShape } from '../utils/propShapes';
+import sharedSeriesProps from '../utils/sharedSeriesProps';
 
 const propTypes = {
+  ...sharedSeriesProps,
   data: areaSeriesDataShape.isRequired,
-  disableMouseEvents: PropTypes.bool,
   fill: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   fillOpacity: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
   interpolation: interpolationShape,
@@ -21,16 +22,9 @@ const propTypes = {
   strokeDasharray: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   strokeWidth: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
   strokeLinecap: PropTypes.oneOf(['butt', 'square', 'round', 'inherit']),
-  onClick: PropTypes.func,
-  onMouseMove: PropTypes.func,
-  onMouseLeave: PropTypes.func,
-  // these will likely be injected by the parent chart
-  xScale: PropTypes.func,
-  yScale: PropTypes.func,
 };
 
 const defaultProps = {
-  disableMouseEvents: false,
   interpolation: 'monotoneX',
   stroke: color.default,
   strokeWidth: 3,
@@ -38,11 +32,6 @@ const defaultProps = {
   strokeLinecap: 'round',
   fill: color.default,
   fillOpacity: 0.3,
-  xScale: null,
-  yScale: null,
-  onClick: null,
-  onMouseMove: null,
-  onMouseLeave: null,
 };
 
 const x = d => d && d.x;

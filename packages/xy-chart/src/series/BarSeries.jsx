@@ -7,39 +7,25 @@ import themeColors from '@data-ui/theme/build/color';
 
 import { barSeriesDataShape } from '../utils/propShapes';
 import { callOrValue, isDefined } from '../utils/chartUtils';
+import sharedSeriesProps from '../utils/sharedSeriesProps';
 
 const propTypes = {
+  ...sharedSeriesProps,
+  barWidth: PropTypes.number,
   data: barSeriesDataShape.isRequired,
-  disableMouseEvents: PropTypes.bool,
-  // overridden by data props
   fill: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   fillOpacity: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
   stroke: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   strokeWidth: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
-
-  onClick: PropTypes.func,
-  onMouseMove: PropTypes.func,
-  onMouseLeave: PropTypes.func,
-
-  // probably injected by the parent xychart
-  barWidth: PropTypes.number,
-  xScale: PropTypes.func,
-  yScale: PropTypes.func,
 };
 
 const defaultProps = {
   barWidth: null,
-  disableMouseEvents: false,
   fill: themeColors.default,
   fillOpacity: null,
   stackBy: null,
   stroke: '#FFFFFF',
   strokeWidth: 1,
-  xScale: null,
-  yScale: null,
-  onClick: null,
-  onMouseMove: null,
-  onMouseLeave: null,
 };
 
 const x = d => d.x;

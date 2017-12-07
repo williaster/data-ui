@@ -10,10 +10,11 @@ import {
 
 export const parseDate = timeParse('%Y%m%d');
 export const formatDate = timeFormat('%b %d');
+export const formatYear = timeFormat('%Y');
 export const dateFormatter = date => formatDate(parseDate(date));
 
 // this is a little messy to handle all cases across series types
-function renderTooltip({ datum, seriesKey, color }) {
+export function renderTooltip({ datum, seriesKey, color }) {
   const { x, x0, y, value } = datum;
   let xVal = x || x0;
   if (typeof xVal === 'string') {

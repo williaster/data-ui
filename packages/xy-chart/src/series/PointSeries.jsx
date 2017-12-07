@@ -8,6 +8,7 @@ import color from '@data-ui/theme/build/color';
 import { callOrValue, isDefined } from '../utils/chartUtils';
 import { pointSeriesDataShape } from '../utils/propShapes';
 import GlyphDotComponent from '../glyph/GlyphDotComponent';
+import sharedSeriesProps from '../utils/sharedSeriesProps';
 
 export const pointComponentPropTypes = {
   x: PropTypes.number.isRequired,
@@ -26,28 +27,19 @@ export const pointComponentPropTypes = {
 };
 
 export const propTypes = {
+  ...sharedSeriesProps,
   data: pointSeriesDataShape.isRequired,
-  disableMouseEvents: PropTypes.bool,
   labelComponent: PropTypes.element,
   pointComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
-  onClick: PropTypes.func,
-  onMouseMove: PropTypes.func,
-  onMouseLeave: PropTypes.func,
-  // attributes on data points will override these
   fill: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   fillOpacity: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
   stroke: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   strokeWidth: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
   strokeDasharray: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   size: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
-
-  // likely be injected by the parent chart
-  xScale: PropTypes.func,
-  yScale: PropTypes.func,
 };
 
 export const defaultProps = {
-  disableMouseEvents: false,
   labelComponent: <text {...chartTheme.labelStyles} />,
   pointComponent: GlyphDotComponent,
   size: 4,
@@ -56,11 +48,6 @@ export const defaultProps = {
   stroke: '#FFFFFF',
   strokeDasharray: null,
   strokeWidth: 1,
-  xScale: null,
-  yScale: null,
-  onClick: null,
-  onMouseMove: null,
-  onMouseLeave: null,
 };
 
 const noEventsStyles = { pointerEvents: 'none' };

@@ -3,7 +3,7 @@ import { shallow, mount } from 'enzyme';
 import Area from '@vx/shape/build/shapes/Area';
 import LinePath from '@vx/shape/build/shapes/LinePath';
 
-import { XYChart, AreaSeries } from '../src/';
+import { XYChart, AreaSeries } from '../../src/';
 
 describe('<AreaSeries />', () => {
   const mockProps = {

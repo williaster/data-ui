@@ -1,7 +1,7 @@
 import React from 'react';
 import { shallow, mount } from 'enzyme';
 
-import { XYChart, CirclePackSeries, PointSeries } from '../src/';
+import { XYChart, CirclePackSeries, PointSeries } from '../../src/';
 
 describe('<CirclePackSeries />', () => {
   const mockProps = {

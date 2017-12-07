@@ -1,9 +1,10 @@
-import Bar from '@vx/shape/build/shapes/Bar';
 import React from 'react';
 import { shallow, mount } from 'enzyme';
-import { XYChart, BarSeries } from '../src/';
 
-describe('<BarSeries />', () => {
+import { XYChart, PointSeries } from '../../src/';
+import GlyphDotComponent from '../../src/glyph/GlyphDotComponent';
+
+describe('<PointSeries />', () => {
   const mockProps = {
     xScale: { type: 'time' },
     yScale: { type: 'linear', includeZero: false },
@@ -20,62 +21,54 @@ describe('<BarSeries />', () => {
   ];
 
   test('it should be defined', () => {
-    expect(BarSeries).toBeDefined();
+    expect(PointSeries).toBeDefined();
   });
 
   test('it should not render without x- and y-scales', () => {
-    expect(shallow(<BarSeries data={[]} />).type()).toBeNull();
+    expect(shallow(<PointSeries data={[]} />).type()).toBeNull();
   });
 
-  test('it should render one bar per datum', () => {
+  test('it should render a GlyphDotComponent for each datum', () => {
     const wrapper = shallow(
       <XYChart {...mockProps} >
-        <BarSeries data={mockData.map(d => ({ ...d, x: d.date, y: d.num }))} />
+        <PointSeries data={mockData.map(d => ({ ...d, x: d.date, y: d.num }))} />
       </XYChart>,
     );
-    const barSeries = wrapper.find(BarSeries).dive();
-    expect(barSeries.find(Bar).length).toBe(mockData.length);
-
-    const noDataWrapper = shallow(
-      <XYChart {...mockProps} >
-        <BarSeries data={[]} />
-      </XYChart>,
-    );
-    const noDataBarSeries = noDataWrapper.find(BarSeries).dive();
-    expect(noDataBarSeries.find(Bar).length).toBe(0);
+    expect(wrapper.find(PointSeries).length).toBe(1);
+    expect(wrapper.find(PointSeries).dive().find(GlyphDotComponent).length).toBe(mockData.length);
   });
 
-  test('it should not render bars for null data', () => {
+  test('it should not render points for null data', () => {
     const wrapper = shallow(
       <XYChart {...mockProps} >
-        <BarSeries
-          data={mockData.map((d, i) => ({
-            x: d.date,
-            y: i === 0 ? null : d.num,
+        <PointSeries
+          data={mockData.map((d, i) => ({ // test null x AND y's
+            x: i === 0 ? null : d.date,
+            y: i === 1 ? null : d.num,
           }))}
         />
       </XYChart>,
     );
-    const barSeries = wrapper.find(BarSeries).dive();
-    expect(barSeries.find(Bar).length).toBe(mockData.length - 1);
+    const series = wrapper.find(PointSeries).dive();
+    expect(series.find(GlyphDotComponent).length).toBe(mockData.length - 2);
   });
 
-  test('it should work with time or band scales', () => {
-    const timeWrapper = shallow(
-      <XYChart {...mockProps} xScale={{ type: 'time' }}>
-        <BarSeries data={mockData.map(d => ({ ...d, x: d.date, y: d.num }))} />
+  test('it should render labels if present', () => {
+    const wrapper = shallow(
+      <XYChart {...mockProps} >
+        <PointSeries
+          data={mockData.map((d, i) => ({
+            x: d.date,
+            y: d.num,
+            label: i === 0 ? 'LABEL' : null,
+          }))}
+          labelComponent={<text className="test" />}
+        />
       </XYChart>,
     );
-    expect(timeWrapper.find(BarSeries).length).toBe(1);
-    expect(timeWrapper.find(BarSeries).dive().find(Bar).length).toBe(mockData.length);
-
-    const bandWrapper = shallow(
-      <XYChart {...mockProps} xScale={{ type: 'band' }}>
-        <BarSeries data={mockData.map(d => ({ ...d, x: d.cat, y: d.num }))} />
-      </XYChart>,
-    );
-    expect(bandWrapper.find(BarSeries).length).toBe(1);
-    expect(bandWrapper.find(BarSeries).dive().find(Bar).length).toBe(mockData.length);
+    const label = wrapper.render().find('.test');
+    expect(label.length).toBe(1);
+    expect(label.text()).toBe('LABEL');
   });
 
   test('it should call onMouseMove({ datum, data, event, color }), onMouseLeave(), and onClick({ datum, data, event, color }) on trigger', () => {
@@ -91,30 +84,30 @@ describe('<BarSeries />', () => {
         onMouseLeave={onMouseLeave}
         onClick={onClick}
       >
-        <BarSeries fill="banana" data={data} />
+        <PointSeries data={data} fill="army-green" />
       </XYChart>,
     );
 
-    const bar = wrapper.find(Bar).first();
+    const point = wrapper.find('circle').first();
 
-    bar.simulate('mousemove');
+    point.simulate('mousemove');
     expect(onMouseMove).toHaveBeenCalledTimes(1);
     let args = onMouseMove.mock.calls[0][0];
     expect(args.data).toBe(data);
     expect(args.datum).toBe(data[0]);
     expect(args.event).toBeDefined();
-    expect(args.color).toBe('banana');
+    expect(args.color).toBe('army-green');
 
-    bar.simulate('mouseleave');
+    point.simulate('mouseleave');
     expect(onMouseLeave).toHaveBeenCalledTimes(1);
 
-    bar.simulate('click');
+    point.simulate('click');
     expect(onClick).toHaveBeenCalledTimes(1);
     args = onClick.mock.calls[0][0];
     expect(args.data).toBe(data);
     expect(args.datum).toBe(data[0]);
     expect(args.event).toBeDefined();
-    expect(args.color).toBe('banana');
+    expect(args.color).toBe('army-green');
   });
 
   test('it should not trigger onMouseMove, onMouseLeave, or onClick if disableMouseEvents is true', () => {
@@ -130,19 +123,19 @@ describe('<BarSeries />', () => {
         onMouseLeave={onMouseLeave}
         onClick={onClick}
       >
-        <BarSeries data={data} disableMouseEvents />
+        <PointSeries data={data} disableMouseEvents />
       </XYChart>,
     );
 
-    const bar = wrapper.find(Bar).first();
+    const point = wrapper.find('circle').first();
 
-    bar.simulate('mousemove');
+    point.simulate('mousemove');
     expect(onMouseMove).toHaveBeenCalledTimes(0);
 
-    bar.simulate('mouseleave');
+    point.simulate('mouseleave');
     expect(onMouseLeave).toHaveBeenCalledTimes(0);
 
-    bar.simulate('click');
+    point.simulate('click');
     expect(onClick).toHaveBeenCalledTimes(0);
   });
 });

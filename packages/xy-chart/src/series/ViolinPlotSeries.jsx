@@ -7,40 +7,24 @@ import themeColors from '@data-ui/theme/build/color';
 import { callOrValue } from '../utils/chartUtils';
 
 import { violinPlotSeriesDataShape } from '../utils/propShapes';
-
+import sharedSeriesProps from '../utils/sharedSeriesProps';
 
 const propTypes = {
+  ...sharedSeriesProps,
   data: violinPlotSeriesDataShape.isRequired,
-
-  // attributes on data points will override these
+  horizontal: PropTypes.bool,
   fill: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   stroke: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   strokeWidth: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
-
-  // likely be injected by the parent chart
-  xScale: PropTypes.func,
-  yScale: PropTypes.func,
-  horizontal: PropTypes.bool,
   widthRatio: PropTypes.number,
-  disableMouseEvents: PropTypes.bool,
-  onMouseMove: PropTypes.func,
-  onMouseLeave: PropTypes.func,
-  onClick: PropTypes.func,
 };
 
 const defaultProps = {
-  boxWidth: null,
   stroke: themeColors.darkGray,
   strokeWidth: 2,
   fill: themeColors.default,
-  xScale: null,
-  yScale: null,
   horizontal: false,
   widthRatio: 1,
-  disableMouseEvents: false,
-  onMouseMove: undefined,
-  onMouseLeave: undefined,
-  onClick: undefined,
 };
 
 const MAX_BOX_WIDTH = 50;

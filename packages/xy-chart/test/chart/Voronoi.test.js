@@ -3,7 +3,7 @@ import { shallow, mount } from 'enzyme';
 
 import VoronoiPolygon from '@vx/voronoi/build/components/VoronoiPolygon';
 
-import Voronoi from '../src/chart/Voronoi';
+import Voronoi from '../../src/chart/Voronoi';
 
 describe('<Voronoi />', () => {
   const props = {

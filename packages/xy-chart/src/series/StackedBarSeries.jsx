@@ -5,34 +5,22 @@ import BarStack from '@vx/shape/build/shapes/BarStack';
 import color from '@data-ui/theme/build/color';
 
 import { stackedBarSeriesDataShape } from '../utils/propShapes';
-import { scaleTypeToScale } from '../utils/chartUtils';
+import { scaleTypeToScale } from '../utils/getScaleForAccessor';
+import sharedSeriesProps from '../utils/sharedSeriesProps';
 
 const propTypes = {
+  ...sharedSeriesProps,
   data: stackedBarSeriesDataShape.isRequired,
-  disableMouseEvents: PropTypes.bool,
   stackKeys: PropTypes.arrayOf(PropTypes.string).isRequired,
   stackFills: PropTypes.arrayOf(PropTypes.string),
   stroke: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   strokeWidth: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
-  onClick: PropTypes.func,
-  onMouseMove: PropTypes.func,
-  onMouseLeave: PropTypes.func,
-
-  // these will likely be injected by the parent xychart
-  xScale: PropTypes.func,
-  yScale: PropTypes.func,
 };
 
 const defaultProps = {
-  disableMouseEvents: false,
   stackFills: color.categories,
   stroke: '#FFFFFF',
   strokeWidth: 1,
-  xScale: null,
-  yScale: null,
-  onClick: null,
-  onMouseMove: null,
-  onMouseLeave: null,
 };
 
 const x = d => d.x;

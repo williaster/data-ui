@@ -51,26 +51,25 @@ export default function StackedAreaExample() {
   return (
     <WithToggle id="lineseries_toggle" label="As percent" initialChecked>
       {asPercent => (
-        <div
-          style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
-        >
-          <LegendOrdinal
-            key="legend"
-            direction="row"
-            scale={legendScale}
-            shape={({ fill, width, height }) => (
-              <svg width={width} height={height}>
-                <rect
-                  width={width}
-                  height={height}
-                  fill={fill}
-                />
-              </svg>
-            )}
-            fill={({ datum }) => legendScale(datum)}
-            labelFormat={label => label}
-          />
-
+        <div>
+          <div style={{ marginLeft: 24 }}>
+            <LegendOrdinal
+              key="legend"
+              direction="row"
+              scale={legendScale}
+              shape={({ fill, width, height }) => (
+                <svg width={width} height={height}>
+                  <rect
+                    width={width}
+                    height={height}
+                    fill={fill}
+                  />
+                </svg>
+              )}
+              fill={({ datum }) => legendScale(datum)}
+              labelFormat={label => label}
+            />
+          </div>
           <ResponsiveXYChart
             ariaLabel="Stacked area chart of temperatures"
             key="chart"

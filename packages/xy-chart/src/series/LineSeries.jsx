@@ -9,38 +9,26 @@ import { callOrValue, isDefined } from '../utils/chartUtils';
 import findClosestDatum from '../utils/findClosestDatum';
 import interpolatorLookup from '../utils/interpolatorLookup';
 import { interpolationShape, lineSeriesDataShape } from '../utils/propShapes';
+import sharedSeriesProps from '../utils/sharedSeriesProps';
 
 const propTypes = {
+  ...sharedSeriesProps,
   data: lineSeriesDataShape.isRequired,
-  disableMouseEvents: PropTypes.bool,
   interpolation: interpolationShape,
   showPoints: PropTypes.bool,
   stroke: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   strokeDasharray: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   strokeWidth: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
   strokeLinecap: PropTypes.oneOf(['butt', 'square', 'round', 'inherit']),
-  onClick: PropTypes.func,
-  onMouseMove: PropTypes.func,
-  onMouseLeave: PropTypes.func,
-
-  // these will likely be injected by the parent chart
-  xScale: PropTypes.func,
-  yScale: PropTypes.func,
 };
 
 const defaultProps = {
-  disableMouseEvents: false,
   interpolation: 'monotoneX',
   showPoints: false,
   stroke: color.default,
   strokeDasharray: null,
   strokeWidth: 3,
   strokeLinecap: 'round',
-  xScale: null,
-  yScale: null,
-  onClick: null,
-  onMouseMove: null,
-  onMouseLeave: null,
 };
 
 const x = d => d.x;

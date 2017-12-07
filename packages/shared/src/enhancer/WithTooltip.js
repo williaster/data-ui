@@ -13,7 +13,7 @@ export const withTooltipPropTypes = {
   tooltipData: PropTypes.any,
 };
 
-const propTypes = {
+export const propTypes = {
   ...vxTooltipPropTypes,
   children: PropTypes.oneOfType([PropTypes.object, PropTypes.func]).isRequired,
   className: PropTypes.string,
@@ -56,19 +56,21 @@ class WithTooltip extends React.PureComponent {
     }
   }
 
-  handleMouseMove({ event, datum, ...rest }) {
+  handleMouseMove({ event, datum, coords, ...rest }) {
     if (this.tooltipTimeout) {
       clearTimeout(this.tooltipTimeout);
     }
 
-    let coords = { x: 0, y: 0 };
+    let tooltipCoords = { x: 0, y: 0 };
     if (event && event.target && event.target.ownerSVGElement) {
-      coords = localPoint(event.target.ownerSVGElement, event);
+      tooltipCoords = localPoint(event.target.ownerSVGElement, event);
     }
 
+    tooltipCoords = { ...tooltipCoords, ...coords };
+
     this.props.showTooltip({
-      tooltipLeft: coords.x,
-      tooltipTop: coords.y,
+      tooltipLeft: tooltipCoords.x,
+      tooltipTop: tooltipCoords.y,
       tooltipData: {
         event,
         datum,

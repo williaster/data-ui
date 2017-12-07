@@ -5,37 +5,25 @@ import BarGroup from '@vx/shape/build/shapes/BarGroup';
 import color from '@data-ui/theme/build/color';
 
 import { groupedBarSeriesDataShape } from '../utils/propShapes';
-import { scaleTypeToScale } from '../utils/chartUtils';
+import { scaleTypeToScale } from '../utils/getScaleForAccessor';
+import sharedSeriesProps from '../utils/sharedSeriesProps';
 
 const propTypes = {
+  ...sharedSeriesProps,
   data: groupedBarSeriesDataShape.isRequired,
-  disableMouseEvents: PropTypes.bool,
   groupKeys: PropTypes.arrayOf(PropTypes.string).isRequired,
   groupFills: PropTypes.arrayOf(PropTypes.string),
   stroke: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   strokeWidth: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
   groupPadding: PropTypes.number, // see https://github.com/d3/d3-scale#band-scales
-  onClick: PropTypes.func,
-  onMouseMove: PropTypes.func,
-  onMouseLeave: PropTypes.func,
-
-  // these will likely be injected by the parent xychart
-  xScale: PropTypes.func,
-  yScale: PropTypes.func,
 };
 
 const defaultProps = {
-  disableMouseEvents: false,
   groupKeys: null,
   groupFills: color.categories,
   groupPadding: 0.1,
   stroke: 'none',
   strokeWidth: 1,
-  xScale: null,
-  yScale: null,
-  onClick: null,
-  onMouseMove: null,
-  onMouseLeave: null,
 };
 
 const x = d => d.x;

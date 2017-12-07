@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import { theme as defaultTheme, withTheme } from '../src';
+import { theme as defaultTheme, withTheme } from '../../src';
 
 describe('withTheme', () => {
   test('it should be a fn', () => {

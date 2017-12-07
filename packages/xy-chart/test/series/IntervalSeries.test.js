@@ -2,7 +2,7 @@ import Bar from '@vx/shape/build/shapes/Bar';
 import React from 'react';
 import { shallow, mount } from 'enzyme';
 
-import { XYChart, IntervalSeries } from '../src/';
+import { XYChart, IntervalSeries } from '../../src/';
 
 describe('<PointSeries />', () => {
   const mockProps = {
