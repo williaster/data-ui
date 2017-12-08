@@ -1,8 +1,39 @@
 # Changelog
-
+- [v0.0.50](#v0050)
 - [v0.0.49](#v0049)
 - [v0.0.48](#v0048)
 - [v0.0.47](#v0047)
+
+## v0.0.50
+🏆 Enhancements
+
+[xy-chart]
+- Ability to "snap" the tooltip to the `x` or `y` value of a datum, by setting `snapTooltipToDataX` and/or `snapTooltipToDataY`. fixes #77 [#81](https://github.com/williaster/data-ui/pull/81)
+- Support for using the chart _container_ for mouse events, instead of series or a voronoi. this is now set with the `eventTrigger` prop as `'series'` [default], `'voronoi'`, or `'container'`. [#81](https://github.com/williaster/data-ui/pull/81)
+- The addition of container events necessitates shared tooltips, i.e., tooltips that contain data for for all series for the hovered x value. fixes #78 [#81](https://github.com/williaster/data-ui/pull/81)
+- Ability to programmatically trigger events using the `eventTriggerRefs` callback (see updated `<LineSeriesExample />` for an example) [#81](https://github.com/williaster/data-ui/pull/81)
+- adds `innerRef` prop which is set on the inner `svg` [#81](https://github.com/williaster/data-ui/pull/81)
+
+[shared]
+- the signature of `onMouseMove` in `<WithTooltip />` now accepts an optional `coords` object of the shape `{ x: Number, y: Number }`. If either or both of `x` or `y` is specified they will be used to set the the tooltips `left` and `top` instead of the `event`'s coordinates. [#81](https://github.com/williaster/data-ui/pull/81)
+
+[forms] 
+- adds `active` prop to `<Button />` [#81](https://github.com/williaster/data-ui/pull/81)
+
+💔 Breaking Changes
+- [xy-chart] the `<XYChart />` `useVoronoi` prop is removed. instead use `eventTrigger='voronoi` [#81](https://github.com/williaster/data-ui/pull/81)
+
+📜 Documentation
+- [xy-chart] documents the above enhancements [#81](https://github.com/williaster/data-ui/pull/81)
+
+🏠 Internal
+[xy-chart] 
+- moves `<XYChart />` static method to their own utils files [#81](https://github.com/williaster/data-ui/pull/81)
+- breaks out several functions in `chartUtils` into their own files [#81](https://github.com/williaster/data-ui/pull/81)
+- adds and uses `sharedSeriesProps` [#81](https://github.com/williaster/data-ui/pull/81)
+
+🐛 Bug Fix
+- Fixes a bug where `tickLabelProps` is not used when passed in either `<XAxis />` or `<YAxis />`. This prop enables per-tick styles so is importanté! [#82](https://github.com/williaster/data-ui/pull/82)
 
 ## v0.0.49
 🏆  Enhancements
