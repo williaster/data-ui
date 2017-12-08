@@ -11,7 +11,7 @@ export default function findClosestDatums({
   getX,
   getY,
   event,
-  maxXDistancePx = 25,
+  maxXDistancePx = 1000,
 }) {
   if (!event || !event.target || !event.target.ownerSVGElement) return null;
   const series = {};
@@ -19,12 +19,14 @@ export default function findClosestDatums({
   const gElement = event.target.ownerSVGElement.firstChild;
   const { x: mouseX, y: mouseY } = localPoint(gElement, event);
   let closestDatum;
-  let minDelta = Infinity;
+  let minDeltaX = Infinity;
+  let minDeltaY = Infinity;
 
   // collect data from all series that have an x value near this point
   Children.forEach(children, (Child, childIndex) => {
     if (isSeries(componentName(Child)) && !Child.props.disableMouseEvents) {
       const { data, seriesKey } = Child.props;
+
       // @TODO data should be sorted, come up with a way to enforce+cache instead of relying on user
       const datum = findClosestDatum({
         data,
@@ -39,8 +41,9 @@ export default function findClosestDatums({
         const key = seriesKey || childIndex; // fall back to child index
         series[key] = datum;
         const deltaY = Math.abs(yScale(getY(datum)) - mouseY);
-        closestDatum = deltaY < minDelta ? datum : closestDatum;
-        minDelta = Math.min(deltaY, minDelta);
+        closestDatum = deltaY < minDeltaY && deltaX <= minDeltaX ? datum : closestDatum;
+        minDeltaX = closestDatum === datum ? deltaX : minDeltaX;
+        minDeltaY = closestDatum === datum ? deltaY : minDeltaY;
       }
     }
   });

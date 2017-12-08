@@ -91,7 +91,6 @@ class LineSeriesExample extends React.PureComponent {
 
   eventTriggerRefs(triggers) {
     this.triggers = triggers;
-    this.triggerTooltip();
   }
 
   triggerTooltip() {
