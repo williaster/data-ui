@@ -1,6 +1,6 @@
 {
   "name": "@data-ui/radial-chart",
-  "version": "0.0.49",
+  "version": "0.0.50",
   "description": "A package for radial-axis visualizations https://williaster.github.io/data-ui",
   "main": "build/index.js",
   "scripts": {
@@ -22,7 +22,7 @@
   "author": "Chris Williams <chris.williams@airbnb.com>",
   "license": "MIT",
   "dependencies": {
-    "@data-ui/shared": "0.0.49",
+    "@data-ui/shared": "0.0.50",
     "@data-ui/theme": "0.0.48",
     "@vx/event": "0.0.140",
     "@vx/group": "0.0.140",
