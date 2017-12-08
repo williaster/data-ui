@@ -4,8 +4,8 @@
   "description": "A package of charts with standard x- and y- axes. https://williaster.github.io/data-ui",
   "main": "build/index.js",
   "scripts": {
-    "build": "webpack -p",
-    "dev": "webpack --progress --colors --watch",
+    "build": "babel src/ -d build/",
+    "dev": "babel src/ -d build/ --watch",
     "prepublish": "npm run build",
     "test": "jest --colors --verbose --coverage"
   },
@@ -42,7 +42,8 @@
     "prop-types": "^15.5.10"
   },
   "devDependencies": {
-    "babel-core": "^6.24.1",
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
     "babel-jest": "^20.0.3",
     "babel-loader": "^6.4.1",
     "babel-plugin-syntax-jsx": "^6.18.0",
@@ -52,8 +53,7 @@
     "jest": "^20.0.3",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
-    "react-test-renderer": "^16.0.0",
-    "webpack": "^2.4.1"
+    "react-test-renderer": "^16.0.0"
   },
   "peerDependencies": {
     "react": "^15.0.0-0 || ^16.0.0-0",

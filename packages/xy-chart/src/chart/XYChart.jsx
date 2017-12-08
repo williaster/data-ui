@@ -3,12 +3,12 @@ import PropTypes from 'prop-types';
 
 import Grid from '@vx/grid/build/grids/Grid';
 import Group from '@vx/group/build/Group';
-import WithTooltip, { withTooltipPropTypes } from '@data-ui/shared/build/enhancer/WithTooltip';
 
 import collectVoronoiData from '../utils/collectVoronoiData';
 import findClosestDatums from '../utils/findClosestDatums';
 import shallowCompareObjectEntries from '../utils/shallowCompareObjectEntries';
 import Voronoi from './Voronoi';
+import WithTooltip, { withTooltipPropTypes } from '../enhancer/WithTooltip';
 
 import {
   componentName,
