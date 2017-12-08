@@ -2,6 +2,7 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import AxisLeft from '@vx/axis/build/axis/AxisLeft';
 import AxisRight from '@vx/axis/build/axis/AxisRight';
+import scaleLinear from '@vx/scale/build/scales/linear';
 import { XYChart, YAxis, LineSeries } from '../../src/';
 
 describe('<YAxis />', () => {
@@ -82,5 +83,71 @@ describe('<YAxis />', () => {
     );
     const tick = wrapper.render().find('.vx-axis-tick').first();
     expect(tick.find('text').text()).toBe(tickFormat());
+  });
+
+  test('tickLabelProps should be passed tick value and indexif passed, and tickStyles.label[orientation] if not', () => {
+    const props = {
+      scale: scaleLinear({ range: [100, 0], domain: [0, 100] }),
+      innerWidth: 100,
+    };
+
+    const wrapper = shallow(
+      <YAxis
+        {...props}
+        tickLabelProps={(val, i) => ({
+          fill: i === 0 ? 'pink' : 'blue',
+        })}
+      />,
+    );
+
+    const label0 = wrapper.find(AxisRight)
+      .dive() // Axis
+      .dive() // Group
+      .find('.vx-axis-tick')
+      .first()
+      .dive()
+      .find('text');
+
+    const label1 = wrapper.find(AxisRight)
+      .dive() // Axis
+      .dive() // Group
+      .find('.vx-axis-tick')
+      .last()
+      .dive()
+      .find('text');
+
+    expect(label0.prop('fill')).toBe('pink');
+    expect(label1.prop('fill')).toBe('blue');
+  });
+
+  test('tickStyles.label[orientation] should be used if tickLabelProps is not passed', () => {
+    const props = {
+      scale: scaleLinear({ range: [100, 0], domain: [0, 100] }),
+      innerWidth: 100,
+    };
+
+    const wrapper = shallow(
+      <YAxis
+        {...props}
+        tickLabelProps={null}
+        tickStyles={{
+          label: {
+            right: {
+              fill: 'skyblue',
+            },
+          },
+        }}
+      />,
+    );
+
+    const label0 = wrapper.find(AxisRight)
+      .dive() // Axis
+      .dive() // Group
+      .find('.vx-axis-tick')
+      .first()
+      .dive()
+      .find('text');
+
+    expect(label0.prop('fill')).toBe('skyblue');
   });
 });
