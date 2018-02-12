@@ -50,6 +50,7 @@ export default function YAxis({
   tickLabelProps: passedTickLabelProps,
   tickStyles,
   tickValues,
+  innerHeight
 }) {
   if (!scale || !innerHeight) return null;
   const Axis = orientation === 'left' ? AxisLeft : AxisRight;
