@@ -23,7 +23,6 @@ const propTypes = {
 
 const defaultProps = {
   axisStyles: {},
-  innerHeight: null,
   label: null,
   labelProps: null,
   left: 0,
@@ -50,9 +49,8 @@ export default function YAxis({
   tickLabelProps: passedTickLabelProps,
   tickStyles,
   tickValues,
-  innerHeight
 }) {
-  if (!scale || !innerHeight) return null;
+  if (!scale) return null;
   const Axis = orientation === 'left' ? AxisLeft : AxisRight;
 
   const tickLabelProps = passedTickLabelProps ||
