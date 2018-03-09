@@ -34,7 +34,8 @@ export default class FocusBlurHandler extends React.PureComponent {
 
     return (
       <a // eslint-disable-line jsx-a11y/no-static-element-interactions
-        xlinkHref="#"
+        xlinkHref={(onBlur || onFocus) && '#'}
+        role="button"
         onBlur={onBlur}
         onFocus={onFocus}
         onClick={this.handleOnClick}

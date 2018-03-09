@@ -110,7 +110,7 @@ export default class PointSeries extends React.PureComponent {
             <FocusBlurHandler
               key={key}
               xlinkHref="#"
-              onBlur={props.onMouseLeave}
+              onBlur={disableMouseEvents ? null : props.onMouseLeave}
               onFocus={disableMouseEvents ? null : (event) => {
                 onMouseMove({ event, data, datum: d, color: computedFill, index: i });
               }}

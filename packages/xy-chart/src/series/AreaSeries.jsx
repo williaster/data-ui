@@ -115,28 +115,28 @@ export default class AreaSeries extends React.PureComponent {
             glyph={null}
             defined={defined}
           />}
-        {strokeWidthValue > 0 &&
-          <LinePath
-            data={data}
-            x={x}
-            y={y1}
-            xScale={xScale}
-            yScale={yScale}
-            stroke={strokeValue}
-            strokeWidth={strokeWidthValue}
-            strokeDasharray={strokeDasharrayValue}
-            strokeLinecap={strokeLinecap}
-            curve={curve}
-            defined={defined}
-            glyph={(d, i) => (
-              <FocusBlurHandler
-                key={`areapoint-${i}`}
-                onBlur={disableMouseEvents ? null : onMouseLeave}
-                onFocus={disableMouseEvents ? null : (event) => {
-                  onMouseMove({ event, data, datum: d, color: strokeValue, index: i });
-                }}
-              />)}
-          />}
+        {/* draw this path even if strokewidth is 0, for focus/blur support */}
+        <LinePath
+          data={data}
+          x={x}
+          y={y1}
+          xScale={xScale}
+          yScale={yScale}
+          stroke={strokeValue}
+          strokeWidth={strokeWidthValue}
+          strokeDasharray={strokeDasharrayValue}
+          strokeLinecap={strokeLinecap}
+          curve={curve}
+          defined={defined}
+          glyph={(d, i) => (
+            <FocusBlurHandler
+              key={`areapoint-${i}`}
+              onBlur={disableMouseEvents ? null : onMouseLeave}
+              onFocus={disableMouseEvents ? null : (event) => {
+                onMouseMove({ event, data, datum: d, color: strokeValue, index: i });
+              }}
+            />)}
+        />
       </Group>
     );
   }
