@@ -7,8 +7,8 @@ import { expandGraph } from './data';
 class ExpandableNetworkWithCustomizedLayout extends React.PureComponent {
   constructor(props) {
     super(props);
-    this.state = { graph: props.graph, alpha: 0.5 };
-    this.onNodeClick = this.onNodeClick.bind(this);
+    this.state = { graph: props.graph, alpha: 0.4 };
+    this.onClick = this.onClick.bind(this);
     this.onSetAlpha = this.onSetAlpha.bind(this);
 
     this.layout = new AtlasForceDirectedLayout();
@@ -28,7 +28,7 @@ class ExpandableNetworkWithCustomizedLayout extends React.PureComponent {
     this.setState({ alpha, graph: nextGraph });
   }
 
-  onNodeClick({ index }) {
+  onClick({ index }) {
     const graph = this.state.graph;
     const newGraph = expandGraph(graph, graph.nodes[index]);
     this.setState(() => ({ graph: newGraph }));
@@ -41,15 +41,22 @@ class ExpandableNetworkWithCustomizedLayout extends React.PureComponent {
 
     return (
       <div>
-        <Range
-          id="data-ui-network-alpha"
-          label={`Alpha min (${alpha.toFixed(3)}, ~${iterations} iterations)`}
-          min={0.001}
-          max={0.5}
-          step={0.001}
-          value={alpha}
-          onMouseUp={this.onSetAlpha}
-        />
+        <h4>
+          {`Alpha min (${alpha.toFixed(3)}, ~${iterations} iterations)`}
+        </h4>
+        <div style={{ display: 'flex' }}>
+          more iterations&nbsp;
+          <Range
+            id="data-ui-network-alpha"
+            label=""
+            min={0.001}
+            max={0.5}
+            step={0.001}
+            value={alpha}
+            onChange={this.onSetAlpha}
+          />
+          &nbsp;fewer iterations
+        </div>
         <Network
           renderTooltip={renderTooltip}
           width={width}
@@ -58,7 +65,7 @@ class ExpandableNetworkWithCustomizedLayout extends React.PureComponent {
           animated={animated}
           ariaLabel={ariaLabel}
           graph={this.state.graph}
-          onNodeClick={this.onNodeClick}
+          onClick={this.onClick}
           layout={this.layout}
         />
       </div>

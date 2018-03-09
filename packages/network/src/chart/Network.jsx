@@ -27,7 +27,16 @@ export const propTypes = {
     bottom: PropTypes.number,
     right: PropTypes.number,
   }),
+  renderLink: PropTypes.func,
+  renderNode: PropTypes.func,
   renderTooltip: PropTypes.func,
+  snapTooltipToDataX: PropTypes.bool,
+  snapTooltipToDataY: PropTypes.bool,
+  onClick: PropTypes.func,
+  onMouseEnter: PropTypes.func,
+  onMouseMove: PropTypes.func,
+  onMouseLeave: PropTypes.func,
+  eventTriggerRefs: PropTypes.func,
   waitingForLayoutLabel: PropTypes.string,
   width: PropTypes.number.isRequired,
   layout: PropTypes.object,
@@ -37,6 +46,8 @@ const defaultProps = {
   animated: false,
   children: null,
   className: null,
+  renderNode: null,
+  renderLink: null,
   renderTooltip: null,
   margin: {
     top: 20,
@@ -45,12 +56,39 @@ const defaultProps = {
     right: 20,
   },
   layout: null,
+  snapTooltipToDataX: true,
+  snapTooltipToDataY: true,
+  onClick: null,
+  onMouseEnter: null,
+  onMouseMove: null,
+  onMouseLeave: null,
+  eventTriggerRefs: null,
   waitingForLayoutLabel: 'Computing layout...',
 };
+
+function updateArgsWithCoordsIfNecessary(args, props) {
+  return {
+    ...args,
+    coords: {
+      ...((props.snapTooltipToDataX) && { x: args.data.x }),
+      ...((props.snapTooltipToDataY) && { y: args.data.y }),
+      ...args.coords,
+    },
+  };
+}
 
 class Network extends React.PureComponent {
   constructor(props) {
     super(props);
+
+    // if renderTooltip is passed we return another Network wrapped in WithTooltip
+    // therefore we don't want to compute a layout if the nested chart will do so
+    if (props.renderTooltip) return;
+
+    this.handleClick = this.handleClick.bind(this);
+    this.handleMouseEnter = this.handleMouseEnter.bind(this);
+    this.handleMouseMove = this.handleMouseMove.bind(this);
+    this.handleMouseLeave = this.handleMouseLeave.bind(this);
 
     const { graph, animated, width, height, margin, layout } = props;
     this.state = {
@@ -66,13 +104,25 @@ class Network extends React.PureComponent {
     });
   }
 
+  componentDidMount() {
+    if (!this.props.renderTooltip && this.props.eventTriggerRefs) {
+      this.props.eventTriggerRefs({
+        mouseenter: this.handleMouseEnter,
+        mousemove: this.handleMouseMove,
+        mouseleave: this.handleMouseLeave,
+        click: this.handleClick,
+      });
+    }
+  }
+
   componentWillReceiveProps(nextProps) {
-    const { graph, animated, width, height, margin } = nextProps;
+    const { graph, animated, width, height, margin, renderTooltip } = nextProps;
     if (
-      this.props.graph.links !== graph.links
-      || this.props.graph.nodes !== graph.nodes
-      || this.state.computingLayout
-    ) {
+      !renderTooltip && (
+        this.props.graph.links !== graph.links
+        || this.props.graph.nodes !== graph.nodes
+        || this.state.computingLayout
+      )) {
       this.layout.clear();
       this.setState(() => ({ computingLayout: true }));
       this.layout.setGraph(graph);
@@ -88,7 +138,7 @@ class Network extends React.PureComponent {
   }
 
   componentWillUnmount() {
-    this.layout.clear();
+    if (this.layout) this.layout.clear();
   }
 
   setGraphState({ graph, width, height, margin }) {
@@ -160,15 +210,40 @@ class Network extends React.PureComponent {
     }));
   }
 
+  handleClick(args) {
+    if (this.props.onClick) {
+      this.props.onClick(
+        updateArgsWithCoordsIfNecessary(args, this.props),
+      );
+    }
+  }
+
+  handleMouseEnter(args) {
+    if (this.props.onMouseEnter) {
+      this.props.onMouseEnter(
+        updateArgsWithCoordsIfNecessary(args, this.props),
+      );
+    }
+  }
+
+  handleMouseMove(args) {
+    if (this.props.onMouseMove) {
+      this.props.onMouseMove(
+        updateArgsWithCoordsIfNecessary(args, this.props),
+      );
+    }
+  }
+
+  handleMouseLeave(args) {
+    if (this.props.onMouseLeave) this.props.onMouseLeave(args);
+  }
+
   render() {
     const {
       ariaLabel,
       children,
       className,
       height,
-      onNodeClick,
-      onNodeMouseEnter,
-      onNodeMouseLeave,
       renderLink,
       renderNode,
       renderTooltip,
@@ -176,60 +251,59 @@ class Network extends React.PureComponent {
       width,
     } = this.props;
 
+    if (renderTooltip) {
+      return (
+        <WithTooltip renderTooltip={renderTooltip}>
+          <Network {...this.props} renderTooltip={null} />
+        </WithTooltip>
+      );
+    }
+
     return (
-      <WithTooltip renderTooltip={renderTooltip}>
-        {({ onMouseMove, onMouseLeave: toolTipOnMouseLeave }) => (
-          <svg
-            aria-label={ariaLabel}
-            className={className}
-            role="img"
-            width={width}
-            height={height}
-          >
-            {this.state.graph &&
-              <Group>
-                <Links
-                  links={this.state.graph.links}
-                  linkComponent={renderLink || Link}
-                />
-                <Nodes
-                  nodes={this.state.graph.nodes}
-                  nodeComponent={renderNode || Node}
-                  onMouseEnter={onNodeMouseEnter}
-                  onMouseLeave={(event) => {
-                    if (onNodeMouseLeave) {
-                      onNodeMouseLeave(event);
-                    }
-                    toolTipOnMouseLeave(event);
-                  }}
-                  onMouseMove={onMouseMove}
-                  onClick={onNodeClick}
-                />
-              </Group>}
+      <svg
+        aria-label={ariaLabel}
+        className={className}
+        role="img"
+        width={width}
+        height={height}
+      >
+        {this.state.graph &&
+          <Group>
+            <Links
+              links={this.state.graph.links}
+              linkComponent={renderLink || Link}
+            />
+            <Nodes
+              nodes={this.state.graph.nodes}
+              nodeComponent={renderNode || Node}
+              onMouseEnter={this.handleMouseEnter}
+              onMouseLeave={this.handleMouseLeave}
+              onMouseMove={this.handleMouseMove}
+              onClick={this.handleClick}
+            />
+          </Group>}
 
-            {children}
+        {children}
 
-            {this.state.computingLayout && waitingForLayoutLabel &&
-              <Group>
-                <rect
-                  width={width}
-                  height={height}
-                  opacity={0.8}
-                  fill="#ffffff"
-                />
-                <text
-                  x={width / 2}
-                  y={height / 2}
-                  textAnchor="middle"
-                  stroke="#ffffff"
-                  paintOrder="stroke"
-                >
-                  {waitingForLayoutLabel}
-                </text>
-              </Group>}
-          </svg>
-        )}
-      </WithTooltip>
+        {this.state.computingLayout && waitingForLayoutLabel &&
+          <Group>
+            <rect
+              width={width}
+              height={height}
+              opacity={0.8}
+              fill="#ffffff"
+            />
+            <text
+              x={width / 2}
+              y={height / 2}
+              textAnchor="middle"
+              stroke="#ffffff"
+              paintOrder="stroke"
+            >
+              {waitingForLayoutLabel}
+            </text>
+          </Group>}
+      </svg>
     );
   }
 
