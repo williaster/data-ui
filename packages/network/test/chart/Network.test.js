@@ -15,11 +15,14 @@ describe('<Network />', () => {
     expect(Network).toBeDefined();
   });
 
-  test('it should render a <WithTooltip />', () => {
-    const wrapper = shallow(
-      <Network {...props} renderTooltip={() => {}} />,
-    );
+  test('it should render a <WithTooltip /> when renderTooltip is passed', () => {
+    const wrapper = shallow(<Network {...props} renderTooltip={() => {}} />);
     expect(wrapper.find(WithTooltip).length).toBe(1);
+  });
+
+  test('it should not render a <WithTooltip /> when renderTooltip is not passed', () => {
+    const wrapper = shallow(<Network {...props} renderTooltip={null} />);
+    expect(wrapper.find(WithTooltip).length).toBe(0);
   });
 
   test('it should render an svg', () => {
@@ -61,9 +64,9 @@ describe('<Network />', () => {
 
     const wrapper = mount(
       <Network
-        onNodeMouseLeave={onMouseEvent}
-        onNodeMouseEnter={onMouseEvent}
-        onNodeClick={onMouseEvent}
+        onMouseLeave={onMouseEvent}
+        onMouseEnter={onMouseEvent}
+        onClick={onMouseEvent}
         {...props}
         animated
       />,
@@ -86,5 +89,79 @@ describe('<Network />', () => {
 
       done();
     }, 20);
+  });
+
+  test('it should call the eventTriggerRefs callback on mount', () => {
+    expect.assertions(5);
+
+    function eventTriggerRefs(refs) {
+      expect(refs).toEqual(expect.any(Object));
+      expect(refs.click).toEqual(expect.any(Function));
+      expect(refs.mouseenter).toEqual(expect.any(Function));
+      expect(refs.mousemove).toEqual(expect.any(Function));
+      expect(refs.mouseleave).toEqual(expect.any(Function));
+    }
+
+    mount(<Network {...props} eventTriggerRefs={eventTriggerRefs} />);
+  });
+
+  test('it should pass coords to mouse handlers according to the snapTooltipToData* props', () => {
+    const onMouseMove = jest.fn();
+    const onClick = jest.fn();
+    const callbackArgs = { data: props.graph.nodes[0] };
+
+    function eventTriggerRefs(refs) {
+      refs.click(callbackArgs);
+      refs.mousemove(callbackArgs);
+    }
+
+    mount(
+      <Network
+        onMouseMove={onMouseMove}
+        onClick={onClick}
+        snapTooltipToDataX={false}
+        snapTooltipToDataY={false}
+        eventTriggerRefs={eventTriggerRefs}
+        {...props}
+        animated
+      />,
+    );
+
+    expect(onMouseMove.mock.calls[0][0].coords.x).toBeUndefined();
+    expect(onMouseMove.mock.calls[0][0].coords.y).toBeUndefined();
+    expect(onClick.mock.calls[0][0].coords.x).toBeUndefined();
+    expect(onClick.mock.calls[0][0].coords.y).toBeUndefined();
+
+    mount(
+      <Network
+        onMouseMove={onMouseMove}
+        onClick={onClick}
+        snapTooltipToDataX
+        snapTooltipToDataY={false}
+        eventTriggerRefs={eventTriggerRefs}
+        {...props}
+        animated
+      />,
+    );
+
+    expect(onMouseMove.mock.calls[1][0].coords.x).toEqual(expect.any(Number));
+    expect(onMouseMove.mock.calls[1][0].coords.y).toBeUndefined();
+    expect(onClick.mock.calls[1][0].coords.x).toEqual(expect.any(Number));
+    expect(onClick.mock.calls[1][0].coords.y).toBeUndefined();
+
+    mount(
+      <Network
+        onMouseMove={onMouseMove}
+        onClick={onClick}
+        snapTooltipToDataY
+        {...props}
+        animated
+      />,
+    );
+
+    expect(onMouseMove.mock.calls[1][0].coords.x).toEqual(expect.any(Number));
+    expect(onMouseMove.mock.calls[1][0].coords.y).toBeUndefined();
+    expect(onClick.mock.calls[1][0].coords.x).toEqual(expect.any(Number));
+    expect(onClick.mock.calls[1][0].coords.y).toBeUndefined();
   });
 });
