@@ -152,12 +152,11 @@ class XYChart extends React.PureComponent {
   }
 
   getDatumCoords(datum) {
-    const { snapTooltipToDataX, snapTooltipToDataY } = this.props;
     const { xScale, yScale, margin } = this.state;
     const coords = {};
     // tooltip operates in full width/height space so we must account for margins
-    if (datum && snapTooltipToDataX) coords.x = xScale(getX(datum)) + margin.left;
-    if (datum && snapTooltipToDataY) coords.y = yScale(getY(datum)) + margin.top;
+    if (datum) coords.x = xScale(getX(datum)) + margin.left;
+    if (datum) coords.y = yScale(getY(datum)) + margin.top;
     return coords;
   }
 
@@ -181,11 +180,16 @@ class XYChart extends React.PureComponent {
   }
 
   handleMouseMove(args) {
+    const { snapTooltipToDataX, snapTooltipToDataY } = this.props;
+    const isFocusEvent = args.event && args.event.type === 'focus';
+
     if (this.props.onMouseMove) {
+      const { x, y } = this.getDatumCoords(args.datum);
       this.props.onMouseMove({
         ...args,
         coords: {
-          ...this.getDatumCoords(args.datum),
+          ...((isFocusEvent || snapTooltipToDataX) && { x }),
+          ...((isFocusEvent || snapTooltipToDataY) && { y }),
           ...args.coords,
         },
       });
@@ -197,11 +201,15 @@ class XYChart extends React.PureComponent {
   }
 
   handleClick(args) {
+    const { snapTooltipToDataX, snapTooltipToDataY } = this.props;
+    const coords = this.getDatumCoords(args.datum);
+
     if (this.props.onClick) {
       this.props.onClick({
         ...args,
         coords: {
-          ...this.getDatumCoords(args.datum),
+          x: snapTooltipToDataX ? coords.x : undefined,
+          y: snapTooltipToDataY ? coords.y : undefined,
           ...args.coords,
         },
       });
@@ -245,6 +253,7 @@ class XYChart extends React.PureComponent {
     const { numXTicks, numYTicks } = this.getNumTicks(innerWidth, innerHeight);
     const barWidth = xScale.barWidth || (xScale.bandwidth && xScale.bandwidth()) || 0;
     const CrossHairs = []; // ensure these are the top-most layer
+
     return innerWidth > 0 && innerHeight > 0 && (
       <svg
         aria-label={ariaLabel}

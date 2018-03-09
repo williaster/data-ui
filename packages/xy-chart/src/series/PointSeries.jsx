@@ -1,13 +1,13 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import Group from '@vx/group/build/Group';
-
 import chartTheme from '@data-ui/theme/build/chartTheme';
 import color from '@data-ui/theme/build/color';
+import FocusBlurHandler from '@data-ui/shared/build/components/FocusBlurHandler';
+import Group from '@vx/group/build/Group';
+import PropTypes from 'prop-types';
+import React from 'react';
 
 import { callOrValue, isDefined } from '../utils/chartUtils';
-import { pointSeriesDataShape } from '../utils/propShapes';
 import GlyphDotComponent from '../glyph/GlyphDotComponent';
+import { pointSeriesDataShape } from '../utils/propShapes';
 import sharedSeriesProps from '../utils/sharedSeriesProps';
 
 export const pointComponentPropTypes = {
@@ -92,7 +92,6 @@ export default class PointSeries extends React.PureComponent {
           const computedStrokeWidth = d.strokeWidth || callOrValue(strokeWidth, d, i);
           const computedStrokeDasharray = d.strokeDasharray || callOrValue(strokeDasharray, d, i);
           const props = {
-            key,
             x,
             y,
             size: computedSize,
@@ -107,7 +106,17 @@ export default class PointSeries extends React.PureComponent {
             data,
             datum: d,
           };
-          return defined && React.createElement(pointComponent, props);
+          return defined &&
+            <FocusBlurHandler
+              key={key}
+              xlinkHref="#"
+              onBlur={props.onMouseLeave}
+              onFocus={disableMouseEvents ? null : (event) => {
+                onMouseMove({ event, data, datum: d, color: computedFill, index: i });
+              }}
+            >
+              {React.createElement(pointComponent, props)}
+            </FocusBlurHandler>;
         })}
         {/* Put labels on top */}
         {labels.map(d => React.cloneElement(labelComponent, d, d.label))}

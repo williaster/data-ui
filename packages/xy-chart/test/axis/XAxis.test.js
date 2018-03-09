@@ -120,7 +120,7 @@ describe('<XAxis />', () => {
     expect(label1.prop('fill')).toBe('blue');
   });
 
-  test.only('tickStyles.label[orientation] should be used if tickLabelProps is not passed', () => {
+  test('tickStyles.label[orientation] should be used if tickLabelProps is not passed', () => {
     const props = {
       scale: scaleLinear({ range: [0, 100], domain: [0, 100] }),
       innerHeight: 100,

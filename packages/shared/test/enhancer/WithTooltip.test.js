@@ -87,7 +87,7 @@ describe('<WithTooltip />', () => {
     expect(wrapper.find('#test').length).toBe(1);
   });
 
-  test.only('it should use the provided `coords` if passed to onMouseMove', () => {
+  test('it should use the provided `coords` if passed to onMouseMove', () => {
     let mouseMove;
     const wrapper = mount(
       <WithTooltip

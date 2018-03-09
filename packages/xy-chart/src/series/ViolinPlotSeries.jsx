@@ -1,13 +1,13 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import FocusBlurHandler from '@data-ui/shared/build/components/FocusBlurHandler';
 import Group from '@vx/group/build/Group';
-import ViolinPlot from '@vx/stats/build/violinplot/ViolinPlot';
+import PropTypes from 'prop-types';
+import React from 'react';
 import themeColors from '@data-ui/theme/build/color';
+import ViolinPlot from '@vx/stats/build/violinplot/ViolinPlot';
 
 import { callOrValue } from '../utils/chartUtils';
-
-import { violinPlotSeriesDataShape } from '../utils/propShapes';
 import sharedSeriesProps from '../utils/sharedSeriesProps';
+import { violinPlotSeriesDataShape } from '../utils/propShapes';
 
 const propTypes = {
   ...sharedSeriesProps,
@@ -60,24 +60,31 @@ export default function ViolinPlotSeries({
   return (
     <Group>
       {data.map((d, i) => (
-        <ViolinPlot
+        <FocusBlurHandler
           key={offsetValue(d)}
-          {...offsetProp(d)}
-          binData={d.binData}
-          width={actualWidth * widthRatio}
-          fill={d.fill || callOrValue(fill, d, i)}
-          stroke={d.stroke || callOrValue(stroke, d, i)}
-          strokeWidth={d.strokeWidth || callOrValue(strokeWidth, d, i)}
-          valueScale={valueScale}
-          horizontal={horizontal}
-          onMouseMove={disableMouseEvents ? null : onMouseMove && (() => (event) => {
+          onBlur={disableMouseEvents ? null : onMouseLeave}
+          onFocus={disableMouseEvents ? null : (event) => {
             onMouseMove({ event, data, datum: d, index: i });
-          })}
-          onMouseLeave={disableMouseEvents ? null : onMouseLeave && (() => onMouseLeave)}
-          onClick={disableMouseEvents ? null : onClick && (() => (event) => {
-            onClick({ event, data, datum: d, index: i });
-          })}
-        />
+          }}
+        >
+          <ViolinPlot
+            {...offsetProp(d)}
+            binData={d.binData}
+            width={actualWidth * widthRatio}
+            fill={d.fill || callOrValue(fill, d, i)}
+            stroke={d.stroke || callOrValue(stroke, d, i)}
+            strokeWidth={d.strokeWidth || callOrValue(strokeWidth, d, i)}
+            valueScale={valueScale}
+            horizontal={horizontal}
+            onMouseMove={disableMouseEvents ? null : onMouseMove && (() => (event) => {
+              onMouseMove({ event, data, datum: d, index: i });
+            })}
+            onMouseLeave={disableMouseEvents ? null : onMouseLeave && (() => onMouseLeave)}
+            onClick={disableMouseEvents ? null : onClick && (() => (event) => {
+              onClick({ event, data, datum: d, index: i });
+            })}
+          />
+        </FocusBlurHandler>
       ))
     }
     </Group>

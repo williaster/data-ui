@@ -1,15 +1,15 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-
 import Area from '@vx/shape/build/shapes/Area';
+import color from '@data-ui/theme/build/color';
+import FocusBlurHandler from '@data-ui/shared/build/components/FocusBlurHandler';
 import Group from '@vx/group/build/Group';
 import LinePath from '@vx/shape/build/shapes/LinePath';
-import color from '@data-ui/theme/build/color';
+import PropTypes from 'prop-types';
+import React from 'react';
 
-import interpolatorLookup from '../utils/interpolatorLookup';
+import { areaSeriesDataShape, interpolationShape } from '../utils/propShapes';
 import { callOrValue, isDefined } from '../utils/chartUtils';
 import findClosestDatum from '../utils/findClosestDatum';
-import { areaSeriesDataShape, interpolationShape } from '../utils/propShapes';
+import interpolatorLookup from '../utils/interpolatorLookup';
 import sharedSeriesProps from '../utils/sharedSeriesProps';
 
 const propTypes = {
@@ -127,8 +127,15 @@ export default class AreaSeries extends React.PureComponent {
             strokeDasharray={strokeDasharrayValue}
             strokeLinecap={strokeLinecap}
             curve={curve}
-            glyph={null}
             defined={defined}
+            glyph={(d, i) => (
+              <FocusBlurHandler
+                key={`areapoint-${i}`}
+                onBlur={disableMouseEvents ? null : onMouseLeave}
+                onFocus={disableMouseEvents ? null : (event) => {
+                  onMouseMove({ event, data, datum: d, color: strokeValue, index: i });
+                }}
+              />)}
           />}
       </Group>
     );

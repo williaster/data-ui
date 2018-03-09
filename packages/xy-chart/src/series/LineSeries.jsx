@@ -1,9 +1,9 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-
+import color from '@data-ui/theme/build/color';
+import FocusBlurHandler from '@data-ui/shared/build/components/FocusBlurHandler';
 import GlyphDot from '@vx/glyph/build/glyphs/Dot';
 import LinePath from '@vx/shape/build/shapes/LinePath';
-import color from '@data-ui/theme/build/color';
+import PropTypes from 'prop-types';
+import React from 'react';
 
 import { callOrValue, isDefined } from '../utils/chartUtils';
 import findClosestDatum from '../utils/findClosestDatum';
@@ -79,31 +79,42 @@ export default class LineSeries extends React.PureComponent {
           onMouseMove({ event, data, datum: d, color: strokeValue });
         })}
         onMouseLeave={disableMouseEvents ? null : onMouseLeave && (() => onMouseLeave)}
-        glyph={showPoints && ((d, i) => (
-          isDefined(x(d)) && isDefined(y(d)) &&
-            <GlyphDot
-              key={`${i}-${x(d)}`}
-              cx={xScale(x(d))}
-              cy={yScale(y(d))}
-              r={4}
-              fill={d.stroke || callOrValue(stroke, d, i)}
-              stroke="#FFFFFF"
-              strokeWidth={1}
-              style={{ pointerEvents: 'none' }}
+        glyph={((d, i) => (
+          // <a /> wrapper is needed for focusing with SVG 1.2 regardless of whether we show a point
+          isDefined(x(d)) &&
+            isDefined(y(d)) &&
+            <FocusBlurHandler
+              key={`linepoint-${i}`}
+              onBlur={disableMouseEvents ? null : onMouseLeave}
+              onFocus={disableMouseEvents ? null : (event) => {
+                onMouseMove({ event, data, datum: d, color, index: i });
+              }}
             >
-              {d.label &&
-                <text
-                  x={xScale(x(d))}
-                  y={yScale(y(d))}
-                  dx={10}
+              {showPoints &&
+                <GlyphDot
+                  key={`${i}-${x(d)}`}
+                  cx={xScale(x(d))}
+                  cy={yScale(y(d))}
+                  r={4}
                   fill={d.stroke || callOrValue(stroke, d, i)}
-                  stroke={'#fff'}
+                  stroke="#FFFFFF"
                   strokeWidth={1}
-                  fontSize={12}
+                  style={{ pointerEvents: 'none' }}
                 >
-                  {d.label}
-                </text>}
-            </GlyphDot>
+                  {d.label &&
+                    <text
+                      x={xScale(x(d))}
+                      y={yScale(y(d))}
+                      dx={10}
+                      fill={d.stroke || callOrValue(stroke, d, i)}
+                      stroke={'#fff'}
+                      strokeWidth={1}
+                      fontSize={12}
+                    >
+                      {d.label}
+                    </text>}
+                </GlyphDot>}
+            </FocusBlurHandler>
         ))}
       />
     );
