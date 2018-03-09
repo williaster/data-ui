@@ -2,7 +2,7 @@ import React from 'react';
 import { shallow, mount } from 'enzyme';
 import Area from '@vx/shape/build/shapes/Area';
 import LinePath from '@vx/shape/build/shapes/LinePath';
-
+import { FocusBlurHandler } from '@data-ui/shared';
 import { XYChart, AreaSeries } from '../../src/';
 
 describe('<AreaSeries />', () => {
@@ -126,5 +126,48 @@ describe('<AreaSeries />', () => {
 
     area.simulate('click');
     expect(onClick).toHaveBeenCalledTimes(0);
+  });
+
+  test('it should render a FocusBlurHandler for each point', () => {
+    const data = mockData.map(d => ({ ...d, x: d.date, y: d.num }));
+
+    const wrapper = mount(
+      <XYChart {...mockProps}>
+        <AreaSeries data={data} fill="hot-pink" />
+      </XYChart>,
+    );
+
+    const area = wrapper.find(AreaSeries);
+    expect(area.find(FocusBlurHandler)).toHaveLength(data.length);
+  });
+
+  test('it should invoke onMouseMove when focused', () => {
+    const data = mockData.map(d => ({ ...d, x: d.date, y: d.num }));
+    const onMouseMove = jest.fn();
+
+    const wrapper = mount(
+      <XYChart {...mockProps} onMouseMove={onMouseMove}>
+        <AreaSeries data={data} fill="hot-pink" />
+      </XYChart>,
+    );
+
+    const firstPoint = wrapper.find(AreaSeries).find(FocusBlurHandler).first();
+    firstPoint.simulate('focus');
+    expect(onMouseMove).toHaveBeenCalledTimes(1);
+  });
+
+  test('it should invoke onMouseLeave when blured', () => {
+    const data = mockData.map(d => ({ ...d, x: d.date, y: d.num }));
+    const onMouseLeave = jest.fn();
+
+    const wrapper = mount(
+      <XYChart {...mockProps} onMouseLeave={onMouseLeave}>
+        <AreaSeries data={data} fill="hot-pink" />
+      </XYChart>,
+    );
+
+    const firstPoint = wrapper.find(AreaSeries).find(FocusBlurHandler).first();
+    firstPoint.simulate('blur');
+    expect(onMouseLeave).toHaveBeenCalledTimes(1);
   });
 });

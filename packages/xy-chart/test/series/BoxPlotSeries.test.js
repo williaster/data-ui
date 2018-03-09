@@ -1,6 +1,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import BoxPlot from '@vx/stats/build/boxplot/BoxPlot';
+import { FocusBlurHandler } from '@data-ui/shared';
 
 import { XYChart, BoxPlotSeries, computeStats } from '../../src/';
 
@@ -143,5 +144,44 @@ describe('<BoxPlotSeries />', () => {
 
     boxplot.simulate('click', {});
     expect(onClick).toHaveBeenCalledTimes(1);
+  });
+
+  test('it should render a FocusBlurHandler for each point', () => {
+    const wrapper = shallow(
+      <XYChart {...mockProps}>
+        <BoxPlotSeries {...boxplotProps} />
+      </XYChart>,
+    );
+
+    const boxes = wrapper.find(BoxPlotSeries).dive();
+    expect(boxes.find(FocusBlurHandler)).toHaveLength(boxplotProps.data.length);
+  });
+
+  test('it should invoke onMouseMove when focused', () => {
+    const onMouseMove = jest.fn();
+
+    const wrapper = shallow(
+      <XYChart {...mockProps} onMouseMove={onMouseMove}>
+        <BoxPlotSeries {...boxplotProps} />
+      </XYChart>,
+    );
+
+    const firstBox = wrapper.find(BoxPlotSeries).dive().find(FocusBlurHandler).first();
+    firstBox.simulate('focus');
+    expect(onMouseMove).toHaveBeenCalledTimes(1);
+  });
+
+  test('it should invoke onMouseLeave when blured', () => {
+    const onMouseLeave = jest.fn();
+
+    const wrapper = shallow(
+      <XYChart {...mockProps} onMouseLeave={onMouseLeave}>
+        <BoxPlotSeries {...boxplotProps} />
+      </XYChart>,
+    );
+
+    const firstBox = wrapper.find(BoxPlotSeries).dive().find(FocusBlurHandler).first();
+    firstBox.simulate('blur');
+    expect(onMouseLeave).toHaveBeenCalledTimes(1);
   });
 });
