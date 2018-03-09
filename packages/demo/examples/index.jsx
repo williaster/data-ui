@@ -20,7 +20,7 @@ import path from 'path';
 import { storiesOf } from '@storybook/react';
 import GoogleAnalyticsDecorator from '../storybook-config/components/GoogleAnalytics';
 
-const requireContext = require.context('./', /* subdirs= */true, /index\.jsx?$/);
+const requireContext = require.context('./', /* subdirs= */ true, /index\.jsx?$/);
 
 requireContext.keys().forEach((packageName) => {
   if (packageName !== 'shared') {
@@ -28,7 +28,7 @@ requireContext.keys().forEach((packageName) => {
     if (packageExport && packageExport.default && !Array.isArray(packageExport.default)) {
       const { examples, usage } = packageExport.default;
       let name = path.dirname(packageName).slice(2); // no './'
-      if ((/^\d\d-/).test(name)) name = name.slice(3); // no 'XX-'
+      if (/^\d\d-/.test(name)) name = name.slice(3); // no 'XX-'
 
       const stories = storiesOf(name, module);
 
@@ -41,6 +41,7 @@ requireContext.keys().forEach((packageName) => {
           kind: name,
           story: example.description,
           storyFn: example.example,
+          hideTabs: Boolean(example.hideTabs),
           components: example.components,
           usage: example.usage || usage,
           useHOC: example.useHOC,

@@ -2,13 +2,7 @@ import React from 'react';
 import { allColors } from '@data-ui/theme/build/color';
 import { Button } from '@data-ui/forms';
 
-import {
-  CrossHair,
-  LineSeries,
-  WithTooltip,
-  XAxis,
-  YAxis,
-} from '@data-ui/xy-chart';
+import { CrossHair, LineSeries, WithTooltip, XAxis, YAxis } from '@data-ui/xy-chart';
 
 import ResponsiveXYChart, { formatYear } from './ResponsiveXYChart';
 import { timeSeriesData } from './data';
@@ -81,11 +75,14 @@ class LineSeriesExample extends React.PureComponent {
 
   handleClick(args) {
     if (this.triggers) {
-      this.setState(({ stickyTooltip }) => ({
-        stickyTooltip: !stickyTooltip,
-      }), () => {
-        this.triggers.mousemove(args);
-      });
+      this.setState(
+        ({ stickyTooltip }) => ({
+          stickyTooltip: !stickyTooltip,
+        }),
+        () => {
+          this.triggers.mousemove(args);
+        },
+      );
     }
   }
 
@@ -99,14 +96,20 @@ class LineSeriesExample extends React.PureComponent {
       this.setState(({ index, trigger }) => {
         this.triggers.mousemove({
           datum: seriesProps[2].data[index],
-          series: trigger === VORONOI_TRIGGER ? null : {
-            [seriesProps[0].seriesKey]: seriesProps[0].data[index],
-            [seriesProps[1].seriesKey]: seriesProps[1].data[index],
-            [seriesProps[2].seriesKey]: seriesProps[2].data[index],
-          },
-          coords: trigger === VORONOI_TRIGGER ? null : {
-            y: 50,
-          },
+          series:
+            trigger === VORONOI_TRIGGER
+              ? null
+              : {
+                [seriesProps[0].seriesKey]: seriesProps[0].data[index],
+                [seriesProps[1].seriesKey]: seriesProps[1].data[index],
+                [seriesProps[2].seriesKey]: seriesProps[2].data[index],
+              },
+          coords:
+            trigger === VORONOI_TRIGGER
+              ? null
+              : {
+                y: 50,
+              },
         });
 
         this.timeout = setTimeout(this.triggerTooltip, TOOLTIP_TIMEOUT);
@@ -124,7 +127,6 @@ class LineSeriesExample extends React.PureComponent {
     }
   }
 
-
   restartProgrammaticTooltip() {
     if (this.timeout) clearTimeout(this.timeout);
     if (this.triggers) {
@@ -135,15 +137,19 @@ class LineSeriesExample extends React.PureComponent {
   renderControls(disableMouseEvents) {
     const { trigger, stickyTooltip } = this.state;
     const useVoronoiTrigger = trigger === VORONOI_TRIGGER;
-    return ([
+    return [
       <div key="buttons" style={{ display: 'flex' }}>
         <Button
           small
           rounded
           active={!disableMouseEvents && !useVoronoiTrigger}
           disabled={disableMouseEvents}
-          onClick={() => { this.setTrigger(CONTAINER_TRIGGER); }}
-        > Shared Tooltip
+          onClick={() => {
+            this.setTrigger(CONTAINER_TRIGGER);
+          }}
+        >
+          {' '}
+          Shared Tooltip
         </Button>
         <div style={{ width: 8 }} />
         <Button
@@ -151,16 +157,24 @@ class LineSeriesExample extends React.PureComponent {
           rounded
           active={!disableMouseEvents && useVoronoiTrigger}
           disabled={disableMouseEvents}
-          onClick={() => { this.setTrigger(VORONOI_TRIGGER); }}
-        > Voronoi Tooltip
+          onClick={() => {
+            this.setTrigger(VORONOI_TRIGGER);
+          }}
+        >
+          {' '}
+          Voronoi Tooltip
         </Button>
         <div style={{ width: 16 }} />
         <Button
           small
           rounded
           disabled={disableMouseEvents}
-          onClick={() => { this.restartProgrammaticTooltip(); }}
-        > Programatically trigger tooltip
+          onClick={() => {
+            this.restartProgrammaticTooltip();
+          }}
+        >
+          {' '}
+          Programatically trigger tooltip
         </Button>
       </div>,
       <div key="sticky" style={{ margin: '8px 0', fontSize: 14 }}>
@@ -170,40 +184,45 @@ class LineSeriesExample extends React.PureComponent {
             fontWeight: stickyTooltip && 600,
             textDecoration: stickyTooltip && `underline ${allColors.grape[4]}`,
           }}
-        >sticky tooltip
+        >
+          sticky tooltip
         </span>
       </div>,
-    ]);
+    ];
   }
 
   renderTooltip({ datum, series }) {
     const { programmaticTrigger, trigger } = this.state;
+    const hasSeries = series && Object.keys(series).length > 0;
+
     return (
       <div>
         <div>
           <strong>{formatYear(datum.x)}</strong>
-          {(!series || Object.keys(series).length === 0) &&
-            <div>
-              ${datum.y.toFixed(2)}
-            </div>}
+          {!hasSeries && <div>${datum.y.toFixed(2)}</div>}
         </div>
-        {trigger === CONTAINER_TRIGGER && <br />}
-        {seriesProps.map(({ seriesKey, stroke: color, dashType }) => (
-          series && series[seriesKey] &&
-            <div key={seriesKey}>
-              <span
-                style={{
-                  color,
-                  textDecoration: !programmaticTrigger && series[seriesKey] === datum
-                    ? `underline ${dashType} ${color}` : null,
-                  fontWeight: series[seriesKey] === datum ? 600 : 200,
-                }}
-              >
-                {`${seriesKey} `}
-              </span>
-              ${series[seriesKey].y.toFixed(2)}
-            </div>
-        ))}
+        {hasSeries && trigger === CONTAINER_TRIGGER && <br />}
+        {seriesProps.map(
+          ({ seriesKey, stroke: color, dashType }) =>
+            series &&
+            series[seriesKey] && (
+              <div key={seriesKey}>
+                <span
+                  style={{
+                    color,
+                    textDecoration:
+                      !programmaticTrigger && series[seriesKey] === datum
+                        ? `underline ${dashType} ${color}`
+                        : null,
+                    fontWeight: series[seriesKey] === datum ? 600 : 200,
+                  }}
+                >
+                  {`${seriesKey} `}
+                </span>
+                ${series[seriesKey].y.toFixed(2)}
+              </div>
+            ),
+        )}
       </div>
     );
   }

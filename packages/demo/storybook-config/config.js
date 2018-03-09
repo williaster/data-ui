@@ -20,7 +20,7 @@ setOptions({
 
 // add WithInfo addon which exposes proptables, usage, and source code for examples
 setAddon({
-  addWithInfo({ kind, story, storyFn, components, usage, useHOC }) {
+  addWithInfo({ kind, story, storyFn, components, usage, useHOC, ...rest }) {
     return this.add(story, () => (
       <ExampleWithInfo
         kind={kind}
@@ -30,6 +30,7 @@ setAddon({
         usage={usage}
         useHOC={useHOC}
         analytics={analytics}
+        {...rest}
       />
     ));
   },
