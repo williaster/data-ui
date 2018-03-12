@@ -1,6 +1,6 @@
 {
   "name": "@data-ui/shared",
-  "version": "0.0.50",
+  "version": "0.0.51",
   "description": "Shared @data-ui components used across multiple packages",
   "main": "build/index.js",
   "files": [
