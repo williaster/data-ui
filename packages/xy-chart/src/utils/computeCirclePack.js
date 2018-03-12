@@ -15,6 +15,8 @@
 function packCircles(data, xScale, getSize = d => d.size || 4) {
   const packBounds = [];
   const packOutline = [];
+  const globalMinX = xScale(data[0].x);
+  const globalMaxX = xScale(data[data.length - 1].x);
   const rect = {
     xMin: 0,
     yMin: 0,
@@ -41,7 +43,11 @@ function packCircles(data, xScale, getSize = d => d.size || 4) {
   function xpackBestPlace(startn, node) {
     const goodnodes = [];
     for (let p = startn.nextPack; p !== startn; p = p.nextPack) {
-      if (!(p.px + p.r < node.x - node.r || p.px - p.r > node.x + node.r)) {
+      if (!(p.px + p.r < node.x - node.r ||
+          p.px - p.r > node.x + node.r ||
+          p.px - p.r - node.r < globalMinX ||
+          p.px + p.r + node.r > globalMaxX
+        )) {
         goodnodes.push(p);
       }
     }

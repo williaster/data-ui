@@ -14,7 +14,7 @@ export const formatYear = timeFormat('%Y');
 export const dateFormatter = date => formatDate(parseDate(date));
 
 // this is a little messy to handle all cases across series types
-export function renderTooltip({ datum, seriesKey, color }) {
+export function renderTooltip({ datum, seriesKey, color, data }) {
   const { x, x0, y, value } = datum;
   let xVal = x || x0;
   if (typeof xVal === 'string') {
@@ -37,6 +37,12 @@ export function renderTooltip({ datum, seriesKey, color }) {
         <strong style={{ color }}>y </strong>
         {yVal && yVal.toFixed ? yVal.toFixed(2) : yVal}
       </div>
+      {data && (
+        <div>
+          <strong style={{ color }}>index </strong>
+          {data.indexOf(datum)}
+        </div>
+      )}
     </div>
   );
 }
