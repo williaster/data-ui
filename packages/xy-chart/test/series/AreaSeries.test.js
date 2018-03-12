@@ -40,7 +40,7 @@ describe('<AreaSeries />', () => {
     expect(wrapper.find(AreaSeries).first().dive().find(Area).length).toBe(1);
   });
 
-  test('it should render a LinePath if strokeWidth is non-zero', () => {
+  test('it should render a LinePath', () => {
     const data = mockData.map(d => ({ ...d, x: d.date, y: d.num }));
     const wrapperWithLine = shallow(
       <XYChart {...mockProps} >
@@ -49,15 +49,6 @@ describe('<AreaSeries />', () => {
     );
     const areaSeriesWithLinePath = wrapperWithLine.find(AreaSeries).dive();
     expect(areaSeriesWithLinePath.find(LinePath).length).toBe(1);
-
-    const wrapperNoLine = shallow(
-      <XYChart {...mockProps} >
-        <AreaSeries data={data} strokeWidth={0} />
-      </XYChart>,
-    );
-
-    const areaSeriesNoLinePath = wrapperNoLine.find(AreaSeries).dive();
-    expect(areaSeriesNoLinePath.find(LinePath).length).toBe(0);
   });
 
   test('it should call onMouseMove({ datum, data, event, color }), onMouseLeave(), and onClick({ datum, data, event, color }) on trigger', () => {
