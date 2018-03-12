@@ -1,8 +1,65 @@
 # Changelog
+- [v0.0.51](#v0051)
 - [v0.0.50](#v0050)
 - [v0.0.49](#v0049)
 - [v0.0.48](#v0048)
 - [v0.0.47](#v0047)
+
+## v0.0.51
+
+💔 Breaking Changes
+
+[network]
+
+Mouse events renamed [#89](https://github.com/williaster/data-ui/pull/89) 
+- `onNodeClick` => `onClick`
+- `onNodeMouseEnter` => `onMouseEnter`
+- `onNodeMouseLeave` => `onMouseLeave`
+
+🏆 Enhancements
+
+[shared]
+- adds the `@data-ui/shared` `<FocusBlurHandler />` handler that wraps mouse target nodes in an `<a />` element, which [seems to be the most reliable way to support focusing in svg 1.1/1.2](https://allyjs.io/tutorials/focusing-in-svg.html) [#88](https://github.com/williaster/data-ui/pull/88)
+
+[xy-chart]
+- adds `onFocus` and `onBlur` support to the following `<*Series />` components (the remainder depend on `@vx` exposing hooks to series dom nodes (to wrap in `<a />`s)[#88](https://github.com/williaster/data-ui/pull/88)
+
+  | Series  | `onFocus` + `onBlur` support added |
+  | ------------- | ------------- |
+  | AreaSeries  | x |
+  | BarSeries  | x |
+  | BoxPlotSeries  | x |
+  | CirclePackSeries  | x |
+  | IntervalSeries | x |
+  | LineSeries  | x |
+  | PointSeries  | x |
+  | ViolinPlotSeries  | x |
+  | GroupedBarSeries  |  |
+  | StackedAreaSeries |  |
+  | StackedBarSeries |  |
+
+[network]
+- allow user to wrap `<Network />` in WithTooltip to support programmatic triggering and custom tooltip logic [89](https://github.com/williaster/data-ui/pull/89) 
+- add `eventTriggerRefs` callback to support programmatic tooltip triggering [#89](https://github.com/williaster/data-ui/pull/89) 
+- add `snapToTooltipX` and `snapToTooltipY` support [#89](https://github.com/williaster/data-ui/pull/89) 
+
+🐛 Bug Fix
+
+[histogram]
+- Fix bug with `innerHeight` referencing [85](https://github.com/williaster/data-ui/pull/85) [#87](https://github.com/williaster/data-ui/pull/88)
+
+[xy-chart]
+- add circle packing x-bounds constraint [#91](https://github.com/williaster/data-ui/pull/91)
+ 
+ 
+📜 Documentation
+- update readmes with enhancements and breaking changes
+
+🏡Internal
+
+[network]
+- fix broken network example [#89](https://github.com/williaster/data-ui/pull/89) 
+- remove unused/add new `Network.propTypes` [#89](https://github.com/williaster/data-ui/pull/89) 
 
 ## v0.0.50
 🏆 Enhancements
