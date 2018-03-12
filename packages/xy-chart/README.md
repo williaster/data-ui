@@ -123,19 +123,19 @@ tickValues | PropTypes.arrayOf( PropTypes.oneOfType([ PropTypes.number, PropType
 Several types of series types are exported by the package, and can be used in combination. See the storybook source for more proptables for your series of interest. Here is an overview of scale support and data shapes:
 
 
-Series | supported x scale type | supported y scale types | data shape | supported `eventTrigger`s | shared tooltip compatible
+Series | supported x scale type | supported y scale types | data shape | supported `eventTrigger`s | shared tooltip compatible | supports onFocus + onBlur
 ------------ | ------------- | ------- | ---- | ---- | ----
-`<AreaSeries />` | `time`, `linear` | `linear` | `{ x, y [, y0, y1, fill, stroke] }`* | `series`, `container`, `voronoi`* | yes
-`<BarSeries />` | `time`, `linear`, `band` | `linear` | `{ x, y [, fill, stroke] }` | `series`, `container` | yes
-`<LineSeries />` | `time`, `linear` | `linear` | `{ x, y [, stroke] }` | `series`, `container`, `voronoi` | yes
-`<PointSeries />` | `time`, `linear` | `time`, `linear` | `{ x, y [size, fill, stroke, label] }` | `series`, `container` (not best for dense data) `voronoi` | yes
-`<StackedAreaSeries />` | `time`, `linear` | `linear` | `{ x, y [, [stackKey(s)]] }`* | `series` | data for all stack keys should be in passed `datum`
-`<StackedBarSeries />` | `band` | `linear` | `{ x, y }` (colors controlled with stackFills & stackKeys) | `series` | data for all stack keys should be in passed `datum`
-`<GroupedBarSeries />` | `band` | `linear` | `{ x, y }` (colors controlled with groupFills & groupKeys) | `series` | data for all group keys should be in passed `datum`
-`<CirclePackSeries />` | `time`, `linear` | y is computed | `{ x [, size] }` | `series` | no
-`<IntervalSeries />` | `time`, `linear` | `linear` | `{ x0, x1 [, fill, stroke] }` | `series` | no
-`<BoxPlotSeries />` | `linear`, `band` | `band`, `linear` | `{ x (or y), min, max, median, firstQuartile, thirdQuartile, outliers [, fill, stroke] }` | `series` | no
-`<ViolinPlotSeries />` | `linear`, `band` | `band`, `linear` | `{ x (or y), binData [, fill, stroke] }` | `series` | no
+`<AreaSeries />` | `time`, `linear` | `linear` | `{ x, y [, y0, y1, fill, stroke] }`* | `series`, `container`, `voronoi`* | yes | yes
+`<BarSeries />` | `time`, `linear`, `band` | `linear` | `{ x, y [, fill, stroke] }` | `series`, `container` | yes | yes
+`<LineSeries />` | `time`, `linear` | `linear` | `{ x, y [, stroke] }` | `series`, `container`, `voronoi` | yes | yes
+`<PointSeries />` | `time`, `linear` | `time`, `linear` | `{ x, y [size, fill, stroke, label] }` | `series`, `container` (not best for dense data) `voronoi` | yes | yes (pointComponent must implement)
+`<StackedAreaSeries />` | `time`, `linear` | `linear` | `{ x, y [, [stackKey(s)]] }`* | `series` | data for all stack keys should be in passed `datum` | no
+`<StackedBarSeries />` | `band` | `linear` | `{ x, y }` (colors controlled with stackFills & stackKeys) | `series` | data for all stack keys should be in passed `datum` | no
+`<GroupedBarSeries />` | `band` | `linear` | `{ x, y }` (colors controlled with groupFills & groupKeys) | `series` | data for all group keys should be in passed `datum` | no
+`<CirclePackSeries />` | `time`, `linear` | y is computed | `{ x [, size] }` | `series` | no | yes (pointComponent must implement)
+`<IntervalSeries />` | `time`, `linear` | `linear` | `{ x0, x1 [, fill, stroke] }` | `series` | no | yes
+`<BoxPlotSeries />` | `linear`, `band` | `band`, `linear` | `{ x (or y), min, max, median, firstQuartile, thirdQuartile, outliers [, fill, stroke] }` | `series` | no | yes
+`<ViolinPlotSeries />` | `linear`, `band` | `band`, `linear` | `{ x (or y), binData [, fill, stroke] }` | `series` | no | yes
 
 
 \* The y boundaries of the `<AreaSeries/>` may be specified by either
@@ -179,6 +179,9 @@ tooltipTimeout | PropTypes.number | 200 | Timeout in ms for the tooltip to hide 
 
 
 Note that to correctly position a tooltip, the `<WithTooltip />` `onMouseMove` function minimally requires an `event` or `coords` object of the form `{ x: Number, y: Number }`. If `coords` is specified it takes precedent over any position computed from the event. See function signatures below for more.
+
+##### Accessibility
+Note that unless `disableMouseEvents=true`, most series currently invoke `onMouseMove` and `onMouseLeave` when `focus`ed and `blur`ed, respectively, so that tooltips are accessible for keyboard-only users. Support for these events is reflected in the `SeriesComponent` table above.
 
 ##### `<CrossHair />`
 The `<CrossHair />` component may be used in combination with tooltips for additional visual feedback (see the storybook for many examples!). Simply pass the component as a child of `<XYChart />` and it will automatically position itself upon tooltip trigger. Compared to a tooltip, this component snaps to actual data points for improved precision. It accepts the following props:

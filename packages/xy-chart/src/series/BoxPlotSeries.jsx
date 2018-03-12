@@ -1,7 +1,8 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import Group from '@vx/group/build/Group';
 import BoxPlot from '@vx/stats/build/boxplot/BoxPlot';
+import FocusBlurHandler from '@data-ui/shared/build/components/FocusBlurHandler';
+import Group from '@vx/group/build/Group';
+import PropTypes from 'prop-types';
+import React from 'react';
 import themeColors from '@data-ui/theme/build/color';
 
 import { callOrValue, isDefined } from '../utils/chartUtils';
@@ -104,48 +105,56 @@ export default class BoxPlotSeries extends React.PureComponent {
         {data.map((d, i) => {
           const mouseEvents = mouseEventProps(d, i);
           return isDefined(min(d)) && (
-            <BoxPlot
+            <FocusBlurHandler
               key={offsetValue(d)}
-              min={min(d)}
-              max={max(d)}
-              {...offsetProp(d)}
-              firstQuartile={firstQuartile(d)}
-              thirdQuartile={thirdQuartile(d)}
-              median={median(d)}
-              boxWidth={actualWidth * widthRatio}
-              outliers={outliers(d)}
-              fill={d.fill || callOrValue(fill, d, i)}
-              stroke={d.stroke || callOrValue(stroke, d, i)}
-              strokeWidth={d.strokeWidth || callOrValue(strokeWidth, d, i)}
-              fillOpacity={d.fillOpacity || callOrValue(fillOpacity, d, i)}
-              valueScale={valueScale}
-              horizontal={horizontal}
-              container={containerEvents}
-              containerProps={
-                (containerEvents || containerProps || undefined)
-                && { ...containerProps, ...(containerEvents && mouseEvents) }
-              }
-              outlierProps={
-                (!containerEvents || outlierProps || undefined)
-                && { ...outlierProps, ...(!containerEvents && mouseEvents) }
-              }
-              boxProps={
-                (!containerEvents || boxProps || undefined)
-                && { ...boxProps, ...(!containerEvents && mouseEvents) }
-              }
-              minProps={
-                (!containerEvents || minProps || undefined)
-                && { ...minProps, ...(!containerEvents && mouseEvents) }
-              }
-              maxProps={
-                (!containerEvents || maxProps || undefined)
-                && { ...maxProps, ...(!containerEvents && mouseEvents) }
-              }
-              medianProps={
-                (!containerEvents || medianProps || undefined)
-                && { ...medianProps, ...(!containerEvents && mouseEvents) }
-              }
-            />
+              xlinkHref="#"
+              onBlur={disableMouseEvents ? null : onMouseLeave}
+              onFocus={disableMouseEvents ? null : (event) => {
+                onMouseMove({ event, data, datum: d, index: i });
+              }}
+            >
+              <BoxPlot
+                min={min(d)}
+                max={max(d)}
+                {...offsetProp(d)}
+                firstQuartile={firstQuartile(d)}
+                thirdQuartile={thirdQuartile(d)}
+                median={median(d)}
+                boxWidth={actualWidth * widthRatio}
+                outliers={outliers(d)}
+                fill={d.fill || callOrValue(fill, d, i)}
+                stroke={d.stroke || callOrValue(stroke, d, i)}
+                strokeWidth={d.strokeWidth || callOrValue(strokeWidth, d, i)}
+                fillOpacity={d.fillOpacity || callOrValue(fillOpacity, d, i)}
+                valueScale={valueScale}
+                horizontal={horizontal}
+                container={containerEvents}
+                containerProps={
+                  (containerEvents || containerProps || undefined)
+                  && { ...containerProps, ...(containerEvents && mouseEvents) }
+                }
+                outlierProps={
+                  (!containerEvents || outlierProps || undefined)
+                  && { ...outlierProps, ...(!containerEvents && mouseEvents) }
+                }
+                boxProps={
+                  (!containerEvents || boxProps || undefined)
+                  && { ...boxProps, ...(!containerEvents && mouseEvents) }
+                }
+                minProps={
+                  (!containerEvents || minProps || undefined)
+                  && { ...minProps, ...(!containerEvents && mouseEvents) }
+                }
+                maxProps={
+                  (!containerEvents || maxProps || undefined)
+                  && { ...maxProps, ...(!containerEvents && mouseEvents) }
+                }
+                medianProps={
+                  (!containerEvents || medianProps || undefined)
+                  && { ...medianProps, ...(!containerEvents && mouseEvents) }
+                }
+              />
+            </FocusBlurHandler>
           );
         })}
       </Group>

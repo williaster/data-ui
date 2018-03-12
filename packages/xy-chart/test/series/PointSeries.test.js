@@ -1,5 +1,6 @@
 import React from 'react';
-import { shallow, mount } from 'enzyme';
+import { shallow } from 'enzyme';
+import { FocusBlurHandler } from '@data-ui/shared';
 
 import { XYChart, PointSeries } from '../../src/';
 import GlyphDotComponent from '../../src/glyph/GlyphDotComponent';
@@ -77,7 +78,7 @@ describe('<PointSeries />', () => {
     const onMouseLeave = jest.fn();
     const onClick = jest.fn();
 
-    const wrapper = mount(
+    const wrapper = shallow(
       <XYChart
         {...mockProps}
         onMouseMove={onMouseMove}
@@ -88,9 +89,13 @@ describe('<PointSeries />', () => {
       </XYChart>,
     );
 
-    const point = wrapper.find('circle').first();
+    const point = wrapper.find(PointSeries)
+      .dive()
+      .find(GlyphDotComponent)
+      .first()
+      .dive();
 
-    point.simulate('mousemove');
+    point.simulate('mousemove', ({ event: {} }));
     expect(onMouseMove).toHaveBeenCalledTimes(1);
     let args = onMouseMove.mock.calls[0][0];
     expect(args.data).toBe(data);
@@ -101,7 +106,7 @@ describe('<PointSeries />', () => {
     point.simulate('mouseleave');
     expect(onMouseLeave).toHaveBeenCalledTimes(1);
 
-    point.simulate('click');
+    point.simulate('click', ({ event: {} }));
     expect(onClick).toHaveBeenCalledTimes(1);
     args = onClick.mock.calls[0][0];
     expect(args.data).toBe(data);
@@ -116,7 +121,7 @@ describe('<PointSeries />', () => {
     const onMouseLeave = jest.fn();
     const onClick = jest.fn();
 
-    const wrapper = mount(
+    const wrapper = shallow(
       <XYChart
         {...mockProps}
         onMouseMove={onMouseMove}
@@ -127,7 +132,11 @@ describe('<PointSeries />', () => {
       </XYChart>,
     );
 
-    const point = wrapper.find('circle').first();
+    const point = wrapper.find(PointSeries)
+      .dive()
+      .find(GlyphDotComponent)
+      .first()
+      .dive();
 
     point.simulate('mousemove');
     expect(onMouseMove).toHaveBeenCalledTimes(0);
@@ -137,5 +146,47 @@ describe('<PointSeries />', () => {
 
     point.simulate('click');
     expect(onClick).toHaveBeenCalledTimes(0);
+  });
+
+  test('it should render a FocusBlurHandler for each point', () => {
+    const data = mockData.map(d => ({ ...d, x: d.date, y: d.num }));
+    const wrapper = shallow(
+      <XYChart {...mockProps}>
+        <PointSeries data={data} />
+      </XYChart>,
+    );
+
+    const line = wrapper.find(PointSeries).dive();
+    expect(line.find(FocusBlurHandler)).toHaveLength(data.length);
+  });
+
+  test('it should invoke onMouseMove when focused', () => {
+    const data = mockData.map(d => ({ ...d, x: d.date, y: d.num }));
+    const onMouseMove = jest.fn();
+
+    const wrapper = shallow(
+      <XYChart {...mockProps} onMouseMove={onMouseMove}>
+        <PointSeries data={data} />
+      </XYChart>,
+    );
+
+    const firstPoint = wrapper.find(PointSeries).dive().find(FocusBlurHandler).first();
+    firstPoint.simulate('focus');
+    expect(onMouseMove).toHaveBeenCalledTimes(1);
+  });
+
+  test('it should invoke onMouseLeave when blured', () => {
+    const data = mockData.map(d => ({ ...d, x: d.date, y: d.num }));
+    const onMouseLeave = jest.fn();
+
+    const wrapper = shallow(
+      <XYChart {...mockProps} onMouseLeave={onMouseLeave}>
+        <PointSeries data={data} />
+      </XYChart>,
+    );
+
+    const firstPoint = wrapper.find(PointSeries).dive().find(FocusBlurHandler).first();
+    firstPoint.simulate('blur');
+    expect(onMouseLeave).toHaveBeenCalledTimes(1);
   });
 });

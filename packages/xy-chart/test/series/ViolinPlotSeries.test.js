@@ -1,6 +1,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import ViolinPlot from '@vx/stats/build/violinplot/ViolinPlot';
+import { FocusBlurHandler } from '@data-ui/shared';
 
 import { XYChart, ViolinPlotSeries, computeStats } from '../../src/';
 
@@ -102,5 +103,52 @@ describe('<ViolinPlotSeries />', () => {
 
     violin.simulate('click', {});
     expect(onClick).toHaveBeenCalledTimes(1);
+  });
+
+  test('it should render a FocusBlurHandler for each point', () => {
+    const wrapper = shallow(
+      <XYChart {...mockProps}>
+        <ViolinPlotSeries {...violinProps} />
+      </XYChart>,
+    );
+
+    const violins = wrapper.find(ViolinPlotSeries).dive();
+    expect(violins.find(FocusBlurHandler)).toHaveLength(violinProps.data.length);
+  });
+
+  test('it should invoke onMouseMove when focused', () => {
+    const onMouseMove = jest.fn();
+
+    const wrapper = shallow(
+      <XYChart {...mockProps} onMouseMove={onMouseMove}>
+        <ViolinPlotSeries {...violinProps} />
+      </XYChart>,
+    );
+
+    const firstPoint = wrapper.find(ViolinPlotSeries)
+      .dive()
+      .find(FocusBlurHandler)
+      .first();
+
+    firstPoint.simulate('focus');
+    expect(onMouseMove).toHaveBeenCalledTimes(1);
+  });
+
+  test('it should invoke onMouseLeave when blured', () => {
+    const onMouseLeave = jest.fn();
+
+    const wrapper = shallow(
+      <XYChart {...mockProps} onMouseLeave={onMouseLeave}>
+        <ViolinPlotSeries {...violinProps} />
+      </XYChart>,
+    );
+
+    const firstPoint = wrapper.find(ViolinPlotSeries)
+      .dive()
+      .find(FocusBlurHandler)
+      .first();
+
+    firstPoint.simulate('blur');
+    expect(onMouseLeave).toHaveBeenCalledTimes(1);
   });
 });
