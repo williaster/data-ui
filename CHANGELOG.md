@@ -20,7 +20,7 @@
 
 📜 Documentation
 
-- update readmes with enhancements and breaking changes
+- add more complete readme, including new prop.
 
 ## v0.0.51
 
