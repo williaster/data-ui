@@ -40,7 +40,7 @@ export const propTypes = {
   waitingForLayoutLabel: PropTypes.string,
   width: PropTypes.number.isRequired,
   layout: PropTypes.object,
-  keepAspectRatio: PropTypes.bool,
+  preserveAspectRatio: PropTypes.bool,
 };
 
 const defaultProps = {
@@ -65,7 +65,7 @@ const defaultProps = {
   onMouseLeave: null,
   eventTriggerRefs: null,
   waitingForLayoutLabel: 'Computing layout...',
-  keepAspectRatio: true,
+  preserveAspectRatio: true,
 };
 
 function updateArgsWithCoordsIfNecessary(args, props) {
@@ -106,19 +106,27 @@ class Network extends React.PureComponent {
         click: this.handleClick,
       });
     }
-    const { graph, animated, width, height, margin, layout, keepAspectRatio } = this.props;
+    const { graph, animated, width, height, margin, layout, preserveAspectRatio } = this.props;
     this.layout = layout || new Layout();
     this.layout.setAnimated(animated);
     this.layout.setGraph(graph);
     this.layout.layout({
       callback: (newGraph) => {
-        this.setGraphState({ graph: newGraph, width, height, margin, keepAspectRatio });
+        this.setGraphState({ graph: newGraph, width, height, margin, preserveAspectRatio });
       },
     });
   }
 
   componentWillReceiveProps(nextProps) {
-    const { graph, animated, width, height, margin, renderTooltip, keepAspectRatio } = nextProps;
+    const {
+      graph,
+      animated,
+      width,
+      height,
+      margin,
+      renderTooltip,
+      preserveAspectRatio,
+    } = nextProps;
     if (
       !renderTooltip && (
         this.props.graph.links !== graph.links
@@ -131,11 +139,11 @@ class Network extends React.PureComponent {
       this.layout.setAnimated(animated);
       this.layout.layout({
         callback: (newGraph) => {
-          this.setGraphState({ graph: newGraph, width, height, margin, keepAspectRatio });
+          this.setGraphState({ graph: newGraph, width, height, margin, preserveAspectRatio });
         },
       });
     } else {
-      this.setGraphState({ graph, width, height, margin, keepAspectRatio });
+      this.setGraphState({ graph, width, height, margin, preserveAspectRatio });
     }
   }
 
@@ -143,7 +151,7 @@ class Network extends React.PureComponent {
     if (this.layout) this.layout.clear();
   }
 
-  setGraphState({ graph, width, height, margin, keepAspectRatio }) {
+  setGraphState({ graph, width, height, margin, preserveAspectRatio }) {
     const range = graph.nodes.reduce(
       ({ x, y }, node) =>
         ({
@@ -175,8 +183,8 @@ class Network extends React.PureComponent {
     let xZoomLevel = dataXRange / actualWidth;
     let yZoomLevel = dataYRange / actualheight;
 
-    const zoomLevel = Math.max(xZoomLevel, yZoomLevel);
-    if (keepAspectRatio) {
+    if (preserveAspectRatio) {
+      const zoomLevel = Math.max(xZoomLevel, yZoomLevel);
       xZoomLevel = zoomLevel;
       yZoomLevel = zoomLevel;
     }
