@@ -70,7 +70,7 @@ export default {
       ),
     },
     {
-      description: 'Expandable network',
+      description: 'Expandable network without keeping aspect ratio',
       components: [ExpandableNetwork],
       example: () => (
         <ResponsiveNetwork
@@ -80,7 +80,7 @@ export default {
       ),
     },
     {
-      description: 'Animated expandable network',
+      description: 'Animated expandable network without keeping aspect ratio',
       components: [ExpandableNetwork],
       example: () => (
         <ResponsiveNetwork

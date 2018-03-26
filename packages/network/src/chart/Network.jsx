@@ -40,6 +40,7 @@ export const propTypes = {
   waitingForLayoutLabel: PropTypes.string,
   width: PropTypes.number.isRequired,
   layout: PropTypes.object,
+  preserveAspectRatio: PropTypes.bool,
 };
 
 const defaultProps = {
@@ -64,6 +65,7 @@ const defaultProps = {
   onMouseLeave: null,
   eventTriggerRefs: null,
   waitingForLayoutLabel: 'Computing layout...',
+  preserveAspectRatio: true,
 };
 
 function updateArgsWithCoordsIfNecessary(args, props) {
@@ -90,18 +92,9 @@ class Network extends React.PureComponent {
     this.handleMouseMove = this.handleMouseMove.bind(this);
     this.handleMouseLeave = this.handleMouseLeave.bind(this);
 
-    const { graph, animated, width, height, margin, layout } = props;
     this.state = {
       computingLayout: true,
     };
-    this.layout = layout || new Layout();
-    this.layout.setAnimated(animated);
-    this.layout.setGraph(graph);
-    this.layout.layout({
-      callback: (newGraph) => {
-        this.setGraphState({ graph: newGraph, width, height, margin });
-      },
-    });
   }
 
   componentDidMount() {
@@ -113,10 +106,27 @@ class Network extends React.PureComponent {
         click: this.handleClick,
       });
     }
+    const { graph, animated, width, height, margin, layout, preserveAspectRatio } = this.props;
+    this.layout = layout || new Layout();
+    this.layout.setAnimated(animated);
+    this.layout.setGraph(graph);
+    this.layout.layout({
+      callback: (newGraph) => {
+        this.setGraphState({ graph: newGraph, width, height, margin, preserveAspectRatio });
+      },
+    });
   }
 
   componentWillReceiveProps(nextProps) {
-    const { graph, animated, width, height, margin, renderTooltip } = nextProps;
+    const {
+      graph,
+      animated,
+      width,
+      height,
+      margin,
+      renderTooltip,
+      preserveAspectRatio,
+    } = nextProps;
     if (
       !renderTooltip && (
         this.props.graph.links !== graph.links
@@ -129,11 +139,11 @@ class Network extends React.PureComponent {
       this.layout.setAnimated(animated);
       this.layout.layout({
         callback: (newGraph) => {
-          this.setGraphState({ graph: newGraph, width, height, margin });
+          this.setGraphState({ graph: newGraph, width, height, margin, preserveAspectRatio });
         },
       });
     } else {
-      this.setGraphState({ graph, width, height, margin });
+      this.setGraphState({ graph, width, height, margin, preserveAspectRatio });
     }
   }
 
@@ -141,7 +151,7 @@ class Network extends React.PureComponent {
     if (this.layout) this.layout.clear();
   }
 
-  setGraphState({ graph, width, height, margin }) {
+  setGraphState({ graph, width, height, margin, preserveAspectRatio }) {
     const range = graph.nodes.reduce(
       ({ x, y }, node) =>
         ({
@@ -170,23 +180,27 @@ class Network extends React.PureComponent {
     const dataXRange = range.x.max - range.x.min;
     const dataYRange = range.y.max - range.y.min;
 
-    const zoomLevel = Math.max(
-      dataXRange / actualWidth,
-      dataYRange / actualheight,
-    );
+    let xZoomLevel = dataXRange / actualWidth;
+    let yZoomLevel = dataYRange / actualheight;
 
-    const xOffsetForCentering = ((actualWidth - (dataXRange / zoomLevel)) / 2);
-    const xTotalOffset = margin.left + (xOffsetForCentering - (range.x.min / zoomLevel));
+    if (preserveAspectRatio) {
+      const zoomLevel = Math.max(xZoomLevel, yZoomLevel);
+      xZoomLevel = zoomLevel;
+      yZoomLevel = zoomLevel;
+    }
 
-    const yOffsetForCentering = ((actualheight - (dataYRange / zoomLevel)) / 2);
-    const yTotalOffset = margin.top + (yOffsetForCentering - (range.y.min / zoomLevel));
+    const xOffsetForCentering = ((actualWidth - (dataXRange / xZoomLevel)) / 2);
+    const xTotalOffset = margin.left + (xOffsetForCentering - (range.x.min / xZoomLevel));
+
+    const yOffsetForCentering = ((actualheight - (dataYRange / yZoomLevel)) / 2);
+    const yTotalOffset = margin.top + (yOffsetForCentering - (range.y.min / yZoomLevel));
 
     function xScale(x) {
-      return (x / zoomLevel) + xTotalOffset;
+      return (x / xZoomLevel) + xTotalOffset;
     }
 
     function yScale(y) {
-      return (y / zoomLevel) + yTotalOffset;
+      return (y / yZoomLevel) + yTotalOffset;
     }
 
     const nodes = graph.nodes.map(({ x, y, ...rest }, index) => ({
