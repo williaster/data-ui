@@ -1,9 +1,26 @@
 # Changelog
+- [v0.0.52](#v0052)
 - [v0.0.51](#v0051)
 - [v0.0.50](#v0050)
 - [v0.0.49](#v0049)
 - [v0.0.48](#v0048)
 - [v0.0.47](#v0047)
+
+## v0.0.52
+
+[network]
+
+🏆 Enhancements
+
+- Add `preserveAspectRatio` prop to control responsive scaling [#93](https://github.com/williaster/data-ui/pull/93)
+
+🐛 Bug Fix
+
+- init layout after mount to avoid pre-mount layout finish race condition [#93](https://github.com/williaster/data-ui/pull/93)
+
+📜 Documentation
+
+- update readmes with enhancements and breaking changes
 
 ## v0.0.51
 
