@@ -31,7 +31,7 @@ class ExpandableNetwork extends React.PureComponent {
         ariaLabel={ariaLabel}
         graph={this.state.graph}
         onClick={this.onClick}
-        keepAspectRatio={false}
+        preserveAspectRatio={false}
       />
     );
   }
