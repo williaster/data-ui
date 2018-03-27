@@ -122,6 +122,11 @@ export const circlePackData = Array(400).fill(null).map((_, i) => ({
   r: minSize + (Math.random() * (maxSize - minSize)),
   fillOpacity: Math.max(0.4, Math.random()),
   fill: theme.colors.categories[i % 2 === 0 ? 1 : 3],
-}));
+})).concat(Array(70).fill(null).map((_, i) => ({
+  x: start,
+  r: minSize + (Math.random() * (maxSize - minSize)),
+  fillOpacity: Math.max(0.4, Math.random()),
+  fill: theme.colors.categories[i % 2 === 0 ? 1 : 3],
+})));
 
 export const statsData = genStats(5);
