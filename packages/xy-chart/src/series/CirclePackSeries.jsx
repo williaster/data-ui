@@ -19,12 +19,14 @@ const propTypes = {
     }),
   ).isRequired,
   layoutCallback: PropTypes.func,
+  layout: PropTypes.func,
 };
 
 const defaultProps = {
   ...pointSeriesDefaultProps,
   size: d => d.size || 4,
   layoutCallback: null,
+  layout: computeCirclePack,
 };
 
 class CirclePackSeries extends React.PureComponent {
@@ -44,8 +46,8 @@ class CirclePackSeries extends React.PureComponent {
     if (this.timeout) clearTimeout(this.timeout);
   }
 
-  computeCirclePack({ data: rawData, xScale, yScale, size, layoutCallback }) {
-    const data = computeCirclePack(rawData, xScale, size);
+  computeCirclePack({ data: rawData, xScale, yScale, size, layoutCallback, layout }) {
+    const data = layout(rawData, xScale, size);
 
     // callback enables the user to re-set the chart height if there is overflow
     if (layoutCallback) {

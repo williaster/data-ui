@@ -55,6 +55,8 @@ import {
 
 import WithToggle from '../shared/WithToggle';
 
+import computeForceBasedCirclePack from './computeForceBasedCirclePack';
+
 PatternLines.displayName = 'PatternLines';
 LinearGradient.displayName = 'LinearGradient';
 
@@ -472,6 +474,34 @@ export default {
           <CirclePackSeries
             data={circlePackData}
             size={d => d.r}
+          />
+          <HorizontalReferenceLine
+            reference={0}
+          />
+          <CrossHair
+            showHorizontalLine={false}
+            fullHeight
+            stroke={colors.darkGray}
+            circleFill="white"
+            circleStroke={colors.darkGray}
+          />
+          <XAxis label="Time" numTicks={5} />
+        </ResponsiveXYChart>
+      ),
+    },
+    {
+      description: 'CirclePackSeries with customized layout',
+      components: [CirclePackSeries],
+      example: () => (
+        <ResponsiveXYChart
+          ariaLabel="Required label"
+          xScale={{ type: 'time' }}
+          yScale={{ type: 'linear' }}
+        >
+          <CirclePackSeries
+            data={circlePackData}
+            size={d => d.r}
+            layout={computeForceBasedCirclePack}
           />
           <HorizontalReferenceLine
             reference={0}

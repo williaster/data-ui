@@ -149,7 +149,7 @@ Series | supported x scale type | supported y scale types | data shape | support
   <img src="https://user-images.githubusercontent.com/4496521/30147216-07514a16-9352-11e7-9459-5802b771c750.png" width="500" />
 </p>
 
-This series implements the Circle packing algorithm described by <a href="https://www.researchgate.net/publication/221516201_Visualization_of_large_hierarchical_data_by_circle_packing" target="_blank">Wang et al. Visualization of large hierarchical data by circle packing</a>, but attempts to preserve datum x values (although they may be modified slightly). It is useful for visualizing e.g., atomic events where x values may partially overlap, and provides an alternative to an atomic histogram without a requirement for binning x values.
+This series implements the Circle packing algorithm described by <a href="https://www.researchgate.net/publication/221516201_Visualization_of_large_hierarchical_data_by_circle_packing" target="_blank">Wang et al. Visualization of large hierarchical data by circle packing</a>, but attempts to preserve datum x values (although they may be modified slightly). It is useful for visualizing e.g., atomic events where x values may partially overlap, and provides an alternative to an atomic histogram without a requirement for binning x values. Alternatively, users can pass their own layout algorithm as the value of prop `layout` (one example is included in the demo package.)
 
 Note that only `x` values are needed for `CirclePackSeries`, `y` values are computed based on `x` and `size` (if specified). Similar to `PointSeries`, `size`, `fill`, and `fillOpacity` may be set on datum themseleves or passed as props to the `CirclePackSeries` component.
 
