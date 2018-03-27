@@ -1,4 +1,5 @@
 # Changelog
+- [v0.0.53](#v0053)
 - [v0.0.52](#v0052)
 - [v0.0.51](#v0051)
 - [v0.0.50](#v0050)
@@ -6,8 +7,13 @@
 - [v0.0.48](#v0048)
 - [v0.0.47](#v0047)
 
-## v0.0.52
+## v0.0.53
+[xy-chart]
 
+🏆 Enhancements
+- exposed circle packing `layout` as a prop so users can pass their own layout algorithm into circle packing charts. A force-driected layout (swarm plot) example is provided in demo [#96](https://github.com/williaster/data-ui/pull/96)
+
+## v0.0.52
 [network]
 
 🏆 Enhancements
