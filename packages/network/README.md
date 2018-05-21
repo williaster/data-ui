@@ -32,7 +32,7 @@ onMouseLeave | PropTypes.func | null | `func({ data, id, event, index })`, passe
 onMouseEnter | PropTypes.func | null | `func({ data, id, event, index })`, passed to a NodeComponent
 onClick | PropTypes.func | null | `func({ data, id, event, index })`, passed to a NodeComponent
 waitingForLayoutLabel | PropTypes.string | 'Computing layout...' | Placeholder message when the layout algorithm is running
-scaleToFit | PropTypes.string | true | A flag to indiate if the computed x and y from layout algorithms will be scaled to fit for the graph width and height. If it is `false`, the `perserveAspectRatio` won't be used. It is useful when the layout algorithms handle the scale-to-fit functionality. 
+scaleToFit | PropTypes.bool | true | A flag to indiate if the computed x and y from layout algorithms will be scaled to fit for the graph width and height. If it is `false`, the `perserveAspectRatio` won't be used. It is useful when the layout algorithms handle the scale-to-fit functionality. 
 preserveAspectRatio | PropTypes.bool | true | A flag to indiate if the aspect ratio will be preserved when scaling the layout to fit for the width and height of the component.
 renderLink | PropTypes.func | Link | Customized Link Renderer for an link object
 renderNode | PropTypes.func | Node | Customized Node Renderer for an node object
@@ -50,6 +50,7 @@ layout | { callback: function } | Layout the graph and call the callback functio
 setAnimated | isAnimated: bool | Render the graph layout process with animated transition
 isAnimated | | Return the animated status
 clear | | Post-process used to clear any states, such as clear all the callback functions
+setBoundingBox | { width: number, height: number, margin: marginShape } | set width, height, and margin for the layout algorithm.
 
 ### Tooltips
 Tooltips are controlled with the `renderTooltip` function passed to `<Network />`. This function takes an object with the shape `{ event, index, id, data }` as input and is expected to return the inner _contents_ of the tooltip (not the tooltip container!) as shown above. If this function returns a `falsy` value, a tooltip will not be rendered.

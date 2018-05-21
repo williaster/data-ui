@@ -142,7 +142,8 @@ class Network extends React.PureComponent {
       this.layout.setAnimated(animated);
 
       // For certain cases, a layout algorithm need to be aware of the actual width, height, etc.,
-      // for better layout optimization.
+      // for better layout optimization. Here we pass the width, height, and margin info to the
+      // layout instance if setBoundingBox funtion is defined.
       if (this.layout.setBoundingBox) {
         this.layout.setBoundingBox({
           width,
