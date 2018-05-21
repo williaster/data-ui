@@ -41,6 +41,7 @@ export const propTypes = {
   width: PropTypes.number.isRequired,
   layout: PropTypes.object,
   preserveAspectRatio: PropTypes.bool,
+  scaleToFit: PropTypes.bool,
 };
 
 const defaultProps = {
@@ -66,6 +67,7 @@ const defaultProps = {
   eventTriggerRefs: null,
   waitingForLayoutLabel: 'Computing layout...',
   preserveAspectRatio: true,
+  scaleToFit: true,
 };
 
 function updateArgsWithCoordsIfNecessary(args, props) {
@@ -126,6 +128,7 @@ class Network extends React.PureComponent {
       margin,
       renderTooltip,
       preserveAspectRatio,
+      scaleToFit,
     } = nextProps;
     if (
       !renderTooltip && (
@@ -137,13 +140,30 @@ class Network extends React.PureComponent {
       this.setState(() => ({ computingLayout: true }));
       this.layout.setGraph(graph);
       this.layout.setAnimated(animated);
+
+      // For certain cases, a layout algorithm need to be aware of the actual width, height, etc.,
+      // for better layout optimization.
+      if (this.layout.setBoundingBox) {
+        this.layout.setBoundingBox({
+          width,
+          height,
+          margin,
+        });
+      }
       this.layout.layout({
         callback: (newGraph) => {
-          this.setGraphState({ graph: newGraph, width, height, margin, preserveAspectRatio });
+          this.setGraphState({
+            graph: newGraph,
+            width,
+            height,
+            margin,
+            preserveAspectRatio,
+            scaleToFit,
+          });
         },
       });
     } else {
-      this.setGraphState({ graph, width, height, margin, preserveAspectRatio });
+      this.setGraphState({ graph, width, height, margin, preserveAspectRatio, scaleToFit });
     }
   }
 
@@ -151,7 +171,25 @@ class Network extends React.PureComponent {
     if (this.layout) this.layout.clear();
   }
 
-  setGraphState({ graph, width, height, margin, preserveAspectRatio }) {
+  setGraphState({ graph, width, height, margin, preserveAspectRatio, scaleToFit }) {
+    if (!scaleToFit) {
+      const links = graph.links.map((link, index) => ({
+        ...link,
+        sourceX: link.source.x,
+        sourceY: link.source.y,
+        targetX: link.target.x,
+        targetY: link.target.y,
+        index,
+      }));
+      this.setState(() => ({
+        graph: {
+          nodes: graph.nodes,
+          links,
+        },
+        computingLayout: false,
+      }));
+      return;
+    }
     const range = graph.nodes.reduce(
       ({ x, y }, node) =>
         ({

@@ -67,6 +67,7 @@ class ExpandableNetworkWithCustomizedLayout extends React.PureComponent {
           graph={this.state.graph}
           onClick={this.onClick}
           layout={this.layout}
+          scaleToFit={false}
         />
       </div>
     );
