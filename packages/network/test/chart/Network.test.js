@@ -3,6 +3,45 @@ import { shallow, mount } from 'enzyme';
 import { Network, WithTooltip, Nodes, Links } from '../../src';
 import defaultGraph from '../data';
 
+/* eslint no-param-reassign: 0, class-methods-use-this: 0 */
+class DummyLayout {
+  constructor() {
+    this.setAnimated(false);
+  }
+
+  setGraph(graph) {
+    this.graph = graph;
+    this.clear();
+  }
+
+  getGraph() {
+    return this.graph;
+  }
+
+  layout({ callback }) {
+    callback({
+      nodes: this.graph.nodes,
+      links: this.graph.links,
+    });
+  }
+
+  setBoundingBox() {
+  }
+
+  isAnimated() {
+    return this.animated;
+  }
+
+  setAnimated(animated) {
+    this.clear();
+    this.animated = animated;
+  }
+
+  clear() {}
+}
+
+const layout = new DummyLayout();
+
 describe('<Network />', () => {
   const props = {
     ariaLabel: 'test',
@@ -38,6 +77,21 @@ describe('<Network />', () => {
   test('it should show initial status of rendering', () => {
     const wrapper = mount(<Network {...props} />);
     expect(wrapper.find('text').length).toBe(1);
+  });
+
+  test('it should render correct number of nodes and links', () => {
+    const wrapper = mount(<Network {...props} layout={layout} />);
+    expect(wrapper.find('.cx-group.data-ui-nodes').length).toBe(defaultGraph.nodes.length);
+    expect(wrapper.find('.cx-group.data-ui-links').length).toBe(defaultGraph.links.length);
+  });
+
+  test('it should render the orignal x and y when scaleToFit is false', () => {
+    const wrapper = mount(<Network {...props} layout={layout} scaleToFit={false} />);
+    defaultGraph.nodes.forEach((node) => {
+      const groupWrapper = wrapper.find('.cx-group.data-ui-nodes');
+      const transformString = `translate(${node.x}, ${node.y})`;
+      expect(groupWrapper.find({ transform: transformString }).length).toBe(1);
+    });
   });
 
   test('it should render the graph for animation enabled graph with little delay', (done) => {
