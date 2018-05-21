@@ -19,7 +19,13 @@ class DummyLayout {
   }
 
   layout({ callback }) {
-    callback(this.graph);
+    callback({
+      nodes: this.graph.nodes,
+      links: this.graph.links,
+    });
+  }
+
+  setBoundingBox() {
   }
 
   isAnimated() {
@@ -73,8 +79,14 @@ describe('<Network />', () => {
     expect(wrapper.find('text').length).toBe(1);
   });
 
-  test('it should render the orignal x and y when scaleToFit is false', () => {
+  test('it should render correct number of nodes and links', () => {
     const wrapper = mount(<Network {...props} layout={layout} />);
+    expect(wrapper.find('.cx-group.data-ui-nodes').length).toBe(defaultGraph.nodes.length);
+    expect(wrapper.find('.cx-group.data-ui-links').length).toBe(defaultGraph.links.length);
+  });
+
+  test('it should render the orignal x and y when scaleToFit is false', () => {
+    const wrapper = mount(<Network {...props} layout={layout} scaleToFit={false} />);
     defaultGraph.nodes.forEach((node) => {
       const groupWrapper = wrapper.find('.cx-group.data-ui-nodes');
       const transformString = `translate(${node.x}, ${node.y})`;

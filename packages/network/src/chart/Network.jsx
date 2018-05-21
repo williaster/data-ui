@@ -108,13 +108,36 @@ class Network extends React.PureComponent {
         click: this.handleClick,
       });
     }
-    const { graph, animated, width, height, margin, layout, preserveAspectRatio } = this.props;
+    const {
+      graph,
+      animated,
+      width,
+      height,
+      margin,
+      layout,
+      preserveAspectRatio,
+      scaleToFit,
+    } = this.props;
     this.layout = layout || new Layout();
     this.layout.setAnimated(animated);
     this.layout.setGraph(graph);
+    if (this.layout.setBoundingBox) {
+      this.layout.setBoundingBox({
+        width,
+        height,
+        margin,
+      });
+    }
     this.layout.layout({
       callback: (newGraph) => {
-        this.setGraphState({ graph: newGraph, width, height, margin, preserveAspectRatio });
+        this.setGraphState({
+          graph: newGraph,
+          width,
+          height,
+          margin,
+          preserveAspectRatio,
+          scaleToFit,
+        });
       },
     });
   }
