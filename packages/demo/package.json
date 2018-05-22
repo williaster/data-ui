@@ -1,6 +1,6 @@
 {
   "name": "@data-ui/demo",
-  "version": "0.0.55",
+  "version": "0.0.56",
   "description": "data-ui demo",
   "scripts": {
     "gh-pages:clean": "rm -rf _gh-pages && lerna run dev:nowatch",
@@ -24,7 +24,7 @@
     "@data-ui/event-flow": "0.0.54",
     "@data-ui/forms": "0.0.50",
     "@data-ui/histogram": "0.0.54",
-    "@data-ui/network": "0.0.55",
+    "@data-ui/network": "0.0.56",
     "@data-ui/radial-chart": "0.0.54",
     "@data-ui/sparkline": "0.0.54",
     "@data-ui/theme": "0.0.48",
