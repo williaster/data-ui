@@ -158,6 +158,11 @@ class Network extends React.PureComponent {
         this.props.graph.links !== graph.links
         || this.props.graph.nodes !== graph.nodes
         || this.state.computingLayout
+        || (this.setBoundingBox && (
+          this.props.width !== width
+          || this.props.height !== height
+          || this.props.margin !== margin
+        ))
       )) {
       this.layout.clear();
       this.setState(() => ({ computingLayout: true }));
