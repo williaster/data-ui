@@ -1,4 +1,5 @@
 # Changelog
+- [v0.0.55](#v0055)
 - [v0.0.54](#v0054)
 - [v0.0.53](#v0053)
 - [v0.0.52](#v0052)
@@ -7,6 +8,13 @@
 - [v0.0.49](#v0049)
 - [v0.0.48](#v0048)
 - [v0.0.47](#v0047)
+
+## v0.0.55
+[network] 
+
+🏆 Enhancements
+
+- enable layout algorithms to handle scale to fit functionality [#99](https://github.com/williaster/data-ui/pull/99)
 
 ## v0.0.54
 [shared] 
