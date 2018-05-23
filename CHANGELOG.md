@@ -1,4 +1,5 @@
 # Changelog
+- [v0.0.56](#v0056)
 - [v0.0.55](#v0055)
 - [v0.0.54](#v0054)
 - [v0.0.53](#v0053)
@@ -8,6 +9,12 @@
 - [v0.0.49](#v0049)
 - [v0.0.48](#v0048)
 - [v0.0.47](#v0047)
+
+## v0.0.56
+[network] 
+
+🐛 Bug Fix
+- Trigger layout algorithm when the width, height, or margin changes [#100](https://github.com/williaster/data-ui/pull/100)
 
 ## v0.0.55
 [network] 
