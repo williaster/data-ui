@@ -116,6 +116,7 @@ fill | PropTypes.oneOfType([PropTypes.func, PropTypes.string]) | @data-ui/theme.
 fillOpacity | PropTypes.oneOfType([PropTypes.func, PropTypes.number]) | 0.7 | opacity of bar fill
 stroke | PropTypes.oneOfType([PropTypes.func, PropTypes.string]) | 'white' | determines bar stroke color
 strokeWidth | PropTypes.oneOfType([PropTypes.func, PropTypes.number]) | 1 | determines width of bar outline
+onClick | PropTypes.func | -- | Called on bar click with a signature of `({ event, data, datum, color, index })`
 
 
 ### `<DensitySeries />`
@@ -169,7 +170,7 @@ Name | Type | Default | Description
 ------------ | ------------- | ------- | ----
 children | PropTypes.func or PropTypes.object | - | Child function (to call) or element (to clone) with onMouseMove, onMouseLeave, and tooltipData props/keys
 className | PropTypes.string | - | Class name to add to the `<div>` container wrapper
-renderTooltip | PropTypes.func.isRequired | - | Renders the _contents_ of the tooltip, signature of `({ event, data, datum, color }) => node`. If this function returns a `falsy` value, a tooltip will not be rendered.
+renderTooltip | PropTypes.func.isRequired | - | Renders the _contents_ of the tooltip, signature of `({ event, data, datum, color, index }) => node`. If this function returns a `falsy` value, a tooltip will not be rendered.
 styles | PropTypes.object | {} | Styles to add to the `<div>` container wrapper
 TooltipComponent | PropTypes.func or PropTypes.object | `@vx`'s `TooltipWithBounds` | Component (not instance) to use as the tooltip container component. It is passed `top` and `left` numbers for positioning
 tooltipProps | PropTypes.object | - | Props that are passed to `TooltipComponent`
