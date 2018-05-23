@@ -33,6 +33,7 @@ function AnimatedBarSeries({
   keyAccessor,
   fill,
   fillOpacity,
+  onClick,
   onMouseMove,
   onMouseLeave,
   stroke,
@@ -42,8 +43,8 @@ function AnimatedBarSeries({
   const maxBarLength = Math.max(...valueScale.range());
 
   const barWidth = binScale.bandwidth
-      ? binScale.bandwidth() // categorical
-      : Math.abs(binScale(binnedData[0].bin1) - binScale(binnedData[0].bin0)); // numeric
+    ? binScale.bandwidth() // categorical
+    : Math.abs(binScale(binnedData[0].bin1) - binScale(binnedData[0].bin0)); // numeric
 
   const getValue = d => d[valueKey];
 
@@ -104,13 +105,28 @@ function AnimatedBarSeries({
                 stroke={d.stroke}
                 fillOpacity={
                   typeof fillOpacity !== 'undefined'
-                  ? fillOpacity
-                  : callOrValue(fillOpacity, rawDatum, i)
+                    ? fillOpacity
+                    : callOrValue(fillOpacity, rawDatum, i)
                 }
                 strokeWidth={rawDatum.strokeWidth || callOrValue(strokeWidth, rawDatum, i)}
-                onMouseMove={onMouseMove && (() => (event) => {
-                  onMouseMove({ event, datum: rawDatum, data: binnedData, color: d.fill });
-                })}
+                onClick={
+                  onClick &&
+                  (() => (event) => {
+                    onClick({ event, datum: rawDatum, data: binnedData, color: d.fill, index: i });
+                  })
+                }
+                onMouseMove={
+                  onMouseMove &&
+                  (() => (event) => {
+                    onMouseMove({
+                      event,
+                      datum: rawDatum,
+                      data: binnedData,
+                      color: d.fill,
+                      index: i,
+                    });
+                  })
+                }
                 onMouseLeave={onMouseLeave && (() => onMouseLeave)}
               />
             );

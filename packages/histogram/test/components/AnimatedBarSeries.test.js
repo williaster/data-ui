@@ -73,10 +73,16 @@ describe('<AnimatedBarSeries />', () => {
   test('it should call onMouseMove({ datum, data, event, color }) and onMouseLeave() on trigger', () => {
     const onMouseMove = jest.fn();
     const onMouseLeave = jest.fn();
+    const onClick = jest.fn();
 
     const wrapper = mount(
       <Histogram {...histogramProps} onMouseMove={onMouseMove} onMouseLeave={onMouseLeave}>
-        <BarSeries animated binnedData={numericBinnedData} fill="cabbage-purple" />
+        <BarSeries
+          animated
+          binnedData={numericBinnedData}
+          fill="cabbage-purple"
+          onClick={onClick}
+        />
       </Histogram>,
     );
 
@@ -85,10 +91,20 @@ describe('<AnimatedBarSeries />', () => {
       bar.simulate('mousemove');
 
       expect(onMouseMove).toHaveBeenCalledTimes(1);
-      const args = onMouseMove.mock.calls[0][0];
+      let args = onMouseMove.mock.calls[0][0];
       expect(args.data).toBe(numericBinnedData);
       expect(args.datum).toBe(numericBinnedData[0]);
       expect(args.event).toBeDefined();
+      expect(args.index).toBe(0);
+      expect(args.color).toBe('cabbage-purple');
+
+      bar.simulate('click');
+      expect(onClick).toHaveBeenCalledTimes(1);
+      args = onClick.mock.calls[0][0];
+      expect(args.data).toBe(numericBinnedData);
+      expect(args.datum).toBe(numericBinnedData[0]);
+      expect(args.event).toBeDefined();
+      expect(args.index).toBe(0);
       expect(args.color).toBe('cabbage-purple');
 
       bar.simulate('mouseleave');

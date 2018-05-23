@@ -50,6 +50,10 @@ const defaultProps = {
 };
 
 class HistogramPlayground extends React.PureComponent {
+  static onClick({ datum, index }) {
+    console.log('clicked bar', index, datum);
+  }
+
   constructor(props) {
     super(props);
 
@@ -107,7 +111,9 @@ class HistogramPlayground extends React.PureComponent {
             id={key}
             label={key}
             checked={Boolean(this.state[key])}
-            onChange={() => { this.setState({ [key]: !this.state[key] }); }}
+            onChange={() => {
+              this.setState({ [key]: !this.state[key] });
+            }}
           />
         ))}
         <Range
@@ -150,7 +156,9 @@ class HistogramPlayground extends React.PureComponent {
           max={10}
           step={1}
           value={mu}
-          onChange={(e) => { this.handleChangeMu(datasetKey, e.target.value); }}
+          onChange={(e) => {
+            this.handleChangeMu(datasetKey, e.target.value);
+          }}
         />
         <Range
           id={`sigma-${datasetKey}`}
@@ -159,7 +167,9 @@ class HistogramPlayground extends React.PureComponent {
           max={15}
           step={1}
           value={sigma}
-          onChange={(e) => { this.handleChangeSigma(datasetKey, e.target.value); }}
+          onChange={(e) => {
+            this.handleChangeSigma(datasetKey, e.target.value);
+          }}
         />
         <Checkbox
           id={`show-density-${datasetKey}`}
@@ -175,7 +185,7 @@ class HistogramPlayground extends React.PureComponent {
             });
           }}
         />
-        {showDensity &&
+        {showDensity && (
           <Checkbox
             id={`show-bars-${datasetKey}`}
             label="Show bars"
@@ -185,7 +195,8 @@ class HistogramPlayground extends React.PureComponent {
                 [datasetKey]: { ...this.state[datasetKey], showBars: !showBars },
               });
             }}
-          />}
+          />
+        )}
       </div>
     );
   }
@@ -203,26 +214,33 @@ class HistogramPlayground extends React.PureComponent {
           binCount={binCount}
           horizontal={horizontal}
         >
-          {datasets.map(key => (
-            !this.state[key].showDensity || this.state[key].showBars ? (
-              <BarSeries
-                key={key}
-                fill={this.state[key].color}
-                rawData={this.state[key].rawData}
-              />
-            ) : null
-          ))}
+          {datasets.map((key) => {
+            if (!this.state[key].showDensity || this.state[key].showBars) {
+              return (
+                <BarSeries
+                  key={key}
+                  fill={this.state[key].color}
+                  rawData={this.state[key].rawData}
+                  onClick={HistogramPlayground.onClick}
+                />
+              );
+            }
+            return null;
+          })}
 
-          {datasets.map(key => (
-            this.state[key].showDensity ? (
-              <DensitySeries
-                key={key}
-                rawData={this.state[key].rawData}
-                stroke={this.state[key].color}
-                fill={this.state[key].color}
-              />
-            ) : null
-          ))}
+          {datasets.map((key) => {
+            if (this.state[key].showDensity) {
+              return (
+                <DensitySeries
+                  key={key}
+                  rawData={this.state[key].rawData}
+                  stroke={this.state[key].color}
+                  fill={this.state[key].color}
+                />
+              );
+            }
+            return null;
+          })}
 
           {xAxis && <XAxis />}
           {yAxis && <YAxis />}

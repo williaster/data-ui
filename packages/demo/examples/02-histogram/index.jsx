@@ -5,12 +5,10 @@ import {
   Histogram,
   BarSeries,
   DensitySeries,
-
   XAxis,
   YAxis,
   PatternLines,
   LinearGradient,
-
   withScreenSize,
 } from '@data-ui/histogram';
 
@@ -42,9 +40,7 @@ export default {
     {
       description: 'Playground',
       components: [Histogram, BarSeries, DensitySeries, XAxis, YAxis],
-      example: () => (
-        <HistogramPlayground HistogramComponent={ResponsiveHistogram} />
-      ),
+      example: () => <HistogramPlayground HistogramComponent={ResponsiveHistogram} />,
     },
     {
       description: 'normal',
@@ -114,7 +110,7 @@ export default {
       description: 'categorical',
       components: [BarSeries, DensitySeries],
       example: () => (
-        <ResponsiveHistogram binType="categorical" >
+        <ResponsiveHistogram binType="categorical">
           <PatternLines
             id="categorical"
             height={8}
@@ -124,11 +120,7 @@ export default {
             strokeWidth={0.5}
             orientation={['diagonal']}
           />
-          <DensitySeries
-            showLine={false}
-            rawData={categorical}
-            fillOpacity={0.2}
-          />
+          <DensitySeries showLine={false} rawData={categorical} fillOpacity={0.2} />
           <BarSeries
             rawData={categorical}
             stroke={chartTheme.colors.default}
@@ -175,10 +167,7 @@ export default {
             rotate={45}
             vertical={false}
           />
-          <BarSeries
-            fill="url(#normalized)"
-            rawData={normal[mus[2]][2]}
-          />
+          <BarSeries fill="url(#normalized)" rawData={normal[mus[2]][2]} />
           <XAxis />
           <YAxis />
         </ResponsiveHistogram>
@@ -260,9 +249,7 @@ export default {
             fillOpacity={0.3}
             binnedData={binnedCategorical}
           />
-          <DensitySeries
-            binnedData={binnedCategorical}
-          />
+          <DensitySeries binnedData={binnedCategorical} />
           <XAxis label="Letter frequency" />
           <YAxis />
         </ResponsiveHistogram>
@@ -288,11 +275,7 @@ export default {
             fill="url(#categorical)"
             fillOpacity={0.7}
           />
-          <DensitySeries
-            showLine={false}
-            binnedData={binnedNumeric}
-            fillOpacity={0.2}
-          />
+          <DensitySeries showLine={false} binnedData={binnedNumeric} fillOpacity={0.2} />
           <XAxis />
           <YAxis />
         </ResponsiveHistogram>

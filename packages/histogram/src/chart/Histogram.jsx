@@ -160,12 +160,7 @@ class Histogram extends React.PureComponent {
     } = this.state;
 
     return (
-      <svg
-        aria-label={ariaLabel}
-        role="img"
-        width={width}
-        height={height}
-      >
+      <svg aria-label={ariaLabel} role="img" width={width} height={height}>
         <Group left={margin.left} top={margin.top}>
           {React.Children.map(children, (Child, index) => {
             const name = componentName(Child);
@@ -186,13 +181,11 @@ class Histogram extends React.PureComponent {
               const styleKey = name[0].toLowerCase();
               const binOrValue =
                 (name === 'XAxis' && !horizontal) || (name === 'YAxis' && horizontal)
-                ? 'bin'
-                : 'value';
+                  ? 'bin'
+                  : 'value';
 
-              const tickValues = (
-                Child.props.tickValues ||
-                (binOrValue === 'bin' && binValues ? binValues : null)
-              );
+              const tickValues =
+                Child.props.tickValues || (binOrValue === 'bin' && binValues ? binValues : null);
 
               return React.cloneElement(Child, {
                 top: name === 'YAxis' || Child.props.orientation === 'top' ? 0 : innerHeight,
