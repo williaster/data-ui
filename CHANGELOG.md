@@ -1,4 +1,5 @@
 # Changelog
+- [v0.0.57](#v0057)
 - [v0.0.56](#v0056)
 - [v0.0.55](#v0055)
 - [v0.0.54](#v0054)
@@ -9,6 +10,14 @@
 - [v0.0.49](#v0049)
 - [v0.0.48](#v0048)
 - [v0.0.47](#v0047)
+
+## v0.0.57
+[histogram]
+
+🏆 Enhancements [#103](https://github.com/williaster/data-ui/pull/103)
+
+- Adds `onClick` support to `BarSeries` and `AnimatedBarSeries`
+- `onClick` and `onMouseMove` functions are passed `index` in addition to `data`, `datum`, `event`, and `color`
 
 ## v0.0.56
 [network] 
