@@ -19,6 +19,7 @@ export const propTypes = {
   stroke: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   strokeWidth: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
   valueKey: PropTypes.string,
+  onClick: PropTypes.func,
 
   // likely injected by parent Histogram
   binScale: PropTypes.func,
@@ -36,6 +37,7 @@ export const defaultProps = {
   fill: chartTheme.colors.default,
   fillOpacity: 0.7,
   horizontal: false,
+  onClick: null,
   onMouseMove: null,
   onMouseLeave: null,
   stroke: '#FFFFFF',
@@ -51,6 +53,7 @@ function BarSeries({
   fill,
   fillOpacity,
   horizontal,
+  onClick,
   onMouseMove,
   onMouseLeave,
   stroke,
@@ -64,53 +67,65 @@ function BarSeries({
 
   // @TODO with custom bin values, bin1 - bin0 may be different for each bar, account for this
   const barWidth = binScale.bandwidth
-      ? binScale.bandwidth() // categorical
-      : Math.abs(binScale(binnedData[0].bin1) - binScale(binnedData[0].bin0)); // numeric
+    ? binScale.bandwidth() // categorical
+    : Math.abs(binScale(binnedData[0].bin1) - binScale(binnedData[0].bin0)); // numeric
 
   return (
     <Group>
-      {animated &&
+      {animated && (
         <AnimatedBarSeries
           binnedData={binnedData}
           binScale={binScale}
           horizontal={horizontal}
           fill={fill}
           fillOpacity={fillOpacity}
+          onClick={onClick}
           onMouseMove={onMouseMove}
           onMouseLeave={onMouseLeave}
           stroke={stroke}
           strokeWidth={strokeWidth}
           valueKey={valueKey}
           valueScale={valueScale}
-        />}
+        />
+      )}
 
-      {!animated && binnedData.map((d, i) => {
-        const binPosition = binScale(d.bin || (horizontal ? d.bin1 : d.bin0));
-        const barLength = horizontal
-          ? valueScale(d[valueKey])
-          : maxBarLength - valueScale(d[valueKey]);
+      {!animated &&
+        binnedData.map((d, i) => {
+          const binPosition = binScale(d.bin || (horizontal ? d.bin1 : d.bin0));
+          const barLength = horizontal
+            ? valueScale(d[valueKey])
+            : maxBarLength - valueScale(d[valueKey]);
 
-        const color = d.fill || callOrValue(fill, d, i);
-        return (
-          <Bar
-            key={`bar-${binPosition}`}
-            x={horizontal ? 0 : binPosition}
-            y={horizontal ? binPosition : (maxBarLength - barLength)}
-            width={horizontal ? barLength : barWidth}
-            height={horizontal ? barWidth : barLength}
-            fill={color}
-            fillOpacity={
-              typeof fillOpacity !== 'undefined' ? fillOpacity : callOrValue(fillOpacity, d, i)
-            }
-            stroke={d.stroke || callOrValue(stroke, d, i)}
-            strokeWidth={d.strokeWidth || callOrValue(strokeWidth, d, i)}
-            onMouseMove={onMouseMove && (() => (event) => {
-              onMouseMove({ event, data: binnedData, datum: d, color });
-            })}
-            onMouseLeave={onMouseLeave && (() => onMouseLeave)}
-          />
-        );
-      })}
+          const color = d.fill || callOrValue(fill, d, i);
+          return (
+            <Bar
+              key={`bar-${binPosition}`}
+              x={horizontal ? 0 : binPosition}
+              y={horizontal ? binPosition : maxBarLength - barLength}
+              width={horizontal ? barLength : barWidth}
+              height={horizontal ? barWidth : barLength}
+              fill={color}
+              fillOpacity={
+                typeof fillOpacity !== 'undefined' ? fillOpacity : callOrValue(fillOpacity, d, i)
+              }
+              stroke={d.stroke || callOrValue(stroke, d, i)}
+              strokeWidth={d.strokeWidth || callOrValue(strokeWidth, d, i)}
+              onClick={
+                onClick &&
+                (() => (event) => {
+                  onClick({ event, data: binnedData, datum: d, color, index: i });
+                })
+              }
+              onMouseMove={
+                onMouseMove &&
+                (() => (event) => {
+                  onMouseMove({ event, data: binnedData, datum: d, color, index: i });
+                })
+              }
+              onMouseLeave={onMouseLeave && (() => onMouseLeave)}
+            />
+          );
+        })}
     </Group>
   );
 }
