@@ -4,6 +4,7 @@ export { default as XYChart, propTypes as xyChartPropTypes } from './chart/XYCha
 
 export { default as AreaSeries } from './series/AreaSeries';
 export { default as BarSeries } from './series/BarSeries';
+export { default as BoxPlotSeries } from './series/BoxPlotSeries';
 export { default as CirclePackSeries } from './series/CirclePackSeries';
 export { default as GroupedBarSeries } from './series/GroupedBarSeries';
 export { default as IntervalSeries } from './series/IntervalSeries';
@@ -12,7 +13,7 @@ export { default as PointSeries } from './series/PointSeries';
 export { pointComponentPropTypes } from './utils/propShapes';
 export { default as StackedAreaSeries } from './series/StackedAreaSeries';
 export { default as StackedBarSeries } from './series/StackedBarSeries';
-export { default as BoxPlotSeries } from './series/BoxPlotSeries';
+export { default as ThresholdSeries } from './series/ThresholdSeries';
 export { default as ViolinPlotSeries } from './series/ViolinPlotSeries';
 export { computeStats } from '@vx/stats';
 

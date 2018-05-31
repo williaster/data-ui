@@ -1,20 +1,4 @@
-/* eslint max-len: 0 */
-
 // source https://yeun.github.io/open-color/
-
-export const grayColors = [
-  '#f8f9fa',
-  '#f1f3f5',
-  '#e9ecef',
-  '#dee2e6',
-  '#ced4da',
-  '#adb5bd',
-  '#868e96',
-  '#495057',
-  '#343a40',
-  '#212529',
-];
-
 export const allColors = {
   red: [
     '#fff5f5',
@@ -160,8 +144,21 @@ export const allColors = {
     '#e8590c',
     '#d9480f',
   ],
-  gray: grayColors,
+  gray: [
+    '#f8f9fa',
+    '#f1f3f5',
+    '#e9ecef',
+    '#dee2e6',
+    '#ced4da',
+    '#adb5bd',
+    '#868e96',
+    '#495057',
+    '#343a40',
+    '#212529',
+  ],
 };
+
+export const grayColors = allColors.gray;
 
 const DEFAULT_BRIGHTNESS = 6;
 const DEFAULT_BRIGHTNESS_DARK = 2;

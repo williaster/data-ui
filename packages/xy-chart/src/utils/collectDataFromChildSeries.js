@@ -1,23 +1,19 @@
 import { Children } from 'react';
-
 import { componentName, isSeries } from './chartUtils';
 
 export default function collectDataFromChildSeries(children) {
   let allData = [];
-  const dataByIndex = {};
-  const dataBySeriesType = {};
-
-  Children.forEach(children, (Child, i) => {
-    if (Child && Child.props && Child.props.data) {
-      const name = componentName(Child);
+  Children.forEach(children, (Child) => {
+    if (Child && Child.props) {
       const { data } = Child.props;
+      const name = componentName(Child);
       if (data && isSeries(name)) {
-        dataByIndex[i] = data;
-        allData = allData.concat(data);
-        dataBySeriesType[name] = (dataBySeriesType[name] || []).concat(data);
+        allData = allData.concat(Child.props.data);
+      } else if (name === 'ThresholdSeries') {
+        allData = allData.concat(collectDataFromChildSeries(Child.props.children));
       }
     }
   });
 
-  return { dataByIndex, allData, dataBySeriesType };
+  return allData;
 }

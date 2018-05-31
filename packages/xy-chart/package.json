@@ -48,6 +48,7 @@
     "@vx/scale": "^0.0.165",
     "@vx/shape": "^0.0.165",
     "@vx/stats": "^0.0.165",
+    "@vx/threshold": "0.0.170",
     "@vx/tooltip": "^0.0.165",
     "@vx/voronoi": "^0.0.165",
     "babel-runtime": "^6.26.0",
