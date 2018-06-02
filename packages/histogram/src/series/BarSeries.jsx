@@ -26,7 +26,6 @@ export const propTypes = {
   valueScale: PropTypes.func,
   onMouseMove: PropTypes.func,
   onMouseLeave: PropTypes.func,
-  // renderLabel: PropTypes.func,
 };
 
 export const defaultProps = {
