@@ -89,7 +89,7 @@ function DensitySeries({
   valueKey,
   valueScale,
 }) {
-  if ((!showArea && !showLine)) return null;
+  if (!showArea && !showLine) return null;
 
   const binWidth = binScale.bandwidth
     ? binScale.bandwidth() // categorical
@@ -105,11 +105,9 @@ function DensitySeries({
 
   if (binType === 'numeric' && rawData.length > 0) {
     // @TODO cache this with a non-functional component
-    const cumulative = (/cumulative/gi).test(valueKey);
+    const cumulative = /cumulative/gi.test(valueKey);
     const bins = binnedData.map(getBin);
-    const kernelFunc = kernel === 'gaussian'
-      ? kernelGaussian()
-      : kernelParabolic(smoothing);
+    const kernelFunc = kernel === 'gaussian' ? kernelGaussian() : kernelParabolic(smoothing);
 
     const estimator = kernelDensityEstimator(kernelFunc, bins);
 
@@ -129,7 +127,7 @@ function DensitySeries({
 
     densityScale = scaleLinear({
       domain: extent(densityData, (d, i) => {
-        const val = densityAccessor(d);// compute cumulative in this loop
+        const val = densityAccessor(d); // compute cumulative in this loop
         d.cumulative = val + (i > 0 ? densityData[i - 1].cumulative : 0);
         d.id = i;
         return cumulative ? d.cumulative : val;
@@ -150,7 +148,7 @@ function DensitySeries({
 
   return (
     <Group style={{ pointerEvents: 'none' }}>
-      {animated &&
+      {animated && (
         <AnimatedDensitySeries
           densityData={densityData}
           fill={fill}
@@ -166,39 +164,46 @@ function DensitySeries({
           strokeLinecap={strokeLinecap}
           xScale={xScale}
           yScale={yScale}
-        />}
-      {!animated && showArea &&
-        <AreaClosed
-          data={densityData}
-          x={getX}
-          y={getY}
-          xScale={xScale}
-          yScale={yScale}
-          fill={fill}
-          fillOpacity={fillOpacity}
-          stroke="transparent"
-          strokeWidth={strokeWidth}
-          curve={curveBasis}
-        />}
-      {!animated && showLine && strokeWidth > 0 &&
-        <LinePath
-          data={densityData}
-          x={getX}
-          y={getY}
-          xScale={xScale}
-          yScale={yScale}
-          stroke={stroke}
-          strokeWidth={strokeWidth}
-          strokeDasharray={strokeDasharray}
-          strokeLinecap={strokeLinecap}
-          curve={curveBasis}
-          glyph={null}
-        />}
+        />
+      )}
+      {!animated &&
+        showArea && (
+          <AreaClosed
+            data={densityData}
+            x={getX}
+            y={getY}
+            xScale={xScale}
+            yScale={yScale}
+            fill={fill}
+            fillOpacity={fillOpacity}
+            stroke="transparent"
+            strokeWidth={strokeWidth}
+            curve={curveBasis}
+          />
+        )}
+      {!animated &&
+        showLine &&
+        strokeWidth > 0 && (
+          <LinePath
+            data={densityData}
+            x={getX}
+            y={getY}
+            xScale={xScale}
+            yScale={yScale}
+            stroke={stroke}
+            strokeWidth={strokeWidth}
+            strokeDasharray={strokeDasharray}
+            strokeLinecap={strokeLinecap}
+            curve={curveBasis}
+            glyph={null}
+          />
+        )}
     </Group>
   );
 }
 
 DensitySeries.propTypes = propTypes;
 DensitySeries.defaultProps = defaultProps;
+DensitySeries.displayName = 'DensitySeries';
 
 export default DensitySeries;
