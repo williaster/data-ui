@@ -1,4 +1,5 @@
 # Changelog
+- [v0.0.58](#v0058)
 - [v0.0.57](#v0057)
 - [v0.0.56](#v0056)
 - [v0.0.55](#v0055)
@@ -10,6 +11,17 @@
 - [v0.0.49](#v0049)
 - [v0.0.48](#v0048)
 - [v0.0.47](#v0047)
+
+## v0.0.58
+[histogram]
+- 🐛Bug Fix 
+- Fixes #104 error seen on DensitySeries in production [#105](https://github.com/williaster/data-ui/pull/105)
+
+```js
+Changes:
+ - @data-ui/demo: 0.0.57 => 0.0.58 (private)
+ - @data-ui/histogram: 0.0.57 => 0.0.58
+ ```
 
 ## v0.0.57
 [histogram]
