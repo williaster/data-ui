@@ -17,7 +17,7 @@
 - 🐛Bug Fix 
 - Fixes #104 error seen on DensitySeries in production [#105](https://github.com/williaster/data-ui/pull/105)
 
-```js
+```
 Changes:
  - @data-ui/demo: 0.0.57 => 0.0.58 (private)
  - @data-ui/histogram: 0.0.57 => 0.0.58
