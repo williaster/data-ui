@@ -124,7 +124,7 @@ Several types of series types are exported by the package, and can be used in co
 
 
 Series | supported x scale type | supported y scale types | data shape | supported `eventTrigger`s | shared tooltip compatible | supports onFocus + onBlur
------------- | ------------- | ------- | ---- | ---- | ----
+------------ | ------------- | ------- | ---- | ---- | ---- | ----
 `<AreaSeries />` | `time`, `linear` | `linear` | `{ x, y [, y0, y1, fill, stroke] }`* | `series`, `container`, `voronoi`* | yes | yes
 `<BarSeries />` | `time`, `linear`, `band` | `linear` | `{ x, y [, fill, stroke] }` | `series`, `container` | yes | yes
 `<LineSeries />` | `time`, `linear` | `linear` | `{ x, y [, stroke] }` | `series`, `container`, `voronoi` | yes | yes
