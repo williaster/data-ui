@@ -1,4 +1,4 @@
-/* eslint jsx-a11y/label-has-for: 1, no-mixed-operators: 0 */
+/* eslint jsx-a11y/label-has-for: 0, no-mixed-operators: 0 */
 import React from 'react';
 import { allColors } from '@data-ui/theme/build/color';
 import theme from '@data-ui/theme/build/chartTheme';
@@ -71,7 +71,6 @@ class TickLabelPlayground extends React.PureComponent {
   }
 
   renderControls() {
-    const styles = {};
     return (
       <div className="tick-demo--form">
         <h4>Tick Label Props</h4>

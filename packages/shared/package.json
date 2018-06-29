@@ -3,9 +3,7 @@
   "version": "0.0.54",
   "description": "Shared @data-ui components used across multiple packages",
   "main": "build/index.js",
-  "files": [
-    "build"
-  ],
+  "files": ["build"],
   "scripts": {
     "build": "make build SRC=./src",
     "prepublish": "make build SRC=./src",
@@ -15,15 +13,7 @@
     "type": "git",
     "url": "git+https://github.com/williaster/data-ui.git"
   },
-  "keywords": [
-    "vx",
-    "react",
-    "d3",
-    "visualization",
-    "graph",
-    "chart",
-    "data"
-  ],
+  "keywords": ["vx", "react", "d3", "visualization", "graph", "chart", "data"],
   "author": "Chris Williams @williaster",
   "license": "MIT",
   "bugs": {
@@ -48,17 +38,14 @@
   },
   "dependencies": {
     "@data-ui/theme": "0.0.48",
-    "@vx/event": "0.0.143",
-    "@vx/group": "0.0.143",
-    "@vx/shape": "0.0.145",
-    "@vx/tooltip": "0.0.148",
+    "@vx/event": "^0.0.165",
+    "@vx/group": "^0.0.165",
+    "@vx/shape": "^0.0.168",
+    "@vx/tooltip": "0.0.165",
     "d3-array": "^1.2.1",
     "prop-types": "^15.5.10"
   },
   "jest": {
-    "setupFiles": [
-      "<rootDir>/test/shim.js",
-      "<rootDir>/test/setup.js"
-    ]
+    "setupFiles": ["<rootDir>/test/shim.js", "<rootDir>/test/setup.js"]
   }
 }
