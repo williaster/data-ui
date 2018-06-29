@@ -1,25 +1,27 @@
+/* eslint jsx-a11y/label-has-for: 1, no-mixed-operators: 0 */
 import React from 'react';
 import { allColors } from '@data-ui/theme/build/color';
 import theme from '@data-ui/theme/build/chartTheme';
-import {
-  AreaSeries,
-  CrossHair,
-  LinearGradient,
-  HorizontalReferenceLine,
-  YAxis,
-} from '@data-ui/xy-chart';
+import { AreaSeries, CrossHair, PatternLines, YAxis } from '@data-ui/xy-chart';
 
 import ResponsiveXYChart from './ResponsiveXYChart';
-import { timeSeriesData } from './data';
+import { temperatureBands } from './data';
 
 const color = 'blue';
+const bandColor = 'blue';
 
 const chartTheme = {
   ...theme,
+  gridStyles: {
+    ...theme.gridStyles,
+    stroke: allColors[color][1],
+    strokeWidth: 1,
+  },
   yAxisStyles: {
     ...theme.yAxisStyles,
     stroke: allColors[color][7],
     strokeWidth: 2,
+    strokeLineCap: 'round',
   },
   yTickStyles: {
     ...theme.yTickStyles,
@@ -27,24 +29,25 @@ const chartTheme = {
   },
 };
 
-const tickValues = [0, 100, 200, 300, 400];
+const tickValues = [20, 40, 60, 80];
 
 class TickLabelPlayground extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      tickSuffix: 'long suffix to see wrap',
-      dx: 0,
+      tickSuffix: 'suffix for wrap',
+      dx: -4,
       dy: 0,
       width: 100,
       angle: 0,
       scaleToFit: false,
-      textAnchor: 'start',
+      textAnchor: 'end',
       verticalAnchor: 'middle',
       fontSize: '0.9em',
       fontWeight: 200,
       lineHeight: '1em',
       fill: allColors[color][8],
+      axisOrientation: 'left',
     };
 
     this.animateAngle = this.animateAngle.bind(this);
@@ -76,7 +79,6 @@ class TickLabelPlayground extends React.PureComponent {
           tick suffix:
           <input
             type="text"
-            style={styles.tickFormat}
             value={this.state.tickSuffix}
             onChange={e => this.setState({ tickSuffix: e.target.value })}
           />
@@ -86,41 +88,30 @@ class TickLabelPlayground extends React.PureComponent {
           dx:
           <input
             type="range"
-            style={styles.range}
-            min="0"
-            max="225"
+            min="-50"
+            max="50"
             value={this.state.dx}
             onChange={e => this.setState({ dx: Number(e.target.value) })}
-          />
-          <input
-            type="text"
-            value={this.state.dx}
-            onChange={e => this.setState({ dx: Number(e.target.value) })}
-          />
+          />{' '}
+          {this.state.dx}
         </div>
 
         <div>
           dy:
           <input
             type="range"
-            style={styles.range}
-            min="0"
-            max="200"
+            min="-50"
+            max="50"
             value={this.state.dy}
             onChange={e => this.setState({ dy: Number(e.target.value) })}
-          />
-          <input
-            type="text"
-            value={this.state.dy}
-            onChange={e => this.setState({ dy: Number(e.target.value) })}
-          />
+          />{' '}
+          {this.state.dy}
         </div>
 
         <div>
           width:
           <input
             type="range"
-            style={styles.range}
             min="25"
             max="225"
             value={this.state.width}
@@ -234,7 +225,7 @@ class TickLabelPlayground extends React.PureComponent {
             scaleToFit:
             <input
               type="checkbox"
-              onChange={e =>
+              onChange={() =>
                 this.setState({
                   scaleToFit: !this.state.scaleToFit,
                 })
@@ -243,12 +234,46 @@ class TickLabelPlayground extends React.PureComponent {
             />
           </label>
         </div>
+
+        <div>
+          <label>
+            axis orientation:
+            <label>
+              <input
+                type="radio"
+                value="left"
+                onChange={e =>
+                  this.setState({ axisOrientation: e.target.value, textAnchor: 'end', dx: -4 })
+                }
+                checked={this.state.axisOrientation === 'left'}
+              />{' '}
+              left
+            </label>
+            <label>
+              <input
+                type="radio"
+                value="right"
+                onChange={e =>
+                  this.setState({ axisOrientation: e.target.value, textAnchor: 'start', dx: 4 })
+                }
+                checked={this.state.axisOrientation === 'right'}
+              />{' '}
+              right
+            </label>
+          </label>
+        </div>
       </div>
     );
   }
 
   render() {
-    const { tickSuffix, ...tickLabelProps } = this.state;
+    const { tickSuffix, axisOrientation, ...tickLabelProps } = this.state;
+    const margin = {
+      left: axisOrientation === 'left' ? tickLabelProps.width + 20 : 8,
+      top: 32,
+      bottom: 32,
+      right: axisOrientation === 'right' ? tickLabelProps.width + 20 : 8,
+    };
     return (
       <div className="tick-demo">
         {this.renderControls()}
@@ -257,39 +282,45 @@ class TickLabelPlayground extends React.PureComponent {
           eventTrigger="container"
           ariaLabel="Required label"
           xScale={{ type: 'time' }}
-          yScale={{ type: 'linear' }}
-          margin={{ left: 8, top: 32, bottom: 64, right: tickLabelProps.width + 10 }}
+          yScale={{ type: 'linear', domain: [1, 90] }}
+          margin={margin}
           theme={chartTheme}
           snapTooltipToDataX
           snapTooltipToDataY
+          showYGrid
         >
-          <LinearGradient id="area_gradient" from={allColors[color][8]} to={allColors[color][1]} />
-          <AreaSeries
-            seriesKey="one"
-            data={timeSeriesData}
-            fill="url(#area_gradient)"
-            strokeWidth={3}
-            stroke={allColors[color][7]}
-          />
-          {tickValues.map(value => (
-            <HorizontalReferenceLine
-              key={value}
-              reference={value}
-              stroke="white"
-              strokeWidth={1.5}
-            />
-          ))}
+          {temperatureBands.map((data, i) => [
+            <PatternLines
+              id={`band-${i}`}
+              height={2 + 2 * i}
+              width={2 + 2 * i}
+              stroke={allColors[bandColor][6]}
+              strokeWidth={1}
+              orientation={['diagonal']}
+            />,
+            <AreaSeries
+              seriesKey={`band-${i}`}
+              key={`band-${data[0].key}`}
+              data={data}
+              strokeWidth={0}
+              stroke="transparent"
+              fill={`url(#band-${i})`}
+            />,
+          ])}
           <YAxis
             numTicks={5}
-            tickFormat={val => `$${val} ${tickSuffix}`}
+            tickFormat={val => `${val} ${tickSuffix}`}
             tickLabelProps={() => tickLabelProps}
             tickValues={tickValues}
+            orientation={axisOrientation}
           />
           <CrossHair
+            fullHeight
+            strokeDasharray=""
             showHorizontalLine={false}
-            showVerticalLine={false}
-            circleStroke={allColors[color][7]}
             circleFill="white"
+            circleStroke={allColors[bandColor][4]}
+            stroke={allColors[bandColor][4]}
           />
         </ResponsiveXYChart>
 
@@ -297,13 +328,14 @@ class TickLabelPlayground extends React.PureComponent {
           .tick-demo {
              display: flex;
              flex-direction: row;
-             flex-wrap: row;
+             flex-wrap: wrap;
+             align-items: center;
           }
 
           .tick-demo--form > div {
             display: flex;
             justify-content: space-between;
-            margin-right: 16px;
+            margin-bottom: 8px;
           }
         `}</style>
       </div>
