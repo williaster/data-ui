@@ -1,31 +1,34 @@
 {
   "name": "@data-ui/demo",
-  "version": "0.0.58",
+  "version": "0.0.59",
   "description": "data-ui demo",
   "scripts": {
     "gh-pages:clean": "rm -rf _gh-pages && lerna run dev:nowatch",
     "gh-pages:build": "build-storybook -o _gh-pages -c ./storybook-config -s ../../assets/",
     "gh-pages:publish": "git-directory-deploy --directory _gh-pages",
-    "gh-pages":
-      "npm run gh-pages:clean && npm run gh-pages:build && npm run gh-pages:publish && npm run gh-pages:clean",
+    "gh-pages": "npm run gh-pages:clean && npm run gh-pages:build && npm run gh-pages:publish && npm run gh-pages:clean",
     "dev": "start-storybook -p 9001 -c ./storybook-config -s ../../assets/",
     "test": "echo no tests in @data-ui/demo"
   },
   "repository": "https://github.com/williaster/data-ui.git",
-  "keywords": ["demo", "examples", "storybook"],
+  "keywords": [
+    "demo",
+    "examples",
+    "storybook"
+  ],
   "author": "Chris Williams <chris.williams@airbnb.com>",
   "license": "MIT",
   "homepage": "https://github.com/williaster/data-ui#readme",
   "devDependencies": {
     "@data-ui/data-table": "0.0.48",
-    "@data-ui/event-flow": "0.0.54",
+    "@data-ui/event-flow": "0.0.59",
     "@data-ui/forms": "0.0.50",
-    "@data-ui/histogram": "0.0.58",
-    "@data-ui/network": "0.0.56",
-    "@data-ui/radial-chart": "0.0.54",
-    "@data-ui/sparkline": "0.0.54",
-    "@data-ui/theme": "0.0.48",
-    "@data-ui/xy-chart": "0.0.54",
+    "@data-ui/histogram": "0.0.59",
+    "@data-ui/network": "0.0.59",
+    "@data-ui/radial-chart": "0.0.59",
+    "@data-ui/sparkline": "0.0.59",
+    "@data-ui/theme": "0.0.59",
+    "@data-ui/xy-chart": "0.0.59",
     "@storybook/addon-options": "^3.1.6",
     "@storybook/react": "3.2.12",
     "@vx/legend": "^0.0.167",
@@ -63,6 +66,5 @@
     "aphrodite": "^1.2.0",
     "react": "^15.0.0-0 || ^16.0.0-0"
   },
-  "private": true,
-  "dependencies": {}
+  "private": true
 }

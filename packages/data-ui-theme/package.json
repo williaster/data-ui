@@ -1,6 +1,6 @@
 {
   "name": "@data-ui/theme",
-  "version": "0.0.48",
+  "version": "0.0.59",
   "description": "Themes for data-ui",
   "main": "build/index.js",
   "files": [
