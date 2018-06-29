@@ -3,10 +3,8 @@ import React from 'react';
 import {
   XYChart,
   CrossHair,
-
   XAxis,
   YAxis,
-
   AreaSeries,
   BarSeries,
   CirclePackSeries,
@@ -17,7 +15,6 @@ import {
   StackedBarSeries,
   BoxPlotSeries,
   ViolinPlotSeries,
-
   HorizontalReferenceLine,
   PatternLines,
   LinearGradient,
@@ -26,7 +23,6 @@ import {
 
 import colors from '@data-ui/theme/build/color';
 import readme from '../../node_modules/@data-ui/xy-chart/README.md';
-
 import CirclePackWithCallback from './CirclePackWithCallback';
 import LineSeriesExample from './LineSeriesExample';
 import LinkedXYCharts from './LinkedXYCharts';
@@ -34,10 +30,8 @@ import RectPointComponent from './RectPointComponent';
 import ResponsiveXYChart, { dateFormatter } from './ResponsiveXYChart';
 import StackedAreaExample from './StackedAreaExample';
 import ScatterWithHistogram from './ScatterWithHistograms';
-import {
-  BoxPlotSeriesExample,
-  BoxPlotViolinPlotSeriesExample,
-} from './StatsSeriesExample';
+import TickLabelPlayground from './TickLabelPlayground';
+import { BoxPlotSeriesExample, BoxPlotViolinPlotSeriesExample } from './StatsSeriesExample';
 
 import {
   circlePackData,
@@ -83,11 +77,7 @@ export default {
             yScale={{ type: 'linear' }}
             renderTooltip={null}
           >
-            <LinearGradient
-              id="gradient"
-              from={colors.default}
-              to={colors.dark}
-            />
+            <LinearGradient id="gradient" from={colors.default} to={colors.dark} />
             <PatternLines
               id="lines"
               height={8}
@@ -129,11 +119,7 @@ export default {
                   snapTooltipToDataX={snapToDataX}
                   snapTooltipToDataY={snapToDataY}
                 >
-                  <LinearGradient
-                    id="area_gradient"
-                    from={colors.categories[2]}
-                    to="#fff"
-                  />
+                  <LinearGradient id="area_gradient" from={colors.categories[2]} to="#fff" />
                   <PatternLines
                     id="area_pattern"
                     height={12}
@@ -176,28 +162,29 @@ export default {
         <ResponsiveXYChart
           ariaLabel="Required label"
           xScale={{ type: 'time' }}
-          yScale={{ type: 'linear' }}
+          yScale={{ type: 'linear', domain: [10, 90] }}
           eventTrigger="container"
+          showYGrid
           renderTooltip={({ datum, series }) => (
             <div>
               <div>
                 <strong>{dateFormatter(datum.x)}</strong>
-                {(!series || Object.keys(series).length === 0) &&
-                  <div>
-                    {datum.y.toFixed(2)}
-                  </div>}
+                {(!series || Object.keys(series).length === 0) && <div>{datum.y.toFixed(2)}</div>}
               </div>
               <br />
               {temperatureBands.map((_, i) => {
                 const key = `band-${i}`;
                 return (
-                  series && series[key] &&
+                  series &&
+                  series[key] && (
                     <div key={key}>
                       <span
                         style={{
                           color: colors.categories[i + 1],
-                          textDecoration: series[key] === datum
-                            ? `underline solid ${colors.categories[i + 1]}` : null,
+                          textDecoration:
+                            series[key] === datum
+                              ? `underline solid ${colors.categories[i + 1]}`
+                              : null,
                           fontWeight: series[key] === datum ? 600 : 200,
                         }}
                       >
@@ -205,12 +192,13 @@ export default {
                       </span>
                       {series[key].y.toFixed(2)}
                     </div>
+                  )
                 );
               })}
             </div>
           )}
         >
-          {temperatureBands.map((data, i) => ([
+          {temperatureBands.map((data, i) => [
             <PatternLines
               id={`band-${i}`}
               height={5}
@@ -233,7 +221,7 @@ export default {
               stroke={colors.categories[i + 1]}
               disableMouseEvents
             />,
-          ]))}
+          ])}
           <YAxis label="Temperature (°F)" numTicks={4} />
           <CrossHair
             showHorizontalLine={false}
@@ -298,23 +286,17 @@ export default {
     {
       description: 'PointSeries with Histogram',
       components: [PointSeries],
-      example: () => (
-        <ScatterWithHistogram />
-      ),
+      example: () => <ScatterWithHistogram />,
     },
     {
       description: 'Linked charts',
       components: [XYChart, StackedBarSeries, AreaSeries, CrossHair],
-      example: () => (
-        <LinkedXYCharts />
-      ),
+      example: () => <LinkedXYCharts />,
     },
     {
       description: 'StackedAreaSeries',
       components: [XYChart],
-      example: () => (
-        <StackedAreaExample />
-      ),
+      example: () => <StackedAreaExample />,
     },
     {
       description: 'PointSeries',
@@ -333,10 +315,7 @@ export default {
             >
               <YAxis label="Y" numTicks={4} />
               <XAxis label="X" numTicks={4} />
-              <PointSeries
-                data={pointData}
-                size={d => d.size}
-              />
+              <PointSeries data={pointData} size={d => d.size} />
               <CrossHair fullWidth fullHeight showCircle={false} />
             </ResponsiveXYChart>
           )}
@@ -355,13 +334,14 @@ export default {
         >
           <YAxis label="Y" numTicks={4} />
           <XAxis label="X" numTicks={4} />
-          <PointSeries
-            data={pointData}
-            size={d => d.size}
-            pointComponent={RectPointComponent}
-          />
+          <PointSeries data={pointData} size={d => d.size} pointComponent={RectPointComponent} />
         </ResponsiveXYChart>
       ),
+    },
+    {
+      description: 'TickLabelPlayground',
+      components: [XAxis, YAxis],
+      example: () => <TickLabelPlayground />,
     },
     {
       description: 'StackedBarSeries',
@@ -373,10 +353,7 @@ export default {
           yScale={{ type: 'linear' }}
         >
           <YAxis label="Temperature (°F)" numTicks={4} />
-          <StackedBarSeries
-            data={stackedData}
-            stackKeys={groupKeys}
-          />
+          <StackedBarSeries data={stackedData} stackKeys={groupKeys} />
           <XAxis tickFormat={dateFormatter} />
         </ResponsiveXYChart>
       ),
@@ -392,10 +369,7 @@ export default {
           showYGrid={false}
         >
           <YAxis label="Temperature (°F)" numTicks={4} />
-          <GroupedBarSeries
-            data={groupedData}
-            groupKeys={groupKeys}
-          />
+          <GroupedBarSeries data={groupedData} groupKeys={groupKeys} />
           <XAxis tickFormat={dateFormatter} />
         </ResponsiveXYChart>
       ),
@@ -412,15 +386,8 @@ export default {
           snapTooltipToDataX
           snapTooltipToDataY
         >
-          <LinearGradient
-            id="aqua_lightaqua_gradient"
-            from={colors.default}
-            to={colors.dark}
-          />
-          <BarSeries
-            data={categoricalData}
-            fill="url(#aqua_lightaqua_gradient)"
-          />
+          <LinearGradient id="aqua_lightaqua_gradient" from={colors.default} to={colors.dark} />
+          <BarSeries data={categoricalData} fill="url(#aqua_lightaqua_gradient)" />
           <XAxis numTicks={categoricalData.length} />
           <CrossHair
             stroke={colors.dark}
@@ -450,14 +417,8 @@ export default {
             strokeWidth={1}
             orientation={['diagonal']}
           />
-          <LineSeries
-            data={intervalLineData}
-            showPoints
-          />
-          <IntervalSeries
-            data={intervalData}
-            fill="url(#interval_pattern)"
-          />
+          <LineSeries data={intervalLineData} showPoints />
+          <IntervalSeries data={intervalData} fill="url(#interval_pattern)" />
           <XAxis numTicks={0} />
         </ResponsiveXYChart>
       ),
@@ -471,13 +432,8 @@ export default {
           xScale={{ type: 'time' }}
           yScale={{ type: 'linear' }}
         >
-          <CirclePackSeries
-            data={circlePackData}
-            size={d => d.r}
-          />
-          <HorizontalReferenceLine
-            reference={0}
-          />
+          <CirclePackSeries data={circlePackData} size={d => d.r} />
+          <HorizontalReferenceLine reference={0} />
           <CrossHair
             showHorizontalLine={false}
             fullHeight
@@ -503,9 +459,7 @@ export default {
             size={d => d.r}
             layout={computeForceBasedCirclePack}
           />
-          <HorizontalReferenceLine
-            reference={0}
-          />
+          <HorizontalReferenceLine reference={0} />
           <CrossHair
             showHorizontalLine={false}
             fullHeight
@@ -525,19 +479,15 @@ export default {
     {
       description: 'Box Plot Example',
       components: [BoxPlotSeries],
-      example: () => (
-        <BoxPlotSeriesExample />
-      ),
+      example: () => <BoxPlotSeriesExample />,
     },
     {
       description: 'Horizontal BoxPlot With ViolinPlot Example',
       components: [BoxPlotSeries, ViolinPlotSeries],
-      example: () => (
-        <BoxPlotViolinPlotSeriesExample />
-      ),
+      example: () => <BoxPlotViolinPlotSeriesExample />,
     },
     {
-      description: 'Mixed series',
+      description: 'BarSeries + LineSeries',
       components: [BarSeries, LineSeries, XAxis, YAxis, CrossHair],
       example: () => (
         <ResponsiveXYChart
@@ -546,19 +496,9 @@ export default {
           yScale={{ type: 'linear' }}
         >
           <YAxis label="Price ($)" numTicks={4} />
-          <LinearGradient
-            id="aqua_lightaqua_gradient"
-            to="#faa2c1"
-            from="#e64980"
-          />
-          <BarSeries
-            data={timeSeriesData}
-            fill="url(#aqua_lightaqua_gradient)"
-          />
-          <LineSeries
-            data={timeSeriesData}
-            stroke={colors.text}
-          />
+          <LinearGradient id="aqua_lightaqua_gradient" to="#faa2c1" from="#e64980" />
+          <BarSeries data={timeSeriesData} fill="url(#aqua_lightaqua_gradient)" />
+          <LineSeries data={timeSeriesData} stroke={colors.text} />
           <XAxis label="Time" numTicks={5} />
           <CrossHair />
         </ResponsiveXYChart>
@@ -574,15 +514,8 @@ export default {
           yScale={{ type: 'linear' }}
         >
           <YAxis label="Price ($)" numTicks={4} orientation="left" />
-          <LinearGradient
-            id="aqua_lightaqua_gradient"
-            from={colors.default}
-            to={colors.dark}
-          />
-          <BarSeries
-            data={timeSeriesData}
-            fill="url(#aqua_lightaqua_gradient)"
-          />
+          <LinearGradient id="aqua_lightaqua_gradient" from={colors.default} to={colors.dark} />
+          <BarSeries data={timeSeriesData} fill="url(#aqua_lightaqua_gradient)" />
           <XAxis label="Time" numTicks={5} orientation="top" />
         </ResponsiveXYChart>
       ),
@@ -597,15 +530,8 @@ export default {
           yScale={{ type: 'linear', includeZero: false }}
         >
           <YAxis label="$$$" numTicks={4} />
-          <LinearGradient
-            id="aqua_lightaqua_gradient"
-            from={colors.default}
-            to={colors.dark}
-          />
-          <BarSeries
-            data={timeSeriesData}
-            fill="url(#aqua_lightaqua_gradient)"
-          />
+          <LinearGradient id="aqua_lightaqua_gradient" from={colors.default} to={colors.dark} />
+          <BarSeries data={timeSeriesData} fill="url(#aqua_lightaqua_gradient)" />
           <XAxis numTicks={0} />
         </ResponsiveXYChart>
       ),
@@ -621,10 +547,7 @@ export default {
           yScale={{ type: 'linear' }}
         >
           <YAxis label="Price ($)" numTicks={4} />
-          <BarSeries
-            data={timeSeriesData.filter((d, i) => i % 2 === 0)}
-            fill="#484848"
-          />
+          <BarSeries data={timeSeriesData.filter((d, i) => i % 2 === 0)} fill="#484848" />
           <BarSeries
             data={timeSeriesData.filter((d, i) => i % 2 !== 0 && i !== 5)}
             fill="#767676"

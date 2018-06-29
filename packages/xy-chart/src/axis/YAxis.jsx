@@ -14,6 +14,7 @@ const propTypes = {
   numTicks: PropTypes.number,
   orientation: PropTypes.oneOf(['left', 'right']),
   rangePadding: PropTypes.number,
+  tickComponent: PropTypes.func,
   tickStyles: tickStylesShape,
   tickLabelProps: PropTypes.func,
   tickFormat: PropTypes.func,
@@ -35,6 +36,7 @@ const defaultProps = {
   orientation: 'right',
   rangePadding: null,
   scale: null,
+  tickComponent: null,
   tickFormat: null,
   tickLabelProps: null,
   tickStyles: {},
@@ -54,6 +56,7 @@ export default class YAxis extends React.PureComponent {
       orientation,
       rangePadding,
       scale,
+      tickComponent,
       tickFormat,
       tickLabelProps: passedTickLabelProps,
       tickStyles,
@@ -65,8 +68,10 @@ export default class YAxis extends React.PureComponent {
 
     let tickLabelProps = passedTickLabelProps;
     if (!tickLabelProps) {
-      tickLabelProps = (tickStyles.label && tickStyles.label[orientation])
-        ? () => tickStyles.label[orientation] : undefined;
+      tickLabelProps =
+        tickStyles.label && tickStyles.label[orientation]
+          ? () => tickStyles.label[orientation]
+          : undefined;
     }
 
     return (
@@ -83,6 +88,7 @@ export default class YAxis extends React.PureComponent {
         scale={scale}
         stroke={axisStyles.stroke}
         strokeWidth={axisStyles.strokeWidth}
+        tickComponent={tickComponent}
         tickFormat={tickFormat}
         tickLabelProps={tickLabelProps}
         tickLength={tickStyles.tickLength}

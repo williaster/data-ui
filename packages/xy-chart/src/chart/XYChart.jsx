@@ -125,18 +125,14 @@ class XYChart extends React.PureComponent {
 
   componentWillReceiveProps(nextProps) {
     let shouldComputeScales = false;
-    if ([
-      'width',
-      'height',
-      'children',
-    ].some(prop => this.props[prop] !== nextProps[prop])) {
+    if (['width', 'height', 'children'].some(prop => this.props[prop] !== nextProps[prop])) {
       shouldComputeScales = true;
     }
-    if ([
-      'margin',
-      'xScale',
-      'yScale',
-    ].some(prop => !shallowCompareObjectEntries(this.props[prop], nextProps[prop]))) {
+    if (
+      ['margin', 'xScale', 'yScale'].some(
+        prop => !shallowCompareObjectEntries(this.props[prop], nextProps[prop]),
+      )
+    ) {
       shouldComputeScales = true;
     }
     if (shouldComputeScales) this.setState(XYChart.getStateFromProps(nextProps));
@@ -254,102 +250,107 @@ class XYChart extends React.PureComponent {
     const barWidth = xScale.barWidth || (xScale.bandwidth && xScale.bandwidth()) || 0;
     const CrossHairs = []; // ensure these are the top-most layer
 
-    return innerWidth > 0 && innerHeight > 0 && (
-      <svg
-        aria-label={ariaLabel}
-        role="img"
-        width={width}
-        height={height}
-        ref={innerRef}
-      >
-        <Group left={margin.left} top={margin.top}>
-          {(showXGrid || showYGrid) && (numXTicks || numYTicks) &&
-            <Grid
-              xScale={xScale}
-              yScale={yScale}
-              width={innerWidth}
-              height={innerHeight}
-              numTicksRows={showYGrid && numYTicks}
-              numTicksColumns={showXGrid && numXTicks}
-              stroke={theme.gridStyles && theme.gridStyles.stroke}
-              strokeWidth={theme.gridStyles && theme.gridStyles.strokeWidth}
-            />}
+    return (
+      innerWidth > 0 &&
+      innerHeight > 0 && (
+        <svg aria-label={ariaLabel} role="img" width={width} height={height} ref={innerRef}>
+          <Group left={margin.left} top={margin.top}>
+            {(showXGrid || showYGrid) &&
+              (numXTicks || numYTicks) && (
+                <Grid
+                  xScale={xScale}
+                  yScale={yScale}
+                  width={innerWidth}
+                  height={innerHeight}
+                  numTicksRows={showYGrid && numYTicks}
+                  numTicksColumns={showXGrid && numXTicks}
+                  stroke={theme.gridStyles && theme.gridStyles.stroke}
+                  strokeWidth={theme.gridStyles && theme.gridStyles.strokeWidth}
+                />
+              )}
 
-          {React.Children.map(children, (Child) => {
-            const name = componentName(Child);
-            if (isAxis(name)) {
-              const styleKey = name[0].toLowerCase();
-              return React.cloneElement(Child, {
-                innerHeight,
-                innerWidth,
-                labelOffset: name === 'YAxis' ? 0.7 * margin[Child.props.orientation] : 0,
-                numTicks: name === 'XAxis' ? numXTicks : numYTicks,
-                scale: name === 'XAxis' ? xScale : yScale,
-                rangePadding: name === 'XAxis' ? xScale.offset : null,
-                axisStyles: { ...theme[`${styleKey}AxisStyles`], ...Child.props.axisStyles },
-                tickStyles: { ...theme[`${styleKey}TickStyles`], ...Child.props.tickStyles },
-              });
-            } else if (isSeries(name)) {
-              return React.cloneElement(Child, {
-                xScale,
-                yScale,
-                barWidth,
-                onClick: Child.props.onClick
-                  || (Child.props.disableMouseEvents ? undefined : this.handleClick),
-                onMouseLeave: Child.props.onMouseLeave
-                  || (Child.props.disableMouseEvents ? undefined : this.handleMouseLeave),
-                onMouseMove: Child.props.onMouseMove
-                  || (Child.props.disableMouseEvents ? undefined : this.handleMouseMove),
-              });
-            } else if (isCrossHair(name)) {
-              CrossHairs.push(Child);
-              return null;
-            } else if (isReferenceLine(name)) {
-              return React.cloneElement(Child, { xScale, yScale });
-            }
-            return Child;
-          })}
+            {React.Children.map(children, (Child) => {
+              const name = componentName(Child);
+              if (isAxis(name)) {
+                const styleKey = name[0].toLowerCase();
+                return React.cloneElement(Child, {
+                  innerHeight,
+                  innerWidth,
+                  labelOffset: name === 'YAxis' ? 0.7 * margin[Child.props.orientation] : 0,
+                  numTicks: name === 'XAxis' ? numXTicks : numYTicks,
+                  scale: name === 'XAxis' ? xScale : yScale,
+                  rangePadding: name === 'XAxis' ? xScale.offset : null,
+                  axisStyles: { ...theme[`${styleKey}AxisStyles`], ...Child.props.axisStyles },
+                  tickStyles: { ...theme[`${styleKey}TickStyles`], ...Child.props.tickStyles },
+                });
+              } else if (isSeries(name)) {
+                return React.cloneElement(Child, {
+                  xScale,
+                  yScale,
+                  barWidth,
+                  onClick:
+                    Child.props.onClick ||
+                    (Child.props.disableMouseEvents ? undefined : this.handleClick),
+                  onMouseLeave:
+                    Child.props.onMouseLeave ||
+                    (Child.props.disableMouseEvents ? undefined : this.handleMouseLeave),
+                  onMouseMove:
+                    Child.props.onMouseMove ||
+                    (Child.props.disableMouseEvents ? undefined : this.handleMouseMove),
+                });
+              } else if (isCrossHair(name)) {
+                CrossHairs.push(Child);
+                return null;
+              } else if (isReferenceLine(name)) {
+                return React.cloneElement(Child, { xScale, yScale });
+              }
+              return Child;
+            })}
 
-          {eventTrigger === VORONOI_TRIGGER &&
-            <Voronoi
-              data={voronoiData}
-              x={voronoiX}
-              y={voronoiY}
-              width={innerWidth}
-              height={innerHeight}
-              onClick={this.handleClick}
-              onMouseMove={this.handleMouseMove}
-              onMouseLeave={this.handleMouseLeave}
-              showVoronoi={showVoronoi}
-            />}
+            {eventTrigger === VORONOI_TRIGGER && (
+              <Voronoi
+                data={voronoiData}
+                x={voronoiX}
+                y={voronoiY}
+                width={innerWidth}
+                height={innerHeight}
+                onClick={this.handleClick}
+                onMouseMove={this.handleMouseMove}
+                onMouseLeave={this.handleMouseLeave}
+                showVoronoi={showVoronoi}
+              />
+            )}
 
-          {eventTrigger === CONTAINER_TRIGGER &&
-            <rect
-              x={0}
-              y={0}
-              width={innerWidth}
-              height={innerHeight}
-              fill="transparent"
-              fillOpacity={0}
-              onClick={this.handleContainerEvent}
-              onMouseMove={this.handleContainerEvent}
-              onMouseLeave={this.handleMouseLeave}
-            />}
+            {eventTrigger === CONTAINER_TRIGGER && (
+              <rect
+                x={0}
+                y={0}
+                width={innerWidth}
+                height={innerHeight}
+                fill="transparent"
+                fillOpacity={0}
+                onClick={this.handleContainerEvent}
+                onMouseMove={this.handleContainerEvent}
+                onMouseLeave={this.handleMouseLeave}
+              />
+            )}
 
-          {tooltipData && CrossHairs.length > 0 && CrossHairs.map((CrossHair, i) => (
-            React.cloneElement(CrossHair, {
-              key: `crosshair-${i}`, // eslint-disable-line react/no-array-index-key
-              left: (
-                xScale(getX(tooltipData.datum) || 0)
-                + (xScale.bandwidth ? xScale.bandwidth() / 2 : 0)
-              ),
-              top: yScale(getY(tooltipData.datum) || 0),
-              xScale,
-              yScale,
-            })
-          ))}
-        </Group>
-      </svg>
+            {tooltipData &&
+              CrossHairs.length > 0 &&
+              CrossHairs.map((CrossHair, i) =>
+                React.cloneElement(CrossHair, {
+                  key: `crosshair-${i}`, // eslint-disable-line react/no-array-index-key
+                  left:
+                    xScale(getX(tooltipData.datum) || 0) +
+                    (xScale.bandwidth ? xScale.bandwidth() / 2 : 0),
+                  top: yScale(getY(tooltipData.datum) || 0),
+                  xScale,
+                  yScale,
+                }),
+              )}
+          </Group>
+        </svg>
+      )
     );
   }
 }

@@ -23,12 +23,20 @@ describe('<YAxis />', () => {
   });
 
   test('<XYChart/> should render an Axis', () => {
-    const wrapper = shallow(<XYChart {...chartProps}><YAxis /></XYChart>);
+    const wrapper = shallow(
+      <XYChart {...chartProps}>
+        <YAxis />
+      </XYChart>,
+    );
     expect(wrapper.find(YAxis).length).toBe(1);
   });
 
   test('<XYChart/> should pass scale and innerWidth props', () => {
-    const wrapper = shallow(<XYChart {...chartProps}><YAxis /></XYChart>);
+    const wrapper = shallow(
+      <XYChart {...chartProps}>
+        <YAxis />
+      </XYChart>,
+    );
     const axis = wrapper.find(YAxis);
     expect(typeof axis.prop('innerWidth')).toBe('number');
     expect(typeof axis.prop('scale')).toBe('function');
@@ -38,7 +46,9 @@ describe('<YAxis />', () => {
     const yAxisStyles = { stroke: 'pink', strokeWidth: 1, label: {} };
     const yTickStyles = { stroke: 'purple', tickLength: 5 };
     const wrapper = shallow(
-      <XYChart {...chartProps} theme={{ yAxisStyles, yTickStyles }}><YAxis /></XYChart>,
+      <XYChart {...chartProps} theme={{ yAxisStyles, yTickStyles }}>
+        <YAxis />
+      </XYChart>,
     );
 
     const axis = wrapper.find(YAxis);
@@ -47,14 +57,29 @@ describe('<YAxis />', () => {
   });
 
   test('It should render the appropriate axis based on props.orientation', () => {
-    const defaultAxis = shallow(<XYChart {...chartProps}><YAxis /></XYChart>)
-      .find(YAxis).dive();
+    const defaultAxis = shallow(
+      <XYChart {...chartProps}>
+        <YAxis />
+      </XYChart>,
+    )
+      .find(YAxis)
+      .dive();
 
-    const rightAxis = shallow(<XYChart {...chartProps}><YAxis orientation="right" /></XYChart>)
-      .find(YAxis).dive();
+    const rightAxis = shallow(
+      <XYChart {...chartProps}>
+        <YAxis orientation="right" />
+      </XYChart>,
+    )
+      .find(YAxis)
+      .dive();
 
-    const leftAxis = shallow(<XYChart {...chartProps}><YAxis orientation="left" /></XYChart>)
-      .find(YAxis).dive();
+    const leftAxis = shallow(
+      <XYChart {...chartProps}>
+        <YAxis orientation="left" />
+      </XYChart>,
+    )
+      .find(YAxis)
+      .dive();
 
     expect(defaultAxis.find(AxisRight).length).toBe(1);
     expect(defaultAxis.find(AxisLeft).length).toBe(0);
@@ -68,9 +93,17 @@ describe('<YAxis />', () => {
 
   test('It should render a label if passed', () => {
     const wrapper = shallow(
-      <XYChart {...chartProps}><YAxis label="apple" /></XYChart>,
+      <XYChart {...chartProps}>
+        <YAxis label="apple" />
+      </XYChart>,
     );
-    expect(wrapper.render().find('.vx-axis-label').first().text()).toBe('apple');
+    expect(
+      wrapper
+        .render()
+        .find('.vx-axis-label')
+        .first()
+        .text(),
+    ).toBe('apple');
   });
 
   test('It should use the output of tickFormat() when passed', () => {
@@ -81,8 +114,32 @@ describe('<YAxis />', () => {
         <YAxis tickFormat={tickFormat} />
       </XYChart>,
     );
-    const tick = wrapper.render().find('.vx-axis-tick').first();
+    const tick = wrapper
+      .render()
+      .find('.vx-axis-tick')
+      .first();
     expect(tick.find('text').text()).toBe(tickFormat());
+  });
+
+  test('It should render a custom tickComponent if passed', () => {
+    const wrapper = shallow(
+      <YAxis
+        scale={scaleLinear({ range: [0, 100], domain: [0, 100] })}
+        innerWidth={100}
+        tickComponent={() => <text id="test" />}
+      />,
+    );
+
+    expect(
+      wrapper
+        .find(AxisRight)
+        .dive() // Axis
+        .dive() // Group
+        .find('.vx-axis-tick')
+        .first()
+        .dive()
+        .find('#test'),
+    ).toHaveLength(1);
   });
 
   test('tickLabelProps should be passed tick value and indexif passed, and tickStyles.label[orientation] if not', () => {
@@ -100,20 +157,28 @@ describe('<YAxis />', () => {
       />,
     );
 
-    const label0 = wrapper.find(AxisRight)
+    const label0 = wrapper
+      .find(AxisRight)
       .dive() // Axis
       .dive() // Group
       .find('.vx-axis-tick')
       .first()
       .dive()
+      .childAt(1) // Text
+      .dive()
+      .find('svg')
       .find('text');
 
-    const label1 = wrapper.find(AxisRight)
+    const label1 = wrapper
+      .find(AxisRight)
       .dive() // Axis
       .dive() // Group
       .find('.vx-axis-tick')
       .last()
       .dive()
+      .childAt(1) // Text
+      .dive()
+      .find('svg')
       .find('text');
 
     expect(label0.prop('fill')).toBe('pink');
@@ -140,12 +205,16 @@ describe('<YAxis />', () => {
       />,
     );
 
-    const label0 = wrapper.find(AxisRight)
+    const label0 = wrapper
+      .find(AxisRight)
       .dive() // Axis
       .dive() // Group
       .find('.vx-axis-tick')
       .first()
       .dive()
+      .childAt(1) // Text
+      .dive()
+      .find('svg')
       .find('text');
 
     expect(label0.prop('fill')).toBe('skyblue');
