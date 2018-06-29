@@ -14,6 +14,7 @@ const propTypes = {
   orientation: PropTypes.oneOf(['bottom', 'top']),
   rangePadding: PropTypes.number,
   tickStyles: tickStylesShape,
+  tickComponent: PropTypes.func,
   tickLabelProps: PropTypes.func,
   tickFormat: PropTypes.func,
   tickValues: PropTypes.array,
@@ -33,6 +34,7 @@ const defaultProps = {
   orientation: 'bottom',
   rangePadding: null,
   scale: null,
+  tickComponent: null,
   tickFormat: null,
   tickLabelProps: null,
   tickStyles: {},
@@ -51,6 +53,7 @@ export default class XAxis extends React.PureComponent {
       orientation,
       rangePadding,
       scale,
+      tickComponent,
       tickFormat,
       tickLabelProps: passedTickLabelProps,
       tickStyles,
@@ -61,8 +64,10 @@ export default class XAxis extends React.PureComponent {
 
     let tickLabelProps = passedTickLabelProps;
     if (!tickLabelProps) {
-      tickLabelProps = (tickStyles.label && tickStyles.label[orientation])
-        ? () => tickStyles.label[orientation] : undefined;
+      tickLabelProps =
+        tickStyles.label && tickStyles.label[orientation]
+          ? () => tickStyles.label[orientation]
+          : undefined;
     }
 
     return (
@@ -78,6 +83,7 @@ export default class XAxis extends React.PureComponent {
         scale={scale}
         stroke={axisStyles.stroke}
         strokeWidth={axisStyles.strokeWidth}
+        tickComponent={tickComponent}
         tickFormat={tickFormat}
         tickLabelProps={tickLabelProps}
         tickLength={tickStyles.tickLength}
