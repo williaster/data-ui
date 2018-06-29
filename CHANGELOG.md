@@ -1,4 +1,5 @@
 # Changelog
+- [v0.0.59](#v0059)
 - [v0.0.58](#v0058)
 - [v0.0.57](#v0057)
 - [v0.0.56](#v0056)
@@ -11,6 +12,32 @@
 - [v0.0.49](#v0049)
 - [v0.0.48](#v0048)
 - [v0.0.47](#v0047)
+
+## v0.0.59
+[xy-chart]
+🏆 Enhancements
+- expose `tickComponent` prop in `XAxis` and `YAxis` components for fully-custom tick rendering [#110](https://github.com/williaster/data-ui/pull/110)
+- bump all `vx` packages, which adds much better default support for tick labels (Fixes #109) [#110](https://github.com/williaster/data-ui/pull/110)
+
+[demo]
+- added tick label props playground example to demo new functionality [#110](https://github.com/williaster/data-ui/pull/110)
+
+🏠 Internal
+[shared]
+-  bump all `vx` packages
+
+```
+Changes:
+ - @data-ui/theme: 0.0.48 => 0.0.59
+ - @data-ui/demo: 0.0.58 => 0.0.59 (private)
+ - @data-ui/event-flow: 0.0.54 => 0.0.59
+ - @data-ui/histogram: 0.0.58 => 0.0.59
+ - @data-ui/network: 0.0.56 => 0.0.59
+ - @data-ui/radial-chart: 0.0.54 => 0.0.59
+ - @data-ui/shared: 0.0.54 => 0.0.59
+ - @data-ui/sparkline: 0.0.54 => 0.0.59
+ - @data-ui/xy-chart: 0.0.54 => 0.0.59
+```
 
 ## v0.0.58
 [histogram]
