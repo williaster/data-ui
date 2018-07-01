@@ -13,15 +13,17 @@ export { default as StackedAreaSeries } from './series/StackedAreaSeries';
 export { default as StackedBarSeries } from './series/StackedBarSeries';
 export { default as BoxPlotSeries } from './series/BoxPlotSeries';
 export { default as ViolinPlotSeries } from './series/ViolinPlotSeries';
-export { computeStats } from '@vx/stats';
+export { default as computeStats } from './utils/computeStats';
 
 export { default as HorizontalReferenceLine } from './annotation/HorizontalReferenceLine';
 export { default as CrossHair } from './chart/CrossHair';
-export { default as WithTooltip, withTooltipPropTypes } from '@data-ui/shared/build/enhancer/WithTooltip';
 
-export { LinearGradient } from '@vx/gradient';
-export { PatternLines, PatternCircles, PatternWaves, PatternHexagons } from '@vx/pattern';
-export { withScreenSize, withParentSize, ParentSize } from '@vx/responsive';
+export { default as LinearGradient } from './style/LinearGradient';
+export { PatternLines, PatternCircles, PatternWaves, PatternHexagons } from './style/Pattern';
+export { default as withScreenSize } from './enhancer/withScreenSize';
+export { default as withParentSize } from './enhancer/withParentSize';
+export { default as ParentSize } from './enhancer/ParentSize';
 
+export { default as WithTooltip, withTooltipPropTypes } from './enhancer/WithTooltip';
 export { default as withTheme } from './enhancer/withTheme';
-export { chartTheme as theme } from '@data-ui/theme';
+export { default as theme } from './style/chartTheme';
