@@ -2,14 +2,22 @@
   "name": "@data-ui/sparkline",
   "version": "0.0.59",
   "description": "React + d3 library for creating sparklines",
-  "main": "build/index.js",
+  "sideEffects": false,
+  "main": "dist/data-ui-sparkline.cjs.js",
+  "module": "dist/data-ui-sparkline.es.js",
   "files": [
+    "dist",
     "build"
   ],
   "scripts": {
-    "build": "make build SRC=./src",
-    "prepublish": "make build SRC=./src",
-    "test": "jest --verbose --coverage --color"
+    "build:cjs": "rm -rf lib && mkdir lib && beemo babel ./src --out-dir lib/",
+    "build:esm": "rm -rf esm && mkdir esm && beemo babel ./src --out-dir esm/ --esm",
+    "build": "npm run build:cjs && npm run build:esm",
+    "jest": "beemo jest --verbose --coverage --color",
+    "lint": "beemo --verbose eslint",
+    "posttest": "npm run lint",
+    "test": "npm run jest",
+    "prettier": "beemo prettier"
   },
   "repository": {
     "type": "git",
@@ -32,17 +40,12 @@
   },
   "homepage": "https://github.com/williaster/data-ui#readme",
   "devDependencies": {
-    "babel-jest": "^20.0.3",
-    "babel-polyfill": "^6.23.0",
-    "enzyme": "^3.1.0",
-    "enzyme-adapter-react-16": "^1.0.0",
-    "jest": "^20.0.3",
+    "@beemo/cli": "^0.19.0",
+    "@beemo/core": "^0.19.2",
+    "@data-ui/build-config": "^0.0.59",
+    "@data-ui/build-config": "^0.0.59",
     "react": "^16.0.0",
-    "react-dom": "^16.0.0",
-    "react-fatigue-dev": "github:tj/react-fatigue-dev",
-    "react-test-renderer": "^16.0.0",
-    "react-tools": "^0.10.0",
-    "regenerator-runtime": "^0.10.5"
+    "react-dom": "^16.0.0"
   },
   "peerDependencies": {
     "react": "^15.0.0-0 || ^16.0.0-0"
@@ -64,10 +67,8 @@
     "d3-array": "^1.2.0",
     "prop-types": "^15.5.10"
   },
-  "jest": {
-    "setupFiles": [
-      "<rootDir>/test/shim.js",
-      "<rootDir>/test/setup.js"
-    ]
+  "beemo": {
+    "module": "@data-ui/build-config",
+    "drivers": ["prettier", "eslint", "babel", "jest"]
   }
 }

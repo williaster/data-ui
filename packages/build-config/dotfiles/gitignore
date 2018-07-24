@@ -14,6 +14,7 @@ esm/
 lib/
 build/
 node_modules/
+_gh-pages/
 
 # Custom
 *.min.js
