@@ -3,11 +3,11 @@
   "version": "0.0.59",
   "description": "React + d3 library for creating sparklines",
   "sideEffects": false,
-  "main": "dist/data-ui-sparkline.cjs.js",
-  "module": "dist/data-ui-sparkline.es.js",
+  "main": "lib/index.js",
+  "module": "esm/index.js",
   "files": [
-    "dist",
-    "build"
+    "esm",
+    "lib"
   ],
   "scripts": {
     "build:cjs": "rm -rf lib && mkdir lib && beemo babel ./src --out-dir lib/",
@@ -16,6 +16,7 @@
     "jest": "beemo jest --verbose --coverage --color",
     "lint": "beemo --verbose eslint",
     "posttest": "npm run lint",
+    "prepublish": "npm run build",
     "test": "npm run jest",
     "prettier": "beemo prettier"
   },
@@ -43,12 +44,12 @@
     "@beemo/cli": "^0.19.0",
     "@beemo/core": "^0.19.2",
     "@data-ui/build-config": "^0.0.59",
-    "@data-ui/build-config": "^0.0.59",
     "react": "^16.0.0",
     "react-dom": "^16.0.0"
   },
   "peerDependencies": {
-    "react": "^15.0.0-0 || ^16.0.0-0"
+    "react": "^15.0.0-0 || ^16.0.0-0",
+    "react-dom": "^15.0.0-0 || ^16.0.0-0"
   },
   "dependencies": {
     "@data-ui/shared": "0.0.59",
