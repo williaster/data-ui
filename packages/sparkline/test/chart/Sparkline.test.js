@@ -23,7 +23,7 @@ describe('<Sparkline />', () => {
         <g />
       </Sparkline>,
     );
-    expect(wrapper.find('svg').length).toHaveLength(1);
+    expect(wrapper.find('svg')).toHaveLength(1);
   });
 
   it('should store parsed data, dimensions, and scales in state', () => {
@@ -76,7 +76,7 @@ describe('<Sparkline />', () => {
         <g id="test" />
       </Sparkline>,
     );
-    expect(wrapper.find('#test').length).toHaveLength(1);
+    expect(wrapper.find('#test')).toHaveLength(1);
   });
 
   it('should pass xScale, yScale, data, getX, and getY to children of series or line type', () => {
@@ -93,7 +93,7 @@ describe('<Sparkline />', () => {
     const line = wrapper.find(HorizontalReferenceLine);
 
     [g, series, line].forEach(component => {
-      expect(component.length).toHaveLength(1);
+      expect(component).toHaveLength(1);
       expect(component.prop('data')).toEqual(component === g ? undefined : expect.any(Array));
       expect(component.prop('xScale')).toEqual(component === g ? undefined : expect.any(Function));
       expect(component.prop('yScale')).toEqual(component === g ? undefined : expect.any(Function));
@@ -114,7 +114,7 @@ describe('<Sparkline />', () => {
 
     const bars = wrapper.find(BarSeries);
     const bar = bars.first();
-    expect(bars.length).toHaveLength(1);
+    expect(bars).toHaveLength(1);
 
     bar.simulate('mousemove');
     bar.simulate('mouseleave');

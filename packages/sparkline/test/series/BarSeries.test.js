@@ -29,7 +29,7 @@ describe('<BarSeries />', () => {
       </Sparkline>,
     );
     const series = wrapper.find(BarSeries).dive();
-    expect(series.find(Bar).length).toHaveLength(sparklineProps.data.length);
+    expect(series.find(Bar)).toHaveLength(sparklineProps.data.length);
   });
 
   it('should pass (yVal, i) to renderLabel, fill, fillOpacity, stroke, strokeWidth func-type props', () => {
@@ -68,7 +68,7 @@ describe('<BarSeries />', () => {
       .find(BarSeries)
       .dive();
 
-    expect(wrapper.find(Label).length).toHaveLength(2);
+    expect(wrapper.find(Label)).toHaveLength(2);
   });
 
   it('should used the passed LabelComponent for the labels', () => {
@@ -83,7 +83,7 @@ describe('<BarSeries />', () => {
       .find(BarSeries)
       .dive();
 
-    expect(wrapper.find('.test-label').length).toHaveLength(2);
+    expect(wrapper.find('.test-label')).toHaveLength(2);
   });
 
   it('should call onMouseMove({ datum, data, index, event, color }) and onMouseLeave() on trigger', () => {

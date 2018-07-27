@@ -32,7 +32,7 @@ describe('<PointSeries />', () => {
       .find(PointSeries)
       .dive();
 
-    expect(wrapper.find(GlyphDot).length).toHaveLength(2);
+    expect(wrapper.find(GlyphDot)).toHaveLength(2);
 
     wrapper = shallow(
       <Sparkline {...sparklineProps}>
@@ -42,7 +42,7 @@ describe('<PointSeries />', () => {
       .find(PointSeries)
       .dive();
 
-    expect(wrapper.find(GlyphDot).length).toHaveLength(sparklineProps.data.length);
+    expect(wrapper.find(GlyphDot)).toHaveLength(sparklineProps.data.length);
   });
 
   it('should pass (yVal, i) to renderLabel, fill, fillOpacity, stroke, strokeWidth, and size func-type props', () => {
@@ -86,7 +86,7 @@ describe('<PointSeries />', () => {
       .find(PointSeries)
       .dive();
 
-    expect(wrapper.find(Label).length).toHaveLength(2);
+    expect(wrapper.find(Label)).toHaveLength(2);
   });
 
   it('should used the passed LabelComponent for the labels', () => {
@@ -102,7 +102,7 @@ describe('<PointSeries />', () => {
       .find(PointSeries)
       .dive();
 
-    expect(wrapper.find('.test-label').length).toHaveLength(2);
+    expect(wrapper.find('.test-label')).toHaveLength(2);
   });
 
   it('should call onMouseMove({ datum, data, index, event, color }) and onMouseLeave() on trigger', () => {

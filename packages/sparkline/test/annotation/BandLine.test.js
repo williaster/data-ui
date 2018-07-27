@@ -32,7 +32,7 @@ describe('<BandLine />', () => {
       .find(BandLine)
       .dive();
 
-    expect(wrapper.find(Bar).length).toHaveLength(1);
+    expect(wrapper.find(Bar)).toHaveLength(1);
   });
 
   it('innerquartiles type bands should span the entire width of the chart', () => {

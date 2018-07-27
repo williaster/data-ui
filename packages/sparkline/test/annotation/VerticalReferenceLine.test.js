@@ -32,7 +32,7 @@ describe('<VerticalReferenceLine />', () => {
       .find(VerticalReferenceLine)
       .dive();
 
-    expect(wrapper.find(Line).length).toHaveLength(1);
+    expect(wrapper.find(Line)).toHaveLength(1);
   });
 
   it('the Line should span the entire height of the chart', () => {
@@ -93,7 +93,7 @@ describe('<VerticalReferenceLine />', () => {
       .dive();
 
     const label = wrapper.find(Label);
-    expect(label.length).toHaveLength(1);
+    expect(label).toHaveLength(1);
     expect(label.dive().text()).toBe('test');
   });
 
@@ -109,6 +109,6 @@ describe('<VerticalReferenceLine />', () => {
       .find(VerticalReferenceLine)
       .dive();
 
-    expect(wrapper.find('.test-label').length).toHaveLength(1);
+    expect(wrapper.find('.test-label')).toHaveLength(1);
   });
 });

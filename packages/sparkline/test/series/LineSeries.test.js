@@ -34,7 +34,7 @@ describe('<LineSeries />', () => {
       .find(LineSeries)
       .dive();
 
-    expect(wrapper.find(AreaClosed).length).toHaveLength(1);
+    expect(wrapper.find(AreaClosed)).toHaveLength(1);
 
     wrapper = shallow(
       <Sparkline {...sparklineProps}>
@@ -44,7 +44,7 @@ describe('<LineSeries />', () => {
       .find(LineSeries)
       .dive();
 
-    expect(wrapper.find(AreaClosed).length).toHaveLength(0);
+    expect(wrapper.find(AreaClosed)).toHaveLength(0);
   });
 
   it('should render an LinePath if showLine is true and strokeWidth > 0', () => {
@@ -55,7 +55,7 @@ describe('<LineSeries />', () => {
     )
       .find(LineSeries)
       .dive();
-    expect(wrapper.find(LinePath).length).toHaveLength(1);
+    expect(wrapper.find(LinePath)).toHaveLength(1);
 
     wrapper = shallow(
       <Sparkline {...sparklineProps}>
@@ -64,7 +64,7 @@ describe('<LineSeries />', () => {
     )
       .find(LineSeries)
       .dive();
-    expect(wrapper.find(LinePath).length).toHaveLength(0);
+    expect(wrapper.find(LinePath)).toHaveLength(0);
   });
 
   it('should use the curve specified by the curve prop', () => {

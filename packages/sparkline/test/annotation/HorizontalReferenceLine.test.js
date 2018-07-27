@@ -31,7 +31,7 @@ describe('<HorizontalReferenceLine />', () => {
       .find(HorizontalReferenceLine)
       .dive();
 
-    expect(wrapper.find(Line).length).toHaveLength(1);
+    expect(wrapper.find(Line)).toHaveLength(1);
   });
 
   it('should render a Line that spans the entire width of the chart', () => {
@@ -88,7 +88,7 @@ describe('<HorizontalReferenceLine />', () => {
       .dive();
 
     const label = wrapper.find(Label);
-    expect(label.length).toHaveLength(1);
+    expect(label).toHaveLength(1);
     expect(label.dive().text()).toBe('test');
   });
 
@@ -104,6 +104,6 @@ describe('<HorizontalReferenceLine />', () => {
       .find(HorizontalReferenceLine)
       .dive();
 
-    expect(wrapper.find('.test-label').length).toHaveLength(1);
+    expect(wrapper.find('.test-label')).toHaveLength(1);
   });
 });
