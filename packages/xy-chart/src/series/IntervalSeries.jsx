@@ -48,19 +48,31 @@ export default class IntervalSeries extends React.PureComponent {
     if (!xScale || !yScale) return null;
 
     const barHeight = (yScale.range() || [0])[0];
+
     return (
       <Group style={disableMouseEvents ? noEventsStyles : null}>
         {data.map((d, i) => {
           const x = xScale(x0(d));
           const barWidth = xScale(x1(d)) - x;
           const intervalFill = d.fill || callOrValue(fill, d, i);
+
           return (
             <FocusBlurHandler
               key={`interval-${x}`}
               onBlur={disableMouseEvents ? null : onMouseLeave}
-              onFocus={disableMouseEvents ? null : (event) => {
-                onMouseMove({ event, datum: d, index: i, data, color: intervalFill });
-              }}
+              onFocus={
+                disableMouseEvents
+                  ? null
+                  : event => {
+                      onMouseMove({
+                        event,
+                        datum: d,
+                        index: i,
+                        data,
+                        color: intervalFill,
+                      });
+                    }
+              }
             >
               <Bar
                 x={x}
@@ -71,12 +83,34 @@ export default class IntervalSeries extends React.PureComponent {
                 fillOpacity={fillOpacity}
                 stroke={d.stroke || callOrValue(stroke, d, i)}
                 strokeWidth={d.strokeWidth || callOrValue(strokeWidth, d, i)}
-                onClick={disableMouseEvents ? null : onClick && (() => (event) => {
-                  onClick({ event, datum: d, index: i, data, color: intervalFill });
-                })}
-                onMouseMove={disableMouseEvents ? null : onMouseMove && (() => (event) => {
-                  onMouseMove({ event, datum: d, index: i, data, color: intervalFill });
-                })}
+                onClick={
+                  disableMouseEvents
+                    ? null
+                    : onClick &&
+                      (() => event => {
+                        onClick({
+                          event,
+                          datum: d,
+                          index: i,
+                          data,
+                          color: intervalFill,
+                        });
+                      })
+                }
+                onMouseMove={
+                  disableMouseEvents
+                    ? null
+                    : onMouseMove &&
+                      (() => event => {
+                        onMouseMove({
+                          event,
+                          datum: d,
+                          index: i,
+                          data,
+                          color: intervalFill,
+                        });
+                      })
+                }
                 onMouseLeave={disableMouseEvents ? null : onMouseLeave && (() => onMouseLeave)}
               />
             </FocusBlurHandler>

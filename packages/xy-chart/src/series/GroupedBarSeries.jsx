@@ -19,7 +19,6 @@ const propTypes = {
 };
 
 const defaultProps = {
-  groupKeys: null,
   groupFills: color.categories,
   groupPadding: 0.1,
   stroke: 'none',
@@ -47,7 +46,8 @@ export default class GroupedBarSeries extends React.PureComponent {
     } = this.props;
 
     if (!xScale || !yScale) return null;
-    if (!xScale.bandwidth) { // @todo figure this out/be more graceful
+    if (!xScale.bandwidth) {
+      // @todo figure this out/be more graceful
       throw new Error("'GroupedBarSeries' requires a 'band' type xScale");
     }
     const maxHeight = (yScale.range() || [0])[0];
@@ -56,7 +56,11 @@ export default class GroupedBarSeries extends React.PureComponent {
       domain: groupKeys,
       padding: groupPadding,
     });
-    const zScale = scaleTypeToScale.ordinal({ range: groupFills, domain: groupKeys });
+    const zScale = scaleTypeToScale.ordinal({
+      range: groupFills,
+      domain: groupKeys,
+    });
+
     return (
       <BarGroup
         style={disableMouseEvents ? noEventsStyles : null}
@@ -71,14 +75,36 @@ export default class GroupedBarSeries extends React.PureComponent {
         rx={2}
         stroke={stroke}
         strokeWidth={strokeWidth}
-        onClick={disableMouseEvents ? null : onClick && (d => (event) => {
-          const { key: seriesKey, data: datum } = d;
-          onClick({ event, data, datum, seriesKey, color: zScale(seriesKey) });
-        })}
-        onMouseMove={disableMouseEvents ? null : onMouseMove && (d => (event) => {
-          const { key, data: datum } = d;
-          onMouseMove({ event, data, datum, seriesKey: key, color: zScale(key) });
-        })}
+        onClick={
+          disableMouseEvents
+            ? null
+            : onClick &&
+              (d => event => {
+                const { key: seriesKey, data: datum } = d;
+                onClick({
+                  event,
+                  data,
+                  datum,
+                  seriesKey,
+                  color: zScale(seriesKey),
+                });
+              })
+        }
+        onMouseMove={
+          disableMouseEvents
+            ? null
+            : onMouseMove &&
+              (d => event => {
+                const { key, data: datum } = d;
+                onMouseMove({
+                  event,
+                  data,
+                  datum,
+                  seriesKey: key,
+                  color: zScale(key),
+                });
+              })
+        }
         onMouseLeave={disableMouseEvents ? null : onMouseLeave && (() => onMouseLeave)}
       />
     );

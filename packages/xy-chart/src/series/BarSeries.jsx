@@ -23,7 +23,6 @@ const defaultProps = {
   barWidth: null,
   fill: themeColors.default,
   fillOpacity: null,
-  stackBy: null,
   stroke: '#FFFFFF',
   strokeWidth: 1,
 };
@@ -53,6 +52,7 @@ export default class BarSeries extends React.PureComponent {
 
     const maxHeight = (yScale.range() || [0])[0];
     const offset = xScale.offset || 0;
+
     return (
       <Group style={disableMouseEvents ? noEventsStyles : null}>
         {data.map((d, i) => {
@@ -60,32 +60,54 @@ export default class BarSeries extends React.PureComponent {
           const color = d.fill || callOrValue(fill, d, i);
           const barX = xScale(x(d)) - offset;
 
-          return isDefined(d.y) && (
-            <FocusBlurHandler
-              key={`bar-${barX}`}
-              onBlur={disableMouseEvents ? null : onMouseLeave}
-              onFocus={disableMouseEvents ? null : (event) => {
-                onMouseMove({ event, data, datum: d, color, index: i });
-              }}
-            >
-              <Bar
-                x={barX}
-                y={maxHeight - barHeight}
-                width={barWidth}
-                height={barHeight}
-                fill={color}
-                fillOpacity={d.fillOpacity || callOrValue(fillOpacity, d, i)}
-                stroke={d.stroke || callOrValue(stroke, d, i)}
-                strokeWidth={d.strokeWidth || callOrValue(strokeWidth, d, i)}
-                onClick={disableMouseEvents ? null : onClick && (() => (event) => {
-                  onClick({ event, data, datum: d, color, index: i });
-                })}
-                onMouseMove={disableMouseEvents ? null : onMouseMove && (() => (event) => {
-                  onMouseMove({ event, data, datum: d, color, index: i });
-                })}
-                onMouseLeave={disableMouseEvents ? null : onMouseLeave && (() => onMouseLeave)}
-              />
-            </FocusBlurHandler>
+          return (
+            isDefined(d.y) && (
+              <FocusBlurHandler
+                key={`bar-${barX}`}
+                onBlur={disableMouseEvents ? null : onMouseLeave}
+                onFocus={
+                  disableMouseEvents
+                    ? null
+                    : event => {
+                        onMouseMove({ event, data, datum: d, color, index: i });
+                      }
+                }
+              >
+                <Bar
+                  x={barX}
+                  y={maxHeight - barHeight}
+                  width={barWidth}
+                  height={barHeight}
+                  fill={color}
+                  fillOpacity={d.fillOpacity || callOrValue(fillOpacity, d, i)}
+                  stroke={d.stroke || callOrValue(stroke, d, i)}
+                  strokeWidth={d.strokeWidth || callOrValue(strokeWidth, d, i)}
+                  onClick={
+                    disableMouseEvents
+                      ? null
+                      : onClick &&
+                        (() => event => {
+                          onClick({ event, data, datum: d, color, index: i });
+                        })
+                  }
+                  onMouseMove={
+                    disableMouseEvents
+                      ? null
+                      : onMouseMove &&
+                        (() => event => {
+                          onMouseMove({
+                            event,
+                            data,
+                            datum: d,
+                            color,
+                            index: i,
+                          });
+                        })
+                  }
+                  onMouseLeave={disableMouseEvents ? null : onMouseLeave && (() => onMouseLeave)}
+                />
+              </FocusBlurHandler>
+            )
           );
         })}
       </Group>

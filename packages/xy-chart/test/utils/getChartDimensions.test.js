@@ -3,11 +3,11 @@ import getChartDimensions from '../../src/utils/getChartDimensions';
 describe('getChartDimensions', () => {
   const result = getChartDimensions({ width: 100, height: 100, margin: {} });
 
-  test('it should be defined', () => {
+  it('it should be defined', () => {
     expect(getChartDimensions).toBeDefined();
   });
 
-  test('it should return an object with margin, innerHeight, and innerWidth keys', () => {
+  it('it should return an object with margin, innerHeight, and innerWidth keys', () => {
     expect(result).toEqual(
       expect.objectContaining({
         innerWidth: expect.any(Number),
@@ -17,7 +17,7 @@ describe('getChartDimensions', () => {
     );
   });
 
-  test('it should return a complete margin', () => {
+  it('it should return a complete margin', () => {
     expect(result.margin).toEqual(
       expect.objectContaining({
         top: expect.any(Number),

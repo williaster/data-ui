@@ -2,7 +2,7 @@ import React from 'react';
 import { shallow, mount } from 'enzyme';
 import Stack from '@vx/shape/build/shapes/Stack';
 
-import { XYChart, StackedAreaSeries } from '../../src/';
+import { XYChart, StackedAreaSeries } from '../../src';
 
 describe('<StackedAreaSeries />', () => {
   const mockProps = {
@@ -23,31 +23,29 @@ describe('<StackedAreaSeries />', () => {
   const mockStackKeys = ['a', 'b', 'c'];
   const mockStackFills = ['#fill1', '#fill2', '#fill3'];
 
-  test('it should be defined', () => {
+  it('it should be defined', () => {
     expect(StackedAreaSeries).toBeDefined();
   });
 
-  test('it should not render without x- and y-scales', () => {
-    expect(
-      shallow(<StackedAreaSeries data={[]} stackKeys={[]} />).type(),
-    ).toBeNull();
+  it('it should not render without x- and y-scales', () => {
+    expect(shallow(<StackedAreaSeries data={[]} stackKeys={[]} />).type()).toBeNull();
   });
 
-  test('it should render a <Stack />', () => {
+  it('it should render a <Stack />', () => {
     const wrapper = shallow(
-      <XYChart {...mockProps} >
+      <XYChart {...mockProps}>
         <StackedAreaSeries data={mockData} stackKeys={mockStackKeys} />
       </XYChart>,
     );
 
     const series = wrapper.find(StackedAreaSeries).dive();
 
-    expect(series.find(Stack).length).toBe(1);
+    expect(series.find(Stack)).toHaveLength(1);
   });
 
-  test('it should render an path for each stackKey', () => {
+  it('it should render an path for each stackKey', () => {
     const wrapper = shallow(
-      <XYChart {...mockProps} >
+      <XYChart {...mockProps}>
         <StackedAreaSeries data={mockData} stackKeys={mockStackKeys} />
       </XYChart>,
     );
@@ -55,10 +53,10 @@ describe('<StackedAreaSeries />', () => {
     const series = wrapper.find(StackedAreaSeries).dive();
     const stack = series.find(Stack).dive();
 
-    expect(stack.find('path').length).toBe(mockStackKeys.length);
+    expect(stack.find('path')).toHaveLength(mockStackKeys.length);
   });
 
-  test('it should call onMouseMove({ datum, data, event, color, seriesKey }), onMouseLeave(), and onClick({ datum, data, event, color, seriesKey }) on trigger', () => {
+  it('it should call onMouseMove({ datum, data, event, color, seriesKey }), onMouseLeave(), and onClick({ datum, data, event, color, seriesKey }) on trigger', () => {
     const onMouseMove = jest.fn();
     const onMouseLeave = jest.fn();
     const onClick = jest.fn();
@@ -70,11 +68,7 @@ describe('<StackedAreaSeries />', () => {
         onMouseLeave={onMouseLeave}
         onClick={onClick}
       >
-        <StackedAreaSeries
-          data={mockData}
-          stackKeys={mockStackKeys}
-          stackFills={mockStackFills}
-        />
+        <StackedAreaSeries data={mockData} stackKeys={mockStackKeys} stackFills={mockStackFills} />
       </XYChart>,
     );
 
@@ -86,7 +80,7 @@ describe('<StackedAreaSeries />', () => {
     expect(onMouseMove).toHaveBeenCalledTimes(1);
     let args = onMouseMove.mock.calls[0][0];
     expect(args.data).toBe(mockData);
-    expect(args.datum).toBeNull(); // @TODO depends on mocking out findClosestDatum
+    expect(args.datum).toBe(mockData[0]);
     expect(args.event).toBeDefined();
     expect(mockStackFills.indexOf(args.color)).toBeGreaterThan(-1);
     expect(mockStackKeys.indexOf(args.seriesKey)).toBeGreaterThan(-1);
@@ -96,15 +90,15 @@ describe('<StackedAreaSeries />', () => {
 
     path.simulate('click');
     expect(onClick).toHaveBeenCalledTimes(1);
-    args = onClick.mock.calls[0][0];
+    args = onClick.mock.calls[0][0]; // eslint-disable-line prefer-destructuring
     expect(args.data).toBe(mockData);
-    expect(args.datum).toBeNull(); // @TODO depends on mocking out findClosestDatum
+    expect(args.datum).toBe(mockData[0]);
     expect(args.event).toBeDefined();
     expect(mockStackFills.indexOf(args.color)).toBeGreaterThan(-1);
     expect(mockStackKeys.indexOf(args.seriesKey)).toBeGreaterThan(-1);
   });
 
-  test('it should not trigger onMouseMove, onMouseLeave, or onClick if disableMouseEvents is true', () => {
+  it('it should not trigger onMouseMove, onMouseLeave, or onClick if disableMouseEvents is true', () => {
     const onMouseMove = jest.fn();
     const onMouseLeave = jest.fn();
     const onClick = jest.fn();

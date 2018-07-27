@@ -3,7 +3,7 @@ import { shallow } from 'enzyme';
 import AxisBottom from '@vx/axis/build/axis/AxisBottom';
 import AxisTop from '@vx/axis/build/axis/AxisTop';
 import scaleLinear from '@vx/scale/build/scales/linear';
-import { XYChart, XAxis, LineSeries } from '../../src/';
+import { XYChart, XAxis, LineSeries } from '../../src';
 
 describe('<XAxis />', () => {
   const chartProps = {
@@ -14,24 +14,24 @@ describe('<XAxis />', () => {
     ariaLabel: 'label',
   };
 
-  test('it should be defined', () => {
+  it('it should be defined', () => {
     expect(XAxis).toBeDefined();
   });
 
-  test('it should not render without a scale', () => {
+  it('it should not render without a scale', () => {
     expect(shallow(<XAxis />).type()).toBeNull();
   });
 
-  test('<XYChart/> should render an Axis', () => {
+  it('<XYChart/> should render an Axis', () => {
     const wrapper = shallow(
       <XYChart {...chartProps}>
         <XAxis />
       </XYChart>,
     );
-    expect(wrapper.find(XAxis).length).toBe(1);
+    expect(wrapper.find(XAxis)).toHaveLength(1);
   });
 
-  test('<XYChart/> should pass scale and innerHeight props', () => {
+  it('<XYChart/> should pass scale and innerHeight props', () => {
     const wrapper = shallow(
       <XYChart {...chartProps}>
         <XAxis />
@@ -42,7 +42,7 @@ describe('<XAxis />', () => {
     expect(typeof axis.prop('scale')).toBe('function');
   });
 
-  test('<XYChart/> should pass it theme axis and tick styles', () => {
+  it('<XYChart/> should pass it theme axis and tick styles', () => {
     const xAxisStyles = { stroke: 'pink', strokeWidth: 1, label: {} };
     const xTickStyles = { stroke: 'purple', tickLength: 5 };
     const wrapper = shallow(
@@ -56,7 +56,7 @@ describe('<XAxis />', () => {
     expect(axis.prop('tickStyles')).toEqual(xTickStyles);
   });
 
-  test('It should render the appropriate axis based on props.orientation', () => {
+  it('It should render the appropriate axis based on props.orientation', () => {
     const defaultAxis = shallow(
       <XYChart {...chartProps}>
         <XAxis />
@@ -81,17 +81,17 @@ describe('<XAxis />', () => {
       .find(XAxis)
       .dive();
 
-    expect(defaultAxis.find(AxisBottom).length).toBe(1);
-    expect(defaultAxis.find(AxisTop).length).toBe(0);
+    expect(defaultAxis.find(AxisBottom)).toHaveLength(1);
+    expect(defaultAxis.find(AxisTop)).toHaveLength(0);
 
-    expect(bottomAxis.find(AxisBottom).length).toBe(1);
-    expect(bottomAxis.find(AxisTop).length).toBe(0);
+    expect(bottomAxis.find(AxisBottom)).toHaveLength(1);
+    expect(bottomAxis.find(AxisTop)).toHaveLength(0);
 
-    expect(topAxis.find(AxisBottom).length).toBe(0);
-    expect(topAxis.find(AxisTop).length).toBe(1);
+    expect(topAxis.find(AxisBottom)).toHaveLength(0);
+    expect(topAxis.find(AxisTop)).toHaveLength(1);
   });
 
-  test('It should render a label if passed', () => {
+  it('It should render a label if passed', () => {
     const wrapper = shallow(
       <XYChart {...chartProps}>
         <XAxis label="banana" />
@@ -106,7 +106,7 @@ describe('<XAxis />', () => {
     ).toBe('banana');
   });
 
-  test('It should render a custom tickComponent if passed', () => {
+  it('It should render a custom tickComponent if passed', () => {
     const wrapper = shallow(
       <XAxis
         scale={scaleLinear({ range: [0, 100], domain: [0, 100] })}
@@ -127,7 +127,7 @@ describe('<XAxis />', () => {
     ).toHaveLength(1);
   });
 
-  test('It should use the output of tickFormat() for ticks', () => {
+  it('It should use the output of tickFormat() for ticks', () => {
     const tickFormat = () => 'iNvaRiAnT LabEl';
     const wrapper = shallow(
       <XYChart {...chartProps}>
@@ -142,7 +142,7 @@ describe('<XAxis />', () => {
     expect(tick.find('text').text()).toBe(tickFormat());
   });
 
-  test('tickLabelProps should be passed tick value and indexif passed, and tickStyles.label[orientation] if not', () => {
+  it('tickLabelProps should be passed tick value and indexif passed, and tickStyles.label[orientation] if not', () => {
     const props = {
       scale: scaleLinear({ range: [0, 100], domain: [0, 100] }),
       innerHeight: 100,
@@ -185,7 +185,7 @@ describe('<XAxis />', () => {
     expect(label1.prop('fill')).toBe('blue');
   });
 
-  test('tickStyles.label[orientation] should be used if tickLabelProps is not passed', () => {
+  it('tickStyles.label[orientation] should be used if tickLabelProps is not passed', () => {
     const props = {
       scale: scaleLinear({ range: [0, 100], domain: [0, 100] }),
       innerHeight: 100,

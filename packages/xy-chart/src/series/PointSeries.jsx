@@ -10,22 +10,6 @@ import GlyphDotComponent from '../glyph/GlyphDotComponent';
 import { pointSeriesDataShape } from '../utils/propShapes';
 import sharedSeriesProps from '../utils/sharedSeriesProps';
 
-export const pointComponentPropTypes = {
-  x: PropTypes.number.isRequired,
-  y: PropTypes.number.isRequired,
-  size: PropTypes.number.isRequired,
-  fill: PropTypes.string.isRequired,
-  fillOpacity: PropTypes.number.isRequired,
-  stroke: PropTypes.string.isRequired,
-  strokeWidth: PropTypes.number.isRequired,
-  strokeDasharray: PropTypes.string,
-  onClick: PropTypes.func,
-  onMouseMove: PropTypes.func,
-  onMouseLeave: PropTypes.func,
-  data: pointSeriesDataShape.isRequired,
-  datum: PropTypes.object.isRequired,
-};
-
 export const propTypes = {
   ...sharedSeriesProps,
   data: pointSeriesDataShape.isRequired,
@@ -73,6 +57,7 @@ export default class PointSeries extends React.PureComponent {
     } = this.props;
     if (!xScale || !yScale) return null;
     const labels = [];
+
     return (
       <Group style={disableMouseEvents ? noEventsStyles : null}>
         {data.map((d, i) => {
@@ -106,17 +91,31 @@ export default class PointSeries extends React.PureComponent {
             data,
             datum: d,
           };
-          return defined &&
-            <FocusBlurHandler
-              key={key}
-              xlinkHref="#"
-              onBlur={disableMouseEvents ? null : props.onMouseLeave}
-              onFocus={disableMouseEvents ? null : (event) => {
-                onMouseMove({ event, data, datum: d, color: computedFill, index: i });
-              }}
-            >
-              {React.createElement(pointComponent, props)}
-            </FocusBlurHandler>;
+
+          return (
+            defined && (
+              <FocusBlurHandler
+                key={key}
+                xlinkHref="#"
+                onBlur={disableMouseEvents ? null : props.onMouseLeave}
+                onFocus={
+                  disableMouseEvents
+                    ? null
+                    : event => {
+                        onMouseMove({
+                          event,
+                          data,
+                          datum: d,
+                          color: computedFill,
+                          index: i,
+                        });
+                      }
+                }
+              >
+                {React.createElement(pointComponent, props)}
+              </FocusBlurHandler>
+            )
+          );
         })}
         {/* Put labels on top */}
         {labels.map(d => React.cloneElement(labelComponent, d, d.label))}

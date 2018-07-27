@@ -2,12 +2,7 @@ import PropTypes from 'prop-types';
 import interpolatorLookup from './interpolatorLookup';
 
 export const scaleShape = PropTypes.shape({
-  type: PropTypes.oneOf([
-    'time',
-    'timeUtc',
-    'linear',
-    'band',
-  ]).isRequired,
+  type: PropTypes.oneOf(['time', 'timeUtc', 'linear', 'band']).isRequired,
 
   includeZero: PropTypes.bool,
 
@@ -20,7 +15,8 @@ export const scaleShape = PropTypes.shape({
 
 export const boxPlotSeriesDataShape = PropTypes.arrayOf(
   PropTypes.shape({
-    x: PropTypes.oneOfType([ // data with null x/y are not rendered
+    x: PropTypes.oneOfType([
+      // data with null x/y are not rendered
       PropTypes.string,
       PropTypes.number,
       PropTypes.instanceOf(Date),
@@ -37,7 +33,8 @@ export const boxPlotSeriesDataShape = PropTypes.arrayOf(
 
 export const violinPlotSeriesDataShape = PropTypes.arrayOf(
   PropTypes.shape({
-    x: PropTypes.oneOfType([ // data with null x/y are not rendered
+    x: PropTypes.oneOfType([
+      // data with null x/y are not rendered
       PropTypes.string,
       PropTypes.number,
       PropTypes.instanceOf(Date),
@@ -47,10 +44,10 @@ export const violinPlotSeriesDataShape = PropTypes.arrayOf(
   }),
 );
 
-
 export const lineSeriesDataShape = PropTypes.arrayOf(
   PropTypes.shape({
-    x: PropTypes.oneOfType([ // data with null x/y are not rendered
+    x: PropTypes.oneOfType([
+      // data with null x/y are not rendered
       PropTypes.string,
       PropTypes.number,
       PropTypes.instanceOf(Date),
@@ -62,7 +59,8 @@ export const lineSeriesDataShape = PropTypes.arrayOf(
 
 export const areaSeriesDataShape = PropTypes.arrayOf(
   PropTypes.shape({
-    x: PropTypes.oneOfType([ // data with null x/y are not rendered
+    x: PropTypes.oneOfType([
+      // data with null x/y are not rendered
       PropTypes.string,
       PropTypes.number,
       PropTypes.instanceOf(Date),
@@ -74,67 +72,78 @@ export const areaSeriesDataShape = PropTypes.arrayOf(
   }),
 );
 
-export const barSeriesDataShape = PropTypes.arrayOf(PropTypes.shape({
-  x: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.number,
-    PropTypes.instanceOf(Date),
-    PropTypes.object, // eg a moment() instance
-  ]).isRequired,
-  y: PropTypes.number, // null data are not rendered
-  fill: PropTypes.string,
-  stroke: PropTypes.string,
-  strokeWidth: PropTypes.number,
-}));
+export const barSeriesDataShape = PropTypes.arrayOf(
+  PropTypes.shape({
+    x: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.number,
+      PropTypes.instanceOf(Date),
+      PropTypes.object, // eg a moment() instance
+    ]).isRequired,
+    y: PropTypes.number, // null data are not rendered
+    fill: PropTypes.string,
+    stroke: PropTypes.string,
+    strokeWidth: PropTypes.number,
+  }),
+);
 
-export const groupedBarSeriesDataShape = PropTypes.arrayOf(PropTypes.shape({
-  x: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.object, // eg a moment() instance
-  ]).isRequired,
-  y: PropTypes.number.isRequired,
-}));
+export const groupedBarSeriesDataShape = PropTypes.arrayOf(
+  PropTypes.shape({
+    x: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.object, // eg a moment() instance
+    ]).isRequired,
+    y: PropTypes.number.isRequired,
+  }),
+);
 
-export const stackedBarSeriesDataShape = PropTypes.arrayOf(PropTypes.shape({
-  x: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.object, // eg a moment() instance
-  ]).isRequired,
-  y: PropTypes.number.isRequired,
-}));
+export const stackedBarSeriesDataShape = PropTypes.arrayOf(
+  PropTypes.shape({
+    x: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.object, // eg a moment() instance
+    ]).isRequired,
+    y: PropTypes.number.isRequired,
+  }),
+);
 
-export const pointSeriesDataShape = PropTypes.arrayOf(PropTypes.shape({
-  x: PropTypes.oneOfType([ // data with null x/y are not rendered
-    PropTypes.string,
-    PropTypes.number,
-    PropTypes.instanceOf(Date),
-    PropTypes.object, // eg a moment() instance
-  ]),
-  y: PropTypes.number,
-  size: PropTypes.number,
-  fill: PropTypes.string,
-  stroke: PropTypes.string,
-  strokeWidth: PropTypes.number,
-  strokeDasharray: PropTypes.string,
-}));
+export const pointSeriesDataShape = PropTypes.arrayOf(
+  PropTypes.shape({
+    x: PropTypes.oneOfType([
+      // data with null x/y are not rendered
+      PropTypes.string,
+      PropTypes.number,
+      PropTypes.instanceOf(Date),
+      PropTypes.object, // eg a moment() instance
+    ]),
+    y: PropTypes.number,
+    size: PropTypes.number,
+    fill: PropTypes.string,
+    stroke: PropTypes.string,
+    strokeWidth: PropTypes.number,
+    strokeDasharray: PropTypes.string,
+  }),
+);
 
-export const intervalSeriesDataShape = PropTypes.arrayOf(PropTypes.shape({
-  x0: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.number,
-    PropTypes.instanceOf(Date),
-    PropTypes.object, // eg a moment() instance
-  ]).isRequired,
-  x1: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.number,
-    PropTypes.instanceOf(Date),
-    PropTypes.object, // eg a moment() instance
-  ]).isRequired,
-  fill: PropTypes.string,
-  stroke: PropTypes.string,
-  strokeWidth: PropTypes.number,
-}));
+export const intervalSeriesDataShape = PropTypes.arrayOf(
+  PropTypes.shape({
+    x0: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.number,
+      PropTypes.instanceOf(Date),
+      PropTypes.object, // eg a moment() instance
+    ]).isRequired,
+    x1: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.number,
+      PropTypes.instanceOf(Date),
+      PropTypes.object, // eg a moment() instance
+    ]).isRequired,
+    fill: PropTypes.string,
+    stroke: PropTypes.string,
+    strokeWidth: PropTypes.number,
+  }),
+);
 
 export const axisStylesShape = PropTypes.shape({
   stroke: PropTypes.string,
@@ -172,3 +181,19 @@ export const themeShape = PropTypes.shape({
 });
 
 export const interpolationShape = PropTypes.oneOf(Object.keys(interpolatorLookup));
+
+export const pointComponentPropTypes = {
+  x: PropTypes.number.isRequired,
+  y: PropTypes.number.isRequired,
+  size: PropTypes.number.isRequired,
+  fill: PropTypes.string.isRequired,
+  fillOpacity: PropTypes.number.isRequired,
+  stroke: PropTypes.string.isRequired,
+  strokeWidth: PropTypes.number.isRequired,
+  strokeDasharray: PropTypes.string,
+  onClick: PropTypes.func,
+  onMouseMove: PropTypes.func,
+  onMouseLeave: PropTypes.func,
+  data: pointSeriesDataShape.isRequired,
+  datum: PropTypes.object.isRequired,
+};

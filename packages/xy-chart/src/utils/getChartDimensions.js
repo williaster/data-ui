@@ -1,7 +1,8 @@
-import { defaultProps } from '../chart/XYChart';
+import { DEFAULT_CHART_MARGIN } from './chartUtils';
 
 export default function getChartDimensions({ margin, width, height }) {
-  const completeMargin = { ...defaultProps.margin, ...margin };
+  const completeMargin = { ...DEFAULT_CHART_MARGIN, ...margin };
+
   return {
     margin: completeMargin,
     innerHeight: Math.max(0, height - completeMargin.top - completeMargin.bottom),

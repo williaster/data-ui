@@ -9,7 +9,7 @@ const propTypes = {
   axisStyles: axisStylesShape,
   hideZero: PropTypes.bool,
   label: PropTypes.string,
-  labelProps: PropTypes.object,
+  labelProps: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.number, PropTypes.string])),
   labelOffset: PropTypes.number,
   numTicks: PropTypes.number,
   orientation: PropTypes.oneOf(['left', 'right']),
@@ -18,7 +18,10 @@ const propTypes = {
   tickStyles: tickStylesShape,
   tickLabelProps: PropTypes.func,
   tickFormat: PropTypes.func,
-  tickValues: PropTypes.array,
+  tickValues: PropTypes.arrayOf(
+    // number or date/moment object
+    PropTypes.oneOfType([PropTypes.number, PropTypes.object]),
+  ),
 
   // probably injected by parent
   innerWidth: PropTypes.number,

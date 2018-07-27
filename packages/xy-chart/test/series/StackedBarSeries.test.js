@@ -2,7 +2,7 @@ import Bar from '@vx/shape/build/shapes/Bar';
 import BarStack from '@vx/shape/build/shapes/BarStack';
 import React from 'react';
 import { shallow, mount } from 'enzyme';
-import { XYChart, StackedBarSeries } from '../../src/';
+import { XYChart, StackedBarSeries } from '../../src';
 
 describe('<StackedBarSeries />', () => {
   const mockProps = {
@@ -22,56 +22,49 @@ describe('<StackedBarSeries />', () => {
 
   const mockStackKeys = ['a', 'b', 'c'];
 
-  test('it should be defined', () => {
+  it('it should be defined', () => {
     expect(StackedBarSeries).toBeDefined();
   });
 
-  test('it should not render without x- and y-scales', () => {
+  it('it should not render without x- and y-scales', () => {
     expect(shallow(<StackedBarSeries stackKeys={[]} data={[]} />).type()).toBeNull();
   });
 
-  test('it should render a BarGroup', () => {
+  it('it should render a BarGroup', () => {
     const wrapper = shallow(
-      <XYChart {...mockProps} >
+      <XYChart {...mockProps}>
         <StackedBarSeries stackKeys={mockStackKeys} data={mockData} />
       </XYChart>,
     );
     const series = wrapper.find(StackedBarSeries).dive();
-    expect(series.find(BarStack).length).toBe(1);
+    expect(series.find(BarStack)).toHaveLength(1);
   });
 
-  test('it should render one rect per x value per stack key', () => {
+  it('it should render one rect per x value per stack key', () => {
     const wrapper = shallow(
-      <XYChart {...mockProps} >
-        <StackedBarSeries
-          stackKeys={mockStackKeys}
-          data={mockData}
-        />
+      <XYChart {...mockProps}>
+        <StackedBarSeries stackKeys={mockStackKeys} data={mockData} />
       </XYChart>,
     );
     const rects = wrapper.render().find('rect');
-    expect(rects.length).toBe(mockStackKeys.length * mockData.length);
+    expect(rects).toHaveLength(mockStackKeys.length * mockData.length);
   });
 
-  test('it should use stackFills for color', () => {
+  it('it should use stackFills for color', () => {
     const fills = ['magenta', 'maplesyrup', 'banana'];
     const wrapper = shallow(
-      <XYChart {...mockProps} >
-        <StackedBarSeries
-          stackKeys={['a', 'b', 'c']}
-          stackFills={fills}
-          data={mockData}
-        />
+      <XYChart {...mockProps}>
+        <StackedBarSeries stackKeys={['a', 'b', 'c']} stackFills={fills} data={mockData} />
       </XYChart>,
     );
     const rects = wrapper.render().find('rect');
     rects.each((i, rect) => {
-      const fill = rect.attribs.fill;
+      const { fill } = rect.attribs;
       expect(fills.some(f => f === fill)).toBe(true);
     });
   });
 
-  test('it should call onMouseMove({ datum, data, event, seriesKey, color }), onMouseLeave(), and onClick({ datum, data, event, seriesKey, color }) on trigger', () => {
+  it('it should call onMouseMove({ datum, data, event, seriesKey, color }), onMouseLeave(), and onClick({ datum, data, event, seriesKey, color }) on trigger', () => {
     const fills = ['magenta', 'maplesyrup', 'banana'];
     const stackKeys = ['a', 'b', 'c'];
     const onMouseMove = jest.fn();
@@ -85,11 +78,7 @@ describe('<StackedBarSeries />', () => {
         onMouseLeave={onMouseLeave}
         onClick={onClick}
       >
-        <StackedBarSeries
-          stackKeys={stackKeys}
-          stackFills={fills}
-          data={mockData}
-        />
+        <StackedBarSeries stackKeys={stackKeys} stackFills={fills} data={mockData} />
       </XYChart>,
     );
 
@@ -109,7 +98,7 @@ describe('<StackedBarSeries />', () => {
 
     bar.simulate('click');
     expect(onClick).toHaveBeenCalledTimes(1);
-    args = onClick.mock.calls[0][0];
+    args = onClick.mock.calls[0][0]; // eslint-disable-line prefer-destructuring
     expect(args.data).toEqual(mockData);
     expect(args.datum).toBe(mockData[0]);
     expect(args.event).toBeDefined();
@@ -117,7 +106,7 @@ describe('<StackedBarSeries />', () => {
     expect(fills.includes(args.color)).toBe(true);
   });
 
-  test('it should not trigger onMouseMove, onMouseLeave, or onClick if disableMouseEvents is true', () => {
+  it('it should not trigger onMouseMove, onMouseLeave, or onClick if disableMouseEvents is true', () => {
     const fills = ['magenta', 'maplesyrup', 'banana'];
     const stackKeys = ['a', 'b', 'c'];
     const onMouseMove = jest.fn();

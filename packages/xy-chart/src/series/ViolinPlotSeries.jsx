@@ -51,21 +51,25 @@ export default function ViolinPlotSeries({
   const valueScale = horizontal ? xScale : yScale;
   const boxWidth = offsetScale.bandwidth();
   const actualWidth = Math.min(MAX_BOX_WIDTH, boxWidth);
-  const offset = (offsetScale.offset || 0) - ((boxWidth - actualWidth) / 2);
+  const offset = (offsetScale.offset || 0) - (boxWidth - actualWidth) / 2;
   const offsetPropName = horizontal ? 'top' : 'left';
   const offsetProp = d => ({
-    [offsetPropName]: (offsetScale(offsetValue(d)) - offset) +
-     (((1 - widthRatio) / 2) * actualWidth),
+    [offsetPropName]: offsetScale(offsetValue(d)) - offset + ((1 - widthRatio) / 2) * actualWidth,
   });
+
   return (
     <Group>
       {data.map((d, i) => (
         <FocusBlurHandler
           key={offsetValue(d)}
           onBlur={disableMouseEvents ? null : onMouseLeave}
-          onFocus={disableMouseEvents ? null : (event) => {
-            onMouseMove({ event, data, datum: d, index: i });
-          }}
+          onFocus={
+            disableMouseEvents
+              ? null
+              : event => {
+                  onMouseMove({ event, data, datum: d, index: i });
+                }
+          }
         >
           <ViolinPlot
             {...offsetProp(d)}
@@ -76,17 +80,26 @@ export default function ViolinPlotSeries({
             strokeWidth={d.strokeWidth || callOrValue(strokeWidth, d, i)}
             valueScale={valueScale}
             horizontal={horizontal}
-            onMouseMove={disableMouseEvents ? null : onMouseMove && (() => (event) => {
-              onMouseMove({ event, data, datum: d, index: i });
-            })}
+            onMouseMove={
+              disableMouseEvents
+                ? null
+                : onMouseMove &&
+                  (() => event => {
+                    onMouseMove({ event, data, datum: d, index: i });
+                  })
+            }
             onMouseLeave={disableMouseEvents ? null : onMouseLeave && (() => onMouseLeave)}
-            onClick={disableMouseEvents ? null : onClick && (() => (event) => {
-              onClick({ event, data, datum: d, index: i });
-            })}
+            onClick={
+              disableMouseEvents
+                ? null
+                : onClick &&
+                  (() => event => {
+                    onClick({ event, data, datum: d, index: i });
+                  })
+            }
           />
         </FocusBlurHandler>
-      ))
-    }
+      ))}
     </Group>
   );
 }

@@ -2,7 +2,7 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import Line from '@vx/shape/build/shapes/Line';
 
-import { XYChart, HorizontalReferenceLine } from '../../src/';
+import { XYChart, HorizontalReferenceLine } from '../../src';
 
 describe('<HorizontalReferenceLine />', () => {
   const reference = 12;
@@ -16,37 +16,41 @@ describe('<HorizontalReferenceLine />', () => {
     ariaLabel: 'label',
   };
 
-  test('it should be defined', () => {
+  it('it should be defined', () => {
     expect(HorizontalReferenceLine).toBeDefined();
   });
 
-  test('it should render null if no accessors or scales are passed', () => {
+  it('it should render null if no accessors or scales are passed', () => {
     expect(shallow(<HorizontalReferenceLine reference={reference} />).type()).toBeNull();
   });
 
-  test('it should render a Line', () => {
+  it('it should render a Line', () => {
     const wrapper = shallow(
       <XYChart {...mockProps}>
         <HorizontalReferenceLine reference={reference} />
       </XYChart>,
-    ).find(HorizontalReferenceLine).dive();
+    )
+      .find(HorizontalReferenceLine)
+      .dive();
 
-    expect(wrapper.find(Line).length).toBe(1);
+    expect(wrapper.find(Line)).toHaveLength(1);
   });
 
-  test('the Line should span the entire width of the chart', () => {
+  it('the Line should span the entire width of the chart', () => {
     const wrapper = shallow(
       <XYChart {...mockProps}>
         <HorizontalReferenceLine reference={reference} />
       </XYChart>,
-    ).find(HorizontalReferenceLine).dive();
+    )
+      .find(HorizontalReferenceLine)
+      .dive();
 
     const line = wrapper.find(Line);
     expect(line.prop('from').x).toBe(0);
     expect(line.prop('to').x).toBe(mockProps.width);
   });
 
-  test('it should render a line at the passed reference number', () => {
+  it('it should render a line at the passed reference number', () => {
     const wrapper = shallow(
       <XYChart {...mockProps}>
         <HorizontalReferenceLine reference={reference} />
@@ -60,27 +64,31 @@ describe('<HorizontalReferenceLine />', () => {
     expect(line.prop('to').y).toBe(scaledValue);
   });
 
-  test('it should render a label if specified', () => {
+  it('it should render a label if specified', () => {
     const label = 'label!';
 
     const noLabelWrapper = shallow(
       <XYChart {...mockProps}>
         <HorizontalReferenceLine reference={reference} />
       </XYChart>,
-    ).find(HorizontalReferenceLine).dive();
+    )
+      .find(HorizontalReferenceLine)
+      .dive();
 
     const withLabelWrapper = shallow(
       <XYChart {...mockProps}>
         <HorizontalReferenceLine reference={reference} label={label} />
       </XYChart>,
-    ).find(HorizontalReferenceLine).dive();
+    )
+      .find(HorizontalReferenceLine)
+      .dive();
 
-    expect(noLabelWrapper.find('text').length).toBe(0);
-    expect(withLabelWrapper.find('text').length).toBe(1);
+    expect(noLabelWrapper.find('text')).toHaveLength(0);
+    expect(withLabelWrapper.find('text')).toHaveLength(1);
     expect(withLabelWrapper.find('text').text()).toBe(label);
   });
 
-  test('it should use labelProps if passed', () => {
+  it('it should use labelProps if passed', () => {
     const wrapper = shallow(
       <XYChart {...mockProps}>
         <HorizontalReferenceLine
@@ -91,7 +99,9 @@ describe('<HorizontalReferenceLine />', () => {
           }}
         />
       </XYChart>,
-    ).find(HorizontalReferenceLine).dive();
+    )
+      .find(HorizontalReferenceLine)
+      .dive();
 
     const text = wrapper.find('text');
     expect(text.prop('id')).toBe('test');

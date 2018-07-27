@@ -23,7 +23,6 @@ const propTypes = {
 };
 
 const defaultProps = {
-  fill: color.default,
   fillOpacity: 0.7,
   interpolation: 'monotoneX',
   stackFills: color.categories,
@@ -55,6 +54,7 @@ export default class StackedAreaSeries extends React.PureComponent {
       onMouseLeave,
     } = this.props;
     if (!xScale || !yScale) return null;
+
     return (
       <Group style={disableMouseEvents ? noEventsStyles : null}>
         <Stack
@@ -69,27 +69,45 @@ export default class StackedAreaSeries extends React.PureComponent {
           strokeWidth={({ datum, index }) => callOrValue(strokeWidth, { datum, index })}
           curve={interpolatorLookup[interpolation] || interpolatorLookup.monotoneX}
           defined={defined}
-          onClick={disableMouseEvents ? null : onClick && (({ series, index }) => (event) => {
-            const datum = findClosestDatum({ data: series, getX: d => x(d.data), event, xScale });
-            onClick({
-              event,
-              data,
-              seriesKey: series.key,
-              datum: datum && datum.data,
-              color: stackFills[index],
-            });
-          })}
-          onMouseMove={disableMouseEvents ? null : onMouseMove &&
-            (({ series, index }) => (event) => {
-              const datum = findClosestDatum({ data: series, getX: d => x(d.data), event, xScale });
-              onMouseMove({
-                event,
-                data,
-                seriesKey: series.key,
-                datum: datum && datum.data,
-                color: stackFills[index],
-              });
-            })
+          onClick={
+            disableMouseEvents
+              ? null
+              : onClick &&
+                (({ series, index }) => event => {
+                  const datum = findClosestDatum({
+                    data: series,
+                    getX: d => x(d.data),
+                    event,
+                    xScale,
+                  });
+                  onClick({
+                    event,
+                    data,
+                    seriesKey: series.key,
+                    datum: datum && datum.data,
+                    color: stackFills[index],
+                  });
+                })
+          }
+          onMouseMove={
+            disableMouseEvents
+              ? null
+              : onMouseMove &&
+                (({ series, index }) => event => {
+                  const datum = findClosestDatum({
+                    data: series,
+                    getX: d => x(d.data),
+                    event,
+                    xScale,
+                  });
+                  onMouseMove({
+                    event,
+                    data,
+                    seriesKey: series.key,
+                    datum: datum && datum.data,
+                    color: stackFills[index],
+                  });
+                })
           }
           onMouseLeave={disableMouseEvents ? null : () => onMouseLeave}
         />

@@ -19,16 +19,15 @@ const propTypes = {
   strokeWidth: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
   fillOpacity: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
   widthRatio: PropTypes.number,
-  containerProps: PropTypes.object,
-  outlierProps: PropTypes.object,
-  boxProps: PropTypes.object,
-  minProps: PropTypes.object,
-  maxProps: PropTypes.object,
-  medianProps: PropTypes.object,
+  containerProps: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+  outlierProps: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+  boxProps: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+  minProps: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+  maxProps: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+  medianProps: PropTypes.object, // eslint-disable-line react/forbid-prop-types
 };
 
 const defaultProps = {
-  boxWidth: null,
   containerEvents: true,
   stroke: themeColors.darkGray,
   strokeWidth: 2,
@@ -85,76 +84,101 @@ export default class BoxPlotSeries extends React.PureComponent {
     const valueScale = horizontal ? xScale : yScale;
     const boxWidth = offsetScale.bandwidth();
     const actualWidth = Math.min(MAX_BOX_WIDTH, boxWidth);
-    const offset = (offsetScale.offset || 0) - ((boxWidth - actualWidth) / 2);
+    const offset = (offsetScale.offset || 0) - (boxWidth - actualWidth) / 2;
     const offsetPropName = horizontal ? 'top' : 'left';
     const offsetProp = d => ({
-      [offsetPropName]: (offsetScale(offsetValue(d)) - offset) +
-       (((1 - widthRatio) / 2) * actualWidth),
+      [offsetPropName]: offsetScale(offsetValue(d)) - offset + ((1 - widthRatio) / 2) * actualWidth,
     });
     const mouseEventProps = (d, i) => ({
-      onMouseMove: disableMouseEvents ? null : onMouseMove && (() => (event) => {
-        onMouseMove({ event, data, datum: d, index: i });
-      }),
+      onMouseMove: disableMouseEvents
+        ? null
+        : onMouseMove &&
+          (() => event => {
+            onMouseMove({ event, data, datum: d, index: i });
+          }),
       onMouseLeave: disableMouseEvents ? null : onMouseLeave && (() => onMouseLeave),
-      onClick: disableMouseEvents ? null : onClick && (() => (event) => {
-        onClick({ event, data, datum: d, index: i });
-      }),
+      onClick: disableMouseEvents
+        ? null
+        : onClick &&
+          (() => event => {
+            onClick({ event, data, datum: d, index: i });
+          }),
     });
+
     return (
       <Group>
         {data.map((d, i) => {
           const mouseEvents = mouseEventProps(d, i);
-          return isDefined(min(d)) && (
-            <FocusBlurHandler
-              key={offsetValue(d)}
-              xlinkHref="#"
-              onBlur={disableMouseEvents ? null : onMouseLeave}
-              onFocus={disableMouseEvents ? null : (event) => {
-                onMouseMove({ event, data, datum: d, index: i });
-              }}
-            >
-              <BoxPlot
-                min={min(d)}
-                max={max(d)}
-                {...offsetProp(d)}
-                firstQuartile={firstQuartile(d)}
-                thirdQuartile={thirdQuartile(d)}
-                median={median(d)}
-                boxWidth={actualWidth * widthRatio}
-                outliers={outliers(d)}
-                fill={d.fill || callOrValue(fill, d, i)}
-                stroke={d.stroke || callOrValue(stroke, d, i)}
-                strokeWidth={d.strokeWidth || callOrValue(strokeWidth, d, i)}
-                fillOpacity={d.fillOpacity || callOrValue(fillOpacity, d, i)}
-                valueScale={valueScale}
-                horizontal={horizontal}
-                container={containerEvents}
-                containerProps={
-                  (containerEvents || containerProps || undefined)
-                  && { ...containerProps, ...(containerEvents && mouseEvents) }
+
+          return (
+            isDefined(min(d)) && (
+              <FocusBlurHandler
+                key={offsetValue(d)}
+                xlinkHref="#"
+                onBlur={disableMouseEvents ? null : onMouseLeave}
+                onFocus={
+                  disableMouseEvents
+                    ? null
+                    : event => {
+                        onMouseMove({ event, data, datum: d, index: i });
+                      }
                 }
-                outlierProps={
-                  (!containerEvents || outlierProps || undefined)
-                  && { ...outlierProps, ...(!containerEvents && mouseEvents) }
-                }
-                boxProps={
-                  (!containerEvents || boxProps || undefined)
-                  && { ...boxProps, ...(!containerEvents && mouseEvents) }
-                }
-                minProps={
-                  (!containerEvents || minProps || undefined)
-                  && { ...minProps, ...(!containerEvents && mouseEvents) }
-                }
-                maxProps={
-                  (!containerEvents || maxProps || undefined)
-                  && { ...maxProps, ...(!containerEvents && mouseEvents) }
-                }
-                medianProps={
-                  (!containerEvents || medianProps || undefined)
-                  && { ...medianProps, ...(!containerEvents && mouseEvents) }
-                }
-              />
-            </FocusBlurHandler>
+              >
+                <BoxPlot
+                  min={min(d)}
+                  max={max(d)}
+                  {...offsetProp(d)}
+                  firstQuartile={firstQuartile(d)}
+                  thirdQuartile={thirdQuartile(d)}
+                  median={median(d)}
+                  boxWidth={actualWidth * widthRatio}
+                  outliers={outliers(d)}
+                  fill={d.fill || callOrValue(fill, d, i)}
+                  stroke={d.stroke || callOrValue(stroke, d, i)}
+                  strokeWidth={d.strokeWidth || callOrValue(strokeWidth, d, i)}
+                  fillOpacity={d.fillOpacity || callOrValue(fillOpacity, d, i)}
+                  valueScale={valueScale}
+                  horizontal={horizontal}
+                  container={containerEvents}
+                  containerProps={
+                    (containerEvents || containerProps || undefined) && {
+                      ...containerProps,
+                      ...(containerEvents && mouseEvents),
+                    }
+                  }
+                  outlierProps={
+                    (!containerEvents || outlierProps || undefined) && {
+                      ...outlierProps,
+                      ...(!containerEvents && mouseEvents),
+                    }
+                  }
+                  boxProps={
+                    (!containerEvents || boxProps || undefined) && {
+                      ...boxProps,
+                      ...(!containerEvents && mouseEvents),
+                    }
+                  }
+                  minProps={
+                    (!containerEvents || minProps || undefined) && {
+                      ...minProps,
+                      ...(!containerEvents && mouseEvents),
+                    }
+                  }
+                  maxProps={
+                    (!containerEvents || maxProps || undefined) && {
+                      ...maxProps,
+                      ...(!containerEvents && mouseEvents),
+                    }
+                  }
+                  medianProps={
+                    (!containerEvents || medianProps || undefined) && {
+                      ...medianProps,
+                      ...(!containerEvents && mouseEvents),
+                    }
+                  }
+                />
+              </FocusBlurHandler>
+            )
           );
         })}
       </Group>

@@ -1,7 +1,8 @@
+/* eslint react/default-props-match-prop-types: 'off' */
 import React from 'react';
 import GlyphDot from '@vx/glyph/build/glyphs/Dot';
 
-import { pointComponentPropTypes } from '../series/PointSeries';
+import { pointComponentPropTypes } from '../utils/propShapes';
 
 const defaultPropTypes = {
   onMouseMove: null,
@@ -34,12 +35,18 @@ export default function GlyphDotComponent({
       stroke={stroke}
       strokeWidth={strokeWidth}
       strokeDasharray={strokeDasharray}
-      onClick={onClick && ((event) => {
-        onClick({ event, data, datum, color: fill });
-      })}
-      onMouseMove={onMouseMove && ((event) => {
-        onMouseMove({ event, data, datum, color: fill });
-      })}
+      onClick={
+        onClick &&
+        (event => {
+          onClick({ event, data, datum, color: fill });
+        })
+      }
+      onMouseMove={
+        onMouseMove &&
+        (event => {
+          onMouseMove({ event, data, datum, color: fill });
+        })
+      }
       onMouseLeave={onMouseLeave}
     />
   );
@@ -48,4 +55,5 @@ export default function GlyphDotComponent({
 GlyphDotComponent.propTypes = {
   ...pointComponentPropTypes,
 };
+
 GlyphDotComponent.defaultProps = defaultPropTypes;

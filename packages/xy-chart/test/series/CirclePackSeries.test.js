@@ -1,7 +1,7 @@
 import React from 'react';
 import { shallow, mount } from 'enzyme';
 
-import { XYChart, CirclePackSeries, PointSeries } from '../../src/';
+import { XYChart, CirclePackSeries, PointSeries } from '../../src';
 
 describe('<CirclePackSeries />', () => {
   const mockProps = {
@@ -19,24 +19,24 @@ describe('<CirclePackSeries />', () => {
     { x: new Date('2017-01-05 02:00:00'), size: 5 },
   ];
 
-  test('it should be defined', () => {
+  it('it should be defined', () => {
     expect(CirclePackSeries).toBeDefined();
   });
 
-  test('it should render a PointSeries', () => {
+  it('it should render a PointSeries', () => {
     const wrapper = shallow(
-      <XYChart {...mockProps} >
+      <XYChart {...mockProps}>
         <CirclePackSeries data={mockData} />
       </XYChart>,
     );
     const circleSeries = wrapper.find(CirclePackSeries);
-    expect(circleSeries.length).toBe(1);
-    expect(circleSeries.dive().find(PointSeries).length).toBe(1);
+    expect(circleSeries).toHaveLength(1);
+    expect(circleSeries.dive().find(PointSeries)).toHaveLength(1);
   });
 
-  test('data passed to PointSeries should include computed y values', () => {
+  it('data passed to PointSeries should include computed y values', () => {
     const wrapper = shallow(
-      <XYChart {...mockProps} >
+      <XYChart {...mockProps}>
         <CirclePackSeries data={mockData} />
       </XYChart>,
     );
@@ -47,7 +47,7 @@ describe('<CirclePackSeries />', () => {
     expect(data[0].y).toEqual(expect.any(Number));
   });
 
-  test('it should call onMouseMove({ datum, data, event, color }), onMouseLeave(), and onClick({ datum, data, event, color }) on trigger', () => {
+  it('it should call onMouseMove({ datum, data, event, color }), onMouseLeave(), and onClick({ datum, data, event, color }) on trigger', () => {
     const onMouseMove = jest.fn();
     const onMouseLeave = jest.fn();
     const onClick = jest.fn();
@@ -78,14 +78,14 @@ describe('<CirclePackSeries />', () => {
 
     point.simulate('click');
     expect(onClick).toHaveBeenCalledTimes(1);
-    args = onClick.mock.calls[0][0];
+    args = onClick.mock.calls[0][0]; // eslint-disable-line prefer-destructuring
     expect(args.data).toMatchObject(mockData);
     expect(args.datum).toMatchObject(mockData[0]);
     expect(args.event).toBeDefined();
     expect(args.color).toBe('army-green');
   });
 
-  test('it should not trigger onMouseMove, onMouseLeave, or onClick if disableMouseEvents is true', () => {
+  it('it should not trigger onMouseMove, onMouseLeave, or onClick if disableMouseEvents is true', () => {
     const onMouseMove = jest.fn();
     const onMouseLeave = jest.fn();
     const onClick = jest.fn();
@@ -113,12 +113,12 @@ describe('<CirclePackSeries />', () => {
     expect(onClick).toHaveBeenCalledTimes(0);
   });
 
-  test('it should invoke layoutCallback if passed with y-range and -domain arguments', () => {
+  it('it should invoke layoutCallback if passed with y-range and -domain arguments', () => {
     jest.useFakeTimers();
     const layoutCallback = jest.fn();
 
     mount(
-      <XYChart {...mockProps} >
+      <XYChart {...mockProps}>
         <CirclePackSeries data={mockData} layoutCallback={layoutCallback} />
       </XYChart>,
     );

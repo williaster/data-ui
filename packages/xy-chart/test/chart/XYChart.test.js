@@ -22,59 +22,55 @@ describe('<XYChart />', () => {
     { date: new Date('2019-01-05'), cat: 'c', num: 377 },
   ];
 
-  test('it should be defined', () => {
+  it('it should be defined', () => {
     expect(XYChart).toBeDefined();
   });
 
-  test('xyChartPropTypes should be defined', () => {
+  it('xyChartPropTypes should be defined', () => {
     expect(xyChartPropTypes).toEqual(expect.any(Object));
   });
 
-  test('it should not render with invalid width or height', () => {
+  it('it should not render with invalid width or height', () => {
     const valid = shallow(<XYChart {...mockProps} />);
     const invalidWidth = shallow(<XYChart {...mockProps} width={0} />);
     const invalidHeight = shallow(<XYChart {...mockProps} height={0} />);
 
-    expect(valid.children().length).toBe(1);
-    expect(invalidWidth.children().length).toBe(0);
-    expect(invalidHeight.children().length).toBe(0);
+    expect(valid.children()).toHaveLength(1);
+    expect(invalidWidth.children()).toHaveLength(0);
+    expect(invalidHeight.children()).toHaveLength(0);
   });
 
-  test('it should render an svg with an aria label', () => {
+  it('it should render an svg with an aria label', () => {
     const wrapper = shallow(<XYChart {...mockProps} />);
     const svg = wrapper.find('svg');
-    expect(svg.length).toBe(1);
+    expect(svg).toHaveLength(1);
     expect(svg.prop('aria-label')).toBe(mockProps.ariaLabel);
   });
 
-  test('it should render a WithTooltip if renderTooltip is passed', () => {
-    let wrapper = shallow(
-      <XYChart {...mockProps} renderTooltip={null} />,
-    );
-    expect(wrapper.find(WithTooltip).length).toBe(0);
+  it('it should render a WithTooltip if renderTooltip is passed', () => {
+    let wrapper = shallow(<XYChart {...mockProps} renderTooltip={null} />);
+    expect(wrapper.find(WithTooltip)).toHaveLength(0);
 
-    wrapper = shallow(
-      <XYChart {...mockProps} renderTooltip={() => {}} />,
-    );
-    expect(wrapper.find(WithTooltip).length).toBe(1);
+    wrapper = shallow(<XYChart {...mockProps} renderTooltip={() => {}} />);
+    expect(wrapper.find(WithTooltip)).toHaveLength(1);
   });
 
-  test('it should render an offset <Group /> based on margin', () => {
+  it('it should render an offset <Group /> based on margin', () => {
     const wrapper = shallow(<XYChart {...mockProps} />);
     const group = wrapper.find(Group);
-    expect(group.length).toBe(1);
+    expect(group).toHaveLength(1);
     expect(group.prop('top')).toBe(mockProps.margin.top);
     expect(group.prop('left')).toBe(mockProps.margin.left);
   });
 
-  test('it should render a grid based on props', () => {
+  it('it should render a grid based on props', () => {
     let wrapper = shallow(<XYChart {...mockProps} />);
     let grid = wrapper.find(Grid);
-    expect(grid.length).toBe(0);
+    expect(grid).toHaveLength(0);
 
     wrapper = shallow(<XYChart {...mockProps} showYGrid />);
     grid = wrapper.find(Grid);
-    expect(grid.length).toBe(1);
+    expect(grid).toHaveLength(1);
     expect(grid.prop('numTicksColumns')).toBeFalsy();
     expect(grid.prop('numTicksRows')).toBeGreaterThan(0);
 
@@ -85,27 +81,24 @@ describe('<XYChart />', () => {
       </XYChart>,
     );
     grid = wrapper.find(Grid);
-    expect(grid.length).toBe(1);
+    expect(grid).toHaveLength(1);
     expect(grid.prop('numTicksRows')).toBe(16);
     expect(grid.prop('numTicksColumns')).toBe(13);
   });
 
-  test('it should pass scales to child series', () => {
+  it('it should pass scales to child series', () => {
     const wrapper = shallow(
       <XYChart {...mockProps}>
-        <LineSeries
-          label="label"
-          data={mockData.map(d => ({ ...d, x: d.date, y: d.num }))}
-        />
+        <LineSeries label="label" data={mockData.map(d => ({ ...d, x: d.date, y: d.num }))} />
       </XYChart>,
     );
     const series = wrapper.find(LineSeries);
-    expect(series.length).toBe(1);
+    expect(series).toHaveLength(1);
     expect(series.prop('xScale')).toBeDefined();
     expect(series.prop('yScale')).toBeDefined();
   });
 
-  test('it should compute time, linear, and band domains across all child series', () => {
+  it('it should compute time, linear, and band domains across all child series', () => {
     let wrapper = shallow(
       <XYChart {...mockProps}>
         <LineSeries
@@ -121,7 +114,7 @@ describe('<XYChart />', () => {
     let series = wrapper.find(LineSeries);
     let xScale = series.first().prop('xScale');
     let yScale = series.first().prop('yScale');
-    expect(series.length).toBe(2);
+    expect(series).toHaveLength(2);
     expect(xScale.domain()).toEqual([mockData[0].date, mockData[2].date]);
     expect(yScale.domain()).toEqual([mockData[0].num, mockData[2].num]);
 
@@ -144,7 +137,7 @@ describe('<XYChart />', () => {
     expect(yScale.domain()).toEqual([mockData[0].num, mockData[2].num]);
   });
 
-  test('it should include zero in linear domains based on props', () => {
+  it('it should include zero in linear domains based on props', () => {
     let wrapper = shallow(
       <XYChart {...mockProps} yScale={{ type: 'linear', includeZero: true }}>
         <LineSeries label="l" data={mockData.map(d => ({ ...d, x: d.date, y: d.num }))} />
@@ -153,7 +146,7 @@ describe('<XYChart />', () => {
     let series = wrapper.find(LineSeries);
     let xScale = series.first().prop('xScale');
     let yScale = series.first().prop('yScale');
-    expect(series.length).toBe(1);
+    expect(series).toHaveLength(1);
     expect(xScale.domain()).toEqual([mockData[0].date, mockData[2].date]);
     expect(yScale.domain()).toEqual([0, mockData[2].num]);
 
@@ -169,7 +162,7 @@ describe('<XYChart />', () => {
     expect(yScale.domain()).toEqual([-mockData[2].num, 0]);
   });
 
-  test('it should call the eventTriggerRefs callback on mount', () => {
+  it('it should call the eventTriggerRefs callback on mount', () => {
     expect.assertions(4);
 
     function eventTriggerRefs(refs) {
@@ -182,7 +175,7 @@ describe('<XYChart />', () => {
     mount(<XYChart {...mockProps} eventTriggerRefs={eventTriggerRefs} />);
   });
 
-  test('it should set the passed innerRef callback on the svg', () => {
+  it('it should set the passed innerRef callback on the svg', () => {
     expect.assertions(1);
 
     function innerRef(ref) {
@@ -192,7 +185,7 @@ describe('<XYChart />', () => {
     mount(<XYChart {...mockProps} innerRef={innerRef} />);
   });
 
-  test('calls to eventTriggerRefs should invoke the corresponding event handlers passed to XYChart', () => {
+  it('calls to eventTriggerRefs should invoke the corresponding event handlers passed to XYChart', () => {
     const onMouseMove = jest.fn();
     const onMouseLeave = jest.fn();
     const onClick = jest.fn();
@@ -224,33 +217,27 @@ describe('<XYChart />', () => {
     expect(onClick.mock.calls[0][0]).toMatchObject(callbackArgs);
   });
 
-  test('it should render a Voronoi if eventTrigger="voronoi"', () => {
+  it('it should render a Voronoi if eventTrigger="voronoi"', () => {
     const wrapper = shallow(
       <XYChart {...mockProps} eventTrigger="voronoi">
-        <LineSeries
-          label="label"
-          data={mockData.map(d => ({ ...d, x: d.date, y: d.num }))}
-        />
+        <LineSeries label="label" data={mockData.map(d => ({ ...d, x: d.date, y: d.num }))} />
       </XYChart>,
     );
 
-    expect(wrapper.find(Voronoi).length).toBe(1);
+    expect(wrapper.find(Voronoi)).toHaveLength(1);
   });
 
-  test('it should render a rect to intercept events if eventTrigger="container"', () => {
+  it('it should render a rect to intercept events if eventTrigger="container"', () => {
     const wrapper = shallow(
       <XYChart {...mockProps} eventTrigger="container">
-        <LineSeries
-          label="label"
-          data={mockData.map(d => ({ ...d, x: d.date, y: d.num }))}
-        />
+        <LineSeries label="label" data={mockData.map(d => ({ ...d, x: d.date, y: d.num }))} />
       </XYChart>,
     );
 
-    expect(wrapper.find('rect').length).toBe(1);
+    expect(wrapper.find('rect')).toHaveLength(1);
   });
 
-  test('it should pass appropriate coords in mouse event handlers if snapTooltipToDataX or snapTooltipToDataY is true', () => {
+  it('it should pass appropriate coords in mouse event handlers if snapTooltipToDataX or snapTooltipToDataY is true', () => {
     const onMouseMove = jest.fn();
     const onClick = jest.fn();
     const data = mockData.map(d => ({ x: d.date, y: d.num }));

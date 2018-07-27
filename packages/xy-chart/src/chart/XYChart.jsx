@@ -20,20 +20,24 @@ import {
   numTicksForWidth,
   numTicksForHeight,
   propOrFallback,
+  DEFAULT_CHART_MARGIN,
 } from '../utils/chartUtils';
 
 import collectScalesFromProps from '../utils/collectScalesFromProps';
 import getChartDimensions from '../utils/getChartDimensions';
+
 import { scaleShape, themeShape } from '../utils/propShapes';
 
 export const CONTAINER_TRIGGER = 'container';
 export const SERIES_TRIGGER = 'series';
 export const VORONOI_TRIGGER = 'voronoi';
+const Y_LABEL_OFFSET = 0.7;
 
 export const propTypes = {
   ...withTooltipPropTypes,
   ariaLabel: PropTypes.string.isRequired,
   children: PropTypes.node,
+  disableMouseEvents: PropTypes.bool,
   eventTrigger: PropTypes.oneOf([CONTAINER_TRIGGER, SERIES_TRIGGER, VORONOI_TRIGGER]),
   eventTriggerRefs: PropTypes.func,
   height: PropTypes.number.isRequired,
@@ -62,19 +66,13 @@ export const defaultProps = {
   eventTrigger: SERIES_TRIGGER,
   eventTriggerRefs: null,
   innerRef: null,
-  margin: {
-    top: 64,
-    right: 64,
-    bottom: 64,
-    left: 64,
-  },
+  margin: DEFAULT_CHART_MARGIN,
   renderTooltip: null,
   showVoronoi: false,
   showXGrid: false,
   showYGrid: false,
   snapTooltipToDataX: false,
   snapTooltipToDataY: false,
-  styles: null,
   theme: {},
 };
 
@@ -83,23 +81,6 @@ const getX = d => d && d.x;
 const getY = d => d && d.y;
 
 class XYChart extends React.PureComponent {
-  static getStateFromProps(props) {
-    const { margin, innerWidth, innerHeight } = getChartDimensions(props);
-    const { xScale, yScale } = collectScalesFromProps(props);
-    const voronoiData = collectVoronoiData({ children: props.children, getX, getY });
-
-    return {
-      innerHeight,
-      innerWidth,
-      margin,
-      xScale,
-      yScale,
-      voronoiData,
-      voronoiX: d => xScale(getX(d)),
-      voronoiY: d => yScale(getY(d)),
-    };
-  }
-
   constructor(props) {
     super(props);
     // if renderTooltip is passed we return another XYChart wrapped in WithTooltip
@@ -114,8 +95,9 @@ class XYChart extends React.PureComponent {
   }
 
   componentDidMount() {
-    if (!this.props.renderTooltip && this.props.eventTriggerRefs) {
-      this.props.eventTriggerRefs({
+    const { renderTooltip, eventTriggerRefs } = this.props;
+    if (!renderTooltip && eventTriggerRefs) {
+      eventTriggerRefs({
         mousemove: this.handleMouseMove,
         mouseleave: this.handleMouseLeave,
         click: this.handleClick,
@@ -125,11 +107,13 @@ class XYChart extends React.PureComponent {
 
   componentWillReceiveProps(nextProps) {
     let shouldComputeScales = false;
+    // eslint-disable-next-line react/destructuring-assignment
     if (['width', 'height', 'children'].some(prop => this.props[prop] !== nextProps[prop])) {
       shouldComputeScales = true;
     }
     if (
       ['margin', 'xScale', 'yScale'].some(
+        // eslint-disable-next-line react/destructuring-assignment
         prop => !shallowCompareObjectEntries(this.props[prop], nextProps[prop]),
       )
     ) {
@@ -138,9 +122,32 @@ class XYChart extends React.PureComponent {
     if (shouldComputeScales) this.setState(XYChart.getStateFromProps(nextProps));
   }
 
+  static getStateFromProps(props) {
+    const { margin, innerWidth, innerHeight } = getChartDimensions(props);
+    const { xScale, yScale } = collectScalesFromProps(props);
+    const voronoiData = collectVoronoiData({
+      children: props.children,
+      getX,
+      getY,
+    });
+
+    return {
+      innerHeight,
+      innerWidth,
+      margin,
+      xScale,
+      yScale,
+      voronoiData,
+      voronoiX: d => xScale(getX(d)),
+      voronoiY: d => yScale(getY(d)),
+    };
+  }
+
   getNumTicks(innerWidth, innerHeight) {
-    const xAxis = getChildWithName('XAxis', this.props.children);
-    const yAxis = getChildWithName('YAxis', this.props.children);
+    const { children } = this.props;
+    const xAxis = getChildWithName('XAxis', children);
+    const yAxis = getChildWithName('YAxis', children);
+
     return {
       numXTicks: propOrFallback(xAxis && xAxis.props, 'numTicks', numTicksForWidth(innerWidth)),
       numYTicks: propOrFallback(yAxis && yAxis.props, 'numTicks', numTicksForHeight(innerHeight)),
@@ -153,6 +160,7 @@ class XYChart extends React.PureComponent {
     // tooltip operates in full width/height space so we must account for margins
     if (datum) coords.x = xScale(getX(datum)) + margin.left;
     if (datum) coords.y = yScale(getY(datum)) + margin.top;
+
     return coords;
   }
 
@@ -176,12 +184,12 @@ class XYChart extends React.PureComponent {
   }
 
   handleMouseMove(args) {
-    const { snapTooltipToDataX, snapTooltipToDataY } = this.props;
+    const { snapTooltipToDataX, snapTooltipToDataY, onMouseMove } = this.props;
     const isFocusEvent = args.event && args.event.type === 'focus';
 
-    if (this.props.onMouseMove) {
+    if (onMouseMove) {
       const { x, y } = this.getDatumCoords(args.datum);
-      this.props.onMouseMove({
+      onMouseMove({
         ...args,
         coords: {
           ...((isFocusEvent || snapTooltipToDataX) && { x }),
@@ -193,15 +201,16 @@ class XYChart extends React.PureComponent {
   }
 
   handleMouseLeave(args) {
-    if (this.props.onMouseLeave) this.props.onMouseLeave(args);
+    const { onMouseLeave } = this.props;
+    if (onMouseLeave) onMouseLeave(args);
   }
 
   handleClick(args) {
-    const { snapTooltipToDataX, snapTooltipToDataY } = this.props;
-    const coords = this.getDatumCoords(args.datum);
+    const { snapTooltipToDataX, snapTooltipToDataY, onClick } = this.props;
 
-    if (this.props.onClick) {
-      this.props.onClick({
+    if (onClick) {
+      const coords = this.getDatumCoords(args.datum);
+      onClick({
         ...args,
         coords: {
           x: snapTooltipToDataX ? coords.x : undefined,
@@ -213,9 +222,10 @@ class XYChart extends React.PureComponent {
   }
 
   render() {
-    if (this.props.renderTooltip) {
+    const { renderTooltip } = this.props;
+    if (renderTooltip) {
       return (
-        <WithTooltip renderTooltip={this.props.renderTooltip}>
+        <WithTooltip renderTooltip={renderTooltip}>
           <XYChart {...this.props} renderTooltip={null} />
         </WithTooltip>
       );
@@ -269,19 +279,27 @@ class XYChart extends React.PureComponent {
                 />
               )}
 
-            {React.Children.map(children, (Child) => {
+            {React.Children.map(children, Child => {
               const name = componentName(Child);
               if (isAxis(name)) {
                 const styleKey = name[0].toLowerCase();
+
                 return React.cloneElement(Child, {
                   innerHeight,
                   innerWidth,
-                  labelOffset: name === 'YAxis' ? 0.7 * margin[Child.props.orientation] : 0,
+                  labelOffset:
+                    name === 'YAxis' ? Y_LABEL_OFFSET * margin[Child.props.orientation] : 0,
                   numTicks: name === 'XAxis' ? numXTicks : numYTicks,
                   scale: name === 'XAxis' ? xScale : yScale,
                   rangePadding: name === 'XAxis' ? xScale.offset : null,
-                  axisStyles: { ...theme[`${styleKey}AxisStyles`], ...Child.props.axisStyles },
-                  tickStyles: { ...theme[`${styleKey}TickStyles`], ...Child.props.tickStyles },
+                  axisStyles: {
+                    ...theme[`${styleKey}AxisStyles`],
+                    ...Child.props.axisStyles,
+                  },
+                  tickStyles: {
+                    ...theme[`${styleKey}TickStyles`],
+                    ...Child.props.tickStyles,
+                  },
                 });
               } else if (isSeries(name)) {
                 return React.cloneElement(Child, {
@@ -300,10 +318,12 @@ class XYChart extends React.PureComponent {
                 });
               } else if (isCrossHair(name)) {
                 CrossHairs.push(Child);
+
                 return null;
               } else if (isReferenceLine(name)) {
                 return React.cloneElement(Child, { xScale, yScale });
               }
+
               return Child;
             })}
 

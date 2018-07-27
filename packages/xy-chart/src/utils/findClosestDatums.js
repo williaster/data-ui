@@ -2,7 +2,9 @@ import { Children } from 'react';
 import localPoint from '@vx/event/build/localPoint';
 
 import findClosestDatum from './findClosestDatum';
-import { componentName, isSeries } from '../utils/chartUtils';
+import { componentName, isSeries } from './chartUtils';
+
+const DEFAULT_MAX_DISTANCE_PX = 1000;
 
 export default function findClosestDatums({
   children,
@@ -11,7 +13,7 @@ export default function findClosestDatums({
   getX,
   getY,
   event,
-  maxXDistancePx = 1000,
+  maxXDistancePx = DEFAULT_MAX_DISTANCE_PX,
 }) {
   if (!event || !event.target || !event.target.ownerSVGElement) return null;
   const series = {};

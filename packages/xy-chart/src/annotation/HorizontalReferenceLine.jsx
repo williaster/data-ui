@@ -18,7 +18,7 @@ export const defaultLabelProps = {
 
 export const propTypes = {
   label: PropTypes.node,
-  labelProps: PropTypes.object,
+  labelProps: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.number, PropTypes.string])),
   reference: PropTypes.number.isRequired,
   stroke: PropTypes.string,
   strokeDasharray: PropTypes.string,
@@ -55,6 +55,7 @@ function HorizontalReferenceLine({
   const scaledRef = yScale(reference);
   const fromPoint = new Point({ x: x0, y: scaledRef });
   const toPoint = new Point({ x: x1, y: scaledRef });
+
   return (
     <Group>
       <Line
@@ -66,7 +67,11 @@ function HorizontalReferenceLine({
         strokeWidth={strokeWidth}
         vectorEffect="non-scaling-stroke"
       />
-      {Boolean(label) && <text y={scaledRef} x={0} dy="-0.4em" {...labelProps}>{label}</text>}
+      {Boolean(label) && (
+        <text y={scaledRef} x={0} dy="-0.4em" {...labelProps}>
+          {label}
+        </text>
+      )}
     </Group>
   );
 }

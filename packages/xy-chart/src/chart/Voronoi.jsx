@@ -7,7 +7,7 @@ import voronoiLayout from '@vx/voronoi/build/voronoi';
 import VoronoiPolygon from '@vx/voronoi/build/components/VoronoiPolygon';
 
 const propTypes = {
-  data: PropTypes.array.isRequired,
+  data: PropTypes.arrayOf(PropTypes.object).isRequired,
   onClick: PropTypes.func,
   onMouseMove: PropTypes.func,
   onMouseLeave: PropTypes.func,
@@ -26,27 +26,28 @@ const defaultProps = {
 };
 
 class Voronoi extends React.PureComponent {
-  static getVoronoi(props) {
-    const { x, y, data, width, height } = props;
-    return voronoiLayout({ x, y, width, height })(data);
-  }
-
   constructor(props) {
     super(props);
     this.state = { voronoi: Voronoi.getVoronoi(props) };
   }
 
   componentWillReceiveProps(nextProps) {
-    if (['data', 'x', 'y', 'width', 'height'].some(prop => (
-      this.props[prop] !== nextProps[prop]
-    ))) {
+    // eslint-disable-next-line react/destructuring-assignment
+    if (['data', 'x', 'y', 'width', 'height'].some(prop => this.props[prop] !== nextProps[prop])) {
       this.setState({ voronoi: Voronoi.getVoronoi(nextProps) });
     }
+  }
+
+  static getVoronoi(props) {
+    const { x, y, data, width, height } = props;
+
+    return voronoiLayout({ x, y, width, height })(data);
   }
 
   render() {
     const { onMouseLeave, onMouseMove, onClick, showVoronoi } = this.props;
     const { voronoi } = this.state;
+
     return (
       <Group>
         {voronoi.polygons().map((polygon, i) => (
@@ -56,12 +57,18 @@ class Voronoi extends React.PureComponent {
             fill="transparent"
             stroke={showVoronoi ? '#ddd' : 'transparent'}
             strokeWidth={1}
-            onClick={onClick && (() => (event) => {
-              onClick({ event, datum: polygon.data });
-            })}
-            onMouseMove={onMouseMove && (() => (event) => {
-              onMouseMove({ event, datum: polygon.data });
-            })}
+            onClick={
+              onClick &&
+              (() => event => {
+                onClick({ event, datum: polygon.data });
+              })
+            }
+            onMouseMove={
+              onMouseMove &&
+              (() => event => {
+                onMouseMove({ event, datum: polygon.data });
+              })
+            }
             onMouseLeave={onMouseLeave && (() => onMouseLeave)}
           />
         ))}

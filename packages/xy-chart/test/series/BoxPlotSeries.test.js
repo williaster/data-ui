@@ -3,7 +3,7 @@ import { shallow } from 'enzyme';
 import BoxPlot from '@vx/stats/build/boxplot/BoxPlot';
 import { FocusBlurHandler } from '@data-ui/shared';
 
-import { XYChart, BoxPlotSeries, computeStats } from '../../src/';
+import { XYChart, BoxPlotSeries, computeStats } from '../../src';
 
 describe('<BoxPlotSeries />', () => {
   const mockData = [1, 2, 3, 4, 5, 5, 5, 5, 5, 6, 9, 5, 1];
@@ -20,25 +20,31 @@ describe('<BoxPlotSeries />', () => {
     data: [{ x: 'label1', ...mockStats.boxPlot }],
   };
 
-  test('it should be defined', () => {
+  it('it should be defined', () => {
     expect(BoxPlotSeries).toBeDefined();
   });
 
-  test('it should not render without x- and y-scales', () => {
+  it('it should not render without x- and y-scales', () => {
     expect(shallow(<BoxPlotSeries data={[]} />).type()).toBeNull();
   });
 
-  test('it should render one boxplot per datum', () => {
+  it('it should render one boxplot per datum', () => {
     const wrapper = shallow(
-      <XYChart {...mockProps} >
+      <XYChart {...mockProps}>
         <BoxPlotSeries {...boxplotProps} />
       </XYChart>,
     );
-    expect(wrapper.find(BoxPlotSeries).length).toBe(1);
-    expect(wrapper.find(BoxPlotSeries).first().dive().find(BoxPlot).length).toBe(1);
+    expect(wrapper.find(BoxPlotSeries)).toHaveLength(1);
+    expect(
+      wrapper
+        .find(BoxPlotSeries)
+        .first()
+        .dive()
+        .find(BoxPlot),
+    ).toHaveLength(1);
   });
 
-  test('it should pass containerProps, outlierProps, boxProps, minProps, maxProps, and medianProps to BoxPlot', () => {
+  it('it should pass containerProps, outlierProps, boxProps, minProps, maxProps, and medianProps to BoxPlot', () => {
     const extraBoxplotProps = {
       containerProps: {
         fill: 'pink',
@@ -60,26 +66,27 @@ describe('<BoxPlotSeries />', () => {
       },
     };
     const wrapper = shallow(
-      <XYChart {...mockProps} >
-        <BoxPlotSeries
-          {...boxplotProps}
-          {...extraBoxplotProps}
-        />
+      <XYChart {...mockProps}>
+        <BoxPlotSeries {...boxplotProps} {...extraBoxplotProps} />
       </XYChart>,
     );
 
-    const boxplot = wrapper.find(BoxPlotSeries).first().dive().find(BoxPlot);
+    const boxplot = wrapper
+      .find(BoxPlotSeries)
+      .first()
+      .dive()
+      .find(BoxPlot);
 
     const propsToCheck = Object.keys(extraBoxplotProps);
     const assertions = propsToCheck.length;
 
     expect.assertions(assertions);
-    propsToCheck.forEach((prop) => {
+    propsToCheck.forEach(prop => {
       expect(boxplot.prop(prop)).toMatchObject(extraBoxplotProps[prop]);
     });
   });
 
-  test('it should call onMouseMove({ datum, data, event, index }), onMouseLeave(), and onClick({ datum, data, event, index }) on trigger when disableMouseEvents is falsy', () => {
+  it('it should call onMouseMove({ datum, data, event, index }), onMouseLeave(), and onClick({ datum, data, event, index }) on trigger when disableMouseEvents is falsy', () => {
     const onMouseMove = jest.fn();
     const onMouseLeave = jest.fn();
     const onClick = jest.fn();
@@ -95,8 +102,11 @@ describe('<BoxPlotSeries />', () => {
       </XYChart>,
     );
 
-    let boxplot = wrapper.find(BoxPlotSeries).dive()
-      .find(BoxPlot).dive()
+    let boxplot = wrapper
+      .find(BoxPlotSeries)
+      .dive()
+      .find(BoxPlot)
+      .dive()
       .find('rect')
       .last();
 
@@ -113,7 +123,7 @@ describe('<BoxPlotSeries />', () => {
 
     boxplot.simulate('click', {});
     expect(onClick).toHaveBeenCalledTimes(1);
-    args = onClick.mock.calls[0][0];
+    args = onClick.mock.calls[0][0]; // eslint-disable-line prefer-destructuring
     expect(args.data).toBe(boxplotProps.data);
     expect(args.datum).toBe(boxplotProps.data[0]);
     expect(args.event).toBeDefined();
@@ -131,8 +141,11 @@ describe('<BoxPlotSeries />', () => {
       </XYChart>,
     );
 
-    boxplot = wrapper.find(BoxPlotSeries).dive()
-      .find(BoxPlot).dive()
+    boxplot = wrapper
+      .find(BoxPlotSeries)
+      .dive()
+      .find(BoxPlot)
+      .dive()
       .find('rect')
       .last();
 
@@ -146,7 +159,7 @@ describe('<BoxPlotSeries />', () => {
     expect(onClick).toHaveBeenCalledTimes(1);
   });
 
-  test('it should render a FocusBlurHandler for each point', () => {
+  it('it should render a FocusBlurHandler for each point', () => {
     const wrapper = shallow(
       <XYChart {...mockProps}>
         <BoxPlotSeries {...boxplotProps} />
@@ -157,7 +170,7 @@ describe('<BoxPlotSeries />', () => {
     expect(boxes.find(FocusBlurHandler)).toHaveLength(boxplotProps.data.length);
   });
 
-  test('it should invoke onMouseMove when focused', () => {
+  it('it should invoke onMouseMove when focused', () => {
     const onMouseMove = jest.fn();
 
     const wrapper = shallow(
@@ -166,12 +179,16 @@ describe('<BoxPlotSeries />', () => {
       </XYChart>,
     );
 
-    const firstBox = wrapper.find(BoxPlotSeries).dive().find(FocusBlurHandler).first();
+    const firstBox = wrapper
+      .find(BoxPlotSeries)
+      .dive()
+      .find(FocusBlurHandler)
+      .first();
     firstBox.simulate('focus');
     expect(onMouseMove).toHaveBeenCalledTimes(1);
   });
 
-  test('it should invoke onMouseLeave when blured', () => {
+  it('it should invoke onMouseLeave when blured', () => {
     const onMouseLeave = jest.fn();
 
     const wrapper = shallow(
@@ -180,7 +197,11 @@ describe('<BoxPlotSeries />', () => {
       </XYChart>,
     );
 
-    const firstBox = wrapper.find(BoxPlotSeries).dive().find(FocusBlurHandler).first();
+    const firstBox = wrapper
+      .find(BoxPlotSeries)
+      .dive()
+      .find(FocusBlurHandler)
+      .first();
     firstBox.simulate('blur');
     expect(onMouseLeave).toHaveBeenCalledTimes(1);
   });
