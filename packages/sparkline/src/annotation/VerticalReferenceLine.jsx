@@ -1,3 +1,4 @@
+/* eslint complexity: ['error', 12] */
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -7,18 +8,15 @@ import Point from '@vx/point/build/Point';
 import color from '@data-ui/theme/build/color';
 import svgLabel from '@data-ui/theme/build/svgLabel';
 
-import Label from '../annotation/Label';
+import Label from './Label';
 import positionLabel from '../utils/positionLabel';
+
+const ZERO_DELTA = 0.00001;
 
 export const propTypes = {
   reference: PropTypes.oneOfType([
     PropTypes.number,
-    PropTypes.oneOf([
-      'first',
-      'last',
-      'min',
-      'max',
-    ]),
+    PropTypes.oneOf(['first', 'last', 'min', 'max']),
   ]),
   LabelComponent: PropTypes.element,
   labelOffset: PropTypes.number,
@@ -30,7 +28,7 @@ export const propTypes = {
   strokeWidth: PropTypes.number,
 
   // all likely passed by the parent chart
-  data: PropTypes.array,
+  data: PropTypes.arrayOf(PropTypes.number),
   getX: PropTypes.func,
   getY: PropTypes.func,
   xScale: PropTypes.func,
@@ -79,12 +77,13 @@ class VerticalReferenceLine extends React.PureComponent {
     // use a number if passed, else find the index based on the ref type
     let index = reference;
     if (typeof reference !== 'number') {
-      index = data.findIndex((d, i) => (
-        (reference === 'first' && i === 0)
-        || (reference === 'last' && i === data.length - 1)
-        || (reference === 'min' && Math.abs(getY(d) - yMin) < 0.00001)
-        || (reference === 'max' && Math.abs(getY(d) - yMax) < 0.00001)
-      ));
+      index = data.findIndex(
+        (d, i) =>
+          (reference === 'first' && i === 0) ||
+          (reference === 'last' && i === data.length - 1) ||
+          (reference === 'min' && Math.abs(getY(d) - yMin) < ZERO_DELTA) ||
+          (reference === 'max' && Math.abs(getY(d) - yMax) < ZERO_DELTA),
+      );
     }
     const datum = data[index];
     // use passed value if no datum, this enables custom x values
@@ -105,12 +104,13 @@ class VerticalReferenceLine extends React.PureComponent {
           strokeWidth={strokeWidth}
           vectorEffect="non-scaling-stroke"
         />
-        {label && React.cloneElement(LabelComponent, {
-          x: toPoint.x,
-          y: toPoint.y,
-          ...positionLabel(labelPosition, labelOffset),
-          label,
-        })}
+        {label &&
+          React.cloneElement(LabelComponent, {
+            x: toPoint.x,
+            y: toPoint.y,
+            ...positionLabel(labelPosition, labelOffset),
+            label,
+          })}
       </Group>
     );
   }

@@ -14,10 +14,10 @@
     "build:esm": "beemo babel ./src --esm --out-dir esm/",
     "build": "npm run build:cjs && npm run build:esm",
     "jest": "beemo jest --verbose --coverage --color",
-    "lint": "beemo eslint .",
+    "lint": "beemo eslint \"./{src,test}/**/*.{js,jsx,json,md}\"",
     "posttest": "npm run lint",
     "test": "npm run jest",
-    "prettier": "beemo prettier \"./{src,tests}/**/*.{js,jsx,json,md}\" --write",
+    "prettier": "beemo prettier \"./{src,test}/**/*.{js,jsx,json,md}\" --write",
     "sync:gitignore": "beemo sync-dotfiles --filter=gitignore"
   },
   "repository": {
@@ -43,7 +43,7 @@
   "devDependencies": {
     "@beemo/cli": "^0.19.0",
     "@beemo/core": "^0.19.2",
-    "@data-ui/build-config": "^0.0.2",
+    "@data-ui/build-config": "^0.0.4",
     "react": "^16.0.0",
     "react-dom": "^16.0.0"
   },
@@ -73,6 +73,11 @@
     "drivers": [
       "prettier",
       "eslint"
-    ]
+    ],
+    "eslint": {
+      "rules": {
+        "sort-keys": "off"
+      }
+    }
   }
 }

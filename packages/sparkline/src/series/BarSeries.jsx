@@ -26,7 +26,7 @@ export const propTypes = {
   strokeWidth: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
 
   // all likely passed by the parent chart
-  data: PropTypes.array,
+  data: PropTypes.arrayOf(PropTypes.number),
   getX: PropTypes.func,
   getY: PropTypes.func,
   xScale: PropTypes.func,
@@ -72,9 +72,10 @@ class BarSeries extends React.PureComponent {
     } = this.props;
 
     if (!xScale || !yScale || !getX || !getY || !data.length) return null;
-    const barWidth = Math.max(1, (Math.max(...xScale.range()) / data.length) - 1);
+    const barWidth = Math.max(1, Math.max(...xScale.range()) / data.length - 1);
     const maxBarHeight = Math.max(...yScale.range());
     const labels = []; // render labels as top-most layer
+
     return (
       <Group>
         {data.map((d, i) => {
@@ -93,28 +94,28 @@ class BarSeries extends React.PureComponent {
               ...positionLabel(callOrValue(labelPosition, yVal, i), labelOffset),
             });
           }
+
           return (
             <Bar
               key={key}
-              x={x - (barWidth / 2)}
+              x={x - barWidth / 2}
               y={y}
               width={barWidth}
               height={maxBarHeight - y}
               fill={fillValue}
-              fillOpacity={
-                callOrValue(
-                  typeof d.fillOpacity !== 'undefined'
-                    ? d.fillOpacity
-                    : fillOpacity,
-                  yVal,
-                  i,
-                )
-              }
+              fillOpacity={callOrValue(
+                typeof d.fillOpacity === 'undefined' ? fillOpacity : d.fillOpacity,
+                yVal,
+                i,
+              )}
               stroke={callOrValue(d.stroke || stroke, yVal, i)}
               strokeWidth={callOrValue(d.strokeWidth || strokeWidth, yVal, i)}
-              onMouseMove={onMouseMove && (() => (event) => {
-                onMouseMove({ event, data, datum: d, index: i, color: fillValue });
-              })}
+              onMouseMove={
+                onMouseMove &&
+                (() => event => {
+                  onMouseMove({ event, data, datum: d, index: i, color: fillValue });
+                })
+              }
               onMouseLeave={onMouseLeave && (() => onMouseLeave)}
             />
           );

@@ -14,7 +14,7 @@ const propTypes = {
   ariaLabel: PropTypes.string.isRequired,
   children: PropTypes.node.isRequired,
   className: PropTypes.string,
-  data: PropTypes.array,
+  data: PropTypes.arrayOf(PropTypes.number),
   height: PropTypes.number.isRequired,
   margin: PropTypes.shape({
     top: PropTypes.number,
@@ -27,7 +27,7 @@ const propTypes = {
   onMouseMove: PropTypes.func,
   onMouseLeave: PropTypes.func,
   preserveAspectRatio: PropTypes.string,
-  styles: PropTypes.object,
+  styles: PropTypes.object, // eslint-disable-line react/forbid-prop-types
   width: PropTypes.number.isRequired,
   valueAccessor: PropTypes.func,
   viewBox: PropTypes.string,
@@ -57,6 +57,7 @@ const getY = d => d.y;
 
 const parsedDatumThunk = valueAccessor => (d, i) => {
   const y = valueAccessor(d);
+
   return { i, y, id: y, ...d };
 };
 
@@ -68,15 +69,18 @@ class Sparkline extends React.PureComponent {
   }
 
   componentWillReceiveProps(nextProps) {
-    if ([ // recompute scales if any of the following change
-      'data',
-      'height',
-      'margin',
-      'max',
-      'min',
-      'valueAccessor',
-      'width',
-    ].some(prop => this.props[prop] !== nextProps[prop])) {
+    if (
+      [
+        // recompute scales if any of the following change
+        'data',
+        'height',
+        'margin',
+        'max',
+        'min',
+        'valueAccessor',
+        'width',
+      ].some(prop => this.props[prop] !== nextProps[prop]) // eslint-disable-line react/destructuring-assignment
+    ) {
       this.setState(this.getStateFromProps(nextProps));
     }
   }
@@ -100,22 +104,23 @@ class Sparkline extends React.PureComponent {
       range: [0, innerWidth],
     });
     const yScale = scaleLinear({
-      domain: [
-        isDefined(min) ? min : yExtent[0],
-        isDefined(max) ? max : yExtent[1],
-      ],
+      domain: [isDefined(min) ? min : yExtent[0], isDefined(max) ? max : yExtent[1]],
       range: [innerHeight, 0],
     });
+
     return { xScale, yScale, data };
   }
 
   getMaxY() {
-    return Math.max(...this.state.yScale.domain());
+    const { yScale } = this.state;
+
+    return Math.max(...yScale.domain());
   }
 
   getDimmensions(props) {
     const { margin, width, height } = props || this.props;
     const completeMargin = { ...defaultProps.margin, ...margin };
+
     return {
       margin: completeMargin,
       innerHeight: height - completeMargin.top - completeMargin.bottom,
@@ -159,19 +164,18 @@ class Sparkline extends React.PureComponent {
         viewBox={viewBox}
       >
         <Group left={margin.left} top={margin.top}>
-          {React.Children.map(children, (Child) => {
+          {React.Children.map(children, Child => {
             const name = componentName(Child);
             if (isSeries(name) || isReferenceLine(name) || isBandLine(name)) {
-              return (
-                React.cloneElement(Child, seriesProps)
-              );
+              return React.cloneElement(Child, seriesProps);
             }
+
             return Child;
           })}
 
           {/* intercept Sparkline-level mouse events with Bars
               note: this allows event listeners to be overridden on Series-level components */}
-          {(onMouseMove || onMouseLeave) &&
+          {(onMouseMove || onMouseLeave) && (
             <BarSeries
               fill="transparent"
               fillOpacity={0}
@@ -181,7 +185,8 @@ class Sparkline extends React.PureComponent {
               getY={this.getMaxY}
               onMouseMove={onMouseMove}
               onMouseLeave={onMouseLeave}
-            />}
+            />
+          )}
         </Group>
       </svg>
     );
