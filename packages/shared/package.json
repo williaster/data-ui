@@ -2,14 +2,23 @@
   "name": "@data-ui/shared",
   "version": "0.0.59",
   "description": "Shared @data-ui components used across multiple packages",
-  "main": "build/index.js",
+  "sideEffects": false,
+  "main": "lib/index.js",
+  "module": "esm/index.js",
   "files": [
-    "build"
+    "esm",
+    "lib"
   ],
   "scripts": {
-    "build": "make build SRC=./src",
-    "prepublish": "make build SRC=./src",
-    "test": "jest --verbose --coverage --color"
+    "build:cjs": "beemo babel ./src --out-dir lib/ --react --minify",
+    "build:esm": "beemo babel ./src --out-dir esm/ --react --esm --minify",
+    "build": "npm run build:cjs && npm run build:esm",
+    "jest": "beemo jest --react --color",
+    "lint": "beemo eslint \"./{src,test}/**/*.{js,jsx,json,md}\"",
+    "posttest": "npm run lint",
+    "test": "npm run jest",
+    "prettier": "beemo prettier \"./{src,test}/**/*.{js,jsx,json,md}\" --write",
+    "sync:gitignore": "beemo sync-dotfiles --filter=gitignore"
   },
   "repository": {
     "type": "git",
@@ -31,20 +40,13 @@
   },
   "homepage": "https://github.com/williaster/data-ui#readme",
   "devDependencies": {
-    "babel-jest": "^20.0.3",
-    "babel-polyfill": "^6.23.0",
-    "enzyme": "^3.1.0",
-    "enzyme-adapter-react-16": "^1.0.0",
-    "jest": "^20.0.3",
+    "@data-ui/build-config": "^0.0.7",
     "react": "^16.0.0",
-    "react-dom": "^16.0.0",
-    "react-fatigue-dev": "github:tj/react-fatigue-dev",
-    "react-test-renderer": "^16.0.0",
-    "react-tools": "^0.10.0",
-    "regenerator-runtime": "^0.10.5"
+    "react-dom": "^16.0.0"
   },
   "peerDependencies": {
-    "react": "^15.0.0-0 || ^16.0.0-0"
+    "react": "^15.0.0-0 || ^16.0.0-0",
+    "react-dom": "^15.0.0-0 || ^16.0.0-0"
   },
   "dependencies": {
     "@data-ui/theme": "0.0.59",
@@ -52,13 +54,26 @@
     "@vx/group": "^0.0.165",
     "@vx/shape": "^0.0.168",
     "@vx/tooltip": "0.0.165",
+    "babel-runtime": "^6.26.0",
     "d3-array": "^1.2.1",
     "prop-types": "^15.5.10"
   },
-  "jest": {
-    "setupFiles": [
-      "<rootDir>/test/shim.js",
-      "<rootDir>/test/setup.js"
-    ]
+  "engines": {
+    "node": ">=8.10.0"
+  },
+  "beemo": {
+    "module": "@data-ui/build-config",
+    "drivers": [
+      "prettier",
+      "eslint",
+      "babel",
+      "jest"
+    ],
+    "eslint": {
+      "rules": {
+        "sort-keys": "off",
+        "react/jsx-no-literals": "off"
+      }
+    }
   }
 }

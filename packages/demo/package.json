@@ -1,6 +1,6 @@
 {
   "name": "@data-ui/demo",
-  "version": "0.0.60-alpha.1.0",
+  "version": "0.0.60-alpha.2.0",
   "description": "data-ui demo",
   "scripts": {
     "gh-pages:clean": "rm -rf _gh-pages && lerna run dev:nowatch",
@@ -24,11 +24,11 @@
     "@data-ui/event-flow": "0.0.59",
     "@data-ui/forms": "0.0.50",
     "@data-ui/histogram": "0.0.59",
-    "@data-ui/network": "0.0.59",
+    "@data-ui/network": "^0.0.60-alpha.2.0",
     "@data-ui/radial-chart": "0.0.59",
-    "@data-ui/sparkline": "^0.0.60-alpha.1.0",
+    "@data-ui/sparkline": "^0.0.60-alpha.2.0",
     "@data-ui/theme": "0.0.59",
-    "@data-ui/xy-chart": "^0.0.60-alpha.1.0",
+    "@data-ui/xy-chart": "^0.0.60-alpha.2.0",
     "@storybook/addon-options": "^3.1.6",
     "@storybook/react": "3.2.12",
     "@vx/legend": "^0.0.167",

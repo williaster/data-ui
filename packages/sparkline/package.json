@@ -1,6 +1,6 @@
 {
   "name": "@data-ui/sparkline",
-  "version": "0.0.60-alpha.1.0",
+  "version": "0.0.60-alpha.2.0",
   "description": "React + d3 library for creating sparklines",
   "sideEffects": false,
   "main": "lib/index.js",
@@ -67,6 +67,9 @@
     "babel-runtime": "^6.26.0",
     "d3-array": "^1.2.0",
     "prop-types": "^15.5.10"
+  },
+  "engines": {
+    "node": ">=8.10.0"
   },
   "beemo": {
     "module": "@data-ui/build-config",
