@@ -1,6 +1,6 @@
-import BoxPlot from '@vx/stats/build/boxplot/BoxPlot';
+import { BoxPlot } from '@vx/stats';
 import FocusBlurHandler from '@data-ui/shared/build/components/FocusBlurHandler';
-import Group from '@vx/group/build/Group';
+import { Group } from '@vx/group';
 import PropTypes from 'prop-types';
 import React from 'react';
 import themeColors from '@data-ui/theme/build/color';

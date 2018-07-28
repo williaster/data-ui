@@ -14,7 +14,8 @@ const propTypes = {
   ariaLabel: PropTypes.string.isRequired,
   children: PropTypes.node.isRequired,
   className: PropTypes.string,
-  data: PropTypes.arrayOf(PropTypes.number),
+  // number or objects (with accessors)
+  data: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.number, PropTypes.object])),
   height: PropTypes.number.isRequired,
   margin: PropTypes.shape({
     top: PropTypes.number,

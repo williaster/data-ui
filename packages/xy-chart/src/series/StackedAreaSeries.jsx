@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Group from '@vx/group/build/Group';
-import Stack from '@vx/shape/build/shapes/Stack';
+import { Group } from '@vx/group';
+import { Stack } from '@vx/shape';
 import color from '@data-ui/theme/build/color';
 
 import interpolatorLookup from '../utils/interpolatorLookup';

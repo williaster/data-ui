@@ -36,7 +36,7 @@ export const propTypes = {
   strokeWidth: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
 
   // all likely passed by the parent chart
-  data: PropTypes.arrayOf(PropTypes.number),
+  data: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.number, PropTypes.object])),
   getX: PropTypes.func,
   getY: PropTypes.func,
   xScale: PropTypes.func,

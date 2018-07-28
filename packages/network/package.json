@@ -44,7 +44,8 @@
     "regenerator-runtime": "^0.10.5"
   },
   "peerDependencies": {
-    "react": "^15.0.0-0 || ^16.0.0-0"
+    "react": "^15.0.0-0 || ^16.0.0-0",
+    "react-dom": "^15.0.0-0 || ^16.0.0-0"
   },
   "dependencies": {
     "@data-ui/shared": "0.0.59",

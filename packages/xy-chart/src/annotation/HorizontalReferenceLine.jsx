@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import Group from '@vx/group/build/Group';
-import Line from '@vx/shape/build/shapes/Line';
-import Point from '@vx/point/build/Point';
+import { Group } from '@vx/group';
+import { Line } from '@vx/shape';
+import { Point } from '@vx/point';
 
 import color from '@data-ui/theme/build/color';
 import { baseLabel } from '@data-ui/theme/build/svgLabel';

@@ -1,6 +1,6 @@
 {
   "name": "@data-ui/sparkline",
-  "version": "0.0.59",
+  "version": "0.0.60-alpha.1.0",
   "description": "React + d3 library for creating sparklines",
   "sideEffects": false,
   "main": "lib/index.js",
@@ -18,7 +18,8 @@
     "posttest": "npm run lint",
     "test": "npm run jest",
     "prettier": "beemo prettier \"./{src,test}/**/*.{js,jsx,json,md}\" --write",
-    "sync:gitignore": "beemo sync-dotfiles --filter=gitignore"
+    "sync:gitignore": "beemo sync-dotfiles --filter=gitignore",
+    "prepublish": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -63,6 +64,7 @@
     "@vx/responsive": "0.0.140",
     "@vx/scale": "0.0.140",
     "@vx/shape": "0.0.140",
+    "babel-runtime": "^6.26.0",
     "d3-array": "^1.2.0",
     "prop-types": "^15.5.10"
   },

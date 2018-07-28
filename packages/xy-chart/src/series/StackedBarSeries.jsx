@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import BarStack from '@vx/shape/build/shapes/BarStack';
+import { BarStack } from '@vx/shape';
 import color from '@data-ui/theme/build/color';
 
 import { stackedBarSeriesDataShape } from '../utils/propShapes';

@@ -1,9 +1,9 @@
 import FocusBlurHandler from '@data-ui/shared/build/components/FocusBlurHandler';
-import Group from '@vx/group/build/Group';
+import { Group } from '@vx/group';
 import PropTypes from 'prop-types';
 import React from 'react';
 import themeColors from '@data-ui/theme/build/color';
-import ViolinPlot from '@vx/stats/build/violinplot/ViolinPlot';
+import { ViolinPlot } from '@vx/stats';
 
 import { callOrValue } from '../utils/chartUtils';
 import sharedSeriesProps from '../utils/sharedSeriesProps';

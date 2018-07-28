@@ -1,5 +1,5 @@
 import { Children } from 'react';
-import localPoint from '@vx/event/build/localPoint';
+import { localPoint } from '@vx/event';
 
 import findClosestDatum from './findClosestDatum';
 import { componentName, isSeries } from './chartUtils';

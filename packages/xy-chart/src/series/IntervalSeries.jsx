@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import FocusBlurHandler from '@data-ui/shared/build/components/FocusBlurHandler';
-import Group from '@vx/group/build/Group';
-import Bar from '@vx/shape/build/shapes/Bar';
+import { Group } from '@vx/group';
+import { Bar } from '@vx/shape';
 import color from '@data-ui/theme/build/color';
 
 import { intervalSeriesDataShape } from '../utils/propShapes';
