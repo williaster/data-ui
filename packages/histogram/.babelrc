@@ -1,19 +1,36 @@
 {
-  "presets": ["es2015", "react", "stage-0"],
-  "plugins": [],
-  "env": {
-    "development": {
-      "plugins": [
-        ["react-transform", {
-          "transforms": [{
-            "transform": "react-transform-hmr",
-            "imports": ["react"],
-            "locals": ["module"]
-          }]
-        }],
-        "transform-runtime",
-        "transform-decorators-legacy"
-      ]
-    }
-  }
+  "babelrc": false,
+  "comments": false,
+  "plugins": [
+    "babel-plugin-transform-export-extensions",
+    [
+      "babel-plugin-transform-dev",
+      {
+        "evaluate": false
+      }
+    ],
+    [
+      "babel-plugin-transform-runtime",
+      {
+        "helpers": true,
+        "polyfill": true,
+        "regenerator": false
+      }
+    ]
+  ],
+  "presets": [
+    [
+      "babel-preset-env",
+      {
+        "modules": "commonjs",
+        "shippedProposals": true,
+        "targets": {
+          "ie": 10
+        },
+        "useBuiltIns": "usage"
+      }
+    ],
+    "babel-preset-stage-2",
+    "babel-preset-react"
+  ]
 }

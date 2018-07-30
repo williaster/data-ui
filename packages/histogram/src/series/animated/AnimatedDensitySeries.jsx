@@ -7,9 +7,8 @@ import { curveBasis } from '@vx/curve';
 import { Group } from '@vx/group';
 import { chartTheme } from '@data-ui/theme';
 
-
 const propTypes = {
-  densityData: PropTypes.array.isRequired, // @TODO shape
+  densityData: PropTypes.arrayOf(PropTypes.object).isRequired, // @TODO shape
   fill: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   fillOpacity: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
   getX: PropTypes.func.isRequired,
@@ -39,6 +38,8 @@ const defaultProps = {
   keyAccessor: d => d.id,
 };
 
+const INDEX_DELAY_MULTIPLIER = 10;
+
 function AnimatedDensitySeries({
   densityData,
   fill,
@@ -57,12 +58,14 @@ function AnimatedDensitySeries({
   yScale,
 }) {
   const maxY = Math.max(...yScale.range());
+
   return (
     <NodeGroup
       data={densityData}
       keyAccessor={keyAccessor}
-      start={(d) => {
+      start={d => {
         if (horizontal) return { x: 0, y: yScale.invert ? yScale(getY(d)) : getY(d) };
+
         return { x: xScale.invert ? xScale(getX(d)) : getX(d), y: maxY };
       }}
       enter={(d, i) => ({
@@ -70,24 +73,24 @@ function AnimatedDensitySeries({
         y: [yScale.invert ? yScale(getY(d)) : getY(d)],
         fill: [d.fill || fill],
         stroke: [d.stroke || stroke],
-        timing: { duration: 300, delay: 10 * i },
+        timing: { duration: 300, delay: INDEX_DELAY_MULTIPLIER * i },
       })}
       update={(d, i) => ({
         x: [xScale.invert ? xScale(getX(d)) : getX(d)],
         y: [yScale.invert ? yScale(getY(d)) : getY(d)],
         fill: [d.fill || fill],
         stroke: [d.stroke || stroke],
-        timing: { duration: 300, delay: 10 * i },
+        timing: { duration: 300, delay: INDEX_DELAY_MULTIPLIER * i },
       })}
       leave={(d, i) => ({
         x: xScale.invert ? xScale(getX(d)) : getX(d),
         y: horizontal ? 0 : maxY,
-        timing: { duration: 300, delay: 5 * i },
+        timing: { duration: 300, delay: (INDEX_DELAY_MULTIPLIER / 2) * i },
       })}
     >
       {modifiedData => (
         <Group style={{ pointerEvents: 'none' }}>
-          {showArea &&
+          {showArea && (
             <AreaClosed
               data={modifiedData}
               x={d => (xScale.invert ? xScale.invert(d.state.x) : d.state.x)}
@@ -99,21 +102,24 @@ function AnimatedDensitySeries({
               stroke="transparent"
               strokeWidth={strokeWidth}
               curve={curveBasis}
-            />}
-          {showLine && strokeWidth > 0 &&
-            <LinePath
-              data={modifiedData}
-              x={d => (xScale.invert ? xScale.invert(d.state.x) : d.state.x)}
-              y={d => (yScale.invert ? yScale.invert(d.state.y) : d.state.y)}
-              xScale={xScale}
-              yScale={yScale}
-              stroke={stroke}
-              strokeWidth={strokeWidth}
-              strokeDasharray={strokeDasharray}
-              strokeLinecap={strokeLinecap}
-              curve={curveBasis}
-              glyph={null}
-            />}
+            />
+          )}
+          {showLine &&
+            strokeWidth > 0 && (
+              <LinePath
+                data={modifiedData}
+                x={d => (xScale.invert ? xScale.invert(d.state.x) : d.state.x)}
+                y={d => (yScale.invert ? yScale.invert(d.state.y) : d.state.y)}
+                xScale={xScale}
+                yScale={yScale}
+                stroke={stroke}
+                strokeWidth={strokeWidth}
+                strokeDasharray={strokeDasharray}
+                strokeLinecap={strokeLinecap}
+                curve={curveBasis}
+                glyph={null}
+              />
+            )}
         </Group>
       )}
     </NodeGroup>

@@ -2,8 +2,12 @@ import React from 'react';
 import collectBinnedDataFromChildSeries from '../../src/utils/collectBinnedDataFromChildSeries';
 
 describe('collectDataFromChildSeries', () => {
-  function FauxAxis() { return null; }
-  function FauxSeries() { return null; }
+  function FauxAxis() {
+    return null;
+  }
+  function FauxSeries() {
+    return null;
+  }
 
   const rawData = [1, 2, 2, 3, 3, 3];
 
@@ -14,22 +18,22 @@ describe('collectDataFromChildSeries', () => {
     { bin0: 3, bin1: 4, count: 3 },
   ];
   const childrenWithRawData = [
-    <FauxSeries rawData={rawData} />,
-    <FauxSeries rawData={rawData} />,
-    <FauxAxis rawData={rawData} />,
+    <FauxSeries key="1" rawData={rawData} />,
+    <FauxSeries key="2" rawData={rawData} />,
+    <FauxAxis key="3" rawData={rawData} />,
   ];
 
   const childrenWithBinnedData = [
-    <FauxSeries binnedData={binnedData.map(d => ({ ...d }))} />,
-    <FauxSeries binnedData={binnedData.map(d => ({ ...d }))} />,
-    <FauxAxis binnedData={binnedData.map(d => ({ ...d }))} />,
+    <FauxSeries key="1" binnedData={binnedData.map(d => ({ ...d }))} />,
+    <FauxSeries key="2" binnedData={binnedData.map(d => ({ ...d }))} />,
+    <FauxAxis key="3" binnedData={binnedData.map(d => ({ ...d }))} />,
   ];
 
-  test('it should be defined', () => {
+  it('should be defined', () => {
     expect(collectBinnedDataFromChildSeries).toBeDefined();
   });
 
-  test('it should used binnedData if children already have it', () => {
+  it('should used binnedData if children already have it', () => {
     const binnedDataByIndex = collectBinnedDataFromChildSeries({
       children: childrenWithBinnedData,
       binType: 'numeric',
@@ -41,7 +45,7 @@ describe('collectDataFromChildSeries', () => {
     });
   });
 
-  test('it should bin data if children have rawData', () => {
+  it('should bin data if children have rawData', () => {
     const binnedDataByIndex = collectBinnedDataFromChildSeries({
       children: childrenWithRawData,
       binType: 'numeric',

@@ -11,7 +11,7 @@ import { binnedDataShape } from '../utils/propShapes';
 
 export const propTypes = {
   animated: PropTypes.bool,
-  rawData: PropTypes.array, // eslint-disable-line react/no-unused-prop-types
+  rawData: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.number, PropTypes.string])), // eslint-disable-line react/no-unused-prop-types
   binnedData: binnedDataShape,
   fill: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   fillOpacity: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
@@ -96,6 +96,7 @@ function BarSeries({
             : maxBarLength - valueScale(d[valueKey]);
 
           const color = d.fill || callOrValue(fill, d, i);
+
           return (
             <Bar
               key={`bar-${binPosition}`}
@@ -105,19 +106,19 @@ function BarSeries({
               height={horizontal ? barWidth : barLength}
               fill={color}
               fillOpacity={
-                typeof fillOpacity !== 'undefined' ? fillOpacity : callOrValue(fillOpacity, d, i)
+                typeof fillOpacity === 'undefined' ? callOrValue(fillOpacity, d, i) : fillOpacity
               }
               stroke={d.stroke || callOrValue(stroke, d, i)}
               strokeWidth={d.strokeWidth || callOrValue(strokeWidth, d, i)}
               onClick={
                 onClick &&
-                (() => (event) => {
+                (() => event => {
                   onClick({ event, data: binnedData, datum: d, color, index: i });
                 })
               }
               onMouseMove={
                 onMouseMove &&
-                (() => (event) => {
+                (() => event => {
                   onMouseMove({ event, data: binnedData, datum: d, color, index: i });
                 })
               }

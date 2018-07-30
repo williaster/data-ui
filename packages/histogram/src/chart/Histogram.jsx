@@ -1,4 +1,4 @@
-/* eslint class-methods-use-this: 0, react/no-unused-prop-types: 0 */
+/* eslint complexity: ['error', 17] */
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -23,7 +23,7 @@ export const propTypes = {
   cumulative: PropTypes.bool,
   height: PropTypes.number.isRequired,
   horizontal: PropTypes.bool,
-  limits: PropTypes.array, // values outside the limits are ignored
+  limits: PropTypes.arrayOf(PropTypes.number), // values outside the limits are ignored
   margin: PropTypes.shape({
     top: PropTypes.number,
     right: PropTypes.number,
@@ -81,6 +81,7 @@ class Histogram extends React.PureComponent {
   getDimmensions(props) {
     const { margin, width, height } = props || this.props;
     const completeMargin = { ...defaultProps.margin, ...margin };
+
     return {
       margin: completeMargin,
       innerHeight: height - completeMargin.top - completeMargin.bottom,
@@ -90,6 +91,7 @@ class Histogram extends React.PureComponent {
 
   getBinnedData(props) {
     const { children, binCount, binType, binValues, limits, valueAccessor } = props || this.props;
+
     return collectBinnedDataFromChildSeries({
       children,
       binCount,
@@ -127,9 +129,10 @@ class Histogram extends React.PureComponent {
   }
 
   render() {
-    if (this.props.renderTooltip) {
+    const { renderTooltip } = this.props;
+    if (renderTooltip) {
       return (
-        <WithTooltip renderTooltip={this.props.renderTooltip}>
+        <WithTooltip renderTooltip={renderTooltip}>
           <Histogram {...this.props} renderTooltip={null} />
         </WithTooltip>
       );
@@ -166,6 +169,7 @@ class Histogram extends React.PureComponent {
             const name = componentName(Child);
             if (isSeries(name)) {
               const binnedData = binsByIndex[index];
+
               return React.cloneElement(Child, {
                 binScale,
                 binType,
@@ -197,6 +201,7 @@ class Histogram extends React.PureComponent {
                 tickValues,
               });
             }
+
             return Child;
           })}
         </Group>

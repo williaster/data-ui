@@ -17,7 +17,7 @@
     "lint": "beemo eslint \"./{src,test}/**/*.{js,jsx,json,md}\"",
     "posttest": "npm run lint",
     "test": "npm run jest",
-    "prettier": "beemo prettier \"./{src,test}/**/*.{js,jsx,json,md}\" --write",
+    "prettier": "beemo prettier \"./{src,test}/**/*.{js,jsx,json,md}\"",
     "sync:gitignore": "beemo sync-dotfiles --filter=gitignore",
     "prepublish": "npm run build"
   },

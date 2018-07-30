@@ -15,16 +15,16 @@ describe('binNumericData', () => {
     binValues: null,
   };
 
-  test('it should be defined', () => {
+  it('should be defined', () => {
     expect(binNumericData).toBeDefined();
   });
 
-  test('it should return binned data arrays by index', () => {
+  it('should return binned data arrays by index', () => {
     const binned = binNumericData(args);
     expect(binned).toMatchObject({ 0: expect.any(Array) });
   });
 
-  test('bins should have bin0, bin1, data, count, and id keys', () => {
+  it('bins should have bin0, bin1, data, count, and id keys', () => {
     const expectedShape = {
       bin0: expect.any(Number),
       bin1: expect.any(Number),
@@ -37,11 +37,11 @@ describe('binNumericData', () => {
     expect(binned[0][0]).toMatchObject(expectedShape);
   });
 
-  test('it should use binValues if specified', () => {
+  it('should use binValues if specified', () => {
     const binValues = [0, 1, 2, 3, 4, 5];
     const binned = binNumericData({ ...args, binValues });
 
-    expect(binned[0].length).toBe(binValues.length);
+    expect(binned[0]).toHaveLength(binValues.length);
 
     binned[0].forEach((bin, i) => {
       expect(bin.bin0).toBe(binValues[i]);
@@ -49,7 +49,7 @@ describe('binNumericData', () => {
     });
   });
 
-  test('it should add accurate counts', () => {
+  it('should add accurate counts', () => {
     const binValues = [0, 1, 2, 3, 4, 5];
     const binned = binNumericData({ ...args, binValues });
 
@@ -72,10 +72,11 @@ describe('binNumericData', () => {
     expect(binned[0][5].data).toEqual(expect.arrayContaining([]));
   });
 
-  test('it should use the same buckets for multiple series', () => {
+  it('should use the same buckets for multiple series', () => {
     const binned = binNumericData(args);
     binned[0].forEach((bin, i) => {
-      expect(binned[1][i].bin0 === bin.bin0 && binned[1][i].bin1 === bin.bin1);
+      expect(binned[1][i].bin0).toBe(bin.bin0);
+      expect(binned[1][i].bin1).toBe(bin.bin1);
     });
   });
 });

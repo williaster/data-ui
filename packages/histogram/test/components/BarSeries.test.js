@@ -1,7 +1,7 @@
 import React from 'react';
 import { shallow, mount } from 'enzyme';
 import { Bar } from '@vx/shape';
-import { BarSeries, Histogram } from '../../src/';
+import { BarSeries, Histogram } from '../../src';
 import AnimatedBarSeries from '../../src/series/animated/AnimatedBarSeries';
 
 describe('<BarSeries />', () => {
@@ -27,41 +27,41 @@ describe('<BarSeries />', () => {
     { bin: 'e', count: 10, id: 'e' },
   ];
 
-  test('it should be defined', () => {
+  it('should be defined', () => {
     expect(BarSeries).toBeDefined();
   });
 
-  test('it should render one <Bar/> for each numeric bin', () => {
+  it('should render one <Bar/> for each numeric bin', () => {
     const wrapper = shallow(
       <Histogram {...histogramProps}>
         <BarSeries animated={false} binnedData={numericBinnedData} />
       </Histogram>,
     );
     const barWrapper = wrapper.find(BarSeries).dive();
-    expect(barWrapper.find(Bar).length).toBe(numericBinnedData.length);
+    expect(barWrapper.find(Bar)).toHaveLength(numericBinnedData.length);
   });
 
-  test('it should render one <Bar/> for each categorical bin', () => {
+  it('should render one <Bar/> for each categorical bin', () => {
     const wrapper = shallow(
       <Histogram {...histogramProps} binType="categorical">
         <BarSeries animated={false} binnedData={categoricalBinnedData} />
       </Histogram>,
     );
     const barWrapper = wrapper.find(BarSeries).dive();
-    expect(barWrapper.find(Bar).length).toBe(numericBinnedData.length);
+    expect(barWrapper.find(Bar)).toHaveLength(numericBinnedData.length);
   });
 
-  test('it should render an <AnimatedBarSeries /> if animated = true', () => {
+  it('should render an <AnimatedBarSeries /> if animated = true', () => {
     const wrapper = shallow(
       <Histogram {...histogramProps}>
         <BarSeries animated binnedData={numericBinnedData} />
       </Histogram>,
     );
     const barWrapper = wrapper.find(BarSeries).dive();
-    expect(barWrapper.find(AnimatedBarSeries).length).toBe(1);
+    expect(barWrapper.find(AnimatedBarSeries)).toHaveLength(1);
   });
 
-  test('it should call onMouseMove(), onClick() and onMouseLeave() on trigger', () => {
+  it('should call onMouseMove(), onClick() and onMouseLeave() on trigger', () => {
     const onMouseMove = jest.fn();
     const onMouseLeave = jest.fn();
     const onClick = jest.fn();
@@ -93,7 +93,7 @@ describe('<BarSeries />', () => {
 
     bar.simulate('click');
     expect(onClick).toHaveBeenCalledTimes(1);
-    args = onClick.mock.calls[0][0];
+    args = onClick.mock.calls[0][0]; // eslint-disable-line prefer-destructuring
     expect(args.data).toBe(numericBinnedData);
     expect(args.datum).toBe(numericBinnedData[0]);
     expect(args.event).toBeDefined();

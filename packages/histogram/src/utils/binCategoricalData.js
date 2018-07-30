@@ -14,11 +14,11 @@ const sortBins = (a, b) => caseInsensitiveSort(a.bin, b.bin);
 export default function binCategoricalData({ rawDataByIndex, valueAccessor, binValues = null }) {
   const binsByIndex = {};
 
-  Object.keys(rawDataByIndex).forEach((index) => {
+  Object.keys(rawDataByIndex).forEach(index => {
     const data = rawDataByIndex[index];
     const bins = {};
 
-    data.forEach((datum) => {
+    data.forEach(datum => {
       const bin = valueAccessor(datum);
       bins[bin] = bins[bin] || { bin, data: [], count: 0, id: bin };
       bins[bin].data.push(datum);
@@ -27,7 +27,7 @@ export default function binCategoricalData({ rawDataByIndex, valueAccessor, binV
 
     // convert to an array of bins
     if (binValues) {
-      binsByIndex[index] = binValues.map(bin => (bins[bin] || { bin, count: 0, data: [] }));
+      binsByIndex[index] = binValues.map(bin => bins[bin] || { bin, count: 0, data: [] });
     } else {
       binsByIndex[index] = Object.values(bins).sort(sortBins);
     }
