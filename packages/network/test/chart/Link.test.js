@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import { Link } from '../../src/';
+import { Link } from '../../src';
 import defaultGraph from '../data';
 
 describe('<Link />', () => {
@@ -8,14 +8,12 @@ describe('<Link />', () => {
     link: defaultGraph.nodes[0],
   };
 
-  test('it should be defined', () => {
+  it('should be defined', () => {
     expect(Link).toBeDefined();
   });
 
-  test('it should render a line dom', () => {
-    const wrapper = shallow(
-      <Link {...props} />,
-    );
-    expect(wrapper.find('line').length).toBe(1);
+  it('should render a line dom', () => {
+    const wrapper = shallow(<Link {...props} />);
+    expect(wrapper.find('line')).toHaveLength(1);
   });
 });

@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 
-
 export const nodeShape = PropTypes.shape({
   x: PropTypes.number,
   y: PropTypes.number,
@@ -24,4 +23,13 @@ export const linkStyleShape = PropTypes.shape({
   stroke: PropTypes.string,
   strokeWidth: PropTypes.number,
   opacity: PropTypes.number,
+});
+
+export const layoutShape = PropTypes.shape({
+  getGraph: PropTypes.func.isRequired,
+  setGraph: PropTypes.func.isRequired,
+  clear: PropTypes.func.isRequired,
+  layout: PropTypes.func.isRequired,
+  setAnimated: PropTypes.func.isRequired,
+  setBoundingBox: PropTypes.func,
 });

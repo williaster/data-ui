@@ -16,6 +16,7 @@ const defaultProps = {
 
 export default function Link({ linkStyles, link }) {
   const { stroke, strokeWidth, strokeOpacity } = linkStyles;
+
   return (
     <line
       x1={link.sourceX}

@@ -1,5 +1,8 @@
 import * as d3Force from 'd3-force';
 
+const CENTER_X = 450;
+const CENTER_Y = 250;
+
 class AtlasForceDirectedLayout {
   constructor() {
     this.alphaMin = 0.1;
@@ -17,7 +20,7 @@ class AtlasForceDirectedLayout {
       .forceSimulation(graph.nodes)
       .force('charge', this.forceManyBody)
       .force('link', this.forceLink)
-      .force('center', d3Force.forceCenter(450, 250))
+      .force('center', d3Force.forceCenter(CENTER_X, CENTER_Y))
       .force('collide', this.forceCollide)
       .alphaMin(this.alphaMin);
   }
@@ -35,6 +38,7 @@ class AtlasForceDirectedLayout {
 
   setAlphaMin(alphaMin) {
     this.alphaMin = alphaMin;
+
     return this;
   }
 
@@ -49,36 +53,43 @@ class AtlasForceDirectedLayout {
 
   setCollideRadius(radius) {
     this.forceCollide.radius(radius);
+
     return this;
   }
 
   setCollideStrength(strength) {
     this.forceCollide.strength(strength);
+
     return this;
   }
 
   setNodeStrength(strength) {
     this.forceManyBody.strength(strength);
+
     return this;
   }
 
   setLinkStrength(strength) {
     this.forceLink.strength(strength);
+
     return this;
   }
 
   setNodeMinDistance(distance) {
     this.forceManyBody.distanceMin(distance);
+
     return this;
   }
 
   setNodeMaxDistance(distance) {
     this.forceManyBody.distanceMax(distance);
+
     return this;
   }
 
   setLinkDistance(distance) {
     this.forceLink.distance(distance);
+
     return this;
   }
 
