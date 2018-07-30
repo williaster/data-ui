@@ -9,11 +9,11 @@ describe('<Nodes />', () => {
     nodeComponent: Node,
   };
 
-  it('it should be defined', () => {
+  it('should be defined', () => {
     expect(Nodes).toBeDefined();
   });
 
-  it('it should render the correct number of Node components', () => {
+  it('should render the correct number of Node components', () => {
     const wrapper = shallow(<Nodes {...props} />);
     expect(wrapper.find(Node)).toHaveLength(defaultGraph.nodes.length);
   });

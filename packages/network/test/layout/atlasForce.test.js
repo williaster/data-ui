@@ -2,7 +2,7 @@ import { AtlasForceDirectedLayout } from '../../src';
 import defaultGraph from '../data';
 
 describe('AtlasForceDirectedLayout', () => {
-  it('it should be defined', () => {
+  it('should be defined', () => {
     expect(AtlasForceDirectedLayout).toBeDefined();
   });
 

@@ -11,28 +11,24 @@ describe('<RadialChart />', () => {
     children: <g />,
   };
 
-  test('it should be defined', () => {
+  it('should be defined', () => {
     expect(RadialChart).toBeDefined();
   });
 
-  test('radialChartPropTypes should be defined', () => {
+  it('radialChartPropTypes should be defined', () => {
     expect(radialChartPropTypes).toBeDefined();
   });
 
-  test('it should render an svg', () => {
+  it('should render an svg', () => {
     const wrapper = shallow(<RadialChart {...mockProps} />);
-    expect(wrapper.find('svg').length).toBe(1);
+    expect(wrapper.find('svg')).toHaveLength(1);
   });
 
-  test('it should render a <WithTooltip /> if renderTooltip is passed', () => {
-    let wrapper = shallow(
-      <RadialChart {...mockProps} renderTooltip={null} />,
-    );
-    expect(wrapper.find(WithTooltip).length).toBe(0);
+  it('should render a <WithTooltip /> if renderTooltip is passed', () => {
+    let wrapper = shallow(<RadialChart {...mockProps} renderTooltip={null} />);
+    expect(wrapper.find(WithTooltip)).toHaveLength(0);
 
-    wrapper = shallow(
-      <RadialChart {...mockProps} renderTooltip={() => {}} />,
-    );
-    expect(wrapper.find(WithTooltip).length).toBe(1);
+    wrapper = shallow(<RadialChart {...mockProps} renderTooltip={() => {}} />);
+    expect(wrapper.find(WithTooltip)).toHaveLength(1);
   });
 });

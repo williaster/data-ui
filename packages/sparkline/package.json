@@ -13,7 +13,7 @@
     "build:cjs": "beemo babel ./src --out-dir lib/ --react --minify",
     "build:esm": "beemo babel ./src --out-dir esm/ --react --esm --minify",
     "build": "npm run build:cjs && npm run build:esm",
-    "jest": "beemo jest --react --color",
+    "jest": "beemo jest --react --color --verbose",
     "lint": "beemo eslint \"./{src,test}/**/*.{js,jsx,json,md}\"",
     "posttest": "npm run lint",
     "test": "npm run jest",

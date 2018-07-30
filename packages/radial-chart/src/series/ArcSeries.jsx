@@ -9,9 +9,11 @@ import { singleHueScaleFactory } from '../util/fillScaleFactory';
 const grayScale = singleHueScaleFactory();
 
 const propTypes = {
-  data: PropTypes.arrayOf(PropTypes.shape({
-    label: PropTypes.string,
-  })).isRequired,
+  data: PropTypes.arrayOf(
+    PropTypes.shape({
+      label: PropTypes.string,
+    }),
+  ).isRequired,
   pieValue: PropTypes.func.isRequired, // (d) => pie value
   pieSort: PropTypes.func,
 
@@ -34,16 +36,19 @@ const propTypes = {
   onMouseLeave: PropTypes.func,
 };
 
+const INNER_RADIUS_FRACTION = 0.5;
+const OUTER_RADIUS_FRACTION = 0.9;
+const LABEL_RADIUS_FRACTION = 0.75;
+const MIN_ANGLE_FOR_LABEL = 0.1;
+
 const defaultProps = {
   radius: 300,
   pieSort: null,
-  innerRadius: radius => radius * 0.5,
-  outerRadius: radius => radius * 0.9,
-  labelRadius: radius => radius * 0.75,
+  innerRadius: radius => radius * INNER_RADIUS_FRACTION,
+  outerRadius: radius => radius * OUTER_RADIUS_FRACTION,
+  labelRadius: radius => radius * LABEL_RADIUS_FRACTION,
   cornerRadius: 3,
-  fill: arc => (
-    (arc.data && arc.data.label) ? grayScale(arc.data.label) : '#dddddd'
-  ),
+  fill: arc => (arc.data && arc.data.label ? grayScale(arc.data.label) : '#dddddd'),
   fillOpacity: 1,
   stroke: '#ffffff',
   strokeWidth: 1,
@@ -91,33 +96,48 @@ export default function ArcSeries({
         cornerRadius={cornerRadius}
         padAngle={padAngle}
         padRadius={padRadius}
-        onMouseMove={onMouseLeave &&
-          (datum => (event) => {
+        onMouseMove={
+          onMouseLeave &&
+          (datum => event => {
             const fraction = Math.abs(datum.startAngle - datum.endAngle) / (2 * Math.PI);
-            onMouseMove({ event, data, datum: datum.data, fraction });
-          })}
-        onMouseLeave={onMouseLeave && (() => () => { onMouseLeave(); })}
+            onMouseMove({
+              event,
+              data,
+              datum: datum.data,
+              fraction,
+            });
+          })
+        }
+        onMouseLeave={
+          onMouseLeave &&
+          (() => () => {
+            onMouseLeave();
+          })
+        }
         {...restProps}
         centroid={null}
       />
-      {label && labelComponent &&
-        <Arc
-          data={data}
-          pieValue={pieValue}
-          pieSort={pieSort}
-          outerRadius={callOrValue(labelRadius, radius)}
-          innerRadius={callOrValue(labelRadius, radius)}
-          fill="none"
-          fillOpacity={0}
-          stroke="none"
-          strokeWidth={0}
-          centroid={(centroid, arc) => {
-            const [x, y] = centroid;
-            const labelElement = label(arc);
-            if (arc.endAngle - arc.startAngle < 0.1 || !labelElement) return null;
-            return React.cloneElement(labelComponent, { x, y, arc }, labelElement);
-          }}
-        />}
+      {label &&
+        labelComponent && (
+          <Arc
+            data={data}
+            pieValue={pieValue}
+            pieSort={pieSort}
+            outerRadius={callOrValue(labelRadius, radius)}
+            innerRadius={callOrValue(labelRadius, radius)}
+            fill="none"
+            fillOpacity={0}
+            stroke="none"
+            strokeWidth={0}
+            centroid={(centroid, arc) => {
+              const [x, y] = centroid;
+              const labelElement = label(arc);
+              if (arc.endAngle - arc.startAngle < MIN_ANGLE_FOR_LABEL || !labelElement) return null;
+
+              return React.cloneElement(labelComponent, { x, y, arc }, labelElement);
+            }}
+          />
+        )}
     </g>
   );
 }

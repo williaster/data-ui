@@ -2,13 +2,24 @@
   "name": "@data-ui/radial-chart",
   "version": "0.0.59",
   "description": "A package for radial-axis visualizations https://williaster.github.io/data-ui",
-  "main": "build/index.js",
+  "sideEffects": false,
+  "main": "lib/index.js",
+  "module": "esm/index.js",
+  "files": [
+    "esm",
+    "lib"
+  ],
   "scripts": {
-    "build": "webpack -p",
-    "dev": "webpack -d --progress --colors --watch",
-    "dev:nowatch": "webpack -d --progress --colors",
-    "prepublish": "npm run build",
-    "test": "jest --colors --verbose --coverage"
+    "build:cjs": "beemo babel ./src --out-dir lib/ --react --minify",
+    "build:esm": "beemo babel ./src --out-dir esm/ --react --esm --minify",
+    "build": "npm run build:cjs && npm run build:esm",
+    "jest": "beemo jest --react --color --verbose",
+    "lint": "beemo eslint \"./{src,test}/**/*.{js,jsx,json,md}\"",
+    "posttest": "npm run lint",
+    "test": "npm run jest",
+    "prettier": "beemo prettier \"./{src,test}/**/*.{js,jsx,json,md}\" --write",
+    "sync:gitignore": "beemo sync-dotfiles --filter=gitignore",
+    "prepublish": "npm run build"
   },
   "repository": "https://github.com/williaster/data-ui",
   "keywords": [
@@ -19,7 +30,7 @@
     "vx",
     "data-ui"
   ],
-  "author": "Chris Williams <chris.williams@airbnb.com>",
+  "author": "Chris Williams @williaster",
   "license": "MIT",
   "dependencies": {
     "@data-ui/shared": "0.0.59",
@@ -32,26 +43,29 @@
     "prop-types": "^15.5.10"
   },
   "devDependencies": {
-    "babel-core": "^6.24.1",
-    "babel-jest": "^20.0.3",
-    "babel-loader": "^6.4.1",
-    "babel-plugin-syntax-jsx": "^6.18.0",
-    "babel-preset-airbnb": "^2.2.3",
-    "enzyme": "^3.1.0",
-    "enzyme-adapter-react-16": "^1.0.0",
-    "jest": "^20.0.3",
+    "@data-ui/build-config": "^0.0.7",
     "react": "^16.0.0",
-    "react-dom": "^16.0.0",
-    "react-test-renderer": "^16.0.0",
-    "webpack": "^2.4.1"
+    "react-dom": "^16.0.0"
   },
   "peerDependencies": {
-    "react": "^15.0.0-0 || ^16.0.0-0"
+    "react": "^15.0.0-0 || ^16.0.0-0",
+    "react-dom": "^15.0.0-0 || ^16.0.0-0"
   },
-  "jest": {
-    "setupFiles": [
-      "<rootDir>/test/shim.js",
-      "<rootDir>/test/setup.js"
-    ]
+  "engines": {
+    "node": ">=8.10.0"
+  },
+  "beemo": {
+    "module": "@data-ui/build-config",
+    "drivers": [
+      "prettier",
+      "eslint",
+      "babel",
+      "jest"
+    ],
+    "eslint": {
+      "rules": {
+        "sort-keys": "off"
+      }
+    }
   }
 }

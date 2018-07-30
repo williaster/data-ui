@@ -8,16 +8,16 @@ describe('<Node />', () => {
     node: defaultGraph.nodes[0],
   };
 
-  it('it should be defined', () => {
+  it('should be defined', () => {
     expect(Node).toBeDefined();
   });
 
-  it('it should render a <g>', () => {
+  it('should render a <g>', () => {
     const wrapper = shallow(<Node {...props} />);
     expect(wrapper.find('g')).toHaveLength(1);
   });
 
-  it('it should handle mouse events correctly', () => {
+  it('should handle mouse events correctly', () => {
     let testID = 0;
     function onMouseEvent({ id }) {
       testID = id;
