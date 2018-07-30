@@ -1,10 +1,6 @@
 import { textColor } from './color';
 
-const getSvgFont = ({
-  fontFamily,
-  fontSize,
-  letterSpacing,
-}) => ({
+const getSvgFont = ({ fontFamily, fontSize, letterSpacing }) => ({
   fill: textColor,
   stroke: 'none',
   fontFamily,
