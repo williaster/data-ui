@@ -13,9 +13,9 @@
     "build:cjs": "beemo babel ./src --out-dir lib/ --react --minify",
     "build:esm": "beemo babel ./src --out-dir esm/ --react --esm --minify",
     "build": "npm run build:cjs && npm run build:esm",
-    "jest": "beemo jest --react --color",
-    "lint": "beemo eslint \"./{src,test}/**/*.{js,jsx,json,md}\"",
-    "posttest": "npm run lint",
+    "jest": "beemo jest --react --color --coverage",
+    "eslint": "beemo eslint \"./{src,test}/**/*.{js,jsx,json,md}\"",
+"lint": "npm run prettier && npm run eslint",
     "test": "npm run jest",
     "prettier": "beemo prettier \"./{src,test}/**/*.{js,jsx,json,md}\"",
     "sync:gitignore": "beemo sync-dotfiles --filter=gitignore",
@@ -32,6 +32,7 @@
   "license": "MIT",
   "homepage": "https://github.com/williaster/data-ui#readme",
   "dependencies": {
+    "babel-runtime": "^6.26.0",
     "immutable": "^3.8.1",
     "prop-types": "^15.5.10",
     "react-virtualized": "^9.7.3"

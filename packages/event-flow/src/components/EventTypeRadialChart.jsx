@@ -5,9 +5,11 @@ import { RadialChart, ArcSeries, ArcLabel } from '@data-ui/radial-chart';
 import { FILTERED_EVENTS } from '../constants';
 
 const propTypes = {
-  data: PropTypes.arrayOf(PropTypes.shape({
-    label: PropTypes.string, // used for colors
-  })).isRequired,
+  data: PropTypes.arrayOf(
+    PropTypes.shape({
+      label: PropTypes.string, // used for colors
+    }),
+  ).isRequired,
   pieValue: PropTypes.func,
   colorScale: PropTypes.func.isRequired,
   width: PropTypes.number.isRequired,
@@ -34,21 +36,9 @@ const innerRadius = 0;
 const outerRadius = radius => radius * 0.9;
 const labelRadius = radius => radius * 0.5;
 
-function EventTypeRadialChart({
-  width,
-  height,
-  margin,
-  colorScale,
-  pieValue,
-  data,
-}) {
+function EventTypeRadialChart({ width, height, margin, colorScale, pieValue, data }) {
   return (
-    <RadialChart
-      ariaLabel="Event type fractions"
-      width={width}
-      height={height}
-      margin={margin}
-    >
+    <RadialChart ariaLabel="Event type fractions" width={width} height={height} margin={margin}>
       <ArcSeries
         data={data}
         pieValue={pieValue}
@@ -60,21 +50,14 @@ function EventTypeRadialChart({
         fillOpacity={0.8}
         strokeWidth={2}
         cornerRadius={4}
-        label={(arc) => {
+        label={arc => {
           if (arc.data && arc.data.label) {
-            return arc.data.label === FILTERED_EVENTS
-            ? 'filtered'
-            : arc.data.label.slice(0, 10);
+            return arc.data.label === FILTERED_EVENTS ? 'filtered' : arc.data.label.slice(0, 10);
           }
+
           return null;
         }}
-        labelComponent={
-          <ArcLabel
-            fontSize={10}
-            fill="#333"
-            stroke="#fff"
-          />
-        }
+        labelComponent={<ArcLabel fontSize={10} fill="#333" stroke="#fff" />}
       />
     </RadialChart>
   );

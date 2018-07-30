@@ -8,14 +8,12 @@ const propTypes = {
   yScale: PropTypes.func.isRequired,
 };
 
-export default function ZeroLine({
-  xScale,
-  yScale,
-}) {
+export default function ZeroLine({ xScale, yScale }) {
   const [y0, y1] = yScale.range();
   const x = xScale(0);
   const fromPoint = new Point({ x, y: y0 });
   const toPoint = new Point({ x, y: y1 });
+
   return (
     <Line
       from={fromPoint}

@@ -21,32 +21,32 @@ describe('<AggregatePanel />', () => {
     graph,
   };
 
-  test('it should be defined', () => {
+  it('should be defined', () => {
     expect(AggregatePanel).toBeDefined();
   });
 
-  test('it should render an svg', () => {
+  it('should render an svg', () => {
     const wrapper = shallow(<AggregatePanel {...props} />);
-    expect(wrapper.find('svg').length).toBe(1);
+    expect(wrapper.find('svg')).toHaveLength(1);
   });
 
-  test('it should render an XAxis', () => {
+  it('should render an XAxis', () => {
     const wrapper = shallow(<AggregatePanel {...props} />);
-    expect(wrapper.find(XAxis).length).toBe(1);
+    expect(wrapper.find(XAxis)).toHaveLength(1);
   });
 
-  test('it should render an YAxis', () => {
+  it('should render an YAxis', () => {
     const wrapper = shallow(<AggregatePanel {...props} />);
-    expect(wrapper.find(YAxis).length).toBe(1);
+    expect(wrapper.find(YAxis)).toHaveLength(1);
   });
 
-  test('it should render a ZeroLine', () => {
+  it('should render a ZeroLine', () => {
     const wrapper = shallow(<AggregatePanel {...props} />);
-    expect(wrapper.find(ZeroLine).length).toBe(1);
+    expect(wrapper.find(ZeroLine)).toHaveLength(1);
   });
 
-  test('it should render a SubTree', () => {
+  it('should render a SubTree', () => {
     const wrapper = shallow(<AggregatePanel {...props} />);
-    expect(wrapper.find(SubTree).length).toBe(1);
+    expect(wrapper.find(SubTree)).toHaveLength(1);
   });
 });

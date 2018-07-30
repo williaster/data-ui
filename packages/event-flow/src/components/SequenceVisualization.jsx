@@ -17,7 +17,7 @@ import { unit } from '../theme';
 export const margin = {
   top: 4 * unit,
   left: 3 * unit,
-  right: (3 * unit) + 100,
+  right: 3 * unit + 100,
   bottom: 2 * unit,
 };
 
@@ -29,7 +29,7 @@ const propTypes = {
   emphasisIndex: PropTypes.number,
   showTooltip: PropTypes.func,
   hideTooltip: PropTypes.func,
-  tooltipData: PropTypes.object,
+  tooltipData: PropTypes.object, // eslint-disable-line react/forbid-prop-types
   tooltipTop: PropTypes.number,
   tooltipLeft: PropTypes.number,
   tooltipOpen: PropTypes.bool,
@@ -63,6 +63,7 @@ function SequenceVisualization({
 }) {
   const innerWidth = Math.max(...xScale.scale.range());
   const innerHeight = Math.max(...yScale.scale.range());
+
   return (
     <div>
       <svg
@@ -117,13 +118,8 @@ function SequenceVisualization({
         </Group>
       </svg>
 
-      {tooltipOpen &&
-        <Tooltip
-          left={tooltipLeft}
-          top={tooltipTop}
-          width="auto"
-          detectOverflowY={false}
-        >
+      {tooltipOpen && (
+        <Tooltip left={tooltipLeft} top={tooltipTop} width="auto" detectOverflowY={false}>
           <EventDetails
             xScale={xScale}
             colorScale={colorScale}
@@ -131,7 +127,8 @@ function SequenceVisualization({
             events={tooltipData.events}
             index={tooltipData.index}
           />
-        </Tooltip>}
+        </Tooltip>
+      )}
     </div>
   );
 }

@@ -10,30 +10,39 @@ describe('<YAxis />', () => {
     width: 100,
   };
 
-  test('it should be defined', () => {
+  it('should be defined', () => {
     expect(YAxis).toBeDefined();
   });
 
-  test('It should render the appropriate axis based on props.orientation', () => {
+  it('should render the appropriate axis based on props.orientation', () => {
     const leftAxis = shallow(<YAxis {...props} orientation="left" />);
     const rightAxis = shallow(<YAxis {...props} orientation="right" />);
 
-    expect(leftAxis.find(AxisLeft).length).toBe(1);
-    expect(leftAxis.find(AxisRight).length).toBe(0);
+    expect(leftAxis.find(AxisLeft)).toHaveLength(1);
+    expect(leftAxis.find(AxisRight)).toHaveLength(0);
 
-    expect(rightAxis.find(AxisLeft).length).toBe(0);
-    expect(rightAxis.find(AxisRight).length).toBe(1);
+    expect(rightAxis.find(AxisLeft)).toHaveLength(0);
+    expect(rightAxis.find(AxisRight)).toHaveLength(1);
   });
 
-  test('It should render a label if passed', () => {
+  it('should render a label if passed', () => {
     const wrapper = shallow(<YAxis {...props} label="banana" />);
-    expect(wrapper.render().find('.vx-axis-label').first().text()).toBe('banana');
+    expect(
+      wrapper
+        .render()
+        .find('.vx-axis-label')
+        .first()
+        .text(),
+    ).toBe('banana');
   });
 
-  test('It should use the output of tickFormat() for ticks', () => {
+  it('should use the output of tickFormat() for ticks', () => {
     const tickFormat = () => 'iNvaRiAnT LabEl';
     const wrapper = shallow(<YAxis {...props} tickFormat={tickFormat} />);
-    const tick = wrapper.render().find('.vx-axis-tick').first();
+    const tick = wrapper
+      .render()
+      .find('.vx-axis-tick')
+      .first();
     expect(tick.find('text').text()).toBe(tickFormat());
   });
 });

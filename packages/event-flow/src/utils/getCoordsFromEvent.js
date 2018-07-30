@@ -7,12 +7,14 @@ export default function getCoordsFromEvent(node, event) {
     point.x = event.clientX;
     point.y = event.clientY;
     point = point.matrixTransform(node.getScreenCTM().inverse());
+
     return {
       x: point.x,
       y: point.y,
     };
   }
   const rect = node.getBoundingClientRect();
+
   return {
     x: event.clientX - rect.left - node.clientLeft,
     y: event.clientY - rect.top - node.clientTop,

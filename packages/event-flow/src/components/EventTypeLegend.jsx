@@ -34,12 +34,7 @@ const defaultProps = {
   },
 };
 
-function EventTypeLegend({
-  scale,
-  labelFormat,
-  hiddenEventTypes,
-  onClick,
-}) {
+function EventTypeLegend({ scale, labelFormat, hiddenEventTypes, onClick }) {
   return (
     <LegendOrdinal
       direction="column"
@@ -47,18 +42,17 @@ function EventTypeLegend({
       shape={({ fill, width, height, label }) => {
         const value = label.datum;
         const isHidden = Boolean(hiddenEventTypes[value]);
+
         return value === FILTERED_EVENTS ? (
           <svg width={width} height={height}>
-            <rect
-              width={width}
-              height={height}
-              fill={fill}
-            />
+            <rect width={width} height={height} fill={fill} />
           </svg>
         ) : (
-          <div
+          <div // eslint-disable-line jsx-a11y/click-events-have-key-events
             className={css(styles.legendItem)}
-            onClick={() => { onClick(value); }}
+            onClick={() => {
+              onClick(value);
+            }}
             style={{
               width,
               height,

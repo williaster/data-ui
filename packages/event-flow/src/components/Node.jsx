@@ -29,48 +29,41 @@ const defaultProps = {
 class Node extends React.PureComponent {
   constructor(props) {
     super(props);
-    this.onClick = this.onClick.bind(this);
-    this.onMouseOut = this.onMouseOut.bind(this);
-    this.onMouseOver = this.onMouseOver.bind(this);
+    this.handleClick = this.handleClick.bind(this);
+    this.handleMouseOut = this.handleMouseOut.bind(this);
+    this.handleMouseOver = this.handleMouseOver.bind(this);
 
     this.state = {
       isMousedOver: false,
     };
   }
 
-  onClick(e) {
+  handleClick(e) {
     this.props.onClick(e);
   }
 
-  onMouseOver(e) {
+  handleMouseOver(e) {
     this.setState({ isMousedOver: true });
     this.props.onMouseOver(e);
   }
 
-  onMouseOut(e) {
+  handleMouseOut(e) {
     this.setState({ isMousedOver: false });
     this.props.onMouseOut(e);
   }
 
   render() {
-    const {
-      isMousedOver,
-    } = this.state;
+    const { isMousedOver } = this.state;
 
-    const {
-      node,
-      x,
-      y,
-      width,
-      height,
-      fill,
-    } = this.props;
+    const { node, x, y, width, height, fill } = this.props;
 
     return (
       <g
-        onClick={this.onClick}
-        onMouseOver={this.onMouseOver}
-        onMouseOut={this.onMouseOut}
+        onClick={this.handleClick}
+        onMouseOver={this.handleMouseOver}
+        onMouseOut={this.handleMouseOut}
+        onFocus={this.handleMouseOver}
+        onBlur={this.handleMouseOut}
         data-node={node.id}
       >
         <Bar

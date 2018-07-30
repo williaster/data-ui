@@ -1,8 +1,4 @@
-import {
-  scalePoint,
-  scaleOrdinal,
-  scaleLinear,
-} from '@vx/scale';
+import { scalePoint, scaleOrdinal, scaleLinear } from '@vx/scale';
 
 import { extent as d3Extent } from 'd3-array';
 import { format } from 'd3-format';
@@ -27,6 +23,7 @@ import { colors } from '../theme';
 
 export function computeElapsedTimeScale(nodesArray, width) {
   const domain = d3Extent(nodesArray, n => n[ELAPSED_MS_ROOT]);
+
   return scaleLinear({
     nice: true,
     clamp: true,
@@ -38,9 +35,10 @@ export function computeElapsedTimeScale(nodesArray, width) {
 export function computeEventCountScale(root, height) {
   // The maximum event count should be the sum of events at the root node
   // @todo: correct for filter nodes
-  const max = Object.keys(root.children).reduce((result, curr) => (
-    result + root.children[curr][EVENT_COUNT]
-  ), 0);
+  const max = Object.keys(root.children).reduce(
+    (result, curr) => result + root.children[curr][EVENT_COUNT],
+    0,
+  );
 
   return scaleLinear({
     nice: true,
@@ -52,6 +50,7 @@ export function computeEventCountScale(root, height) {
 
 export function computeEventSequenceScale(nodesArray, width) {
   const domain = d3Extent(nodesArray, n => n.depth);
+
   return scaleLinear({
     nice: true,
     clamp: true,
@@ -64,7 +63,7 @@ function recursivelyDivideHeight(nodes, height, lookup) {
   if (nodes) {
     const leftNodes = [];
     const rightNodes = [];
-    Object.values(nodes).forEach((n) => {
+    Object.values(nodes).forEach(n => {
       if (n.depth >= 0) rightNodes.push(n);
       if (n.depth < 0) leftNodes.push(n);
     });
@@ -72,12 +71,12 @@ function recursivelyDivideHeight(nodes, height, lookup) {
     const rightHeight = height / rightNodes.length;
     const leftHeight = height / leftNodes.length;
 
-    leftNodes.forEach((n) => {
+    leftNodes.forEach(n => {
       lookup[n.id] = leftHeight; // eslint-disable-line no-param-reassign
       recursivelyDivideHeight(n.children, leftHeight, lookup);
     });
 
-    rightNodes.forEach((n) => {
+    rightNodes.forEach(n => {
       lookup[n.id] = rightHeight; // eslint-disable-line no-param-reassign
       recursivelyDivideHeight(n.children, rightHeight, lookup);
     });
@@ -107,7 +106,7 @@ export function computeNodeSequenceScale(root, height) {
 
 export function computeColorScale(array, accessor = d => d.name || d[EVENT_NAME]) {
   const names = {};
-  array.forEach((d) => {
+  array.forEach(d => {
     const key = accessor(d);
     if (key) {
       names[key] = true;
@@ -121,6 +120,7 @@ export function computeColorScale(array, accessor = d => d.name || d[EVENT_NAME]
       (${colors.categories.length}). Consider filtering event types.`,
     );
   }
+
   return scaleOrdinal({
     range: [`url(#${FILTERED_EVENTS})`, ...colors.categories],
     domain: [FILTERED_EVENTS, ...sortedNames],
@@ -130,12 +130,14 @@ export function computeColorScale(array, accessor = d => d.name || d[EVENT_NAME]
 export function numTicksForHeight(height) {
   if (height <= 300) return 3;
   if (height <= 600) return 5;
+
   return 6;
 }
 
 export function numTicksForWidth(width) {
   if (width <= 300) return 3;
   if (width <= 400) return 5;
+
   return 6;
 }
 
@@ -149,10 +151,11 @@ const hour = minute * 60;
 const day = hour * 24;
 
 export function timeUnitFromTimeExtent(extent) {
-  const maxMs = Math.max(...(extent.map(Math.abs)));
+  const maxMs = Math.max(...extent.map(Math.abs));
   if (maxMs / day >= 3) return 'day';
   if (maxMs / hour >= 3) return 'hour';
   if (maxMs / minute >= 3) return 'minute';
+
   return 'second';
 }
 
@@ -180,13 +183,15 @@ export function formatInterval(ms, optionalUnit) {
  */
 export function getTimeFormatter(scale) {
   const unit = timeUnitFromTimeExtent(scale.domain());
-  return (ms => formatInterval(ms, unit));
+
+  return ms => formatInterval(ms, unit);
 }
 
 export const nodeSorters = {
   [ORDER_BY_EVENT_COUNT]: (a, b) => b[EVENT_COUNT] - a[EVENT_COUNT], // high to low
   [ORDER_BY_ELAPSED_MS]: (a, b) => {
     const delta = a[ELAPSED_MS] - b[ELAPSED_MS];
+
     return a.depth >= 0 ? delta : -delta; // low to high
   },
 };
@@ -252,7 +257,7 @@ export function computeEntityNameScale(sequences, heightPerEntity = 30) {
 
 export function computeTimeScaleForSequences(sequences, width) {
   let domain = null;
-  sequences.forEach((sequence) => {
+  sequences.forEach(sequence => {
     const [min, max] = d3Extent(sequence, n => n[ELAPSED_MS_ROOT]);
     if (!domain) domain = [min, max];
     domain[0] = Math.min(min, domain[0]);

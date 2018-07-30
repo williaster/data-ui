@@ -5,7 +5,6 @@ import {
   EVENT_NAME,
   ENTITY_ID,
   META,
-
   ELAPSED_TIME_SCALE,
   EVENT_COUNT_SCALE,
   EVENT_SEQUENCE_SCALE,
@@ -49,12 +48,6 @@ export const scaleShape = PropTypes.shape({
   format: PropTypes.func,
 });
 
-export const xScaleTypeShape = PropTypes.oneOf([
-  ELAPSED_TIME_SCALE,
-  EVENT_SEQUENCE_SCALE,
-]);
+export const xScaleTypeShape = PropTypes.oneOf([ELAPSED_TIME_SCALE, EVENT_SEQUENCE_SCALE]);
 
-export const yScaleTypeShape = PropTypes.oneOf([
-  EVENT_COUNT_SCALE,
-  NODE_SEQUENCE_SCALE,
-]);
+export const yScaleTypeShape = PropTypes.oneOf([EVENT_COUNT_SCALE, NODE_SEQUENCE_SCALE]);

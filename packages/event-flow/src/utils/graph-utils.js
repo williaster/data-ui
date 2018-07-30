@@ -1,11 +1,7 @@
 /* eslint no-param-reassign: 1 */
 import { mean as d3Mean } from 'd3-array';
 
-import {
-  binEventsByEntityId,
-  getEventUuid,
-  getEventCountLookup,
-} from './data-utils';
+import { binEventsByEntityId, getEventUuid, getEventCountLookup } from './data-utils';
 
 import {
   TS,
@@ -32,7 +28,8 @@ export function getNodeId(eventName, depth) {
  * Initializes the node if it doesn't already exist
  */
 export function getNodeFromEvent(allNodes, id, eventName, depth) {
-  const node = allNodes[id] || { // lazy init
+  const node = allNodes[id] || {
+    // lazy init
     id,
     name: eventName,
     parent: null,
@@ -75,7 +72,7 @@ export function buildNodesFromEntityEvents(events, startIndex, nodes) {
     event[TS0] = ts0;
     event[TS_PREV] = (events[index - 1] || {})[TS];
     event[TS_NEXT] = (events[index + 1] || {})[TS];
-    event[ELAPSED_MS] = depth === 0 ? 0 : (event[TS] - event[TS_PREV]);
+    event[ELAPSED_MS] = depth === 0 ? 0 : event[TS] - event[TS_PREV];
     event[ELAPSED_MS_ROOT] = event[TS] - ts0;
 
     tempNode.parent = currNode;
@@ -127,7 +124,7 @@ export function buildNodesFromEntityEvents(events, startIndex, nodes) {
 export function addMetaDataToNodes(nodes, allNodes) {
   if (!nodes || !Object.keys(nodes).length) return;
 
-  Object.keys(nodes).forEach((id) => {
+  Object.keys(nodes).forEach(id => {
     const node = nodes[id];
     node[EVENT_COUNT] = Object.keys(node.events || {}).length;
     node[ELAPSED_MS] = d3Mean(Object.values(node.events || {}), d => d[ELAPSED_MS]);
@@ -154,6 +151,7 @@ export function addMetaDataToNodes(nodes, allNodes) {
 export function getRoot(nodes) {
   const children = Object.keys(nodes).filter(n => nodes[n] && nodes[n].depth === 0);
   const root = {};
+
   return Object.assign(root, {
     name: 'root',
     id: 'root',
@@ -165,6 +163,7 @@ export function getRoot(nodes) {
     children: children.reduce((result, currNodeKey) => {
       nodes[currNodeKey].parent = root;
       result[currNodeKey] = nodes[currNodeKey];
+
       return result;
     }, {}),
   });
@@ -218,7 +217,7 @@ export function buildGraph({
   // note this shallow copies
   const { entityEvents, ignoredEvents } = binEventsByEntityId(cleanedEvents, ignoreEventTypes);
 
-  Object.keys(entityEvents).forEach((id) => {
+  Object.keys(entityEvents).forEach(id => {
     const events = entityEvents[id];
     const initialEventIndex = getStartIndex(events);
     entityEvents[id].zeroIndex = initialEventIndex;
@@ -230,6 +229,7 @@ export function buildGraph({
       filteredEvents[id] = events.reduce((all, curr) => {
         all[i] = curr;
         i += 1;
+
         return all;
       }, {});
     }
@@ -245,8 +245,10 @@ export function buildGraph({
 
   console.log(
     'hidden',
-    Object.keys(hiddenNodes).length, 'nodes',
-    Object.keys(hiddenEvents).length, 'events',
+    Object.keys(hiddenNodes).length,
+    'nodes',
+    Object.keys(hiddenEvents).length,
+    'events',
   );
 
   // given that a node size respresents an event count, the "filtered" node should
@@ -266,8 +268,10 @@ export function buildGraph({
     root.children[FILTERED_EVENTS] = nodes[FILTERED_EVENTS];
   }
 
-  root[EVENT_COUNT] = Object.keys(root.children)
-    .reduce((sum, curr) => sum + nodes[curr][EVENT_COUNT], 0);
+  root[EVENT_COUNT] = Object.keys(root.children).reduce(
+    (sum, curr) => sum + nodes[curr][EVENT_COUNT],
+    0,
+  );
 
   const { eventCountLookup, eventCountTotal } = getEventCountLookup(root.children);
 
@@ -286,11 +290,10 @@ export function buildGraph({
       },
       eventCountLookup,
       eventCountTotal,
-      eventCountArray: Object.entries(eventCountLookup)
-        .map(([label, value]) => ({
-          label,
-          value,
-        })),
+      eventCountArray: Object.entries(eventCountLookup).map(([label, value]) => ({
+        label,
+        value,
+      })),
     },
   };
 }
@@ -305,5 +308,6 @@ export function ancestorsFromNode(node) {
     ancestors.push(curr);
     curr = curr.parent;
   }
+
   return ancestors.reverse();
 }

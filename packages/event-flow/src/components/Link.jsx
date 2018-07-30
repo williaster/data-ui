@@ -35,24 +35,15 @@ const defaultProps = {
   onClick: null,
 };
 
-function Link({
-  source,
-  target,
-  x,
-  y,
-  width,
-  height,
-  fill,
-  onClick,
-  onMouseOver,
-  onMouseOut,
-}) {
+function Link({ source, target, x, y, width, height, fill, onClick, onMouseOver, onMouseOut }) {
   return (
     <g
       className={css(styles.group)}
       onClick={onClick}
       onMouseOver={onMouseOver}
       onMouseOut={onMouseOut}
+      onFocus={onMouseOver}
+      onBlur={onMouseOut}
       data-source={source.id}
       data-target={target.id}
     >

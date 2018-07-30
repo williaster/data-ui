@@ -26,11 +26,11 @@ describe('<SubTree />', () => {
     onClick: jest.fn(() => {}),
   };
 
-  test('it should be defined', () => {
+  it('should be defined', () => {
     expect(SubTree).toBeDefined();
   });
 
-  test('it should render a Node for each Node passed', () => {
+  it('should render a Node for each Node passed', () => {
     const wrapper = shallow(
       <SubTree
         {...props}
@@ -41,16 +41,16 @@ describe('<SubTree />', () => {
         }}
       />,
     );
-    expect(wrapper.find(Node).length).toBe(3);
+    expect(wrapper.find(Node)).toHaveLength(3);
   });
 
-  test('it should render a Node and Link for nodes with parents and children', () => {
+  it('should render a Node and Link for nodes with parents and children', () => {
     const wrapper = shallow(<SubTree {...props} nodes={{ [middleNode.id]: middleNode }} />);
-    expect(wrapper.find(Node).length).toBe(1);
-    expect(wrapper.find(Link).length).toBe(1);
+    expect(wrapper.find(Node)).toHaveLength(1);
+    expect(wrapper.find(Link)).toHaveLength(1);
   });
 
-  test('it should not render a Link for nodes with no parent', () => {
+  it('should not render a Link for nodes with no parent', () => {
     const wrapper = shallow(
       <SubTree
         {...props}
@@ -59,29 +59,35 @@ describe('<SubTree />', () => {
         }}
       />,
     );
-    expect(wrapper.find(Node).length).toBe(1);
-    expect(wrapper.find(Link).length).toBe(0);
+    expect(wrapper.find(Node)).toHaveLength(1);
+    expect(wrapper.find(Link)).toHaveLength(0);
   });
 
-  test('it should render a SubTree for nodes with children', () => {
+  it('should render a SubTree for nodes with children', () => {
     const wrapper = shallow(<SubTree {...props} nodes={{ [middleNode.id]: middleNode }} />);
-    expect(wrapper.find(SubTree).length).toBe(1);
+    expect(wrapper.find(SubTree)).toHaveLength(1);
 
     const leafWrapper = shallow(<SubTree {...props} nodes={{ [leafNode.id]: leafNode }} />);
-    expect(leafWrapper.find(SubTree).length).toBe(0);
+    expect(leafWrapper.find(SubTree)).toHaveLength(0);
   });
 
-  test('node and link clicks should result in onClick calls', () => {
+  it('node and link clicks should result in onClick calls', () => {
     const wrapper = mount(
       <svg>
         <SubTree {...props} nodes={{ [middleNode.id]: middleNode }} />
       </svg>,
     );
 
-    wrapper.find(Node).first().simulate('click');
+    wrapper
+      .find(Node)
+      .first()
+      .simulate('click');
     expect(props.onClick).toHaveBeenCalledTimes(1);
 
-    wrapper.find(Link).first().simulate('click');
+    wrapper
+      .find(Link)
+      .first()
+      .simulate('click');
     expect(props.onClick).toHaveBeenCalledTimes(2);
   });
 });

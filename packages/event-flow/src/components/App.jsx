@@ -1,4 +1,4 @@
-/* eslint class-methods-use-this: 0 */
+/* eslint react/no-access-state-in-setstate: 0 */
 import PropTypes from 'prop-types';
 import React from 'react';
 import SplitPane from 'react-split-pane';
@@ -39,7 +39,7 @@ const defaultProps = {
 class App extends React.PureComponent {
   constructor(props) {
     super(props);
-    this.onToggleShowControls = this.onToggleShowControls.bind(this);
+    this.handleToggleShowControls = this.handleToggleShowControls.bind(this);
     this.handleAlignByIndex = this.handleAlignByIndex.bind(this);
     this.handleAlignByEventType = this.handleAlignByEventType.bind(this);
     this.handleClickLegend = this.handleClickLegend.bind(this);
@@ -116,7 +116,36 @@ class App extends React.PureComponent {
     }
   }
 
-  onToggleShowControls() {
+  getVisualizationWidth(width, showControls) {
+    return width - (showControls ? CONTROLS_WIDTH + VIS_MARGIN.right : 0);
+  }
+
+  getGraph({ data, alignByIndex, alignByEventType, hiddenEventTypes, minEventCount }) {
+    // the graph is built from a root event derived from event type + index
+    return buildGraph({
+      cleanedEvents: data,
+      getStartIndex: eventSequence =>
+        findNthIndexOfX(
+          eventSequence,
+          alignByIndex,
+          event => alignByEventType === ANY_EVENT_TYPE || event[EVENT_NAME] === alignByEventType,
+        ),
+      ignoreEventTypes: hiddenEventTypes,
+      minEventCount,
+    });
+  }
+
+  getScales(graph, width, height) {
+    const innerWidth = width - VIS_MARGIN.left - VIS_MARGIN.right;
+    const innerHeight = height - VIS_MARGIN.top - VIS_MARGIN.bottom;
+    console.time('buildScales');
+    const scales = buildAllScales(graph, innerWidth, innerHeight);
+    console.timeEnd('buildScales');
+
+    return scales;
+  }
+
+  handleToggleShowControls() {
     const { width, height } = this.props;
     const { showControls: prevShowControls, graph } = this.state;
     const showControls = !prevShowControls;
@@ -133,33 +162,6 @@ class App extends React.PureComponent {
     });
   }
 
-  getVisualizationWidth(width, showControls) {
-    return width - (showControls ? CONTROLS_WIDTH + VIS_MARGIN.right : 0);
-  }
-
-  getGraph({ data, alignByIndex, alignByEventType, hiddenEventTypes, minEventCount }) {
-    // the graph is built from a root event derived from event type + index
-    return buildGraph({
-      cleanedEvents: data,
-      getStartIndex: eventSequence => (
-        findNthIndexOfX(eventSequence, alignByIndex, event => (
-          alignByEventType === ANY_EVENT_TYPE || event[EVENT_NAME] === alignByEventType
-        ))
-      ),
-      ignoreEventTypes: hiddenEventTypes,
-      minEventCount,
-    });
-  }
-
-  getScales(graph, width, height) {
-    const innerWidth = width - VIS_MARGIN.left - VIS_MARGIN.right;
-    const innerHeight = height - VIS_MARGIN.top - VIS_MARGIN.bottom;
-    console.time('buildScales');
-    const scales = buildAllScales(graph, innerWidth, innerHeight);
-    console.timeEnd('buildScales');
-    return scales;
-  }
-
   handleAlignByIndex(alignByIndex) {
     const { data, height } = this.props;
 
@@ -171,7 +173,8 @@ class App extends React.PureComponent {
       minEventCount: this.state.minEventCount,
     });
 
-    const scales = { // use the previous color scale in case event types are hidden
+    const scales = {
+      // use the previous color scale in case event types are hidden
       ...this.getScales(graph, this.state.visualizationWidth, height),
       [NODE_COLOR_SCALE]: this.state.scales[NODE_COLOR_SCALE],
     };
@@ -189,7 +192,8 @@ class App extends React.PureComponent {
       minEventCount: this.state.minEventCount,
     });
 
-    const scales = { // use the previous color scale in case event types are hidden
+    const scales = {
+      // use the previous color scale in case event types are hidden
       ...this.getScales(graph, this.state.visualizationWidth, height),
       [NODE_COLOR_SCALE]: this.state.scales[NODE_COLOR_SCALE],
     };
@@ -213,7 +217,8 @@ class App extends React.PureComponent {
       minEventCount: this.state.minEventCount,
     });
 
-    const scales = { // use the previous color scale in case event types are hidden
+    const scales = {
+      // use the previous color scale in case event types are hidden
       ...this.getScales(graph, visualizationWidth, height),
       [NODE_COLOR_SCALE]: this.state.scales[NODE_COLOR_SCALE],
     };
@@ -233,7 +238,8 @@ class App extends React.PureComponent {
       minEventCount,
     });
 
-    const scales = { // use the previous color scale in case event types are hidden
+    const scales = {
+      // use the previous color scale in case event types are hidden
       ...this.getScales(graph, visualizationWidth, height),
       [NODE_COLOR_SCALE]: this.state.scales[NODE_COLOR_SCALE],
     };
@@ -259,8 +265,9 @@ class App extends React.PureComponent {
 
     const { width, height } = this.props;
 
-    let metaData = graph.metaData;
-    if (selectedNode) { // use meta data from selected subtree
+    let { metaData } = graph;
+    if (selectedNode) {
+      // use meta data from selected subtree
       metaData = {
         ...metaData,
         ...getEventCountLookup({ [selectedNode.id]: selectedNode }),
@@ -276,7 +283,9 @@ class App extends React.PureComponent {
           split="vertical"
         >
           <Visualization
-            onClickNode={(node) => { this.setState({ selectedNode: node }); }}
+            onClickNode={node => {
+              this.setState({ selectedNode: node });
+            }}
             width={visualizationWidth}
             height={height}
             graph={graph}
@@ -294,13 +303,17 @@ class App extends React.PureComponent {
             orderBy={orderBy}
             colorScale={scales[NODE_COLOR_SCALE]}
             xScaleType={xScaleType}
-            onToggleShowControls={this.onToggleShowControls}
+            onToggleShowControls={this.handleToggleShowControls}
             onChangeAlignByEventType={this.handleAlignByEventType}
             onChangeAlignByIndex={this.handleAlignByIndex}
             onChangeMinEventCount={this.handleMinEventCountChange}
             onClickLegendShape={this.handleClickLegend}
-            onChangeXScale={(type) => { this.setState({ xScaleType: type }); }}
-            onChangeOrderBy={(value) => { this.setState({ orderBy: value }); }}
+            onChangeXScale={type => {
+              this.setState({ xScaleType: type });
+            }}
+            onChangeOrderBy={value => {
+              this.setState({ orderBy: value });
+            }}
             metaData={metaData}
             hiddenEventTypes={hiddenEventTypes}
             width={width - visualizationWidth}

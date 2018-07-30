@@ -101,7 +101,13 @@ export default class LineSeries extends React.PureComponent {
                 disableMouseEvents
                   ? null
                   : event => {
-                      onMouseMove({ event, data, datum: d, color, index: i });
+                      onMouseMove({
+                        event,
+                        data,
+                        datum: d,
+                        color: d.stroke || callOrValue(stroke, d, i),
+                        index: i,
+                      });
                     }
               }
             >

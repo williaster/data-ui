@@ -14,7 +14,10 @@
   "scripts": {
     "build": "webpack -p",
     "dev": "webpack --progress --colors --watch",
-    "dev:nowatch": "webpack -d --progress --colors",
+    "eslint": "beemo eslint \"./{src,test}/**/*.{js,jsx,json,md}\"",
+    "lint": "npm run prettier && npm run eslint",
+    "prettier": "beemo prettier \"./{src,test}/**/*.{js,jsx,json,md}\"",
+    "sync:gitignore": "beemo sync-dotfiles --filter=gitignore",
     "prepublish": "npm run build",
     "test": "jest --colors --verbose --coverage"
   },
@@ -23,6 +26,7 @@
   "license": "MIT",
   "homepage": "https://github.com/williaster/data-ui#readme",
   "devDependencies": {
+    "@data-ui/build-config": "^0.0.7",
     "babel-cli": "^6.24.1",
     "babel-core": "^6.24.1",
     "babel-jest": "^20.0.3",
@@ -82,5 +86,23 @@
       "<rootDir>/test/setup.js"
     ],
     "setupTestFrameworkScriptFile": "./test/testsSetup.js"
+  },
+  "engines": {
+    "node": ">=8.10.0"
+  },
+  "beemo": {
+    "module": "@data-ui/build-config",
+    "drivers": [
+      "prettier",
+      "eslint"
+    ],
+    "eslint": {
+      "rules": {
+        "complexity": "off",
+        "no-magic-numbers": "off",
+        "react/destructuring-assignment": "off",
+        "sort-keys": "off"
+      }
+    }
   }
 }

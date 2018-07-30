@@ -14,22 +14,25 @@ describe('<NodeSequence />', () => {
     colorScale: scales.NODE_COLOR_SCALE,
   };
 
-  test('it should be defined', () => {
+  it('should be defined', () => {
     expect(NodeSequence).toBeDefined();
   });
 
-  test('it should render one span element per node', () => {
+  it('should render one span element per node', () => {
     const wrapper = shallow(<NodeSequence {...props} />);
-    expect(wrapper.children().length).toBe(nodeArray.length);
+    expect(wrapper.children()).toHaveLength(nodeArray.length);
   });
 
-  test('it should add colors using the color scale', () => {
-    const colorScale = props.colorScale;
+  it('should add colors using the color scale', () => {
+    const { colorScale } = props;
     const wrapper = shallow(<NodeSequence {...props} />);
     const children = wrapper.children();
     children.forEach((child, index) => {
       const node = props.nodeArray[index];
-      const color = child.find('span').last().props().style.color;
+      const { color } = child
+        .find('span')
+        .last()
+        .props().style;
       const expectedColor = colorScale.scale(colorScale.accessor(node));
       expect(color).toBe(expectedColor);
     });

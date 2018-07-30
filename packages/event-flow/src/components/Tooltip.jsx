@@ -51,15 +51,12 @@ function Tooltip({
   let top = initialTop;
 
   if (rect && parentRect) {
-    left = detectOverflowX && rect.right > parentRect.right ? (left - rect.width) : left;
-    top = detectOverflowY && rect.bottom > parentRect.bottom ? (top - rect.height) : top;
+    left = detectOverflowX && rect.right > parentRect.right ? left - rect.width : left;
+    top = detectOverflowY && rect.bottom > parentRect.bottom ? top - rect.height : top;
   }
 
   return (
-    <div
-      className={css(styles.tooltip)}
-      style={{ top, left, width }}
-    >
+    <div className={css(styles.tooltip)} style={{ top, left, width }}>
       {children}
     </div>
   );

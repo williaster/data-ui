@@ -38,45 +38,12 @@ const defaultProps = {
 class SubTree extends React.PureComponent {
   constructor(props) {
     super(props);
-    this.state = {
-      showEventsFor: null,
-    };
+    this.state = {};
 
-    this.onClickNode = this.onClickNode.bind(this);
-    this.onClickLink = this.onClickLink.bind(this);
-    this.onMouseOver = this.onMouseOver.bind(this);
-    this.onMouseOut = this.onMouseOut.bind(this);
-  }
-
-  onMouseOver(event) {
-    const target = event.target;
-    const { node, link } = this.getNodeFromTarget(target);
-    if (node || link) {
-      const coords = getCoordsFromEvent(target, event);
-      this.props.onMouseOver({ node, link, coords, event });
-    }
-  }
-
-  onMouseOut() {
-    this.props.onMouseOut();
-  }
-
-  onClickNode(event) {
-    const target = event.target;
-    const { node } = this.getNodeFromTarget(target);
-    if (node) {
-      const coords = getCoordsFromEvent(target, event);
-      this.props.onClick({ coords, event, node });
-    }
-  }
-
-  onClickLink(event) {
-    const target = event.target;
-    const { link } = this.getNodeFromTarget(target);
-    if (link) {
-      const coords = getCoordsFromEvent(target, event);
-      this.props.onClick({ coords, event, node: link.target });
-    }
+    this.handleClickNode = this.handleClickNode.bind(this);
+    this.handleClickLink = this.handleClickLink.bind(this);
+    this.handleMouseOver = this.handleMouseOver.bind(this);
+    this.handleMouseOut = this.handleMouseOut.bind(this);
   }
 
   getNodeFromTarget(target) {
@@ -94,9 +61,42 @@ class SubTree extends React.PureComponent {
           target: targetNode,
         };
       }
+
       return result;
     }
+
     return null;
+  }
+
+  handleMouseOver(event) {
+    const { target } = event;
+    const { node, link } = this.getNodeFromTarget(target);
+    if (node || link) {
+      const coords = getCoordsFromEvent(target, event);
+      this.props.onMouseOver({ node, link, coords, event });
+    }
+  }
+
+  handleMouseOut() {
+    this.props.onMouseOut();
+  }
+
+  handleClickNode(event) {
+    const { target } = event;
+    const { node } = this.getNodeFromTarget(target);
+    if (node) {
+      const coords = getCoordsFromEvent(target, event);
+      this.props.onClick({ coords, event, node });
+    }
+  }
+
+  handleClickLink(event) {
+    const { target } = event;
+    const { link } = this.getNodeFromTarget(target);
+    if (link) {
+      const coords = getCoordsFromEvent(target, event);
+      this.props.onClick({ coords, event, node: link.target });
+    }
   }
 
   render() {
@@ -117,7 +117,7 @@ class SubTree extends React.PureComponent {
 
     return (
       <Group className="subtree">
-        {sortedNodes.map((node) => {
+        {sortedNodes.map(node => {
           const offset = node.depth >= 0 ? 'right' : 'left';
           const hasParent = Boolean(node.parent);
           const hasChildren = node.children && Object.keys(node.children).length;
@@ -133,35 +133,30 @@ class SubTree extends React.PureComponent {
 
           return (
             <Group key={node.id} style={{ cursor: 'pointer' }}>
-              {hasChildren &&
-                <SubTree
-                  {...this.props}
-                  yOffset={top}
-                  nodes={node.children}
-                />}
+              {hasChildren && <SubTree {...this.props} yOffset={top} nodes={node.children} />}
               {/* link back to the parent */}
-              {hasParent &&
-                <Link
+              {hasParent && (
+                <Link // eslint-disable-line jsx-a11y/mouse-events-have-key-events, jsx-a11y/anchor-is-valid
                   source={node.parent}
                   target={node}
                   x={Math.min(left, parentLeft) + (left > parentLeft ? DEFAULT_NODE_WIDTH : 0)}
                   y={top}
                   width={Math.abs(left - parentLeft)}
                   height={Math.max(1, height)}
-                  onClick={this.onClickLink}
-                  onMouseOver={this.onMouseOver}
-                  onMouseOut={this.onMouseOut}
+                  onClick={this.handleClickLink}
+                  onMouseOver={this.handleMouseOver}
+                  onMouseOut={this.handleMouseOut}
                 />
-              }
-              <Node
+              )}
+              <Node // eslint-disable-line jsx-a11y/mouse-events-have-key-events
                 node={node}
                 x={left}
                 y={top}
                 height={Math.max(1, height)}
                 fill={nodeColor}
-                onClick={this.onClickNode}
-                onMouseOver={this.onMouseOver}
-                onMouseOut={this.onMouseOut}
+                onClick={this.handleClickNode}
+                onMouseOver={this.handleMouseOver}
+                onMouseOut={this.handleMouseOut}
                 data-node={node.id}
               />
             </Group>

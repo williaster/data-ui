@@ -30,8 +30,8 @@ const styles = StyleSheet.create({
   },
 
   nodeSequence: {
-    paddingTop: 1 * unit,
-    paddingLeft: 1 * unit,
+    paddingTop: Number(unit),
+    paddingLeft: Number(unit),
     flexGrow: 1,
     flexWrap: 'wrap',
   },
@@ -42,11 +42,11 @@ const styles = StyleSheet.create({
     fontSize: 12,
     flexShrink: 0,
     fontWeight: 200,
-    marginLeft: 1 * unit,
+    marginLeft: Number(unit),
   },
 
   checkbox: {
-    marginRight: 1 * unit,
+    marginRight: Number(unit),
   },
 });
 
@@ -64,11 +64,6 @@ const defaultProps = {
 };
 
 class SingleSequencePanel extends React.PureComponent {
-  // given a sequence count, returns an estimate of the panel height
-  static getEstimatedHeight(numSequences) {
-    return (numSequences * 30) + margin.top + 75;
-  }
-
   constructor(props) {
     super(props);
     const { sequences, width } = props;
@@ -94,6 +89,11 @@ class SingleSequencePanel extends React.PureComponent {
     }
   }
 
+  // given a sequence count, returns an estimate of the panel height
+  static getEstimatedHeight(numSequences) {
+    return numSequences * 30 + margin.top + 75;
+  }
+
   render() {
     const { node, sequences, colorScale, clearSelection, height } = this.props;
     const { xScale, yScale } = this.state;
@@ -115,11 +115,7 @@ class SingleSequencePanel extends React.PureComponent {
             />
           </div>
           <div className={css(styles.controls)}>
-            <Button
-              onClick={clearSelection}
-              disabled={!hasSequences}
-              small
-            >
+            <Button onClick={clearSelection} disabled={!hasSequences} small>
               Clear Selection ({sequences.length})
             </Button>
           </div>
