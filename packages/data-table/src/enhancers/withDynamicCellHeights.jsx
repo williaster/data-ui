@@ -20,7 +20,7 @@ const propTypes = {
   // wrapped by CellMeasurer and returns the cell contents, one or one for each column
   cellRendererByColumnKey: PropTypes.objectOf(PropTypes.func),
   defaultCellHeight: PropTypes.number,
-  dynamicHeightColumnKeys: PropTypes.array.isRequired, // dynamic height is computed for these
+  dynamicHeightColumnKeys: PropTypes.arrayOf(PropTypes.string).isRequired, // dynamic height is computed for these
   minCellHeight: PropTypes.number,
 };
 
@@ -35,10 +35,7 @@ function withDynamicCellHeights(WrappedComponent, pureComponent = true) {
   const BaseClass = baseHOC(pureComponent);
 
   class EnhancedComponent extends BaseClass {
-    static getDynamicHeightCellCache({
-      defaultCellHeight,
-      minCellHeight,
-    }) {
+    static getDynamicHeightCellCache({ defaultCellHeight, minCellHeight }) {
       return new CellMeasurerCache({
         defaultHeight: defaultCellHeight,
         fixedHeight: false,
@@ -58,8 +55,7 @@ function withDynamicCellHeights(WrappedComponent, pureComponent = true) {
     cellRenderer({ cellData, dataKey, parent, rowData, rowIndex }) {
       const { cellRendererByColumnKey } = this.props;
       const cellRenderer =
-        (cellRendererByColumnKey && cellRendererByColumnKey[dataKey]) ||
-        defaultCellRenderer;
+        (cellRendererByColumnKey && cellRendererByColumnKey[dataKey]) || defaultCellRenderer;
 
       return (
         <CellMeasurer
@@ -87,6 +83,7 @@ function withDynamicCellHeights(WrappedComponent, pureComponent = true) {
           [key]: this.cellRenderer,
         })),
       );
+
       return (
         <WrappedComponent
           {...rest}

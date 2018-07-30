@@ -6,7 +6,7 @@ import Table from '../src/components/Table';
 import withDynamicCellHeights from '../src/enhancers/withDynamicCellHeights';
 
 const TableWithDynamicCellHeights = withDynamicCellHeights(Table);
-const dataList = List([{ a: 'a', b: 'b' }, { a: 'a', z: 'z' }]);
+const dataList = List([{ a: 'a', b: 'b' }, { a: 'a', z: 'z' }]); // eslint-disable-line babel/new-cap
 
 describe('withDynamicCellHeights()', () => {
   const props = {
@@ -17,16 +17,16 @@ describe('withDynamicCellHeights()', () => {
     dynamicHeightColumnKeys: ['a'],
   };
 
-  test('it should be defined', () => {
+  it('it should be defined', () => {
     expect(withDynamicCellHeights).toBeDefined();
   });
 
-  test('it should render a Table', () => {
+  it('it should render a Table', () => {
     const wrapper = shallow(<TableWithDynamicCellHeights {...props} />);
-    expect(wrapper.find(Table).length).toBe(1);
+    expect(wrapper.find(Table)).toHaveLength(1);
   });
 
-  test('it should pass a deferredMeasurementCache and cellRendererByColumnKey props to the Table', () => {
+  it('it should pass a deferredMeasurementCache and cellRendererByColumnKey props to the Table', () => {
     const wrapper = shallow(<TableWithDynamicCellHeights {...props} />);
     const RenderedTable = wrapper.find(Table);
 

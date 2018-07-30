@@ -7,7 +7,7 @@ import withTableAutoSizer from '../src/enhancers/withTableAutoSizer';
 import Table from '../src/components/Table';
 
 const TableWithAutoSizer = withTableAutoSizer(Table);
-const dataList = List([{ str: 'a', num: 5 }, { str: 'c', num: 3 }, { str: 'b', num: 0 }]);
+const dataList = List([{ str: 'a', num: 5 }, { str: 'c', num: 3 }, { str: 'b', num: 0 }]); // eslint-disable-line babel/new-cap
 
 describe('withTableAutoSizer()', () => {
   const props = {
@@ -17,12 +17,12 @@ describe('withTableAutoSizer()', () => {
     orderedColumnKeys: ['str', 'num'],
   };
 
-  test('it should be defined', () => {
+  it('it should be defined', () => {
     expect(withTableAutoSizer).toBeDefined();
   });
 
-  test('it should render an AutoSizer', () => {
+  it('it should render an AutoSizer', () => {
     const wrapper = shallow(<TableWithAutoSizer {...props} />);
-    expect(wrapper.find(AutoSizer).length).toBe(1);
+    expect(wrapper.find(AutoSizer)).toHaveLength(1);
   });
 });

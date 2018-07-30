@@ -6,7 +6,7 @@ import withSorting from '../src/enhancers/withSorting';
 import Table from '../src/components/Table';
 
 const TableWithSorting = withSorting(Table);
-const dataList = List([{ str: 'a', num: 5 }, { str: 'c', num: 3 }, { str: 'b', num: 0 }]);
+const dataList = List([{ str: 'a', num: 5 }, { str: 'c', num: 3 }, { str: 'b', num: 0 }]); // eslint-disable-line babel/new-cap
 
 describe('withSorting()', () => {
   const props = {
@@ -16,16 +16,16 @@ describe('withSorting()', () => {
     orderedColumnKeys: ['str', 'num'],
   };
 
-  test('it should be defined', () => {
+  it('it should be defined', () => {
     expect(withSorting).toBeDefined();
   });
 
-  test('it should render a Table', () => {
+  it('it should render a Table', () => {
     const wrapper = shallow(<TableWithSorting {...props} />);
-    expect(wrapper.find(Table).length).toBe(1);
+    expect(wrapper.find(Table)).toHaveLength(1);
   });
 
-  test('it should pass sort, sorbBy, sortDirection, and dataList props to the wrapped Table', () => {
+  it('it should pass sort, sorbBy, sortDirection, and dataList props to the wrapped Table', () => {
     const wrapper = shallow(<TableWithSorting {...props} />);
     const RenderedTable = wrapper.find(Table);
 
@@ -35,7 +35,7 @@ describe('withSorting()', () => {
     expect(RenderedTable.prop('dataList') instanceof List).toBe(true);
   });
 
-  test('it should do an initial sort if initialSortBy and initialSortDirection are passed', () => {
+  it('it should do an initial sort if initialSortBy and initialSortDirection are passed', () => {
     let wrapper = shallow(<TableWithSorting {...props} />);
     let RenderedTable = wrapper.find(Table);
     let data = RenderedTable.prop('dataList');

@@ -5,19 +5,15 @@ import { Column, SortDirection, Table } from 'react-virtualized';
 import dataListPropType from '../propTypes/dataList';
 
 function typeOrColumnKeyToType(PropType) {
-  return PropTypes.oneOfType([
-    PropType,
-    PropTypes.objectOf(PropType),
-  ]);
+  return PropTypes.oneOfType([PropType, PropTypes.objectOf(PropType)]);
 }
 
 const propTypes = {
   // required
   dataList: dataListPropType.isRequired,
   height: PropTypes.number.isRequired,
-  orderedColumnKeys: PropTypes.arrayOf(
-    PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  ).isRequired,
+  orderedColumnKeys: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number]))
+    .isRequired,
   width: PropTypes.number.isRequired,
 
   // optional
@@ -35,7 +31,7 @@ const propTypes = {
   columnFlexShrink: typeOrColumnKeyToType(PropTypes.number),
   columnLabelByColumnKey: PropTypes.objectOf(PropTypes.string),
   columnWidth: typeOrColumnKeyToType(PropTypes.number),
-  deferredMeasurementCache: PropTypes.object,
+  deferredMeasurementCache: PropTypes.object, // eslint-disable-line react/forbid-prop-types
   disableHeader: PropTypes.bool,
   disableSort: typeOrColumnKeyToType(PropTypes.bool),
   flexLastColumn: PropTypes.bool,
@@ -78,16 +74,11 @@ const defaultProps = {
   styles: {},
 };
 
-// eslint-disable-next-line react/prefer-stateless-function
 class BasicTable extends React.PureComponent {
   render() {
     const {
       cellRendererByColumnKey,
-      classNames: {
-        table: className,
-        header: headerClassName,
-        row: rowClassName,
-      },
+      classNames: { table: className, header: headerClassName, row: rowClassName },
       columnFlexGrow,
       columnFlexShrink,
       columnLabelByColumnKey,
@@ -106,13 +97,10 @@ class BasicTable extends React.PureComponent {
       sort,
       sortBy,
       sortDirection,
-      styles: {
-        table: style,
-        header: headerStyle,
-        row: rowStyle,
-      },
+      styles: { table: style, header: headerStyle, row: rowStyle },
       width,
     } = this.props;
+
     return (
       <Table
         deferredMeasurementCache={deferredMeasurementCache}
@@ -136,37 +124,30 @@ class BasicTable extends React.PureComponent {
       >
         {orderedColumnKeys.map((columnKey, idx) => {
           let flexGrow;
-          if (typeof columnFlexGrow !== 'undefined') {
-            flexGrow = typeof columnFlexGrow === 'object' ?
-              columnFlexGrow[columnKey] : columnFlexGrow;
-          } else {
+          if (typeof columnFlexGrow === 'undefined') {
             flexGrow = flexLastColumn && idx === orderedColumnKeys.length - 1 ? 1 : undefined;
+          } else {
+            flexGrow =
+              typeof columnFlexGrow === 'object' ? columnFlexGrow[columnKey] : columnFlexGrow;
           }
+
           return (
             <Column
               key={columnKey}
-              cellRenderer={
-                cellRendererByColumnKey &&
-                cellRendererByColumnKey[columnKey]
-              }
+              cellRenderer={cellRendererByColumnKey && cellRendererByColumnKey[columnKey]}
               dataKey={columnKey}
-              disableSort={
-                typeof disableSort === 'object' ?
-                disableSort[columnKey] : disableSort}
+              disableSort={typeof disableSort === 'object' ? disableSort[columnKey] : disableSort}
               flexShrink={
-                typeof columnFlexShrink === 'object' ?
-                columnFlexShrink[columnKey] : columnFlexShrink
+                typeof columnFlexShrink === 'object'
+                  ? columnFlexShrink[columnKey]
+                  : columnFlexShrink
               }
               flexGrow={flexGrow}
               headerRenderer={
-                typeof headerRenderer === 'object' ?
-                headerRenderer[columnKey] : headerRenderer
+                typeof headerRenderer === 'object' ? headerRenderer[columnKey] : headerRenderer
               }
               label={(columnLabelByColumnKey && columnLabelByColumnKey[columnKey]) || columnKey}
-              width={typeof columnWidth === 'object' ?
-                columnWidth[columnKey] : columnWidth
-              }
-
+              width={typeof columnWidth === 'object' ? columnWidth[columnKey] : columnWidth}
             />
           );
         })}

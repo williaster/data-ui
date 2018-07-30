@@ -7,7 +7,7 @@ import { baseHOC, updateDisplayName } from './hocUtils';
 const propTypes = {
   onResize: PropTypes.func,
   onScroll: PropTypes.func,
-  scrollElement: PropTypes.any,
+  scrollElement: PropTypes.node,
 };
 
 const defaultProps = {
@@ -21,18 +21,10 @@ function withWindowScroller(WrappedComponent, pureComponent = true) {
 
   class EnhancedComponent extends BaseClass {
     render() {
-      const {
-        onResize,
-        onScroll,
-        scrollElement,
-        ...rest
-      } = this.props;
+      const { onResize, onScroll, scrollElement, ...rest } = this.props;
+
       return (
-        <WindowScroller
-          onResize={onResize}
-          onScroll={onScroll}
-          scrollElement={scrollElement}
-        >
+        <WindowScroller onResize={onResize} onScroll={onScroll} scrollElement={scrollElement}>
           {({ height, isScrolling, scrollTop }) => (
             <WrappedComponent
               {...rest}
