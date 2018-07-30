@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { Group } from '@vx/group';
 import { Stack } from '@vx/shape';
-import color from '@data-ui/theme/build/color';
+import { colors } from '@data-ui/theme';
 
 import interpolatorLookup from '../utils/interpolatorLookup';
 import { callOrValue, isDefined } from '../utils/chartUtils';
@@ -25,7 +25,7 @@ const propTypes = {
 const defaultProps = {
   fillOpacity: 0.7,
   interpolation: 'monotoneX',
-  stackFills: color.categories,
+  stackFills: colors.categories,
   stroke: '#fff',
   strokeWidth: 1,
 };

@@ -21,7 +21,7 @@ import {
   WithTooltip,
 } from '@data-ui/xy-chart';
 
-import colors from '@data-ui/theme/build/color';
+import { color as colors } from '@data-ui/theme';
 import readme from '../../node_modules/@data-ui/xy-chart/README.md';
 import CirclePackWithCallback from './CirclePackWithCallback';
 import LineSeriesExample from './LineSeriesExample';

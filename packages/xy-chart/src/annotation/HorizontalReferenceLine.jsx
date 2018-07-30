@@ -4,9 +4,9 @@ import React from 'react';
 import { Group } from '@vx/group';
 import { Line } from '@vx/shape';
 import { Point } from '@vx/point';
+import { color, svgLabel } from '@data-ui/theme';
 
-import color from '@data-ui/theme/build/color';
-import { baseLabel } from '@data-ui/theme/build/svgLabel';
+const { baseLabel } = svgLabel;
 
 export const defaultLabelProps = {
   ...baseLabel,

@@ -1,9 +1,9 @@
 import { Bar } from '@vx/shape';
-import FocusBlurHandler from '@data-ui/shared/build/components/FocusBlurHandler';
+import { FocusBlurHandler } from '@data-ui/shared';
 import { Group } from '@vx/group';
 import PropTypes from 'prop-types';
 import React from 'react';
-import themeColors from '@data-ui/theme/build/color';
+import { color as themeColors } from '@data-ui/theme';
 
 import { barSeriesDataShape } from '../utils/propShapes';
 import { callOrValue, isDefined } from '../utils/chartUtils';

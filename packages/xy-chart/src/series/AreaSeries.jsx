@@ -1,6 +1,6 @@
 import { Area, LinePath } from '@vx/shape';
-import color from '@data-ui/theme/build/color';
-import FocusBlurHandler from '@data-ui/shared/build/components/FocusBlurHandler';
+import { color } from '@data-ui/theme';
+import { FocusBlurHandler } from '@data-ui/shared';
 import { Group } from '@vx/group';
 import PropTypes from 'prop-types';
 import React from 'react';

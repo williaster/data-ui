@@ -18,14 +18,9 @@ export { computeStats } from '@vx/stats';
 
 export { default as HorizontalReferenceLine } from './annotation/HorizontalReferenceLine';
 export { default as CrossHair } from './chart/CrossHair';
-export {
-  default as WithTooltip,
-  withTooltipPropTypes,
-} from '@data-ui/shared/build/enhancer/WithTooltip';
-
+export { WithTooltip, withTooltipPropTypes } from '@data-ui/shared';
 export { LinearGradient } from '@vx/gradient';
 export { PatternLines, PatternCircles, PatternWaves, PatternHexagons } from '@vx/pattern';
 export { withScreenSize, withParentSize, ParentSize } from '@vx/responsive';
-
 export { default as withTheme } from './enhancer/withTheme';
 export { chartTheme as theme } from '@data-ui/theme';

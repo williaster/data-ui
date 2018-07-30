@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "jest": "lerna run test",
-    "lint": "eslint --ignore-path=.eslintignore --ext .js,.jsx ./packages/",
+    "lint": "lerna run lint",
     "prepare-release": "git checkout master && git pull --rebase origin master && npm run test && lerna updated",
     "release": "npm run prepare-release && lerna publish --exact && lerna run gh-pages",
     "test": "lerna exec npm install && npm run lint && npm run jest"
@@ -23,22 +23,7 @@
   "author": "Chris Williams <chris.williams@airbnb.com>",
   "license": "MIT",
   "devDependencies": {
-    "aphrodite": "^1.2.0",
-    "babel-jest": "^20.0.3",
-    "babel-polyfill": "^6.23.0",
-    "babel-register": "^6.24.1",
-    "coveralls": "^2.13.1",
-    "eslint": "^3.19.0",
-    "eslint-config-airbnb": "^14.1.0",
-    "eslint-plugin-import": "^2.2.0",
-    "eslint-plugin-jsx-a11y": "^4.0.0",
-    "eslint-plugin-react": "^6.10.3",
-    "jest": "^20.0.3",
-    "lerna": "^2.0.0-rc.2",
-    "react": "^16.0.0",
-    "react-dom": "^16.0.0",
-    "react-test-renderer": "^16.0.0",
-    "rimraf": "^2.6.1"
+    "lerna": "^2.0.0-rc.2"
   },
   "peerDependencies": {
     "react": "^15.0.0-0 || ^16.0.0-0"

@@ -1,6 +1,5 @@
-import chartTheme from '@data-ui/theme/build/chartTheme';
-import color from '@data-ui/theme/build/color';
-import FocusBlurHandler from '@data-ui/shared/build/components/FocusBlurHandler';
+import { chartTheme, colors } from '@data-ui/theme';
+import { FocusBlurHandler } from '@data-ui/shared';
 import { Group } from '@vx/group';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -27,7 +26,7 @@ export const defaultProps = {
   labelComponent: <text {...chartTheme.labelStyles} />,
   pointComponent: GlyphDotComponent,
   size: 4,
-  fill: color.default,
+  fill: colors.default,
   fillOpacity: 0.8,
   stroke: '#FFFFFF',
   strokeDasharray: null,

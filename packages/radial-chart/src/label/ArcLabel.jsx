@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { baseLabel } from '@data-ui/theme/build/svgLabel';
+import { svgLabel as baseLabel } from '@data-ui/theme';
 
 import additionalProps from '../util/additionalProps';
 

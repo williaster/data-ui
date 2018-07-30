@@ -3,8 +3,7 @@ import React from 'react';
 
 import Group from '@vx/group/build/Group';
 import Bar from '@vx/shape/build/shapes/Bar';
-import color from '@data-ui/theme/build/color';
-import svgLabel from '@data-ui/theme/build/svgLabel';
+import { color, svgLabel } from '@data-ui/theme';
 
 import Label from '../annotation/Label';
 import callOrValue from '../utils/callOrValue';

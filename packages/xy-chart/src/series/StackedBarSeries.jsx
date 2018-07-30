@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { BarStack } from '@vx/shape';
-import color from '@data-ui/theme/build/color';
+import { colors } from '@data-ui/theme/';
 
 import { stackedBarSeriesDataShape } from '../utils/propShapes';
 import { scaleTypeToScale } from '../utils/getScaleForAccessor';
@@ -18,7 +18,7 @@ const propTypes = {
 };
 
 const defaultProps = {
-  stackFills: color.categories,
+  stackFills: colors.categories,
   stroke: '#FFFFFF',
   strokeWidth: 1,
 };

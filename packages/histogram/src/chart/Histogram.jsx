@@ -4,7 +4,7 @@ import React from 'react';
 
 import { Group } from '@vx/group';
 import { scaleBand, scaleLinear } from '@vx/scale';
-import WithTooltip, { withTooltipPropTypes } from '@data-ui/shared/build/enhancer/WithTooltip';
+import { WithTooltip, withTooltipPropTypes } from '@data-ui/shared';
 
 import { isAxis, isSeries } from '../utils/componentIsX';
 import collectBinnedDataFromChildSeries from '../utils/collectBinnedDataFromChildSeries';

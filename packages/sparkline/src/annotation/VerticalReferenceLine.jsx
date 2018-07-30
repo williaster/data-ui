@@ -5,8 +5,7 @@ import React from 'react';
 import Group from '@vx/group/build/Group';
 import Line from '@vx/shape/build/shapes/Line';
 import Point from '@vx/point/build/Point';
-import color from '@data-ui/theme/build/color';
-import svgLabel from '@data-ui/theme/build/svgLabel';
+import { color, svgLabel } from '@data-ui/theme';
 
 import Label from './Label';
 import positionLabel from '../utils/positionLabel';

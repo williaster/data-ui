@@ -1,10 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
-import FocusBlurHandler from '@data-ui/shared/build/components/FocusBlurHandler';
-import { Group } from '@vx/group';
 import { Bar } from '@vx/shape';
-import color from '@data-ui/theme/build/color';
+import { colors } from '@data-ui/theme';
+import { FocusBlurHandler } from '@data-ui/shared';
+import { Group } from '@vx/group';
 
 import { intervalSeriesDataShape } from '../utils/propShapes';
 import { callOrValue } from '../utils/chartUtils';
@@ -20,7 +19,7 @@ const propTypes = {
 };
 
 const defaultProps = {
-  fill: color.default,
+  fill: colors.default,
   fillOpacity: 1,
   stroke: 'none',
   strokeWidth: 1,

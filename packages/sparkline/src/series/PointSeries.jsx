@@ -5,8 +5,7 @@ import { extent } from 'd3-array';
 
 import GlyphDot from '@vx/glyph/build/glyphs/Dot';
 import Group from '@vx/group/build/Group';
-import color from '@data-ui/theme/build/color';
-import svgLabel from '@data-ui/theme/build/svgLabel';
+import { color, svgLabel } from '@data-ui/theme';
 
 import Label from '../annotation/Label';
 import callOrValue from '../utils/callOrValue';

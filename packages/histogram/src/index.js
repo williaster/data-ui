@@ -5,10 +5,7 @@ export { default as DensitySeries } from './series/DensitySeries';
 
 export { default as XAxis } from './axis/XAxis';
 export { default as YAxis } from './axis/YAxis';
-export {
-  default as WithTooltip,
-  withTooltipPropTypes,
-} from '@data-ui/shared/build/enhancer/WithTooltip';
+export { WithTooltip, withTooltipPropTypes } from '@data-ui/shared';
 
 export { LinearGradient } from '@vx/gradient';
 export { PatternLines } from '@vx/pattern';

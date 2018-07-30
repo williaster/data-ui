@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { BarGroup } from '@vx/shape';
-import color from '@data-ui/theme/build/color';
+import { colors } from '@data-ui/theme';
 
 import { groupedBarSeriesDataShape } from '../utils/propShapes';
 import { scaleTypeToScale } from '../utils/getScaleForAccessor';
@@ -19,7 +19,7 @@ const propTypes = {
 };
 
 const defaultProps = {
-  groupFills: color.categories,
+  groupFills: colors.categories,
   groupPadding: 0.1,
   stroke: 'none',
   strokeWidth: 1,

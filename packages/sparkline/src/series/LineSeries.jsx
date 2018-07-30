@@ -5,7 +5,7 @@ import { curveCardinal, curveLinear, curveBasis, curveMonotoneX } from '@vx/curv
 import Group from '@vx/group/build/Group';
 import LinePath from '@vx/shape/build/shapes/LinePath';
 import AreaClosed from '@vx/shape/build/shapes/AreaClosed';
-import color from '@data-ui/theme/build/color';
+import { color } from '@data-ui/theme';
 
 import defined from '../utils/defined';
 import findClosestDatum from '../utils/findClosestDatum';

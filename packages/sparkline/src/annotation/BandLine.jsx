@@ -3,7 +3,7 @@ import React from 'react';
 import { quantile } from 'd3-array';
 
 import Bar from '@vx/shape/build/shapes/Bar';
-import color from '@data-ui/theme/build/color';
+import { color } from '@data-ui/theme';
 
 export const propTypes = {
   band: PropTypes.oneOfType([

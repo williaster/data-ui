@@ -8,7 +8,4 @@ export { default as AtlasForceDirectedLayout } from './layout/atlasForce';
 
 export { default as Network, propTypes as networkPropTypes } from './chart/Network';
 
-export {
-  default as WithTooltip,
-  withTooltipPropTypes,
-} from '@data-ui/shared/build/enhancer/WithTooltip';
+export { WithTooltip, withTooltipPropTypes } from '@data-ui/shared';
