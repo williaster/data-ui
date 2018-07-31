@@ -1,4 +1,5 @@
 # Changelog
+- [v0.0.60](#v0060)
 - [v0.0.59](#v0059)
 - [v0.0.58](#v0058)
 - [v0.0.57](#v0057)
@@ -12,6 +13,15 @@
 - [v0.0.49](#v0049)
 - [v0.0.48](#v0048)
 - [v0.0.47](#v0047)
+
+## v0.0.60
+
+🏠 Internal
+- Use `@data-ui/build-config` across all packages for linting, prettier, jest, and babel (`forms` + `event-flow` require webpack and still have jest deps) [#110](https://github.com/williaster/data-ui/pull/110). This 
+  - fixes an issue where `node_modules` were included in builds, this improves bundle size.
+  - adds `esm` builds in addition to `commonjs`
+  - adds `sideEffects: false` to `package.json`'s for tree-shaking support 
+  - introduces more aggressive linting + prettier ✨
 
 ## v0.0.59
 [xy-chart]
