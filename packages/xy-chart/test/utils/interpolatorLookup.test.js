@@ -1,11 +1,11 @@
 import interpolatorLookup from '../../src/utils/interpolatorLookup';
 
 describe('interpolatorLookup', () => {
-  test('it should be defined', () => {
+  it('it should be defined', () => {
     expect(interpolatorLookup).toBeDefined();
   });
 
-  test('it should have linear, cardinal, monotoneX, monotoneY, and natural interpolators', () => {
+  it('it should have linear, cardinal, monotoneX, monotoneY, and natural interpolators', () => {
     expect(interpolatorLookup).toEqual(
       expect.objectContaining({
         linear: expect.any(Function),

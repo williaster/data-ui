@@ -3,7 +3,7 @@ import { shallow, mount } from 'enzyme';
 import { Bar } from '@vx/shape';
 import { NodeGroup } from 'react-move';
 
-import { BarSeries, Histogram } from '../../src/';
+import { BarSeries, Histogram } from '../../src';
 import AnimatedBarSeries from '../../src/series/animated/AnimatedBarSeries';
 
 describe('<AnimatedBarSeries />', () => {
@@ -29,11 +29,11 @@ describe('<AnimatedBarSeries />', () => {
     { bin0: 4, bin1: 5, count: 10, id: '4' },
   ];
 
-  test('it should be defined', () => {
+  it('should be defined', () => {
     expect(AnimatedBarSeries).toBeDefined();
   });
 
-  test('it should render a resonance <NodeGroup />', () => {
+  it('should render a resonance <NodeGroup />', () => {
     const wrapper = shallow(
       <Histogram {...histogramProps}>
         <BarSeries animated binnedData={numericBinnedData} />
@@ -41,10 +41,10 @@ describe('<AnimatedBarSeries />', () => {
     );
     const barWrapper = wrapper.find(BarSeries).dive();
     const animatedDensityWrapper = barWrapper.find(AnimatedBarSeries).dive();
-    expect(animatedDensityWrapper.find(NodeGroup).length).toBe(1);
+    expect(animatedDensityWrapper.find(NodeGroup)).toHaveLength(1);
   });
 
-  test('it should render one <Bar/> per numeric bin', () => {
+  it('should render one <Bar/> per numeric bin', () => {
     // resonance doesn't compute data without mounting
     const wrapper = mount(
       <Histogram {...histogramProps}>
@@ -53,11 +53,11 @@ describe('<AnimatedBarSeries />', () => {
     );
 
     setTimeout(() => {
-      expect(wrapper.find(Bar).length).toBe(numericBinnedData.length);
+      expect(wrapper.find(Bar)).toHaveLength(numericBinnedData.length);
     }, 0);
   });
 
-  test('it should render one <Bar/> per categorical bin', () => {
+  it('should render one <Bar/> per categorical bin', () => {
     // resonance doesn't compute data without mounting
     const wrapper = mount(
       <Histogram {...histogramProps} binType="categorical">
@@ -66,11 +66,11 @@ describe('<AnimatedBarSeries />', () => {
     );
 
     setTimeout(() => {
-      expect(wrapper.find(Bar).length).toBe(categoricalBinnedData.length);
+      expect(wrapper.find(Bar)).toHaveLength(categoricalBinnedData.length);
     }, 0);
   });
 
-  test('it should call onMouseMove({ datum, data, event, color }) and onMouseLeave() on trigger', () => {
+  it('should call onMouseMove({ datum, data, event, color }) and onMouseLeave() on trigger', () => {
     const onMouseMove = jest.fn();
     const onMouseLeave = jest.fn();
     const onClick = jest.fn();
@@ -100,7 +100,7 @@ describe('<AnimatedBarSeries />', () => {
 
       bar.simulate('click');
       expect(onClick).toHaveBeenCalledTimes(1);
-      args = onClick.mock.calls[0][0];
+      args = onClick.mock.calls[0][0]; // eslint-disable-line prefer-destructuring
       expect(args.data).toBe(numericBinnedData);
       expect(args.datum).toBe(numericBinnedData[0]);
       expect(args.event).toBeDefined();

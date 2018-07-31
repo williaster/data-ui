@@ -10,12 +10,12 @@ describe('<EventTypeLegend />', () => {
     scale: scaleOrdinal({ range: ['a', 'b'], domain: ['#fff', '#000'] }),
   };
 
-  test('it should be defined', () => {
+  it('should be defined', () => {
     expect(EventTypeLegend).toBeDefined();
   });
 
-  test('it should render a <LegendOrdinal />', () => {
+  it('should render a <LegendOrdinal />', () => {
     const wrapper = shallow(<EventTypeLegend {...props} />);
-    expect(wrapper.find(LegendOrdinal).length).toBe(1);
+    expect(wrapper.find(LegendOrdinal)).toHaveLength(1);
   });
 });

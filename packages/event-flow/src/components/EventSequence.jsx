@@ -44,7 +44,7 @@ function EventSequence({
 }) {
   const firstEvent = sequence[0];
   const entityId = yScale.accessor(firstEvent || {});
-  const zeroIndex = sequence.zeroIndex;
+  const { zeroIndex } = sequence;
   const y = yScale.scale(entityId);
   const [xMin, xMax] = xScale.scale.range();
   const innerWidth = Math.max(xMin, xMax);
@@ -70,17 +70,23 @@ function EventSequence({
         fill={color}
         stroke={relativeIndex === 0 ? '#000' : '#fff'}
         strokeWidth={1}
-        onClick={() => () => { onClick({ event, index, events: sequence }); }}
-        onMouseEnter={() => () => { onMouseEnter({ event, index, events: sequence }); }}
-        onMouseLeave={() => () => { onMouseLeave({ event, index, events: sequence }); }}
+        onClick={() => () => {
+          onClick({ event, index, events: sequence });
+        }}
+        onMouseEnter={() => () => {
+          onMouseEnter({ event, index, events: sequence });
+        }}
+        onMouseLeave={() => () => {
+          onMouseLeave({ event, index, events: sequence });
+        }}
       />
     );
   });
 
   const emphasisMin = Math.min(...emphasizeBounds);
   const emphasisMax = Math.max(...emphasizeBounds);
-  const entityLabel = entityId.length > MAX_NAME_LENGTH ?
-    `${entityId.slice(0, MAX_NAME_LENGTH + 1)}…` : entityId;
+  const entityLabel =
+    entityId.length > MAX_NAME_LENGTH ? `${entityId.slice(0, MAX_NAME_LENGTH + 1)}…` : entityId;
 
   return (
     <Group>
@@ -93,11 +99,7 @@ function EventSequence({
       />
 
       {/* label for this sequence */}
-      <text
-        x={innerWidth + 8}
-        y={y}
-        {...yTickStyles.label.right}
-      >
+      <text x={innerWidth + 8} y={y} {...yTickStyles.label.right}>
         {entityLabel}
       </text>
 
@@ -107,7 +109,7 @@ function EventSequence({
         rx={CIRCLE_RADIUS}
         ry={CIRCLE_RADIUS}
         x={emphasisMin}
-        y={y - (CIRCLE_RADIUS / 2)}
+        y={y - CIRCLE_RADIUS / 2}
         width={emphasisMax - emphasisMin}
         height={CIRCLE_RADIUS + 1}
       />

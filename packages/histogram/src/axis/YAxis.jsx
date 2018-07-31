@@ -7,7 +7,7 @@ import { axisStylesShape, tickStylesShape } from '../utils/propShapes';
 const propTypes = {
   axisStyles: axisStylesShape,
   label: PropTypes.string,
-  labelProps: PropTypes.object,
+  labelProps: PropTypes.object, // eslint-disable-line react/forbid-prop-types
   numTicks: PropTypes.number,
   orientation: PropTypes.oneOf(['left', 'right']),
   tickStyles: tickStylesShape,
@@ -53,9 +53,10 @@ export default function YAxis({
   if (!scale) return null;
   const Axis = orientation === 'left' ? AxisLeft : AxisRight;
 
-  const tickLabelProps = passedTickLabelProps ||
-  (tickStyles.label && tickStyles.label[orientation])
-    ? () => tickStyles.label[orientation] : undefined;
+  const tickLabelProps =
+    passedTickLabelProps || (tickStyles.label && tickStyles.label[orientation])
+      ? () => tickStyles.label[orientation]
+      : undefined;
 
   return (
     <Axis

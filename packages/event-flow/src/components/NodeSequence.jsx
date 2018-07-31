@@ -56,26 +56,28 @@ function NodeSequence({
   if (nodes.length > maxNodeLength) {
     nodes = [...nodeArray.slice(0, 2), null, ...nodeArray.slice(-(maxNodeLength - 3))];
   }
+
   return nodeArray.length ? (
     <div className={css(styles.container)}>
       {nodes.map((node, index) => {
         let name;
         if (node) {
-          name = node.name.length > maxNameLength
-            ? `${node.name.slice(0, maxNameLength + 1)}…`
-            : node.name;
+          name =
+            node.name.length > maxNameLength
+              ? `${node.name.slice(0, maxNameLength + 1)}…`
+              : node.name;
         } else {
           name = `+${nodeArray.length - nodes.length} more…`;
         }
+
         return (
           <span key={(node && node.id) || '...'}>
-            {index !== 0 &&
-              <span className={css(styles.separator)}>
-                {separator}
-              </span>}
+            {index !== 0 && <span className={css(styles.separator)}>{separator}</span>}
             <span
               className={css(styles.node, index === currNodeIndex && styles.currNode)}
-              style={{ color: node && colorScale.scale(colorScale.accessor(node)) }}
+              style={{
+                color: node && colorScale.scale(colorScale.accessor(node)),
+              }}
             >
               {name}
             </span>

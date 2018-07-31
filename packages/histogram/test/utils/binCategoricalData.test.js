@@ -6,16 +6,16 @@ describe('binCategoricalData', () => {
     1: ['a', 'a', 'a', 'a', 'c', 'c', 'b'],
   };
 
-  test('it should be defined', () => {
+  it('should be defined', () => {
     expect(binCategoricalData).toBeDefined();
   });
 
-  test('it should return binned data arrays by index', () => {
+  it('should return binned data arrays by index', () => {
     const binned = binCategoricalData({ rawDataByIndex, valueAccessor: d => d });
     expect(binned).toMatchObject({ 0: expect.any(Array), 1: expect.any(Array) });
   });
 
-  test('bins should have bin, data, count, and id keys', () => {
+  it('bins should have bin, data, count, and id keys', () => {
     const expectedShape = {
       bin: expect.any(String),
       data: expect.any(Array),
@@ -28,12 +28,12 @@ describe('binCategoricalData', () => {
     expect(binned[1][0]).toMatchObject(expectedShape);
   });
 
-  test('it should sort bins', () => {
+  it('should sort bins', () => {
     const binned = binCategoricalData({ rawDataByIndex, valueAccessor: d => d });
     expect(binned[0].map(d => d.bin)).toEqual(['a', 'b', 'c']);
   });
 
-  test('it should use binValues if specified', () => {
+  it('should use binValues if specified', () => {
     const binned = binCategoricalData({
       rawDataByIndex,
       valueAccessor: d => d,
@@ -43,7 +43,7 @@ describe('binCategoricalData', () => {
     expect(binned[0].map(d => d.bin)).toEqual(['a', 'b']);
   });
 
-  test('it should add accurate counts', () => {
+  it('should add accurate counts', () => {
     const binned = binCategoricalData({ rawDataByIndex, valueAccessor: d => d });
     expect(binned[0][0].count).toBe(2); // a
     expect(binned[0][1].count).toBe(2); // b

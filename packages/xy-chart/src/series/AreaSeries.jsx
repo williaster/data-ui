@@ -1,8 +1,7 @@
-import Area from '@vx/shape/build/shapes/Area';
-import color from '@data-ui/theme/build/color';
-import FocusBlurHandler from '@data-ui/shared/build/components/FocusBlurHandler';
-import Group from '@vx/group/build/Group';
-import LinePath from '@vx/shape/build/shapes/LinePath';
+import { Area, LinePath } from '@vx/shape';
+import { color } from '@data-ui/theme';
+import { FocusBlurHandler } from '@data-ui/shared';
+import { Group } from '@vx/group';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -72,17 +71,28 @@ export default class AreaSeries extends React.PureComponent {
     const strokeWidthValue = callOrValue(strokeWidth, data);
     const fillValue = callOrValue(fill, data);
     const curve = interpolatorLookup[interpolation] || interpolatorLookup.monotoneX;
+
     return (
       <Group
         style={disableMouseEvents ? noEventsStyles : null}
-        onClick={disableMouseEvents ? null : onClick && ((event) => {
-          const d = findClosestDatum({ data, getX: x, event, xScale });
-          onClick({ event, data, datum: d, color: fillValue });
-        })}
-        onMouseMove={disableMouseEvents ? null : onMouseMove && ((event) => {
-          const d = findClosestDatum({ data, getX: x, event, xScale });
-          onMouseMove({ event, data, datum: d, color: fillValue });
-        })}
+        onClick={
+          disableMouseEvents
+            ? null
+            : onClick &&
+              (event => {
+                const d = findClosestDatum({ data, getX: x, event, xScale });
+                onClick({ event, data, datum: d, color: fillValue });
+              })
+        }
+        onMouseMove={
+          disableMouseEvents
+            ? null
+            : onMouseMove &&
+              (event => {
+                const d = findClosestDatum({ data, getX: x, event, xScale });
+                onMouseMove({ event, data, datum: d, color: fillValue });
+              })
+        }
         onMouseLeave={disableMouseEvents ? null : onMouseLeave}
       >
         <Area
@@ -100,21 +110,23 @@ export default class AreaSeries extends React.PureComponent {
           defined={defined}
         />
         {/* only draw a stroke for the top and bottom */}
-        {strokeWidthValue > 0 && !isClosed &&
-          <LinePath
-            data={data}
-            x={x}
-            y={y0}
-            xScale={xScale}
-            yScale={yScale}
-            stroke={strokeValue}
-            strokeWidth={strokeWidthValue}
-            strokeDasharray={strokeDasharrayValue}
-            strokeLinecap={strokeLinecap}
-            curve={curve}
-            glyph={null}
-            defined={defined}
-          />}
+        {strokeWidthValue > 0 &&
+          !isClosed && (
+            <LinePath
+              data={data}
+              x={x}
+              y={y0}
+              xScale={xScale}
+              yScale={yScale}
+              stroke={strokeValue}
+              strokeWidth={strokeWidthValue}
+              strokeDasharray={strokeDasharrayValue}
+              strokeLinecap={strokeLinecap}
+              curve={curve}
+              glyph={null}
+              defined={defined}
+            />
+          )}
         {/* draw this path even if strokewidth is 0, for focus/blur support */}
         <LinePath
           data={data}
@@ -132,10 +144,21 @@ export default class AreaSeries extends React.PureComponent {
             <FocusBlurHandler
               key={`areapoint-${i}`}
               onBlur={disableMouseEvents ? null : onMouseLeave}
-              onFocus={disableMouseEvents ? null : (event) => {
-                onMouseMove({ event, data, datum: d, color: strokeValue, index: i });
-              }}
-            />)}
+              onFocus={
+                disableMouseEvents
+                  ? null
+                  : event => {
+                      onMouseMove({
+                        event,
+                        data,
+                        datum: d,
+                        color: strokeValue,
+                        index: i,
+                      });
+                    }
+              }
+            />
+          )}
         />
       </Group>
     );

@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import BarStack from '@vx/shape/build/shapes/BarStack';
-import color from '@data-ui/theme/build/color';
+import { BarStack } from '@vx/shape';
+import { color } from '@data-ui/theme';
 
 import { stackedBarSeriesDataShape } from '../utils/propShapes';
 import { scaleTypeToScale } from '../utils/getScaleForAccessor';
@@ -42,11 +42,16 @@ export default class StackedBarSeries extends React.PureComponent {
       onMouseLeave,
     } = this.props;
     if (!xScale || !yScale) return null;
-    if (!xScale.bandwidth) { // @todo figure this out/be more graceful
+    if (!xScale.bandwidth) {
+      // @todo figure this out/be more graceful
       throw new Error("'StackedBarSeries' requires a 'band' type xScale");
     }
     const maxHeight = (yScale.range() || [0])[0];
-    const zScale = scaleTypeToScale.ordinal({ range: stackFills, domain: stackKeys });
+    const zScale = scaleTypeToScale.ordinal({
+      range: stackFills,
+      domain: stackKeys,
+    });
+
     return (
       <BarStack
         style={disableMouseEvents ? noEventsStyles : null}
@@ -59,14 +64,36 @@ export default class StackedBarSeries extends React.PureComponent {
         zScale={zScale}
         stroke={stroke}
         strokeWidth={strokeWidth}
-        onClick={disableMouseEvents ? null : onMouseMove && (d => (event) => {
-          const { data: datum, key: seriesKey } = d;
-          onClick({ event, data, datum, seriesKey, color: zScale(seriesKey) });
-        })}
-        onMouseMove={disableMouseEvents ? null : onMouseMove && (d => (event) => {
-          const { data: datum, key } = d;
-          onMouseMove({ event, data, datum, seriesKey: key, color: zScale(key) });
-        })}
+        onClick={
+          disableMouseEvents
+            ? null
+            : onMouseMove &&
+              (d => event => {
+                const { data: datum, key: seriesKey } = d;
+                onClick({
+                  event,
+                  data,
+                  datum,
+                  seriesKey,
+                  color: zScale(seriesKey),
+                });
+              })
+        }
+        onMouseMove={
+          disableMouseEvents
+            ? null
+            : onMouseMove &&
+              (d => event => {
+                const { data: datum, key } = d;
+                onMouseMove({
+                  event,
+                  data,
+                  datum,
+                  seriesKey: key,
+                  color: zScale(key),
+                });
+              })
+        }
         onMouseLeave={disableMouseEvents ? null : onMouseLeave && (() => onMouseLeave)}
       />
     );

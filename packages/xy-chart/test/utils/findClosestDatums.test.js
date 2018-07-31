@@ -1,11 +1,10 @@
 import React from 'react';
-import scaleLinear from '@vx/scale/build/scales/linear';
-import scaleBand from '@vx/scale/build/scales/band';
+import { scaleBand, scaleLinear } from '@vx/scale';
 import findClosestDatums from '../../src/utils/findClosestDatums';
 
 import { LineSeries } from '../../src';
 
-describe('findClosestDatum', () => {
+describe('findClosestDatums', () => {
   beforeAll(() => {
     // mock prototype attributes for vx's localPoint
     Element.prototype.getBoundingClientRect = jest.fn(() => ({
@@ -16,9 +15,6 @@ describe('findClosestDatum', () => {
       bottom: 0,
       right: 0,
     }));
-
-    Element.prototype.clientLeft = 0;
-    Element.prototype.clientTop = 0;
   });
 
   const event = {
@@ -34,11 +30,11 @@ describe('findClosestDatum', () => {
   const getX = d => d.x;
   const getY = d => d.y;
 
-  test('it should be defined', () => {
+  it('it should be defined', () => {
     expect(findClosestDatums).toBeDefined();
   });
 
-  test('it should return an object with closestDatum and series', () => {
+  it('it should return an object with closestDatum and series', () => {
     const data = [
       [{ x: 'a', y: 5 }, { x: 'b', y: 0 }, { x: 'c', y: 8 }],
       [{ x: 'a', y: 2 }, { x: 'b', y: 5 }, { x: 'c', y: 9 }],
@@ -51,8 +47,8 @@ describe('findClosestDatum', () => {
       xScale: scaleBand({ domain: ['a', 'b', 'c'], range: [0, 10] }),
       yScale: scaleLinear({ domain: [0, 10], range: [0, 10] }),
       children: [
-        <LineSeries seriesKey="line-1" data={data[0]} />,
-        <LineSeries seriesKey="line-2" data={data[1]} />,
+        <LineSeries key="line1" seriesKey="line-1" data={data[0]} />,
+        <LineSeries key="line2" seriesKey="line-2" data={data[1]} />,
       ],
     };
 
@@ -66,7 +62,7 @@ describe('findClosestDatum', () => {
     );
   });
 
-  test('it should return one datum per series and use `seriesKey`s for series keys when possible', () => {
+  it('it should return one datum per series and use `seriesKey`s for series keys when possible', () => {
     const data = [
       [{ x: 'a', y: 5 }, { x: 'b', y: 0 }, { x: 'c', y: 8 }],
       [{ x: 'a', y: 2 }, { x: 'b', y: 5 }, { x: 'c', y: 9 }],
@@ -80,9 +76,9 @@ describe('findClosestDatum', () => {
       xScale: scaleBand({ domain: ['a', 'b', 'c'], range: [0, 10] }),
       yScale: scaleLinear({ domain: [0, 10], range: [0, 10] }),
       children: [
-        <LineSeries seriesKey="line-1" data={data[0]} />,
-        <LineSeries seriesKey="line-2" data={data[1]} />,
-        <LineSeries data={data[2]} />,
+        <LineSeries key="line1" seriesKey="line-1" data={data[0]} />,
+        <LineSeries key="line2" seriesKey="line-2" data={data[1]} />,
+        <LineSeries key="line3" data={data[2]} />,
       ],
     };
 
@@ -101,7 +97,7 @@ describe('findClosestDatum', () => {
     expect(data[2].indexOf(result.series[2])).toBeGreaterThan(-1);
   });
 
-  test('it should ignore non-series children and series with disableMouseEvents set to true', () => {
+  it('it should ignore non-series children and series with disableMouseEvents set to true', () => {
     const args = {
       event,
       getX,
@@ -109,14 +105,14 @@ describe('findClosestDatum', () => {
       xScale: scaleBand({ domain: ['a', 'b', 'c'], range: [0, 10] }),
       yScale: scaleLinear({ domain: [0, 10], range: [0, 10] }),
       children: [
-        <LineSeries disableMouseEvents seriesKey="line-1" data={[]} />,
+        <LineSeries key="line" disableMouseEvents seriesKey="line-1" data={[]} />,
         null,
-        <div />,
+        <div key="div" />,
       ],
     };
 
     const result = findClosestDatums(args);
     expect(result.closestDatum).toBeUndefined();
-    expect(Object.keys(result.series).length).toBe(0);
+    expect(Object.keys(result.series)).toHaveLength(0);
   });
 });

@@ -8,7 +8,7 @@ import { yAxisStyles, yTickStyles } from '../theme';
 const propTypes = {
   hideZero: PropTypes.bool,
   label: PropTypes.string,
-  labelProps: PropTypes.object,
+  labelProps: PropTypes.object, // eslint-disable-line react/forbid-prop-types
   labelOffset: PropTypes.number,
   numTicks: PropTypes.number,
   orientation: PropTypes.oneOf(['left', 'right']),
@@ -20,7 +20,6 @@ const propTypes = {
 };
 
 const defaultProps = {
-  axisStyles: {},
   hideZero: false,
   label: null,
   labelProps: null,
@@ -30,7 +29,6 @@ const defaultProps = {
   rangePadding: null,
   tickFormat: null,
   tickLabelProps: null,
-  tickStyles: {},
 };
 
 export default function YAxis({

@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { extent } from 'd3-array';
 
-import color from '@data-ui/theme/build/color';
-import Group from '@vx/group/build/Group';
-import Line from '@vx/shape/build/shapes/Line';
+import { color } from '@data-ui/theme';
+import { Group } from '@vx/group';
+import { Line } from '@vx/shape';
 
 const propTypes = {
   fullHeight: PropTypes.bool,
@@ -12,8 +12,8 @@ const propTypes = {
   circleSize: PropTypes.number,
   circleFill: PropTypes.string,
   circleStroke: PropTypes.string,
-  circleStyles: PropTypes.object,
-  lineStyles: PropTypes.object,
+  circleStyles: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.number, PropTypes.string])),
+  lineStyles: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.number, PropTypes.string])),
   showCircle: PropTypes.bool,
   showHorizontalLine: PropTypes.bool,
   showVerticalLine: PropTypes.bool,
@@ -26,7 +26,6 @@ const propTypes = {
   top: PropTypes.number,
   xScale: PropTypes.func,
   yScale: PropTypes.func,
-
 };
 
 const defaultProps = {
@@ -75,36 +74,44 @@ function CrossHair({
   if (!xScale || !yScale) return null;
   const [xMin, xMax] = extent(xScale.range());
   const [yMin, yMax] = extent(yScale.range());
+
   return (
     <Group>
-      {showHorizontalLine && top !== null &&
-        <Line
-          from={{ x: xMin, y: top }}
-          to={{ x: fullWidth || left === null ? xMax : left, y: top }}
-          style={lineStyles}
-          stroke={stroke}
-          strokeDasharray={strokeDasharray}
-          strokeWidth={strokeWidth}
-        />}
-      {showVerticalLine && top !== null &&
-        <Line
-          from={{ x: left, y: yMax }}
-          to={{ x: left, y: top === null || fullHeight ? yMin : top }}
-          style={lineStyles}
-          stroke={stroke}
-          strokeDasharray={strokeDasharray}
-          strokeWidth={strokeWidth}
-        />}
-      {showCircle && top !== null && left !== null &&
-        <circle
-          cx={left}
-          cy={top}
-          r={circleSize}
-          fill={circleFill}
-          stroke={circleStroke}
-          strokeWidth={1}
-          style={circleStyles}
-        />}
+      {showHorizontalLine &&
+        top !== null && (
+          <Line
+            from={{ x: xMin, y: top }}
+            to={{ x: fullWidth || left === null ? xMax : left, y: top }}
+            style={lineStyles}
+            stroke={stroke}
+            strokeDasharray={strokeDasharray}
+            strokeWidth={strokeWidth}
+          />
+        )}
+      {showVerticalLine &&
+        top !== null && (
+          <Line
+            from={{ x: left, y: yMax }}
+            to={{ x: left, y: top === null || fullHeight ? yMin : top }}
+            style={lineStyles}
+            stroke={stroke}
+            strokeDasharray={strokeDasharray}
+            strokeWidth={strokeWidth}
+          />
+        )}
+      {showCircle &&
+        top !== null &&
+        left !== null && (
+          <circle
+            cx={left}
+            cy={top}
+            r={circleSize}
+            fill={circleFill}
+            stroke={circleStroke}
+            strokeWidth={1}
+            style={circleStyles}
+          />
+        )}
     </Group>
   );
 }

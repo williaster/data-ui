@@ -1,4 +1,6 @@
-export default (orientation, labelOffset = 8) => {
+const DEFAULT_LABEL_OFFSET = 8;
+
+export default function positionLabel(orientation, labelOffset = DEFAULT_LABEL_OFFSET) {
   if (orientation === 'top') {
     return { textAnchor: 'middle', dy: -Math.abs(labelOffset), dx: 0 };
   } else if (orientation === 'right') {
@@ -8,5 +10,6 @@ export default (orientation, labelOffset = 8) => {
   } else if (orientation === 'left') {
     return { textAnchor: 'end', dy: 0, dx: -Math.abs(labelOffset) };
   }
+
   return orientation;
-};
+}

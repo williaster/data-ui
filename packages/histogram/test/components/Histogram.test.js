@@ -8,7 +8,7 @@ import {
   WithTooltip,
   XAxis,
   YAxis,
-} from '../../src/';
+} from '../../src';
 
 describe('<Histogram />', () => {
   const props = {
@@ -19,36 +19,40 @@ describe('<Histogram />', () => {
 
   const rawData = [0, 1, 2, 2, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 5];
 
-  test('it should be defined', () => {
+  it('should be defined', () => {
     expect(Histogram).toBeDefined();
   });
 
-  test('histogramPropTypes should be defined', () => {
+  it('histogramPropTypes should be defined', () => {
     expect(histogramPropTypes).toBeDefined();
   });
 
-  test('it should render an svg', () => {
+  it('should render an svg', () => {
     const wrapper = shallow(
       <Histogram {...props}>
         <BarSeries rawData={rawData} />
       </Histogram>,
     );
-    expect(wrapper.find('svg').length).toBe(1);
+    expect(wrapper.find('svg')).toHaveLength(1);
   });
 
-  test('it should render a <WithTooltip /> if renderTooltip is passed', () => {
+  it('should render a <WithTooltip /> if renderTooltip is passed', () => {
     let wrapper = shallow(
-      <Histogram {...props}><BarSeries rawData={rawData} /></Histogram>,
+      <Histogram {...props}>
+        <BarSeries rawData={rawData} />
+      </Histogram>,
     );
-    expect(wrapper.find(WithTooltip).length).toBe(0);
+    expect(wrapper.find(WithTooltip)).toHaveLength(0);
 
     wrapper = shallow(
-      <Histogram {...props} renderTooltip={() => {}}><BarSeries rawData={rawData} /></Histogram>,
+      <Histogram {...props} renderTooltip={() => {}}>
+        <BarSeries rawData={rawData} />
+      </Histogram>,
     );
-    expect(wrapper.find(WithTooltip).length).toBe(1);
+    expect(wrapper.find(WithTooltip)).toHaveLength(1);
   });
 
-  test('it should render BarSeries, DensitySeries, XAxis, and YAxis children', () => {
+  it('should render BarSeries, DensitySeries, XAxis, and YAxis children', () => {
     const wrapper = shallow(
       <Histogram {...props}>
         <BarSeries rawData={rawData} />
@@ -58,13 +62,13 @@ describe('<Histogram />', () => {
         <YAxis />
       </Histogram>,
     );
-    expect(wrapper.find(BarSeries).length).toBe(2);
-    expect(wrapper.find(DensitySeries).length).toBe(1);
-    expect(wrapper.find(XAxis).length).toBe(1);
-    expect(wrapper.find(YAxis).length).toBe(1);
+    expect(wrapper.find(BarSeries)).toHaveLength(2);
+    expect(wrapper.find(DensitySeries)).toHaveLength(1);
+    expect(wrapper.find(XAxis)).toHaveLength(1);
+    expect(wrapper.find(YAxis)).toHaveLength(1);
   });
 
-  test('it should pass binScale and valueScale props to children', () => {
+  it('should pass binScale and valueScale props to children', () => {
     const wrapper = shallow(
       <Histogram {...props}>
         <BarSeries rawData={rawData} />
@@ -82,7 +86,7 @@ describe('<Histogram />', () => {
     expect(wrapper.find(DensitySeries).prop('binScale')).toBe(binScale);
   });
 
-  test('it should set valueKey = `count` for non-normalized non-cumulative histograms', () => {
+  it('should set valueKey = `count` for non-normalized non-cumulative histograms', () => {
     const wrapper = shallow(
       <Histogram {...props}>
         <BarSeries rawData={rawData} />
@@ -91,7 +95,7 @@ describe('<Histogram />', () => {
     expect(wrapper.find(BarSeries).prop('valueKey')).toBe('count');
   });
 
-  test('it should set valueKey = `cumulative` for non-normalized cumulative histograms', () => {
+  it('should set valueKey = `cumulative` for non-normalized cumulative histograms', () => {
     const wrapper = shallow(
       <Histogram {...props} cumulative>
         <BarSeries rawData={rawData} />
@@ -100,7 +104,7 @@ describe('<Histogram />', () => {
     expect(wrapper.find(BarSeries).prop('valueKey')).toBe('cumulative');
   });
 
-  test('it should set valueKey = `density` for normalized non-cumulative histograms', () => {
+  it('should set valueKey = `density` for normalized non-cumulative histograms', () => {
     const wrapper = shallow(
       <Histogram {...props} normalized>
         <BarSeries rawData={rawData} />
@@ -109,7 +113,7 @@ describe('<Histogram />', () => {
     expect(wrapper.find(BarSeries).prop('valueKey')).toBe('density');
   });
 
-  test('it should set valueKey = `cumulativeDensity` for normalized cumulative histograms', () => {
+  it('should set valueKey = `cumulativeDensity` for normalized cumulative histograms', () => {
     const wrapper = shallow(
       <Histogram {...props} cumulative normalized>
         <BarSeries rawData={rawData} />

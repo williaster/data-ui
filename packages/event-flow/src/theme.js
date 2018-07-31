@@ -4,7 +4,7 @@ export { unit, font } from '@data-ui/theme';
 
 export const colors = color;
 
-export const fontFamily = font.fontFamily;
+export const { fontFamily } = font;
 
 export const gridStyles = {
   stroke: colors.grid,
@@ -39,7 +39,7 @@ export const yAxisStyles = {
 
 export const xTickStyles = {
   stroke: colors.grid,
-  length: 1 * unit,
+  length: Number(unit),
   label: {
     bottom: {
       ...svgLabel.tickLabels.bottom,
@@ -52,7 +52,7 @@ export const xTickStyles = {
 
 export const yTickStyles = {
   stroke: colors.grid,
-  length: 1 * unit,
+  length: Number(unit),
   label: {
     left: {
       ...svgLabel.tickLabels.left,

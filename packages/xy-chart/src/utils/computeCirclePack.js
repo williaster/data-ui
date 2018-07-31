@@ -1,18 +1,15 @@
 /* eslint no-param-reassign: 0 */
 /**
-  * Assume that the position of x and the size of circles have been scaled.
-  * And each circle has the following properties:
-  *  x: the position of x,
-  *  size: the radius,
-  */
-
-
-/**
-  * The algorthm is an implementation of the paper
-  *   Wang et al. Visualization of large hierarchical data by circle packing.
-  * by adding horizontal constrains for each circle.
-  */
-function packCircles(data, xScale, getSize = d => d.size || 4) {
+ * The algorthm is an implementation of the paper
+ *   Wang et al. Visualization of large hierarchical data by circle packing.
+ * by adding horizontal constrains for each circle.
+ * Assume that the position of x and the size of circles have been scaled.
+ * And each circle has the following properties:
+ *  x: the position of x,
+ *  size: the radius,
+ */
+const DEFAULT_POINT_SIZE = 4;
+function packCircles(data, xScale, getSize = d => d.size || DEFAULT_POINT_SIZE) {
   const packBounds = [];
   const packOutline = [];
   const globalMinX = xScale(data[0].x);
@@ -43,11 +40,14 @@ function packCircles(data, xScale, getSize = d => d.size || 4) {
   function xpackBestPlace(startn, node) {
     const goodnodes = [];
     for (let p = startn.nextPack; p !== startn; p = p.nextPack) {
-      if (!(p.px + p.r < node.x - node.r ||
+      if (
+        !(
+          p.px + p.r < node.x - node.r ||
           p.px - p.r > node.x + node.r ||
           p.px - p.r - node.r < globalMinX ||
           p.px + p.r + node.r > globalMaxX
-        )) {
+        )
+      ) {
         goodnodes.push(p);
       }
     }
@@ -55,7 +55,8 @@ function packCircles(data, xScale, getSize = d => d.size || 4) {
     if (goodnodes.length === 0) {
       return startn;
     }
-    goodnodes.sort((a, b) => (Math.abs(a.py) - Math.abs(b.py)));
+    goodnodes.sort((a, b) => Math.abs(a.py) - Math.abs(b.py));
+
     return goodnodes[0];
   }
 
@@ -73,14 +74,13 @@ function packCircles(data, xScale, getSize = d => d.size || 4) {
     const dy = b.py - a.py;
     if (db && (dx || dy)) {
       let da = b.r + c.r;
-      const dc = (dx * dx) + (dy * dy);
+      const dc = dx * dx + dy * dy;
       da *= da;
       db *= db;
-      const x = 0.5 + ((db - da) / (2 * dc));
-      const y = Math.sqrt(Math.max(0,
-        (2 * da * (db + dc)) - ((db -= dc) * db) - (da * da))) / (2 * dc);
-      c.px = a.px + (x * dx) + (y * dy);
-      c.py = (a.py + (x * dy)) - (y * dx);
+      const x = 0.5 + (db - da) / (2 * dc); // eslint-disable-line no-magic-numbers
+      const y = Math.sqrt(Math.max(0, 2 * da * (db + dc) - (db -= dc) * db - da * da)) / (2 * dc);
+      c.px = a.px + x * dx + y * dy;
+      c.py = a.py + x * dy - y * dx;
     } else {
       c.px = a.px + db;
       c.py = a.py;
@@ -91,7 +91,8 @@ function packCircles(data, xScale, getSize = d => d.size || 4) {
     const dx = b.px - a.px;
     const dy = b.py - a.py;
     const dr = a.r + b.r;
-    return 0.999 * dr * dr > (dx * dx) + (dy * dy);
+
+    return 0.999 * dr * dr > dx * dx + dy * dy; // eslint-disable-line no-magic-numbers
   }
 
   function xpackSplice(a, b) {
@@ -121,7 +122,7 @@ function packCircles(data, xScale, getSize = d => d.size || 4) {
       bound(a, bd);
 
       if (nodes.length - start >= 2) {
-          // the second node
+        // the second node
         if (outside(nodes[start + 1], bd)) {
           return start + 1;
         }
@@ -134,7 +135,7 @@ function packCircles(data, xScale, getSize = d => d.size || 4) {
         xpackInsert(a, b);
 
         if (nodes.length - start >= 3) {
-            // the third node
+          // the third node
           if (outside(nodes[start + 2], bd)) {
             return start + 2;
           }
@@ -156,7 +157,7 @@ function packCircles(data, xScale, getSize = d => d.size || 4) {
               b = a.nextPack;
             }
 
-            xpackPlace(a, b, c = nodes[i]);
+            xpackPlace(a, b, (c = nodes[i]));
             // search for the closest intersection
             let isect = 0;
             let s1 = 1;
@@ -177,9 +178,9 @@ function packCircles(data, xScale, getSize = d => d.size || 4) {
             // update front chain
             if (isect) {
               if (s1 < s2 || (s1 === s2 && b.r < a.r)) {
-                xpackSplice(a, b = j);
+                xpackSplice(a, (b = j));
               } else {
-                xpackSplice(a = k, b);
+                xpackSplice((a = k), b);
               }
               i -= 1;
               preiter = true;
@@ -193,6 +194,7 @@ function packCircles(data, xScale, getSize = d => d.size || 4) {
         }
       }
     }
+
     return nodes.length;
   }
 
@@ -201,7 +203,7 @@ function packCircles(data, xScale, getSize = d => d.size || 4) {
   }
 
   const nodes = [];
-  data.forEach((node) => {
+  data.forEach(node => {
     nodes.push({ ...node, x: xScale(node.x), r: getSize(node) });
   });
 
@@ -234,7 +236,7 @@ function packCircles(data, xScale, getSize = d => d.size || 4) {
   rect.xMax = -Infinity;
   rect.yMin = Infinity;
   rect.yMax = -Infinity;
-  packBounds.forEach((bd) => {
+  packBounds.forEach(bd => {
     rect.xMin = Math.min(rect.xMin, bd.xMin);
     rect.xMax = Math.max(rect.xMax, bd.xMax);
     rect.yMin = Math.min(rect.yMin, bd.yMin);
@@ -242,8 +244,8 @@ function packCircles(data, xScale, getSize = d => d.size || 4) {
   });
 
   // compute the global outline
-  packOutline.sort((a, b) => (a.px - b.px));
-  packOutline.forEach((p) => {
+  packOutline.sort((a, b) => a.px - b.px);
+  packOutline.forEach(p => {
     if (p.py < 0) {
       outline.up.push(p);
     } else if (p.py > 0) {
@@ -253,6 +255,7 @@ function packCircles(data, xScale, getSize = d => d.size || 4) {
       outline.down.push(p);
     }
   });
+
   return nodes;
 }
 

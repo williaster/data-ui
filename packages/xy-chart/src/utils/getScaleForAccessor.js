@@ -23,14 +23,12 @@ export default function getScaleForAccessor({
     domain = allData.map(minAccessor);
   }
   if (type === 'linear' || type === 'time' || type === 'timeUtc') {
-    const [min, max] = extent([
-      ...extent(allData, minAccessor),
-      ...extent(allData, maxAccessor),
-    ]);
+    const [min, max] = extent([...extent(allData, minAccessor), ...extent(allData, maxAccessor)]);
     domain = [
       type === 'linear' && includeZero ? Math.min(0, min) : min,
       type === 'linear' && includeZero ? Math.max(0, max) : max,
     ];
   }
+
   return scaleTypeToScale[type]({ domain, range, ...rest });
 }

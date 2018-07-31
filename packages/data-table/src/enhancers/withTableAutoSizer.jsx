@@ -21,12 +21,8 @@ function withTableAutoSizer(WrappedComponent, pureComponent = true) {
 
   class EnhancedComponent extends BaseClass {
     render() {
-      const {
-        width: overrideWidth,
-        height: overrideHeight,
-        onResize,
-        ...rest
-      } = this.props;
+      const { width: overrideWidth, height: overrideHeight, onResize, ...rest } = this.props;
+
       return (
         <AutoSizer
           disableHeight={overrideHeight !== null}
@@ -35,8 +31,8 @@ function withTableAutoSizer(WrappedComponent, pureComponent = true) {
         >
           {({ width, height }) => (
             <WrappedComponent
-              width={overrideWidth !== null ? overrideWidth : width}
-              height={overrideHeight !== null ? overrideHeight : height}
+              width={overrideWidth === null ? width : overrideWidth}
+              height={overrideHeight === null ? height : overrideHeight}
               {...rest}
             />
           )}

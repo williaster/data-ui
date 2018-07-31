@@ -15,21 +15,22 @@ export default function collectScalesFromProps(props) {
 
   const xScale = getScaleForAccessor({
     allData,
-    minAccessor: d => (typeof d.x0 !== 'undefined' ? d.x0 : d.x),
-    maxAccessor: d => (typeof d.x1 !== 'undefined' ? d.x1 : d.x),
+    minAccessor: d => (typeof d.x0 === 'undefined' ? d.x : d.x0),
+    maxAccessor: d => (typeof d.x1 === 'undefined' ? d.x : d.x1),
     range: [0, innerWidth],
     ...xScaleObject,
   });
 
   const yScale = getScaleForAccessor({
     allData,
-    minAccessor: d => (typeof d.y0 !== 'undefined' ? d.y0 : d.y),
-    maxAccessor: d => (typeof d.y1 !== 'undefined' ? d.y1 : d.y),
+    minAccessor: d => (typeof d.y0 === 'undefined' ? d.y : d.y0),
+    maxAccessor: d => (typeof d.y1 === 'undefined' ? d.y : d.y1),
     range: [innerHeight, 0],
     ...yScaleObject,
   });
 
-  Children.forEach(children, (Child) => { // Child-specific scales or adjustments here
+  Children.forEach(children, Child => {
+    // Child-specific scales or adjustments here
     const name = componentName(Child);
     if (isBarSeries(name) && xScaleObject.type !== 'band') {
       const dummyBand = getScaleForAccessor({

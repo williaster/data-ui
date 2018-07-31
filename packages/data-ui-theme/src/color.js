@@ -163,8 +163,11 @@ export const allColors = {
   gray: grayColors,
 };
 
+const DEFAULT_BRIGHTNESS = 6;
+const DEFAULT_BRIGHTNESS_DARK = 2;
+
 export const getPaletteForBrightness = (
-  brightness = 6,
+  brightness = DEFAULT_BRIGHTNESS,
   hues = [
     'cyan',
     'yellow',
@@ -211,5 +214,8 @@ export default {
   tickLabel: textColor,
 
   grays: grayColors,
-  categories: [...getPaletteForBrightness(6), ...getPaletteForBrightness(2)],
+  categories: [
+    ...getPaletteForBrightness(DEFAULT_BRIGHTNESS),
+    ...getPaletteForBrightness(DEFAULT_BRIGHTNESS_DARK),
+  ],
 };

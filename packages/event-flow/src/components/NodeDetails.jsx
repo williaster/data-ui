@@ -4,11 +4,7 @@ import { nodeShape, scaleShape } from '../propShapes';
 import { ancestorsFromNode } from '../utils/graph-utils';
 import { oneDecimal } from '../utils/scale-utils';
 
-import {
-  ELAPSED_MS_ROOT,
-  ELAPSED_MS,
-  EVENT_COUNT,
-} from '../constants';
+import { ELAPSED_MS_ROOT, ELAPSED_MS, EVENT_COUNT } from '../constants';
 
 import NodeSequence from './NodeSequence';
 
@@ -24,12 +20,7 @@ const defaultProps = {
   root: null,
 };
 
-function NodeDetails({
-  node,
-  root,
-  timeScale,
-  colorScale,
-}) {
+function NodeDetails({ node, root, timeScale, colorScale }) {
   if (!node || !root) return null;
 
   const sequence = ancestorsFromNode(node);
@@ -48,19 +39,21 @@ function NodeDetails({
     />
   );
 
-  const SubSequence = sequence.length <= 2 ? null : (
-    <NodeSequence
-      nodeArray={sequence.slice(...subSequenceIndex)}
-      currNodeIndex={hasNegativeDepth ? 0 : 1}
-      separator={separator}
-      colorScale={colorScale}
-    />
-  );
+  const SubSequence =
+    sequence.length <= 2 ? null : (
+      <NodeSequence
+        nodeArray={sequence.slice(...subSequenceIndex)}
+        currNodeIndex={hasNegativeDepth ? 0 : 1}
+        separator={separator}
+        colorScale={colorScale}
+      />
+    );
 
   const currNode = sequence[currNodeIndex];
   const nodeEvents = currNode[EVENT_COUNT];
-  const percentOfPrev =
-    `${oneDecimal((nodeEvents / (currNode.parent || currNode)[EVENT_COUNT]) * 100)}%`;
+  const percentOfPrev = `${oneDecimal(
+    (nodeEvents / (currNode.parent || currNode)[EVENT_COUNT]) * 100,
+  )}%`;
   const percentOfRoot = `${oneDecimal((nodeEvents / root[EVENT_COUNT]) * 100)}%`;
 
   const elapsedToNode = timeScale.format(currNode[ELAPSED_MS]);
@@ -69,21 +62,40 @@ function NodeDetails({
   return (
     <div>
       {SubSequence}
-      {SubSequence &&
+      {SubSequence && (
         <div>
-          <div><strong>{nodeEvents}</strong> events</div>
-          <div><strong>{elapsedToNode}</strong> mean elapsed time</div>
-          <div><strong>{percentOfPrev}</strong> of previous</div>
+          <div>
+            <strong>{nodeEvents}</strong> events
+          </div>
+          <div>
+            <strong>{elapsedToNode}</strong> mean elapsed time
+          </div>
+          <div>
+            <strong>{percentOfPrev}</strong> of previous
+          </div>
           <br />
-        </div>}
+        </div>
+      )}
 
       {Sequence}
       <div>
-        {!SubSequence && <div><strong>{nodeEvents}</strong> events</div>}
-        {!SubSequence && currNode.depth !== 0 &&
-          <div><strong>{percentOfPrev}</strong> of previous</div>}
-        <div><strong>{percentOfRoot}</strong> of root</div>
-        <div><strong>{elapsedToRoot}</strong> mean elapsed time to root</div>
+        {!SubSequence && (
+          <div>
+            <strong>{nodeEvents}</strong> events
+          </div>
+        )}
+        {!SubSequence &&
+          currNode.depth !== 0 && (
+            <div>
+              <strong>{percentOfPrev}</strong> of previous
+            </div>
+          )}
+        <div>
+          <strong>{percentOfRoot}</strong> of root
+        </div>
+        <div>
+          <strong>{elapsedToRoot}</strong> mean elapsed time to root
+        </div>
       </div>
     </div>
   );

@@ -11,11 +11,7 @@ export default function collectBinnedDataFromChildSeries({
   limits,
   valueAccessor,
 }) {
-  const {
-    allRawData,
-    rawDataByIndex,
-    binnedDataByIndex,
-  } = collectDataFromChildSeries(children);
+  const { allRawData, rawDataByIndex, binnedDataByIndex } = collectDataFromChildSeries(children);
 
   let result = binnedDataByIndex;
 
@@ -32,7 +28,7 @@ export default function collectBinnedDataFromChildSeries({
     });
   }
 
-  Object.values(result).forEach((bins) => {
+  Object.values(result).forEach(bins => {
     addDensityAndCumulativeValuesToBins(bins);
   });
 

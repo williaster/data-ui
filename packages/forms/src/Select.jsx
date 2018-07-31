@@ -13,11 +13,13 @@ const propTypes = {
   clearable: PropTypes.bool,
   clearRenderer: PropTypes.func,
   optionRenderer: PropTypes.func,
-  options: PropTypes.arrayOf(PropTypes.shape({
-    label: PropTypes.string,
-    value: valueShape.isRequired,
-    disabled: PropTypes.bool,
-  })),
+  options: PropTypes.arrayOf(
+    PropTypes.shape({
+      label: PropTypes.string,
+      value: valueShape.isRequired,
+      disabled: PropTypes.bool,
+    }),
+  ),
   valueRenderer: PropTypes.func,
   value: valueShape,
   onChange: PropTypes.func,

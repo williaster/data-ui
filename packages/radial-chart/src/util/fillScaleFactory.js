@@ -1,6 +1,5 @@
-/* eslint import/prefer-default-export: 0 */
 import { scaleOrdinal } from '@vx/scale';
-import { allColors, grayColors, getPaletteForBrightness } from '@data-ui/theme/build/color';
+import { allColors, grayColors, getPaletteForBrightness } from '@data-ui/theme';
 
 // returns an ordinal scale of multi-hue colors with normalized/comparable brightness
 export function multiHueScaleFactory(brightness, hues) {

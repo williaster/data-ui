@@ -2,7 +2,7 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import { FocusBlurHandler } from '@data-ui/shared';
 
-import { XYChart, PointSeries } from '../../src/';
+import { XYChart, PointSeries } from '../../src';
 import GlyphDotComponent from '../../src/glyph/GlyphDotComponent';
 
 describe('<PointSeries />', () => {
@@ -21,29 +21,35 @@ describe('<PointSeries />', () => {
     { date: new Date('2019-01-05'), cat: 'c', num: 377 },
   ];
 
-  test('it should be defined', () => {
+  it('it should be defined', () => {
     expect(PointSeries).toBeDefined();
   });
 
-  test('it should not render without x- and y-scales', () => {
+  it('it should not render without x- and y-scales', () => {
     expect(shallow(<PointSeries data={[]} />).type()).toBeNull();
   });
 
-  test('it should render a GlyphDotComponent for each datum', () => {
+  it('it should render a GlyphDotComponent for each datum', () => {
     const wrapper = shallow(
-      <XYChart {...mockProps} >
+      <XYChart {...mockProps}>
         <PointSeries data={mockData.map(d => ({ ...d, x: d.date, y: d.num }))} />
       </XYChart>,
     );
-    expect(wrapper.find(PointSeries).length).toBe(1);
-    expect(wrapper.find(PointSeries).dive().find(GlyphDotComponent).length).toBe(mockData.length);
+    expect(wrapper.find(PointSeries)).toHaveLength(1);
+    expect(
+      wrapper
+        .find(PointSeries)
+        .dive()
+        .find(GlyphDotComponent),
+    ).toHaveLength(mockData.length);
   });
 
-  test('it should not render points for null data', () => {
+  it('it should not render points for null data', () => {
     const wrapper = shallow(
-      <XYChart {...mockProps} >
+      <XYChart {...mockProps}>
         <PointSeries
-          data={mockData.map((d, i) => ({ // test null x AND y's
+          data={mockData.map((d, i) => ({
+            // test null x AND y's
             x: i === 0 ? null : d.date,
             y: i === 1 ? null : d.num,
           }))}
@@ -51,12 +57,12 @@ describe('<PointSeries />', () => {
       </XYChart>,
     );
     const series = wrapper.find(PointSeries).dive();
-    expect(series.find(GlyphDotComponent).length).toBe(mockData.length - 2);
+    expect(series.find(GlyphDotComponent)).toHaveLength(mockData.length - 2);
   });
 
-  test('it should render labels if present', () => {
+  it('it should render labels if present', () => {
     const wrapper = shallow(
-      <XYChart {...mockProps} >
+      <XYChart {...mockProps}>
         <PointSeries
           data={mockData.map((d, i) => ({
             x: d.date,
@@ -68,11 +74,11 @@ describe('<PointSeries />', () => {
       </XYChart>,
     );
     const label = wrapper.render().find('.test');
-    expect(label.length).toBe(1);
+    expect(label).toHaveLength(1);
     expect(label.text()).toBe('LABEL');
   });
 
-  test('it should call onMouseMove({ datum, data, event, color }), onMouseLeave(), and onClick({ datum, data, event, color }) on trigger', () => {
+  it('it should call onMouseMove({ datum, data, event, color }), onMouseLeave(), and onClick({ datum, data, event, color }) on trigger', () => {
     const data = mockData.map(d => ({ ...d, x: d.date, y: d.num }));
     const onMouseMove = jest.fn();
     const onMouseLeave = jest.fn();
@@ -89,13 +95,14 @@ describe('<PointSeries />', () => {
       </XYChart>,
     );
 
-    const point = wrapper.find(PointSeries)
+    const point = wrapper
+      .find(PointSeries)
       .dive()
       .find(GlyphDotComponent)
       .first()
       .dive();
 
-    point.simulate('mousemove', ({ event: {} }));
+    point.simulate('mousemove', { event: {} });
     expect(onMouseMove).toHaveBeenCalledTimes(1);
     let args = onMouseMove.mock.calls[0][0];
     expect(args.data).toBe(data);
@@ -106,16 +113,16 @@ describe('<PointSeries />', () => {
     point.simulate('mouseleave');
     expect(onMouseLeave).toHaveBeenCalledTimes(1);
 
-    point.simulate('click', ({ event: {} }));
+    point.simulate('click', { event: {} });
     expect(onClick).toHaveBeenCalledTimes(1);
-    args = onClick.mock.calls[0][0];
+    args = onClick.mock.calls[0][0]; // eslint-disable-line prefer-destructuring
     expect(args.data).toBe(data);
     expect(args.datum).toBe(data[0]);
     expect(args.event).toBeDefined();
     expect(args.color).toBe('army-green');
   });
 
-  test('it should not trigger onMouseMove, onMouseLeave, or onClick if disableMouseEvents is true', () => {
+  it('it should not trigger onMouseMove, onMouseLeave, or onClick if disableMouseEvents is true', () => {
     const data = mockData.map(d => ({ ...d, x: d.date, y: d.num }));
     const onMouseMove = jest.fn();
     const onMouseLeave = jest.fn();
@@ -132,7 +139,8 @@ describe('<PointSeries />', () => {
       </XYChart>,
     );
 
-    const point = wrapper.find(PointSeries)
+    const point = wrapper
+      .find(PointSeries)
       .dive()
       .find(GlyphDotComponent)
       .first()
@@ -148,7 +156,7 @@ describe('<PointSeries />', () => {
     expect(onClick).toHaveBeenCalledTimes(0);
   });
 
-  test('it should render a FocusBlurHandler for each point', () => {
+  it('it should render a FocusBlurHandler for each point', () => {
     const data = mockData.map(d => ({ ...d, x: d.date, y: d.num }));
     const wrapper = shallow(
       <XYChart {...mockProps}>
@@ -160,7 +168,7 @@ describe('<PointSeries />', () => {
     expect(line.find(FocusBlurHandler)).toHaveLength(data.length);
   });
 
-  test('it should invoke onMouseMove when focused', () => {
+  it('it should invoke onMouseMove when focused', () => {
     const data = mockData.map(d => ({ ...d, x: d.date, y: d.num }));
     const onMouseMove = jest.fn();
 
@@ -170,12 +178,16 @@ describe('<PointSeries />', () => {
       </XYChart>,
     );
 
-    const firstPoint = wrapper.find(PointSeries).dive().find(FocusBlurHandler).first();
+    const firstPoint = wrapper
+      .find(PointSeries)
+      .dive()
+      .find(FocusBlurHandler)
+      .first();
     firstPoint.simulate('focus');
     expect(onMouseMove).toHaveBeenCalledTimes(1);
   });
 
-  test('it should invoke onMouseLeave when blured', () => {
+  it('it should invoke onMouseLeave when blured', () => {
     const data = mockData.map(d => ({ ...d, x: d.date, y: d.num }));
     const onMouseLeave = jest.fn();
 
@@ -185,7 +197,11 @@ describe('<PointSeries />', () => {
       </XYChart>,
     );
 
-    const firstPoint = wrapper.find(PointSeries).dive().find(FocusBlurHandler).first();
+    const firstPoint = wrapper
+      .find(PointSeries)
+      .dive()
+      .find(FocusBlurHandler)
+      .first();
     firstPoint.simulate('blur');
     expect(onMouseLeave).toHaveBeenCalledTimes(1);
   });

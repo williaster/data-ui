@@ -1,7 +1,7 @@
 import color from './color';
 import font from './font';
 import { tickLabels, baseLabel } from './svgLabel';
-import unit from './size';
+import { unit } from './size';
 
 export const colors = color;
 
@@ -43,7 +43,7 @@ export const yAxisStyles = {
 
 export const xTickStyles = {
   stroke: colors.grid,
-  length: 1 * unit,
+  length: Number(unit),
   label: {
     bottom: {
       ...tickLabels.bottom,
@@ -56,7 +56,7 @@ export const xTickStyles = {
 
 export const yTickStyles = {
   stroke: colors.grid,
-  length: 1 * unit,
+  length: Number(unit),
   label: {
     left: {
       ...tickLabels.left,

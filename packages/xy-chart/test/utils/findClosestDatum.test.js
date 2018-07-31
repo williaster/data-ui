@@ -1,5 +1,5 @@
-import scaleLinear from '@vx/scale/build/scales/linear';
-import scaleBand from '@vx/scale/build/scales/band';
+import { scaleBand, scaleLinear } from '@vx/scale';
+
 import findClosestDatum from '../../src/utils/findClosestDatum';
 
 describe('findClosestDatum', () => {
@@ -13,9 +13,6 @@ describe('findClosestDatum', () => {
       bottom: 0,
       right: 0,
     }));
-
-    Element.prototype.clientLeft = 0;
-    Element.prototype.clientTop = 0;
   });
 
   const node = document.createElement('g');
@@ -29,53 +26,67 @@ describe('findClosestDatum', () => {
     },
   };
 
-  test('it should be defined', () => {
+  it('it should be defined', () => {
     expect(findClosestDatum).toBeDefined();
   });
 
-  test('it should return the closest datum', () => {
+  it('it should return the closest datum', () => {
+    const data = [{ x: 0 }, { x: 5 }, { x: 10 }];
     const props = {
-      data: [{ x: 0 }, { x: 5 }, { x: 10 }],
+      data,
       getX: d => d.x,
       xScale: scaleLinear({ domain: [0, 10], range: [0, 10] }),
     };
 
-    expect(findClosestDatum({
-      ...props,
-      event: { ...event, clientX: 1 },
-    })).toBe(props.data[0]);
+    expect(
+      findClosestDatum({
+        ...props,
+        event: { ...event, clientX: 1 },
+      }),
+    ).toBe(data[0]);
 
-    expect(findClosestDatum({
-      ...props,
-      event: { ...event, clientX: 6 },
-    })).toBe(props.data[1]);
+    expect(
+      findClosestDatum({
+        ...props,
+        event: { ...event, clientX: 6 },
+      }),
+    ).toBe(data[1]);
 
-    expect(findClosestDatum({
-      ...props,
-      event: { ...event, clientX: 9 },
-    })).toBe(props.data[2]);
+    expect(
+      findClosestDatum({
+        ...props,
+        event: { ...event, clientX: 9 },
+      }),
+    ).toBe(data[2]);
   });
 
-  test('it should work for ordinal scales', () => {
+  it('it should work for ordinal scales', () => {
+    const data = [{ x: 'a' }, { x: 'b' }, { x: 'c' }];
     const props = {
-      data: [{ x: 'a' }, { x: 'b' }, { x: 'c' }],
+      data,
       getX: d => d.x,
       xScale: scaleBand({ domain: ['a', 'b', 'c'], range: [0, 10] }),
     };
 
-    expect(findClosestDatum({
-      ...props,
-      event: { ...event, clientX: 0 },
-    })).toBe(props.data[0]);
+    expect(
+      findClosestDatum({
+        ...props,
+        event: { ...event, clientX: 0 },
+      }),
+    ).toBe(data[0]);
 
-    expect(findClosestDatum({
-      ...props,
-      event: { ...event, clientX: 5 },
-    })).toBe(props.data[1]);
+    expect(
+      findClosestDatum({
+        ...props,
+        event: { ...event, clientX: 5 },
+      }),
+    ).toBe(data[1]);
 
-    expect(findClosestDatum({
-      ...props,
-      event: { ...event, clientX: 10 },
-    })).toBe(props.data[2]);
+    expect(
+      findClosestDatum({
+        ...props,
+        event: { ...event, clientX: 10 },
+      }),
+    ).toBe(data[2]);
   });
 });

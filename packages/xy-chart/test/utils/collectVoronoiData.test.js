@@ -13,54 +13,56 @@ describe('interpolatorLookup', () => {
   const getY = d => d.y;
 
   const children = [
-    <div data={barData} />,
-    <BarSeries data={barData} {...dummyProps} />,
-    <LineSeries data={lineData} {...dummyProps} />,
-    <BarSeries data={barData} {...dummyProps} disableMouseEvents />,
+    <div key="div" data={barData} />,
+    <BarSeries key="bar" data={barData} {...dummyProps} />,
+    <LineSeries key="line" data={lineData} {...dummyProps} />,
+    <BarSeries key="bar2" data={barData} {...dummyProps} disableMouseEvents />,
     null,
   ];
 
-  test('it should be defined', () => {
+  it('it should be defined', () => {
     expect(collectVoronoiData).toBeDefined();
   });
 
-  test('it should return an array', () => {
+  it('it should return an array', () => {
     expect(collectVoronoiData({ children, getX, getY })).toEqual(expect.any(Array));
   });
 
-  test('it should not include datum from <*Series /> with disableMouseEvents set to true', () => {
-    expect(collectVoronoiData({
-      children: [
-        <BarSeries data={barData} {...dummyProps} />,
-        <LineSeries data={lineData} {...dummyProps} />,
-        <BarSeries data={barData} {...dummyProps} disableMouseEvents />,
-      ],
-      getX,
-      getY,
-    }).length).toBe(2);
+  it('it should not include datum from <*Series /> with disableMouseEvents set to true', () => {
+    expect(
+      collectVoronoiData({
+        children: [
+          <BarSeries key="bar" data={barData} {...dummyProps} />,
+          <LineSeries key="line" data={lineData} {...dummyProps} />,
+          <BarSeries key="bar2" data={barData} {...dummyProps} disableMouseEvents />,
+        ],
+        getX,
+        getY,
+      }),
+    ).toHaveLength(2);
   });
 
-  test('it should not include datum from non-<*Series /> children', () => {
-    expect(collectVoronoiData({
-      children: [
-        <div />,
-        <BarSeries data={barData} {...dummyProps} />,
-        null,
-      ],
-      getX,
-      getY,
-    }).length).toBe(1);
+  it('it should not include datum from non-<*Series /> children', () => {
+    expect(
+      collectVoronoiData({
+        children: [<div key="div" />, <BarSeries key="bar" data={barData} {...dummyProps} />, null],
+        getX,
+        getY,
+      }),
+    ).toHaveLength(1);
   });
 
-  test('it should not include datum with undefined x or y values', () => {
-    expect(collectVoronoiData({
-      children: [
-        <BarSeries data={nullData} {...dummyProps} />,
-        <LineSeries data={nullData} {...dummyProps} />,
-        <BarSeries data={nullData} {...dummyProps} />,
-      ],
-      getX,
-      getY,
-    }).length).toBe(0);
+  it('it should not include datum with undefined x or y values', () => {
+    expect(
+      collectVoronoiData({
+        children: [
+          <BarSeries key="bar" data={nullData} {...dummyProps} />,
+          <LineSeries key="line" data={nullData} {...dummyProps} />,
+          <BarSeries key="bar2" data={nullData} {...dummyProps} />,
+        ],
+        getX,
+        getY,
+      }),
+    ).toHaveLength(0);
   });
 });

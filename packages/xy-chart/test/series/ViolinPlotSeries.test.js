@@ -1,9 +1,9 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import ViolinPlot from '@vx/stats/build/violinplot/ViolinPlot';
+import { ViolinPlot } from '@vx/stats';
 import { FocusBlurHandler } from '@data-ui/shared';
 
-import { XYChart, ViolinPlotSeries, computeStats } from '../../src/';
+import { XYChart, ViolinPlotSeries, computeStats } from '../../src';
 
 describe('<ViolinPlotSeries />', () => {
   const mockData = [1, 2, 3, 4, 5, 5, 5, 5, 5, 6, 9, 5, 1];
@@ -20,25 +20,31 @@ describe('<ViolinPlotSeries />', () => {
     data: [{ x: 'label1', binData: mockStats.binData }],
   };
 
-  test('it should be defined', () => {
+  it('it should be defined', () => {
     expect(ViolinPlotSeries).toBeDefined();
   });
 
-  test('it should not render without x- and y-scales', () => {
+  it('it should not render without x- and y-scales', () => {
     expect(shallow(<ViolinPlotSeries data={[]} />).type()).toBeNull();
   });
 
-  test('it should render one violin per datum', () => {
+  it('it should render one violin per datum', () => {
     const wrapper = shallow(
-      <XYChart {...mockProps} >
+      <XYChart {...mockProps}>
         <ViolinPlotSeries {...violinProps} />
       </XYChart>,
     );
-    expect(wrapper.find(ViolinPlotSeries).length).toBe(1);
-    expect(wrapper.find(ViolinPlotSeries).first().dive().find(ViolinPlot).length).toBe(1);
+    expect(wrapper.find(ViolinPlotSeries)).toHaveLength(1);
+    expect(
+      wrapper
+        .find(ViolinPlotSeries)
+        .first()
+        .dive()
+        .find(ViolinPlot),
+    ).toHaveLength(1);
   });
 
-  test('it should call onMouseMove({ datum, data, event, index }), onMouseLeave(), and onClick({ datum, data, event, index }) on trigger when disableMouseEvents is falsy', () => {
+  it('it should call onMouseMove({ datum, data, event, index }), onMouseLeave(), and onClick({ datum, data, event, index }) on trigger when disableMouseEvents is falsy', () => {
     const onMouseMove = jest.fn();
     const onMouseLeave = jest.fn();
     const onClick = jest.fn();
@@ -54,8 +60,11 @@ describe('<ViolinPlotSeries />', () => {
       </XYChart>,
     );
 
-    let violin = wrapper.find(ViolinPlotSeries).dive()
-      .find(ViolinPlot).dive()
+    let violin = wrapper
+      .find(ViolinPlotSeries)
+      .dive()
+      .find(ViolinPlot)
+      .dive()
       .find('path')
       .first();
 
@@ -72,7 +81,7 @@ describe('<ViolinPlotSeries />', () => {
 
     violin.simulate('click', {});
     expect(onClick).toHaveBeenCalledTimes(1);
-    args = onClick.mock.calls[0][0];
+    args = onClick.mock.calls[0][0]; // eslint-disable-line prefer-destructuring
     expect(args.data).toBe(violinProps.data);
     expect(args.datum).toBe(violinProps.data[0]);
     expect(args.event).toBeDefined();
@@ -90,8 +99,11 @@ describe('<ViolinPlotSeries />', () => {
       </XYChart>,
     );
 
-    violin = wrapper.find(ViolinPlotSeries).dive()
-      .find(ViolinPlot).dive()
+    violin = wrapper
+      .find(ViolinPlotSeries)
+      .dive()
+      .find(ViolinPlot)
+      .dive()
       .find('path')
       .first();
 
@@ -105,7 +117,7 @@ describe('<ViolinPlotSeries />', () => {
     expect(onClick).toHaveBeenCalledTimes(1);
   });
 
-  test('it should render a FocusBlurHandler for each point', () => {
+  it('it should render a FocusBlurHandler for each point', () => {
     const wrapper = shallow(
       <XYChart {...mockProps}>
         <ViolinPlotSeries {...violinProps} />
@@ -116,7 +128,7 @@ describe('<ViolinPlotSeries />', () => {
     expect(violins.find(FocusBlurHandler)).toHaveLength(violinProps.data.length);
   });
 
-  test('it should invoke onMouseMove when focused', () => {
+  it('it should invoke onMouseMove when focused', () => {
     const onMouseMove = jest.fn();
 
     const wrapper = shallow(
@@ -125,7 +137,8 @@ describe('<ViolinPlotSeries />', () => {
       </XYChart>,
     );
 
-    const firstPoint = wrapper.find(ViolinPlotSeries)
+    const firstPoint = wrapper
+      .find(ViolinPlotSeries)
       .dive()
       .find(FocusBlurHandler)
       .first();
@@ -134,7 +147,7 @@ describe('<ViolinPlotSeries />', () => {
     expect(onMouseMove).toHaveBeenCalledTimes(1);
   });
 
-  test('it should invoke onMouseLeave when blured', () => {
+  it('it should invoke onMouseLeave when blured', () => {
     const onMouseLeave = jest.fn();
 
     const wrapper = shallow(
@@ -143,7 +156,8 @@ describe('<ViolinPlotSeries />', () => {
       </XYChart>,
     );
 
-    const firstPoint = wrapper.find(ViolinPlotSeries)
+    const firstPoint = wrapper
+      .find(ViolinPlotSeries)
       .dive()
       .find(FocusBlurHandler)
       .first();

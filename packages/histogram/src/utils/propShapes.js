@@ -22,10 +22,7 @@ export const categoricalBinnedDatumShape = PropTypes.shape({
 });
 
 export const binnedDataShape = PropTypes.arrayOf(
-  PropTypes.oneOfType([
-    numericBinnedDatumShape,
-    categoricalBinnedDatumShape,
-  ]),
+  PropTypes.oneOfType([numericBinnedDatumShape, categoricalBinnedDatumShape]),
 );
 
 // styles ---------------------------------------------------------------------

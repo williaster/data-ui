@@ -5,14 +5,16 @@ const SIZE_MIN = 12;
 const SIZE_MAX = 97;
 
 const IconSizePropType = PropTypes.oneOf(
-  Array(SIZE_MAX - SIZE_MIN).fill().map((_, i) => SIZE_MIN + i),
+  Array(SIZE_MAX - SIZE_MIN)
+    .fill()
+    .map((_, i) => SIZE_MIN + i),
 );
 
 const propTypes = {
   svg: PropTypes.func.isRequired,
   size: IconSizePropType,
   color: PropTypes.string,
-  style: PropTypes.object,
+  style: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.number, PropTypes.string])),
 };
 
 const defaultProps = {
@@ -32,9 +34,7 @@ export default function BaseIcon({ svg, color: fill, size, style }) {
     ...style,
   };
 
-  return (
-    <Glyph style={iconStyles} />
-  );
+  return <Glyph style={iconStyles} />;
 }
 
 BaseIcon.propTypes = propTypes;

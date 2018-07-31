@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import color from '@data-ui/theme/build/color';
+import { color } from '@data-ui/theme';
 
 export const propTypes = {
   anchor: PropTypes.oneOf(['start', 'middle', 'end']),

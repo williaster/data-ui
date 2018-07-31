@@ -1,7 +1,6 @@
 /* eslint jsx-a11y/label-has-for: 0, no-mixed-operators: 0 */
 import React from 'react';
-import { allColors } from '@data-ui/theme/build/color';
-import theme from '@data-ui/theme/build/chartTheme';
+import { allColors, chartTheme as theme } from '@data-ui/theme';
 import { AreaSeries, CrossHair, PatternLines, YAxis } from '@data-ui/xy-chart';
 
 import ResponsiveXYChart from './ResponsiveXYChart';

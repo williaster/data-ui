@@ -6,7 +6,7 @@ import withFiltering from '../src/enhancers/withFiltering';
 import Table from '../src/components/Table';
 
 const TableWithFiltering = withFiltering(Table);
-const dataList = List([{ a: 'a', b: 'b' }, { a: 'a', z: 'z' }]);
+const dataList = List([{ a: 'a', b: 'b' }, { a: 'a', z: 'z' }]); // eslint-disable-line babel/new-cap
 
 describe('withFiltering()', () => {
   const props = {
@@ -16,16 +16,16 @@ describe('withFiltering()', () => {
     orderedColumnKeys: ['a', 'b', 'z'],
   };
 
-  test('it should be defined', () => {
+  it('it should be defined', () => {
     expect(withFiltering).toBeDefined();
   });
 
-  test('it should render a Table', () => {
+  it('it should render a Table', () => {
     const wrapper = shallow(<TableWithFiltering {...props} />);
-    expect(wrapper.find(Table).length).toBe(1);
+    expect(wrapper.find(Table)).toHaveLength(1);
   });
 
-  test('it should pass onChangeFilterText, dataList, and filterText props to the wrapped component', () => {
+  it('it should pass onChangeFilterText, dataList, and filterText props to the wrapped component', () => {
     const wrapper = shallow(<TableWithFiltering {...props} />);
     const RenderedTable = wrapper.find(Table);
 
@@ -34,14 +34,14 @@ describe('withFiltering()', () => {
     expect(RenderedTable.prop('dataList') instanceof List).toBe(true);
   });
 
-  test('no filter text should return the initial dataList', () => {
+  it('no filter text should return the initial dataList', () => {
     const wrapper = shallow(<TableWithFiltering {...props} />);
     const RenderedTable = wrapper.find(Table);
     expect(RenderedTable.prop('dataList') instanceof List).toBe(true);
     expect(RenderedTable.prop('dataList')).toBe(dataList);
   });
 
-  test('it should filter dataList based on initialFilterText', () => {
+  it('it should filter dataList based on initialFilterText', () => {
     // filtering is triggered on mount to not block render thread
     let wrapper = mount(<TableWithFiltering {...props} />);
     let RenderedTable = wrapper.find(Table);

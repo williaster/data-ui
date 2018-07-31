@@ -26,23 +26,23 @@ describe('<Link />', () => {
     fill: 'orange',
   };
 
-  test('it should be defined', () => {
+  it('should be defined', () => {
     expect(Link).toBeDefined();
   });
 
-  test('It should render a Bar', () => {
+  it('should render a Bar', () => {
     const wrapper = shallow(<Link {...props} />);
-    expect(wrapper.find(Bar).length).toBe(1);
+    expect(wrapper.find(Bar)).toHaveLength(1);
   });
 
-  test('It should set a data-source and -target attributes', () => {
+  it('should set a data-source and -target attributes', () => {
     const wrapper = shallow(<Link {...props} />);
-    expect(wrapper.find('g').length).toBe(1);
+    expect(wrapper.find('g')).toHaveLength(1);
     expect(wrapper.find('g').props()['data-source']).toBe(props.source.id);
     expect(wrapper.find('g').props()['data-target']).toBe(props.target.id);
   });
 
-  test('It should pass x, y, width, height, and fill props to the Bar', () => {
+  it('should pass x, y, width, height, and fill props to the Bar', () => {
     const wrapper = shallow(<Link {...props} />);
     const bar = wrapper.find(Bar);
     const barProps = bar.props();
@@ -54,7 +54,7 @@ describe('<Link />', () => {
     expect(barProps.fill).toBe(props.fill);
   });
 
-  test('It should not pass negative width or heights', () => {
+  it('should not pass negative width or heights', () => {
     const wrapper = shallow(<Link {...props} width={-10} height={-10} />);
     const bar = wrapper.find(Bar);
     const barProps = bar.props();

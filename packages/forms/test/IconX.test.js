@@ -4,7 +4,7 @@ import { shallow } from 'enzyme';
 import IconX from '../src/icons/IconX';
 
 describe('<IconX />', () => {
-  test('it should be defined', () => {
+  it('it should be defined', () => {
     expect(IconX).toBeDefined();
   });
 
@@ -15,7 +15,7 @@ describe('<IconX />', () => {
       wrapper
         .dive() // BaseIcon
         .dive() // IconX
-        .find('svg').length,
-    ).toBe(1);
+        .find('svg'),
+    ).toHaveLength(1);
   });
 });

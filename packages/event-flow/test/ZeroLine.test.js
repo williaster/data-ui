@@ -10,23 +10,23 @@ describe('<ZeroLine />', () => {
     yScale: scaleLinear({ range: [0, 60], domain: [10, 100] }),
   };
 
-  test('it should be defined', () => {
+  it('should be defined', () => {
     expect(ZeroLine).toBeDefined();
   });
 
-  test('It should render a Line', () => {
+  it('should render a Line', () => {
     const wrapper = shallow(<ZeroLine {...props} />);
-    expect(wrapper.find(Line).length).toBe(1);
+    expect(wrapper.find(Line)).toHaveLength(1);
   });
 
-  test('It should render a line corresponding to x=0 and y=[min,max]', () => {
+  it('should render a line corresponding to x=0 and y=[min,max]', () => {
     const wrapper = shallow(<ZeroLine {...props} />).dive();
     const line = wrapper.find('line');
     const lineProps = line.props();
     const expectedX = props.xScale(0);
     const [expectedY1, expectedY2] = props.yScale.range();
 
-    expect(line.length).toBe(1);
+    expect(line).toHaveLength(1);
     expect(lineProps.x1).toBe(expectedX);
     expect(lineProps.x2).toBe(expectedX);
     expect(lineProps.y1).toBe(expectedY1);

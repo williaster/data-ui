@@ -7,7 +7,7 @@ import withWindowScroller from '../src/enhancers/withWindowScroller';
 import Table from '../src/components/Table';
 
 const TableWithWindowScroller = withWindowScroller(Table);
-const dataList = List([{ str: 'a', num: 5 }, { str: 'c', num: 3 }, { str: 'b', num: 0 }]);
+const dataList = List([{ str: 'a', num: 5 }, { str: 'c', num: 3 }, { str: 'b', num: 0 }]); // eslint-disable-line babel/new-cap
 
 describe('withTableAutoSizer()', () => {
   const props = {
@@ -17,12 +17,12 @@ describe('withTableAutoSizer()', () => {
     orderedColumnKeys: ['str', 'num'],
   };
 
-  test('it should be defined', () => {
+  it('it should be defined', () => {
     expect(withWindowScroller).toBeDefined();
   });
 
-  test('it should render an WindowScroller', () => {
+  it('it should render an WindowScroller', () => {
     const wrapper = shallow(<TableWithWindowScroller {...props} />);
-    expect(wrapper.find(WindowScroller).length).toBe(1);
+    expect(wrapper.find(WindowScroller)).toHaveLength(1);
   });
 });

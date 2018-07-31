@@ -9,6 +9,9 @@ import PointSeries, {
 
 import computeCirclePack from '../utils/computeCirclePack';
 
+const DEFAULT_POINT_SIZE = 4;
+const CIRCLE_PACK_LAYOUT_TIMEOUT = 10;
+
 const propTypes = {
   ...pointSeriesPropTypes,
   data: PropTypes.arrayOf(
@@ -24,7 +27,7 @@ const propTypes = {
 
 const defaultProps = {
   ...pointSeriesDefaultProps,
-  size: d => d.size || 4,
+  size: d => d.size || DEFAULT_POINT_SIZE,
   layoutCallback: null,
   layout: computeCirclePack,
 };
@@ -37,6 +40,7 @@ class CirclePackSeries extends React.PureComponent {
   }
 
   componentWillReceiveProps(nextProps) {
+    // eslint-disable-next-line react/destructuring-assignment
     if (['data', 'xScale', 'size'].some(prop => this.props[prop] !== nextProps[prop])) {
       this.setState({ data: this.computeCirclePack(nextProps) });
     }
@@ -56,9 +60,10 @@ class CirclePackSeries extends React.PureComponent {
       const [min, max] = d3Extent(data, d => d.y);
       this.timeout = setTimeout(() => {
         layoutCallback({
-          range: [min, max], domain: [yScale(min), yScale(max)],
+          range: [min, max],
+          domain: [yScale(min), yScale(max)],
         });
-      }, 10);
+      }, CIRCLE_PACK_LAYOUT_TIMEOUT);
     }
 
     return data;

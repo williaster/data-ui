@@ -1,12 +1,6 @@
 import { textColor } from './color';
 
-const getFont = ({
-  fontFamily,
-  fontSize,
-  letterSpacing = 0,
-  lineHeight,
-  padding,
-}) => ({
+const getFont = ({ fontFamily, fontSize, letterSpacing = 0, lineHeight, padding }) => ({
   color: textColor,
   fontFamily,
   fontSize,

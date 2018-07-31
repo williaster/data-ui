@@ -8,7 +8,7 @@ import { numTicksForWidth } from '../utils/scale-utils';
 const propTypes = {
   hideZero: PropTypes.bool,
   label: PropTypes.string,
-  labelProps: PropTypes.object,
+  labelProps: PropTypes.object, // eslint-disable-line react/forbid-prop-types
   numTicks: PropTypes.number,
   orientation: PropTypes.oneOf(['bottom', 'top']),
   rangePadding: PropTypes.number,

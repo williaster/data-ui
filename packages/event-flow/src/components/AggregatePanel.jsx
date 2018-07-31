@@ -58,8 +58,8 @@ class AggregatePanel extends React.PureComponent {
 
     this.resetZoom = this.resetZoom.bind(this);
     this.panOrZoom = this.panOrZoom.bind(this);
-    this.onMouseOver = this.onMouseOver.bind(this);
-    this.onMouseOut = this.onMouseOut.bind(this);
+    this.handleMouseOver = this.handleMouseOver.bind(this);
+    this.handleMouseOut = this.handleMouseOut.bind(this);
 
     this.zoom = d3Zoom()
       .scaleExtent(ZOOM_SCALE_EXTENT)
@@ -82,7 +82,7 @@ class AggregatePanel extends React.PureComponent {
     }
   }
 
-  onMouseOver({ node, link, coords }) {
+  handleMouseOver({ node, link, coords }) {
     const { xScale, yScale } = this.props;
     const { xScaleZoomed, yScaleZoomed } = this.state;
     this.setState({
@@ -94,7 +94,7 @@ class AggregatePanel extends React.PureComponent {
     });
   }
 
-  onMouseOut() {
+  handleMouseOut() {
     this.setState({ tooltip: null });
   }
 
@@ -139,12 +139,7 @@ class AggregatePanel extends React.PureComponent {
       nodeSorter,
     } = this.props;
 
-    const {
-      xScaleZoomed,
-      yScaleZoomed,
-      viewTransform,
-      tooltip,
-    } = this.state;
+    const { xScaleZoomed, yScaleZoomed, viewTransform, tooltip } = this.state;
 
     const innerWidth = Math.max(...xScale.scale.range());
     const innerHeight = Math.max(...yScale.scale.range());
@@ -156,13 +151,12 @@ class AggregatePanel extends React.PureComponent {
           aria-label="Aggregated events"
           width={width}
           height={height - 5}
-          ref={(ref) => { this.svg = ref; }}
+          ref={ref => {
+            this.svg = ref;
+          }}
           style={{ cursor: 'move' }}
         >
-          <Group
-            top={margin.top}
-            left={margin.left}
-          >
+          <Group top={margin.top} left={margin.left}>
             <RectClipPath
               id={CLIP_ID}
               x={-2}
@@ -187,8 +181,10 @@ class AggregatePanel extends React.PureComponent {
                   getX={xScale.accessor}
                   getY={yScale.accessor}
                   getColor={colorScale.accessor}
-                  onMouseOver={this.onMouseOver}
-                  onMouseOut={this.onMouseOut}
+                  onFocus={this.handleMouseOver}
+                  onBlur={this.handleMouseOut}
+                  onMouseOver={this.handleMouseOver}
+                  onMouseOut={this.handleMouseOut}
                   onClick={onClickNode}
                   nodeSorter={nodeSorter}
                 />
@@ -204,18 +200,16 @@ class AggregatePanel extends React.PureComponent {
             />
           </Group>
         </svg>
-        {tooltip &&
-          <Tooltip
-            left={tooltip.left + margin.left}
-            top={tooltip.top + margin.top}
-          >
+        {tooltip && (
+          <Tooltip left={tooltip.left + margin.left} top={tooltip.top + margin.top}>
             <NodeDetails
               node={tooltip.node}
               root={graph.root}
               colorScale={colorScale}
               timeScale={timeScale}
             />
-          </Tooltip>}
+          </Tooltip>
+        )}
       </div>
     );
   }

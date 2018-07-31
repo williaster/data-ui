@@ -25,35 +25,39 @@ describe('computeDomainsFromBins', () => {
     valueKey: 'count',
   };
 
-  test('it should be defined', () => {
+  it('should be defined', () => {
     expect(computeDomainsFromBins).toBeDefined();
   });
 
-  test('it should return an object with binDomain and valueDomain keys', () => {
-    expect(computeDomainsFromBins(numericProps)).toEqual(expect.objectContaining({
-      binDomain: expect.any(Array),
-      valueDomain: expect.any(Array),
-    }));
+  it('should return an object with binDomain and valueDomain keys', () => {
+    expect(computeDomainsFromBins(numericProps)).toEqual(
+      expect.objectContaining({
+        binDomain: expect.any(Array),
+        valueDomain: expect.any(Array),
+      }),
+    );
 
-    expect(computeDomainsFromBins(categoricalProps)).toEqual(expect.objectContaining({
-      binDomain: expect.any(Array),
-      valueDomain: expect.any(Array),
-    }));
+    expect(computeDomainsFromBins(categoricalProps)).toEqual(
+      expect.objectContaining({
+        binDomain: expect.any(Array),
+        valueDomain: expect.any(Array),
+      }),
+    );
   });
 
-  test('it should compute accurate domains for categorical data', () => {
+  it('should compute accurate domains for categorical data', () => {
     const result = computeDomainsFromBins(categoricalProps);
     expect(result.binDomain).toEqual(expect.arrayContaining(['a', 'b', 'c']));
     expect(result.valueDomain).toEqual(expect.arrayContaining([0, 20]));
   });
 
-  test('it should compute compute accurate domains for numeric data', () => {
+  it('should compute compute accurate domains for numeric data', () => {
     const result = computeDomainsFromBins(numericProps);
     expect(result.binDomain).toEqual(expect.arrayContaining([0, 3]));
     expect(result.valueDomain).toEqual(expect.arrayContaining([0, 20]));
   });
 
-  test('it should compute a value domain based on valueKey', () => {
+  it('should compute a value domain based on valueKey', () => {
     const numeric = computeDomainsFromBins({ ...numericProps, valueKey: 'cumulative' });
     expect(numeric.valueDomain).toEqual(expect.arrayContaining([0, 35]));
 

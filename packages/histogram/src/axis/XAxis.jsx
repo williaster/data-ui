@@ -7,7 +7,7 @@ import { axisStylesShape, tickStylesShape } from '../utils/propShapes';
 const propTypes = {
   axisStyles: axisStylesShape,
   label: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
-  labelProps: PropTypes.object,
+  labelProps: PropTypes.object, // eslint-disable-line react/forbid-prop-types
   numTicks: PropTypes.number,
   orientation: PropTypes.oneOf(['bottom', 'top']),
   tickStyles: tickStylesShape,
@@ -52,9 +52,10 @@ export default function XAxis({
 }) {
   if (!scale) return null;
   const Axis = orientation === 'bottom' ? AxisBottom : AxisTop;
-  const tickLabelProps = passedTickLabelProps ||
-    (tickStyles.label && tickStyles.label[orientation])
-      ? () => tickStyles.label[orientation] : undefined;
+  const tickLabelProps =
+    passedTickLabelProps || (tickStyles.label && tickStyles.label[orientation])
+      ? () => tickStyles.label[orientation]
+      : undefined;
 
   return (
     <Axis

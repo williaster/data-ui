@@ -1,2 +1,1 @@
-/* eslint import/prefer-default-export: 0 */
-export const unit = 8;
+export const unit = 8; // eslint-disable-line import/prefer-default-export

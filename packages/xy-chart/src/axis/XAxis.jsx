@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import AxisBottom from '@vx/axis/build/axis/AxisBottom';
-import AxisTop from '@vx/axis/build/axis/AxisTop';
+import { AxisBottom, AxisTop } from '@vx/axis';
 
 import { axisStylesShape, tickStylesShape } from '../utils/propShapes';
 
@@ -9,7 +8,7 @@ const propTypes = {
   axisStyles: axisStylesShape,
   hideZero: PropTypes.bool,
   label: PropTypes.string,
-  labelProps: PropTypes.object,
+  labelProps: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.number, PropTypes.string])),
   numTicks: PropTypes.number,
   orientation: PropTypes.oneOf(['bottom', 'top']),
   rangePadding: PropTypes.number,
@@ -17,7 +16,10 @@ const propTypes = {
   tickComponent: PropTypes.func,
   tickLabelProps: PropTypes.func,
   tickFormat: PropTypes.func,
-  tickValues: PropTypes.array,
+  tickValues: PropTypes.arrayOf(
+    // number or date/moment object
+    PropTypes.oneOfType([PropTypes.number, PropTypes.object]),
+  ),
 
   // probably injected by parent
   innerHeight: PropTypes.number,

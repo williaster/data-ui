@@ -1,11 +1,11 @@
+/* eslint complexity: 0 */
 import PropTypes from 'prop-types';
 import React from 'react';
 import { extent } from 'd3-array';
 
 import GlyphDot from '@vx/glyph/build/glyphs/Dot';
 import Group from '@vx/group/build/Group';
-import color from '@data-ui/theme/build/color';
-import svgLabel from '@data-ui/theme/build/svgLabel';
+import { color, svgLabel } from '@data-ui/theme';
 
 import Label from '../annotation/Label';
 import callOrValue from '../utils/callOrValue';
@@ -26,13 +26,7 @@ export const propTypes = {
   points: PropTypes.arrayOf(
     PropTypes.oneOfType([
       PropTypes.number, // index
-      PropTypes.oneOf([
-        'all',
-        'min',
-        'max',
-        'first',
-        'last',
-      ]),
+      PropTypes.oneOf(['all', 'min', 'max', 'first', 'last']),
     ]),
   ),
   size: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
@@ -41,7 +35,7 @@ export const propTypes = {
   strokeWidth: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
 
   // all likely passed by the parent chart
-  data: PropTypes.array,
+  data: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.number, PropTypes.object])),
   getX: PropTypes.func,
   getY: PropTypes.func,
   xScale: PropTypes.func,
@@ -68,16 +62,19 @@ export const defaultProps = {
   yScale: null,
 };
 
+const ZERO_DELTA = 0.00001;
+
 class PointSeries extends React.Component {
   // we define a custom handler because the points prop may be impractible to cache
   shouldComponentUpdate(nextProps) {
     const nonPointsAreEqual = Object.keys(propTypes).every(
+      // eslint-disable-next-line react/destructuring-assignment
       prop => prop === 'points' || this.props[prop] === nextProps[prop],
     );
-
+    const { points } = this.props;
     const pointsAreEqual =
-      nextProps.points.length === this.props.points.length
-      && nextProps.points.every(point => this.props.points.indexOf(point) > -1);
+      nextProps.points.length === points.length &&
+      nextProps.points.every(point => points.indexOf(point) > -1);
 
     return !(pointsAreEqual && nonPointsAreEqual);
   }
@@ -116,12 +113,12 @@ class PointSeries extends React.Component {
       <Group>
         {data.map((d, i) => {
           if (
-            points.indexOf(i) > -1
-            || showAll
-            || (showFirst && i === 0)
-            || (showLast && i === lastIndex)
-            || (showMin && Math.abs(getY(d) - minY) < 0.00001)
-            || (showMax && Math.abs(getY(d) - maxY) < 0.00001)
+            points.indexOf(i) > -1 ||
+            showAll ||
+            (showFirst && i === 0) ||
+            (showLast && i === lastIndex) ||
+            (showMin && Math.abs(getY(d) - minY) < ZERO_DELTA) ||
+            (showMax && Math.abs(getY(d) - maxY) < ZERO_DELTA)
           ) {
             const yVal = getY(d);
             const cx = xScale(getX(d));
@@ -136,38 +133,46 @@ class PointSeries extends React.Component {
             // position label above a point if either of the surrounding points are lower
             const autoLabelPosition =
               (prevCy !== null && prevCy > cy) || (nextCy !== null && nextCy > cy)
-              ? 'top' : 'bottom';
+                ? 'top'
+                : 'bottom';
 
-            return defined(cx) && defined(cy) && (
-              <GlyphDot
-                key={key}
-                cx={cx}
-                cy={cy}
-                r={callOrValue(d.size || size, yVal, i)}
-                fill={fillValue}
-                fillOpacity={callOrValue(d.fillOpacity || fillOpacity, yVal, i)}
-                stroke={callOrValue(d.stroke || stroke, yVal, i)}
-                strokeWidth={callOrValue(d.strokeWidth || strokeWidth, yVal, i)}
-                onMouseMove={onMouseMove && ((event) => {
-                  onMouseMove({ event, data, datum: d, index: i, color: fillValue });
-                })}
-                onMouseLeave={onMouseLeave}
-              >
-                {label &&
-                  React.cloneElement(LabelComponent, {
-                    x: cx,
-                    y: cy,
-                    ...positionLabel(
-                      labelPosition === 'auto'
-                        ? autoLabelPosition
-                        : callOrValue(labelPosition, yVal, i),
-                      labelOffset,
-                    ),
-                    label,
-                  })}
-              </GlyphDot>
+            return (
+              defined(cx) &&
+              defined(cy) && (
+                <GlyphDot
+                  key={key}
+                  cx={cx}
+                  cy={cy}
+                  r={callOrValue(d.size || size, yVal, i)}
+                  fill={fillValue}
+                  fillOpacity={callOrValue(d.fillOpacity || fillOpacity, yVal, i)}
+                  stroke={callOrValue(d.stroke || stroke, yVal, i)}
+                  strokeWidth={callOrValue(d.strokeWidth || strokeWidth, yVal, i)}
+                  onMouseMove={
+                    onMouseMove &&
+                    (event => {
+                      onMouseMove({ event, data, datum: d, index: i, color: fillValue });
+                    })
+                  }
+                  onMouseLeave={onMouseLeave}
+                >
+                  {label &&
+                    React.cloneElement(LabelComponent, {
+                      x: cx,
+                      y: cy,
+                      ...positionLabel(
+                        labelPosition === 'auto'
+                          ? autoLabelPosition
+                          : callOrValue(labelPosition, yVal, i),
+                        labelOffset,
+                      ),
+                      label,
+                    })}
+                </GlyphDot>
+              )
             );
           }
+
           return null;
         })}
       </Group>

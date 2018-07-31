@@ -17,7 +17,7 @@ import kernelGaussian from '../utils/kernels/gaussian';
 
 const propTypes = {
   animated: PropTypes.bool,
-  rawData: PropTypes.array, // eslint-disable-line react/no-unused-prop-types
+  rawData: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.number, PropTypes.string])),
   binnedData: binnedDataShape,
   binType: PropTypes.oneOf(['numeric', 'categorical']),
   fill: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
@@ -63,7 +63,8 @@ const defaultProps = {
   valueScale: null,
 };
 
-const getBin = d => (typeof d.bin !== 'undefined' ? d.bin : d.bin0);
+const BIN_OFFSET = 0.5;
+const getBin = d => (typeof d.bin === 'undefined' ? d.bin0 : d.bin);
 const densityAccessor = d => d.value;
 const cumulativeAccessor = d => d.cumulative;
 
@@ -95,7 +96,7 @@ function DensitySeries({
     ? binScale.bandwidth() // categorical
     : Math.abs(binScale(binnedData[0].bin1) - binScale(binnedData[0].bin0)); // numeric
 
-  const binOffset = 0.5 * binWidth * (horizontal && binType === 'numeric' ? -1 : 1);
+  const binOffset = BIN_OFFSET * binWidth * (horizontal && binType === 'numeric' ? -1 : 1);
 
   // all density estimators require numeric data, so if we're passed categorical data
   // or pre-aggregated data, we just draw an area curve using the binned data
@@ -130,6 +131,7 @@ function DensitySeries({
         const val = densityAccessor(d); // compute cumulative in this loop
         d.cumulative = val + (i > 0 ? densityData[i - 1].cumulative : 0);
         d.id = i;
+
         return cumulative ? d.cumulative : val;
       }),
       range: densityRange,

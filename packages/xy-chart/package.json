@@ -1,13 +1,25 @@
 {
   "name": "@data-ui/xy-chart",
-  "version": "0.0.59",
+  "version": "0.0.60-alpha.3.0",
   "description": "A package of charts with standard x- and y- axes. https://williaster.github.io/data-ui",
-  "main": "build/index.js",
+  "sideEffects": false,
+  "main": "lib/index.js",
+  "module": "esm/index.js",
+  "files": [
+    "esm",
+    "lib"
+  ],
   "scripts": {
-    "build": "webpack -p",
-    "dev": "webpack --progress --colors --watch",
-    "prepublish": "npm run build",
-    "test": "jest --colors --verbose --coverage"
+    "build:cjs": "beemo babel ./src --out-dir lib/ --react --minify",
+    "build:esm": "beemo babel ./src --out-dir esm/ --react --esm --minify",
+    "build": "npm run build:cjs && npm run build:esm",
+    "jest": "beemo jest --react --color --coverage",
+    "eslint": "beemo eslint \"./{src,test}/**/*.{js,jsx,json,md}\"",
+    "lint": "npm run prettier && npm run eslint",
+    "test": "npm run jest",
+    "prettier": "beemo prettier \"./{src,test}/**/*.{js,jsx,json,md}\"",
+    "sync:gitignore": "beemo sync-dotfiles --filter=gitignore",
+    "prepublish": "npm run build"
   },
   "repository": "https://github.com/williaster/data-ui",
   "keywords": [
@@ -21,8 +33,8 @@
   "author": "Chris Williams <chris.williams@airbnb.com>",
   "license": "MIT",
   "dependencies": {
-    "@data-ui/shared": "0.0.59",
-    "@data-ui/theme": "0.0.59",
+    "@data-ui/shared": "^0.0.60-alpha.3.0",
+    "@data-ui/theme": "^0.0.60-alpha.3.0",
     "@vx/axis": "^0.0.168",
     "@vx/curve": "^0.0.165",
     "@vx/event": "^0.0.165",
@@ -38,31 +50,35 @@
     "@vx/stats": "^0.0.165",
     "@vx/tooltip": "^0.0.165",
     "@vx/voronoi": "^0.0.165",
+    "babel-runtime": "^6.26.0",
     "d3-array": "^1.2.0",
     "prop-types": "^15.5.10"
   },
   "devDependencies": {
-    "babel-core": "^6.24.1",
-    "babel-jest": "^20.0.3",
-    "babel-loader": "^6.4.1",
-    "babel-plugin-syntax-jsx": "^6.18.0",
-    "babel-preset-airbnb": "^2.2.3",
-    "enzyme": "^3.1.0",
-    "enzyme-adapter-react-16": "^1.0.0",
-    "jest": "^20.0.3",
+    "@data-ui/build-config": "^0.0.8",
     "react": "^16.0.0",
-    "react-dom": "^16.0.0",
-    "react-test-renderer": "^16.0.0",
-    "webpack": "^2.4.1"
+    "react-dom": "^16.0.0"
   },
   "peerDependencies": {
     "react": "^15.0.0-0 || ^16.0.0-0",
     "react-dom": "^15.0.0-0 || ^16.0.0-0"
   },
-  "jest": {
-    "setupFiles": [
-      "<rootDir>/test/shim.js",
-      "<rootDir>/test/setup.js"
-    ]
+  "engines": {
+    "node": ">=8.10.0"
+  },
+  "beemo": {
+    "module": "@data-ui/build-config",
+    "drivers": [
+      "prettier",
+      "eslint",
+      "babel",
+      "jest"
+    ],
+    "eslint": {
+      "rules": {
+        "sort-keys": "off",
+        "complexity": "off"
+      }
+    }
   }
 }

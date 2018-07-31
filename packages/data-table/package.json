@@ -1,15 +1,25 @@
 {
   "name": "@data-ui/data-table",
-  "version": "0.0.48",
+  "version": "0.0.60-alpha.3.0",
   "description": "Table components that can handle a lot of data",
-  "main": "build/index.js",
+  "sideEffects": false,
+  "main": "lib/index.js",
+  "module": "esm/index.js",
+  "files": [
+    "esm",
+    "lib"
+  ],
   "scripts": {
-    "build": "webpack -p && npm run copy-styles",
-    "copy-styles": "cp ./node_modules/react-virtualized/styles.css ./build/styles.css",
-    "dev": "webpack --progress --colors --watch",
-    "dev:nowatch": "webpack -d --progress --colors",
-    "prepublish": "npm run build",
-    "test": "jest --colors --verbose --coverage"
+    "build:cjs": "beemo babel ./src --out-dir lib/ --react --minify",
+    "build:esm": "beemo babel ./src --out-dir esm/ --react --esm --minify",
+    "build": "npm run build:cjs && npm run build:esm",
+    "jest": "beemo jest --react --color --coverage",
+    "eslint": "beemo eslint \"./{src,test}/**/*.{js,jsx,json,md}\"",
+    "lint": "npm run prettier && npm run eslint",
+    "test": "npm run jest",
+    "prettier": "beemo prettier \"./{src,test}/**/*.{js,jsx,json,md}\"",
+    "sync:gitignore": "beemo sync-dotfiles --filter=gitignore",
+    "prepublish": "npm run build"
   },
   "repository": "https://github.com/williaster/data-ui",
   "keywords": [
@@ -22,33 +32,34 @@
   "license": "MIT",
   "homepage": "https://github.com/williaster/data-ui#readme",
   "dependencies": {
+    "babel-runtime": "^6.26.0",
     "immutable": "^3.8.1",
     "prop-types": "^15.5.10",
     "react-virtualized": "^9.7.3"
   },
   "devDependencies": {
-    "babel-core": "^6.24.1",
-    "babel-jest": "^20.0.3",
-    "babel-loader": "^6.4.1",
-    "babel-plugin-syntax-jsx": "^6.18.0",
-    "babel-polyfill": "^6.23.0",
-    "babel-preset-airbnb": "^2.2.3",
-    "css-loader": "^0.28.0",
-    "enzyme": "^3.1.0",
-    "enzyme-adapter-react-16": "^1.0.0",
-    "jest": "^20.0.3",
-    "react": "^16.0.0",
-    "react-dom": "^16.0.0",
-    "react-test-renderer": "^16.0.0",
-    "webpack": "^2.4.1"
+    "@data-ui/build-config": "^0.0.8",
+    "react": "^16.0.0"
   },
   "peerDependencies": {
     "react": "^15.0.0-0 || ^16.0.0-0"
   },
-  "jest": {
-    "setupFiles": [
-      "<rootDir>/test/shim.js",
-      "<rootDir>/test/setup.js"
-    ]
+  "engines": {
+    "node": ">=8.10.0"
+  },
+  "beemo": {
+    "module": "@data-ui/build-config",
+    "drivers": [
+      "prettier",
+      "eslint",
+      "babel",
+      "jest"
+    ],
+    "eslint": {
+      "rules": {
+        "complexity": "off",
+        "sort-keys": "off"
+      }
+    }
   }
 }

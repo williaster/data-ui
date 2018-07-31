@@ -2,7 +2,7 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import Bar from '@vx/shape/build/shapes/Bar';
 
-import { Sparkline, BandLine } from '../../src/';
+import { Sparkline, BandLine } from '../../src';
 
 describe('<BandLine />', () => {
   const sparklineProps = {
@@ -10,40 +10,46 @@ describe('<BandLine />', () => {
     width: 100,
     height: 100,
     margin: { top: 0, right: 0, bottom: 0, left: 0 },
-    data: Array(10).fill().map((_, i) => i),
+    data: Array(10)
+      .fill()
+      .map((_, i) => i),
   };
 
-  test('it should be defined', () => {
+  it('should be defined', () => {
     expect(BandLine).toBeDefined();
   });
 
-  test('it should render null if no accessors or scales are passed', () => {
+  it('should render null if no accessors or scales are passed', () => {
     expect(shallow(<BandLine />).type()).toBeNull();
   });
 
-  test('it should render a Bar', () => {
+  it('should render a Bar', () => {
     const wrapper = shallow(
       <Sparkline {...sparklineProps}>
         <BandLine />
       </Sparkline>,
-    ).find(BandLine).dive();
+    )
+      .find(BandLine)
+      .dive();
 
-    expect(wrapper.find(Bar).length).toBe(1);
+    expect(wrapper.find(Bar)).toHaveLength(1);
   });
 
-  test('innerquartiles type bands should span the entire width of the chart', () => {
+  it('innerquartiles type bands should span the entire width of the chart', () => {
     const wrapper = shallow(
       <Sparkline {...sparklineProps}>
         <BandLine />
       </Sparkline>,
-    ).find(BandLine).dive();
+    )
+      .find(BandLine)
+      .dive();
 
     const bar = wrapper.find(Bar);
     expect(bar.prop('x')).toBe(0);
     expect(bar.prop('width')).toBe(sparklineProps.width);
   });
 
-  test('it should render a band for custom-coordinate bands', () => {
+  it('should render a band for custom-coordinate bands', () => {
     const band = {
       from: { x: 3, y: 2 },
       to: { x: 7, y: 6 },
@@ -69,7 +75,7 @@ describe('<BandLine />', () => {
     expect(bar.prop('height')).toBe(Math.abs(scaledBand.from.y - scaledBand.to.y));
   });
 
-  test('custom-coordinate bands with missing x or y values should default to chart bounds', () => {
+  it('custom-coordinate bands with missing x or y values should default to chart bounds', () => {
     const emptyBand = { from: {}, to: {} };
 
     const wrapper = shallow(

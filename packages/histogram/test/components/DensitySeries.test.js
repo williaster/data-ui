@@ -1,7 +1,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import { AreaClosed, LinePath } from '@vx/shape';
-import { DensitySeries, Histogram } from '../../src/';
+import { DensitySeries, Histogram } from '../../src';
 import AnimatedDensitySeries from '../../src/series/animated/AnimatedDensitySeries';
 
 describe('<DensitySeries />', () => {
@@ -30,18 +30,18 @@ describe('<DensitySeries />', () => {
     { bin: 'e', count: 10, id: '4' },
   ];
 
-  test('it should be defined', () => {
+  it('should be defined', () => {
     expect(DensitySeries).toBeDefined();
   });
 
-  test('it should render a <DensitySeries /> for binned categorical or numeric data', () => {
+  it('should render a <DensitySeries /> for binned categorical or numeric data', () => {
     const numericWrapper = shallow(
       <Histogram {...histogramProps}>
         <DensitySeries animated={false} binnedData={numericBinnedData} showArea />
       </Histogram>,
     );
     const numericDensityWrapper = numericWrapper.find(DensitySeries).dive();
-    expect(numericDensityWrapper.find(AreaClosed).length).toBe(1);
+    expect(numericDensityWrapper.find(AreaClosed)).toHaveLength(1);
 
     const categoricalWrapper = shallow(
       <Histogram {...histogramProps}>
@@ -49,17 +49,17 @@ describe('<DensitySeries />', () => {
       </Histogram>,
     );
     const catetegoricalDensityWrapper = categoricalWrapper.find(DensitySeries).dive();
-    expect(catetegoricalDensityWrapper.find(AreaClosed).length).toBe(1);
+    expect(catetegoricalDensityWrapper.find(AreaClosed)).toHaveLength(1);
   });
 
-  test('it should render a <DensitySeries /> for raw categorical or numeric data', () => {
+  it('should render a <DensitySeries /> for raw categorical or numeric data', () => {
     const numericWrapper = shallow(
       <Histogram {...histogramProps}>
         <DensitySeries animated={false} rawData={rawNumericData} showArea />
       </Histogram>,
     );
     const numericDensityWrapper = numericWrapper.find(DensitySeries).dive();
-    expect(numericDensityWrapper.find(AreaClosed).length).toBe(1);
+    expect(numericDensityWrapper.find(AreaClosed)).toHaveLength(1);
 
     const categoricalWrapper = shallow(
       <Histogram {...histogramProps} binType="categorical">
@@ -67,17 +67,17 @@ describe('<DensitySeries />', () => {
       </Histogram>,
     );
     const catetegoricalDensityWrapper = categoricalWrapper.find(DensitySeries).dive();
-    expect(catetegoricalDensityWrapper.find(AreaClosed).length).toBe(1);
+    expect(catetegoricalDensityWrapper.find(AreaClosed)).toHaveLength(1);
   });
 
-  test('it should render an <AreaClosed /> depending on the showArea prop', () => {
+  it('should render an <AreaClosed /> depending on the showArea prop', () => {
     const wrapperWithArea = shallow(
       <Histogram {...histogramProps}>
         <DensitySeries animated={false} binnedData={numericBinnedData} showArea />
       </Histogram>,
     );
     const densityWithArea = wrapperWithArea.find(DensitySeries).dive();
-    expect(densityWithArea.find(AreaClosed).length).toBe(1);
+    expect(densityWithArea.find(AreaClosed)).toHaveLength(1);
 
     const wrapperWithoutArea = shallow(
       <Histogram {...histogramProps}>
@@ -85,17 +85,17 @@ describe('<DensitySeries />', () => {
       </Histogram>,
     );
     const densityWithoutArea = wrapperWithoutArea.find(DensitySeries).dive();
-    expect(densityWithoutArea.find(AreaClosed).length).toBe(0);
+    expect(densityWithoutArea.find(AreaClosed)).toHaveLength(0);
   });
 
-  test('it should render an <LinePath /> depending on the showLine prop', () => {
+  it('should render an <LinePath /> depending on the showLine prop', () => {
     const wrapperWithLine = shallow(
       <Histogram {...histogramProps}>
         <DensitySeries animated={false} binnedData={numericBinnedData} showLine />
       </Histogram>,
     );
     const densityWithLine = wrapperWithLine.find(DensitySeries).dive();
-    expect(densityWithLine.find(LinePath).length).toBe(1);
+    expect(densityWithLine.find(LinePath)).toHaveLength(1);
 
     const wrapperWithoutLine = shallow(
       <Histogram {...histogramProps}>
@@ -103,16 +103,16 @@ describe('<DensitySeries />', () => {
       </Histogram>,
     );
     const densityWithoutLine = wrapperWithoutLine.find(DensitySeries).dive();
-    expect(densityWithoutLine.find(LinePath).length).toBe(0);
+    expect(densityWithoutLine.find(LinePath)).toHaveLength(0);
   });
 
-  test('it should render an <AnimatedDensitySeries /> if animated = true', () => {
+  it('should render an <AnimatedDensitySeries /> if animated = true', () => {
     const wrapper = shallow(
       <Histogram {...histogramProps}>
         <DensitySeries animated binnedData={numericBinnedData} />
       </Histogram>,
     );
     const densityWrapper = wrapper.find(DensitySeries).dive();
-    expect(densityWrapper.find(AnimatedDensitySeries).length).toBe(1);
+    expect(densityWrapper.find(AnimatedDensitySeries)).toHaveLength(1);
   });
 });

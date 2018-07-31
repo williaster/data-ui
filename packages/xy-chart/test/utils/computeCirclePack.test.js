@@ -1,4 +1,4 @@
-import scaleLinear from '@vx/scale/build/scales/linear';
+import { scaleLinear } from '@vx/scale';
 import computeCirclePack from '../../src/utils/computeCirclePack';
 
 describe('computeCirclePack', () => {
@@ -15,45 +15,45 @@ describe('computeCirclePack', () => {
     domain: [1, 100],
   });
 
-  test('it should be defined', () => {
+  it('it should be defined', () => {
     expect(computeCirclePack).toBeDefined();
   });
 
-  test('input data length should match output data length', () => {
+  it('input data length should match output data length', () => {
     const output = computeCirclePack(mockData, xScale);
-    expect(output.length).toBe(mockData.length);
+    expect(output).toHaveLength(mockData.length);
   });
 
-  test('input data with lower x values should have lower x values in output', () => {
+  it('input data with lower x values should have lower x values in output', () => {
     const output = computeCirclePack(mockData, xScale);
-    expect(output.length).toBe(mockData.length);
+    expect(output).toHaveLength(mockData.length);
   });
 
-  test('numeric y values should be added to output data', () => {
+  it('numeric y values should be added to output data', () => {
     expect.assertions(mockData.length);
 
     const output = computeCirclePack(mockData, xScale);
-    output.forEach((d) => {
+    output.forEach(d => {
       expect(d.y).toEqual(expect.any(Number));
     });
   });
 
-  test('x, size, and other datum properties should be copied to output data', () => {
+  it('x, size, and other datum properties should be copied to output data', () => {
     expect.assertions(mockData.length);
 
     const output = computeCirclePack(mockData, xScale);
-    output.forEach((outputDatum) => {
+    output.forEach(outputDatum => {
       const inputIndex = mockData.findIndex(inputDatum => inputDatum.id === outputDatum.id);
       const inputDatum = mockData[inputIndex];
       expect(Object.keys(outputDatum)).toEqual(expect.arrayContaining(Object.keys(inputDatum)));
     });
   });
 
-  test('input datum should not be modified', () => {
+  it('input datum should not be modified', () => {
     expect.assertions(mockData.length);
 
     const output = computeCirclePack(mockData, xScale);
-    output.forEach((outputDatum) => {
+    output.forEach(outputDatum => {
       const inputIndex = mockData.findIndex(inputDatum => inputDatum.id === outputDatum.id);
       const inputDatum = mockData[inputIndex];
       expect(outputDatum).not.toBe(inputDatum);

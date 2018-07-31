@@ -17,6 +17,7 @@ const defaultProps = {
   filterRow: (row, filterText) => {
     const re = new RegExp(filterText, 'gi');
     const values = Object.values(row).map(value => (value || '').toString().toLowerCase());
+
     return values.some(value => re.test(value));
   },
   initialFilterText: '',
@@ -30,7 +31,7 @@ function withFiltering(WrappedComponent, pureComponent = true) {
   class EnhancedComponent extends BaseClass {
     constructor(props) {
       super(props);
-      this.onChangeFilterText = this.onChangeFilterText.bind(this);
+      this.handleChangeFilterText = this.handleChangeFilterText.bind(this);
       this.state = {
         filterText: this.props.initialFilterText,
         filteredDataList: this.props.dataList,
@@ -40,17 +41,17 @@ function withFiltering(WrappedComponent, pureComponent = true) {
 
     componentWillMount() {
       if (this.state.filterText) {
-        this.onChangeFilterText(this.state.filterText, this.props);
+        this.handleChangeFilterText(this.state.filterText, this.props);
       }
     }
 
     componentWillReceiveProps(nextProps) {
       if (nextProps.dataList !== this.props.dataList) {
-        this.onChangeFilterText(this.state.filterText, nextProps);
+        this.handleChangeFilterText(this.state.filterText, nextProps);
       }
     }
 
-    onChangeFilterText(filterText, props) {
+    handleChangeFilterText(filterText, props) {
       const { noDebounce, debounceMs } = props || this.props;
       if (!window || noDebounce || !this.state.debounce) {
         const { dataList: originalData, filterRow } = props || this.props;
@@ -58,7 +59,8 @@ function withFiltering(WrappedComponent, pureComponent = true) {
 
         const newData = originalData !== this.props.dataList;
 
-        const userDeletedLetter = prevFilterText &&
+        const userDeletedLetter =
+          prevFilterText &&
           filterText.length < prevFilterText.length &&
           prevFilterText.indexOf(filterText) >= -1;
 
@@ -74,8 +76,9 @@ function withFiltering(WrappedComponent, pureComponent = true) {
         }
 
         if (filterText) {
-          nextState.filteredDataList = nextState.filteredDataList
-            .filter(row => filterRow(row, filterText));
+          nextState.filteredDataList = nextState.filteredDataList.filter(row =>
+            filterRow(row, filterText),
+          );
         }
 
         this.setState(nextState);
@@ -87,10 +90,11 @@ function withFiltering(WrappedComponent, pureComponent = true) {
     render() {
       const { filteredDataList, filterText } = this.state;
       const { dataList, ...rest } = this.props;
+
       return (
         <WrappedComponent
           {...rest}
-          onChangeFilterText={this.onChangeFilterText}
+          onChangeFilterText={this.handleChangeFilterText}
           dataList={filteredDataList}
           filterText={filterText}
         />

@@ -1,6 +1,8 @@
 import { histogram as d3Histogram, extent as d3Extent } from 'd3-array';
 import { scaleLinear } from 'd3-scale';
 
+const DEFAULT_BIN_COUNT = 10;
+
 /*
  * handles binning of numeric data by series index
  * if binValues are passed, ignores other bin values that are encountered
@@ -18,7 +20,7 @@ import { scaleLinear } from 'd3-scale';
  */
 export default function binNumericData({
   allData,
-  binCount = 10,
+  binCount = DEFAULT_BIN_COUNT,
   binValues,
   limits,
   rawDataByIndex,
@@ -28,20 +30,18 @@ export default function binNumericData({
   const histogram = d3Histogram();
   let extent = d3Extent(allData, valueAccessor);
 
-  if (binValues) { // account for extent of binValues if passed
+  if (binValues) {
+    // account for extent of binValues if passed
     const binExtent = d3Extent(binValues);
-    extent = [
-      Math.min(binExtent[0], extent[0]),
-      Math.max(binExtent[1], extent[1]),
-    ];
+    extent = [Math.min(binExtent[0], extent[0]), Math.max(binExtent[1], extent[1])];
   }
-  const scale = scaleLinear().domain(extent).nice(binCount);
+  const scale = scaleLinear()
+    .domain(extent)
+    .nice(binCount);
 
-  histogram
-    .domain(limits || scale.domain())
-    .thresholds(binValues || scale.ticks(binCount));
+  histogram.domain(limits || scale.domain()).thresholds(binValues || scale.ticks(binCount));
 
-  Object.keys(rawDataByIndex).forEach((index) => {
+  Object.keys(rawDataByIndex).forEach(index => {
     const data = rawDataByIndex[index];
     const seriesBins = histogram.value(valueAccessor)(data);
 

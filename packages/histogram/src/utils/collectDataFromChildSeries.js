@@ -13,8 +13,8 @@ export default function collectDataFromChildSeries(children) {
   Children.forEach(children, (Child, i) => {
     const name = componentName(Child);
     if (isSeries(name)) {
-      const rawData = Child.props.rawData;
-      const binnedData = Child.props.binnedData;
+      const { rawData } = Child.props;
+      const { binnedData } = Child.props;
 
       if (rawData && rawData.length > 0) {
         rawDataByIndex[i] = rawData;

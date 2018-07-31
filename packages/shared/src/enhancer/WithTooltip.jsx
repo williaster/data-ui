@@ -3,7 +3,9 @@ import PropTypes from 'prop-types';
 
 import localPoint from '@vx/event/build/localPoint';
 import withTooltip from '@vx/tooltip/build/enhancers/withTooltip';
-import TooltipWithBounds, { withTooltipPropTypes as vxTooltipPropTypes } from '@vx/tooltip/build/tooltips/TooltipWithBounds';
+import TooltipWithBounds, {
+  withTooltipPropTypes as vxTooltipPropTypes,
+} from '@vx/tooltip/build/tooltips/TooltipWithBounds';
 
 export { default as Tooltip } from '@vx/tooltip/build/tooltips/Tooltip';
 
@@ -19,21 +21,23 @@ export const propTypes = {
   className: PropTypes.string,
   HoverStyles: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
   renderTooltip: PropTypes.func,
-  styles: PropTypes.object,
+  styles: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number])),
   TooltipComponent: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
-  tooltipProps: PropTypes.object,
+  tooltipProps: PropTypes.object, // eslint-disable-line react/forbid-prop-types
 };
 
 const defaultProps = {
   className: null,
   HoverStyles: () => (
-    <style type="text/css">{`
+    <style type="text/css">
+      {`
       .vx-arc:hover,
       .vx-bar:hover,
       .vx-glyph-dot:hover {
         opacity: 0.7;
       }
-    `}</style>
+    `}
+    </style>
   ),
   renderTooltip: null,
   styles: { display: 'inline-block', position: 'relative' },
@@ -57,6 +61,7 @@ class WithTooltip extends React.PureComponent {
   }
 
   handleMouseMove({ event, datum, coords, ...rest }) {
+    const { showTooltip } = this.props;
     if (this.tooltipTimeout) {
       clearTimeout(this.tooltipTimeout);
     }
@@ -68,7 +73,7 @@ class WithTooltip extends React.PureComponent {
 
     tooltipCoords = { ...tooltipCoords, ...coords };
 
-    this.props.showTooltip({
+    showTooltip({
       tooltipLeft: tooltipCoords.x,
       tooltipTop: tooltipCoords.y,
       tooltipData: {
@@ -81,7 +86,9 @@ class WithTooltip extends React.PureComponent {
 
   handleMouseLeave() {
     const { tooltipTimeout, hideTooltip } = this.props;
-    this.tooltipTimeout = setTimeout(() => { hideTooltip(); }, tooltipTimeout);
+    this.tooltipTimeout = setTimeout(() => {
+      hideTooltip();
+    }, tooltipTimeout);
   }
 
   render() {
@@ -105,20 +112,17 @@ class WithTooltip extends React.PureComponent {
       tooltipData,
     };
 
-    const tooltipContent = renderTooltip
-      && tooltipOpen
-      && TooltipComponent
-      && renderTooltip(tooltipData);
+    const tooltipContent =
+      renderTooltip && tooltipOpen && TooltipComponent && renderTooltip(tooltipData);
 
     return (
       <div style={styles} className={className}>
-
         {/* inject props or pass to a function depending on child */}
         {typeof children === 'function'
           ? children(childProps)
           : React.cloneElement(React.Children.only(children), childProps)}
 
-        {Boolean(tooltipContent) &&
+        {Boolean(tooltipContent) && (
           <TooltipComponent
             key={Math.random()}
             top={tooltipTop}
@@ -126,7 +130,8 @@ class WithTooltip extends React.PureComponent {
             {...tooltipProps}
           >
             {tooltipContent}
-          </TooltipComponent>}
+          </TooltipComponent>
+        )}
 
         {HoverStyles && <HoverStyles />}
       </div>

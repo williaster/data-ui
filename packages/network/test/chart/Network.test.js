@@ -3,44 +3,9 @@ import { shallow, mount } from 'enzyme';
 import { Network, WithTooltip, Nodes, Links } from '../../src';
 import defaultGraph from '../data';
 
-/* eslint no-param-reassign: 0, class-methods-use-this: 0 */
-class DummyLayout {
-  constructor() {
-    this.setAnimated(false);
-  }
+import MockLayout from '../fixtures/MockLayout';
 
-  setGraph(graph) {
-    this.graph = graph;
-    this.clear();
-  }
-
-  getGraph() {
-    return this.graph;
-  }
-
-  layout({ callback }) {
-    callback({
-      nodes: this.graph.nodes,
-      links: this.graph.links,
-    });
-  }
-
-  setBoundingBox() {
-  }
-
-  isAnimated() {
-    return this.animated;
-  }
-
-  setAnimated(animated) {
-    this.clear();
-    this.animated = animated;
-  }
-
-  clear() {}
-}
-
-const layout = new DummyLayout();
+const layout = new MockLayout();
 
 describe('<Network />', () => {
   const props = {
@@ -50,66 +15,72 @@ describe('<Network />', () => {
     graph: defaultGraph,
   };
 
-  test('it should be defined', () => {
+  it('should be defined', () => {
     expect(Network).toBeDefined();
   });
 
-  test('it should render a <WithTooltip /> when renderTooltip is passed', () => {
+  it('should render a <WithTooltip /> when renderTooltip is passed', () => {
     const wrapper = shallow(<Network {...props} renderTooltip={() => {}} />);
-    expect(wrapper.find(WithTooltip).length).toBe(1);
+    expect(wrapper.find(WithTooltip)).toHaveLength(1);
   });
 
-  test('it should not render a <WithTooltip /> when renderTooltip is not passed', () => {
+  it('should not render a <WithTooltip /> when renderTooltip is not passed', () => {
     const wrapper = shallow(<Network {...props} renderTooltip={null} />);
-    expect(wrapper.find(WithTooltip).length).toBe(0);
+    expect(wrapper.find(WithTooltip)).toHaveLength(0);
   });
 
-  test('it should render an svg', () => {
+  it('should render an svg', () => {
     const wrapper = mount(<Network {...props} />);
-    expect(wrapper.find('svg').length).toBe(1);
+    expect(wrapper.find('svg')).toHaveLength(1);
   });
 
-  test('it should render any additional children passed within the svg', () => {
-    const wrapper = mount(<Network {...props}><defs><filter id="test_filter" /></defs></Network>);
-    expect(wrapper.find('svg').find('#test_filter').length).toBe(1);
+  it('should render any additional children passed within the svg', () => {
+    const wrapper = mount(
+      <Network {...props}>
+        <defs>
+          <filter id="test_filter" />
+        </defs>
+      </Network>,
+    );
+    expect(wrapper.find('svg').find('#test_filter')).toHaveLength(1);
   });
 
-  test('it should show initial status of rendering', () => {
+  it('should show initial status of rendering', () => {
     const wrapper = mount(<Network {...props} />);
-    expect(wrapper.find('text').length).toBe(1);
+    expect(wrapper.find('text')).toHaveLength(1);
   });
 
-  test('it should render correct number of nodes and links', () => {
+  it('should render correct number of nodes and links', () => {
     const wrapper = mount(<Network {...props} layout={layout} />);
-    expect(wrapper.find('.cx-group.data-ui-nodes').length).toBe(defaultGraph.nodes.length);
-    expect(wrapper.find('.cx-group.data-ui-links').length).toBe(defaultGraph.links.length);
+    expect(wrapper.find('.cx-group.data-ui-nodes')).toHaveLength(defaultGraph.nodes.length);
+    expect(wrapper.find('.cx-group.data-ui-links')).toHaveLength(defaultGraph.links.length);
   });
 
-  test('it should render the orignal x and y when scaleToFit is false', () => {
+  it('should render the orignal x and y when scaleToFit is false', () => {
     const wrapper = mount(<Network {...props} layout={layout} scaleToFit={false} />);
-    defaultGraph.nodes.forEach((node) => {
+    defaultGraph.nodes.forEach(node => {
       const groupWrapper = wrapper.find('.cx-group.data-ui-nodes');
       const transformString = `translate(${node.x}, ${node.y})`;
-      expect(groupWrapper.find({ transform: transformString }).length).toBe(1);
+      expect(groupWrapper.find({ transform: transformString })).toHaveLength(1);
     });
   });
 
-  test('it should render the graph for animation enabled graph with little delay', (done) => {
+  it('should render the graph for animation enabled graph with little delay', done => {
     expect.assertions(2);
     const wrapper = mount(<Network {...props} animated />);
 
     setTimeout(() => {
       wrapper.update();
-      expect(wrapper.find(Nodes).length).toBe(1);
-      expect(wrapper.find(Links).length).toBe(1);
+      expect(wrapper.find(Nodes)).toHaveLength(1);
+      expect(wrapper.find(Links)).toHaveLength(1);
       done();
     }, 20);
   });
 
-  test('it should handle mouse events correctly', (done) => {
+  it('should handle mouse events correctly', done => {
     expect.assertions(3);
-
-    const expectedId = props.graph.nodes[0].id;
+    const { graph } = props;
+    const expectedId = graph.nodes[0].id;
     let testID = null;
 
     function onMouseEvent({ id }) {
@@ -145,7 +116,7 @@ describe('<Network />', () => {
     }, 20);
   });
 
-  test('it should call the eventTriggerRefs callback on mount', () => {
+  it('should call the eventTriggerRefs callback on mount', () => {
     expect.assertions(5);
 
     function eventTriggerRefs(refs) {
@@ -159,10 +130,11 @@ describe('<Network />', () => {
     mount(<Network {...props} eventTriggerRefs={eventTriggerRefs} />);
   });
 
-  test('it should pass coords to mouse handlers according to the snapTooltipToData* props', () => {
+  it('should pass coords to mouse handlers according to the snapTooltipToData* props', () => {
     const onMouseMove = jest.fn();
     const onClick = jest.fn();
-    const callbackArgs = { data: props.graph.nodes[0] };
+    const { graph } = props;
+    const callbackArgs = { data: graph.nodes[0] };
 
     function eventTriggerRefs(refs) {
       refs.click(callbackArgs);

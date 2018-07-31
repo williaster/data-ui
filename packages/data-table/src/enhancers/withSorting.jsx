@@ -9,7 +9,7 @@ import { baseHOC, updateDisplayName } from './hocUtils';
 
 export const defaultComparator = (A, B) => {
   const numeric = A - B;
-  if (!isNaN(numeric)) return numeric;
+  if (!isNaN(numeric)) return numeric; // eslint-disable-line no-restricted-globals
   if (!A && !B) return 0;
   if (!A) return -1;
   if (!B) return 1;
@@ -19,6 +19,7 @@ export const defaultComparator = (A, B) => {
     if (a > b) return 1;
     if (b > a) return -1;
   }
+
   return 0;
 };
 
@@ -59,13 +60,15 @@ function withSorting(WrappedComponent, pureComponent = true) {
       this.state = {
         sortBy,
         sortDirection,
-        sortedDataList: sortBy && sortDirection ?
-          EnhancedComponent.getSortedDataList({
-            dataList,
-            sortBy,
-            sortDirection,
-            sortComparator,
-          }) : dataList,
+        sortedDataList:
+          sortBy && sortDirection
+            ? EnhancedComponent.getSortedDataList({
+                dataList,
+                sortBy,
+                sortDirection,
+                sortComparator,
+              })
+            : dataList,
       };
     }
 
@@ -97,6 +100,7 @@ function withSorting(WrappedComponent, pureComponent = true) {
     render() {
       const { sortedDataList, sortBy, sortDirection } = this.state;
       const { dataList, initialSortBy, initialSortDirection, ...rest } = this.props;
+
       return (
         <WrappedComponent
           {...rest}

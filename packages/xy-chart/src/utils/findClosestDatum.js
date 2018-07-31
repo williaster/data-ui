@@ -24,7 +24,7 @@ export default function findClosestDatum({ data, getX, xScale, event }) {
     const index = bisect(data, dataX, 0);
     const d0 = data[index - 1];
     const d1 = data[index] || {};
-    d = !d0 || (Math.abs(dataX - getX(d0)) > Math.abs(dataX - getX(d1))) ? d1 : d0;
+    d = !d0 || Math.abs(dataX - getX(d0)) > Math.abs(dataX - getX(d1)) ? d1 : d0;
   }
 
   return d;

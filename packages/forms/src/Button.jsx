@@ -1,3 +1,4 @@
+/* eslint complexity: 'off' */
 import { css, StyleSheet } from 'aphrodite';
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -11,7 +12,7 @@ const styles = StyleSheet.create({
     border: 0,
     borderRadius: 1,
     background: '#fff',
-    padding: 1 * unit,
+    padding: Number(unit),
     color: '#484848',
     outline: 'none',
 
@@ -45,11 +46,11 @@ const styles = StyleSheet.create({
   },
 
   container_sizeSmall: {
-    padding: 1 * unit,
+    padding: Number(unit),
   },
 
   container_sizeRegular: {
-    padding: `${1.5 * unit}px ${2 * unit}px`,
+    padding: `${1.5 * unit}px ${2 * unit}px`, // eslint-disable-line no-magic-numbers
   },
 
   container_block: {
@@ -73,9 +74,9 @@ const styles = StyleSheet.create({
   },
 
   round: {
-    width: 4 * unit,
-    height: 4 * unit,
-    lineHeight: `${4 * unit}px`,
+    width: 4 * unit, // eslint-disable-line no-magic-numbers
+    height: 4 * unit, // eslint-disable-line no-magic-numbers
+    lineHeight: `${4 * unit}px`, // eslint-disable-line no-magic-numbers
     borderRadius: '50%',
     display: 'flex',
     alignItems: 'center',
@@ -140,6 +141,7 @@ function Button({
 }) {
   return (
     <button
+      type="button"
       aria-disabled={disabled}
       disabled={disabled}
       onClick={onClick}
@@ -149,7 +151,7 @@ function Button({
         block ? styles.container_block : styles.container_notBlock,
         small ? styles.container_sizeSmall : styles.container_sizeRegular,
         rounded && styles.rounded,
-        round && small ? styles.round_small : (round && styles.round),
+        round && small ? styles.round_small : round && styles.round,
         disabled && styles.disabled,
         active && styles.active,
       )}

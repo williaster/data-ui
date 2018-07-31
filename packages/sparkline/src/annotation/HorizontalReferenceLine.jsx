@@ -5,21 +5,15 @@ import { mean, median, max, min } from 'd3-array';
 import Group from '@vx/group/build/Group';
 import Line from '@vx/shape/build/shapes/Line';
 import Point from '@vx/point/build/Point';
-import color from '@data-ui/theme/build/color';
-import svgLabel from '@data-ui/theme/build/svgLabel';
+import { color, svgLabel } from '@data-ui/theme';
 
-import Label from '../annotation/Label';
+import Label from './Label';
 import positionLabel from '../utils/positionLabel';
 
 export const propTypes = {
   reference: PropTypes.oneOfType([
     PropTypes.number,
-    PropTypes.oneOf([
-      'mean',
-      'median',
-      'min',
-      'max',
-    ]),
+    PropTypes.oneOf(['mean', 'median', 'min', 'max']),
   ]),
   LabelComponent: PropTypes.element,
   labelOffset: PropTypes.number,
@@ -31,7 +25,7 @@ export const propTypes = {
   strokeWidth: PropTypes.number,
 
   // all likely passed by the parent chart
-  data: PropTypes.array,
+  data: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.number, PropTypes.object])),
   getY: PropTypes.func,
   xScale: PropTypes.func,
   yScale: PropTypes.func,
@@ -95,12 +89,13 @@ class HorizontalReferenceLine extends React.PureComponent {
           strokeWidth={strokeWidth}
           vectorEffect="non-scaling-stroke"
         />
-        {label && React.cloneElement(LabelComponent, {
-          x: toPoint.x,
-          y: toPoint.y,
-          ...positionLabel(labelPosition, labelOffset),
-          label,
-        })}
+        {label &&
+          React.cloneElement(LabelComponent, {
+            x: toPoint.x,
+            y: toPoint.y,
+            ...positionLabel(labelPosition, labelOffset),
+            label,
+          })}
       </Group>
     );
   }

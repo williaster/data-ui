@@ -3,16 +3,18 @@ import React from 'react';
 import { quantile } from 'd3-array';
 
 import Bar from '@vx/shape/build/shapes/Bar';
-import color from '@data-ui/theme/build/color';
+import { color } from '@data-ui/theme';
 
 export const propTypes = {
   band: PropTypes.oneOfType([
     PropTypes.shape({
-      from: PropTypes.shape({ // @TODO check that it's a length of 2
+      from: PropTypes.shape({
+        // @TODO check that it's a length of 2
         x: PropTypes.number,
         y: PropTypes.number,
       }),
-      to: PropTypes.shape({ // @TODO check that it's a length of 2
+      to: PropTypes.shape({
+        // @TODO check that it's a length of 2
         x: PropTypes.number,
         y: PropTypes.number,
       }),
@@ -25,18 +27,18 @@ export const propTypes = {
   strokeWidth: PropTypes.number,
 
   // all likely passed by the parent chart
-  data: PropTypes.array,
+  data: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.number, PropTypes.object])),
   getY: PropTypes.func,
   xScale: PropTypes.func,
   yScale: PropTypes.func,
 };
 
 export const defaultProps = {
-  data: [],
-  getY: null,
   band: 'innerquartiles',
+  data: [],
   fill: color.lightGray,
   fillOpacity: 0.5,
+  getY: null,
   stroke: 'transparent',
   strokeWidth: 0,
   xScale: null,
@@ -45,17 +47,7 @@ export const defaultProps = {
 
 class BandLine extends React.PureComponent {
   render() {
-    const {
-      band,
-      data,
-      fill,
-      fillOpacity,
-      getY,
-      stroke,
-      strokeWidth,
-      xScale,
-      yScale,
-    } = this.props;
+    const { band, data, fill, fillOpacity, getY, stroke, strokeWidth, xScale, yScale } = this.props;
     if (!xScale || !yScale || !getY || !data.length) return null;
 
     const [x0, x1] = xScale.range();
@@ -67,8 +59,8 @@ class BandLine extends React.PureComponent {
     let height = 0;
     if (band === 'innerquartiles') {
       const sortedData = [...data].sort((a, b) => parseFloat(getY(a)) - parseFloat(getY(b)));
-      const lowerQuartile = yScale(quantile(sortedData, 0.25, getY));
-      const upperQuartile = yScale(quantile(sortedData, 0.75, getY));
+      const lowerQuartile = yScale(quantile(sortedData, 0.25, getY)); // eslint-disable-line no-magic-numbers
+      const upperQuartile = yScale(quantile(sortedData, 0.75, getY)); // eslint-disable-line no-magic-numbers
 
       y = Math.min(lowerQuartile, upperQuartile);
       height = Math.abs(upperQuartile - lowerQuartile);

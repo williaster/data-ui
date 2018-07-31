@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
   },
 
   alignBySelect: {
-    paddingLeft: 1 * unit,
+    paddingLeft: Number(unit),
     fontWeight: 700,
     flexGrow: 1,
   },
@@ -111,10 +111,12 @@ const propTypes = {
     hiddenEvents: PropTypes.object,
     eventCountLookup: PropTypes.object,
     eventCountTotal: PropTypes.number,
-    eventCountArray: PropTypes.arrayOf(PropTypes.shape({
-      label: PropTypes.string.isRequired,
-      value: PropTypes.number.isRequired,
-    })),
+    eventCountArray: PropTypes.arrayOf(
+      PropTypes.shape({
+        label: PropTypes.string.isRequired,
+        value: PropTypes.number.isRequired,
+      }),
+    ),
   }),
   onChangeXScale: PropTypes.func,
   onToggleShowControls: PropTypes.func,
@@ -127,7 +129,6 @@ const propTypes = {
 
 const defaultProps = {
   onChangeXScale: () => {},
-  onChangeYScale: () => {},
   onToggleShowControls: () => {},
   onChangeAlignByIndex: () => {},
   onChangeAlignByEventType: () => {},
@@ -171,9 +172,10 @@ function ControlPanel({
   ];
 
   // option renderer
-  const valueRenderer = (option) => {
+  const valueRenderer = option => {
     if (option.value === ANY_EVENT_TYPE) return option.label;
     const color = colorScale.scale(option.value);
+
     return (
       <div className={css(styles.option)} style={{ color }}>
         <div className={css(styles.optionLegend)} />
@@ -185,11 +187,9 @@ function ControlPanel({
   // sort legend by value and remove filter from color scale if no items are filtered
   const legendScale = colorScale.scale.copy();
   const removeFiltered = !metaData.eventCountLookup[FILTERED_EVENTS];
-  const domain = (removeFiltered
-    ? legendScale.domain().slice(1)
-    : legendScale.domain()).sort((a, b) => (
-      metaData.eventCountLookup[b] - metaData.eventCountLookup[a]
-    ));
+  const domain = (removeFiltered ? legendScale.domain().slice(1) : legendScale.domain()).sort(
+    (a, b) => metaData.eventCountLookup[b] - metaData.eventCountLookup[a],
+  );
   const range = domain.map(eventName => legendScale(eventName));
   legendScale.domain(domain).range(range);
 
@@ -198,21 +198,16 @@ function ControlPanel({
 
   return (
     <div className={css(styles.outerContainer)}>
-
       <div className={css(styles.header)}>
         <Button onClick={onToggleShowControls} small>
-          {showControls
-            ? <span>{'Hide >'}</span>
-            : <span>{'< Controls'}</span>}
+          {showControls ? <span>{'Hide >'}</span> : <span>{'< Controls'}</span>}
         </Button>
       </div>
 
-      {showControls &&
+      {showControls && (
         <div className={css(styles.innerContainer)}>
           <div className={css(styles.padBottom)}>
-            <div className={css(styles.title)}>
-              Align sequences by
-            </div>
+            <div className={css(styles.title)}>Align sequences by</div>
             <div className={css(styles.flexRow)}>
               <StepIncrementer
                 min={-5}
@@ -252,11 +247,14 @@ function ControlPanel({
               />
               <EventTypeLegend
                 scale={legendScale}
-                labelFormat={(label) => {
+                labelFormat={label => {
                   const count = metaData.eventCountLookup[label];
                   const percentage = (count / metaData.eventCountTotal) * 100;
                   const text = label === FILTERED_EVENTS ? 'filtered by alignment' : label;
-                  return !isNaN(percentage) ? `${text} (${percentage.toFixed(1)}%)` : text;
+
+                  return isNaN(percentage) // eslint-disable-line no-restricted-globals
+                    ? text
+                    : `${text} (${percentage.toFixed(1)}%)`;
                 }}
                 onClick={onClickLegendShape}
                 hiddenEventTypes={hiddenEventTypes}
@@ -275,9 +273,7 @@ function ControlPanel({
           </div>
 
           <div className={css(styles.padBottom)}>
-            <div className={css(styles.title)}>
-              X-axis
-            </div>
+            <div className={css(styles.title)}>X-axis</div>
             <Select
               value={xScaleType}
               options={[
@@ -289,9 +285,7 @@ function ControlPanel({
           </div>
 
           <div>
-            <div className={css(styles.title)}>
-              Sort nodes with the same parent by
-            </div>
+            <div className={css(styles.title)}>Sort nodes with the same parent by</div>
             <Select
               value={orderBy}
               options={[
@@ -301,7 +295,8 @@ function ControlPanel({
               onChange={({ value }) => onChangeOrderBy(value)}
             />
           </div>
-        </div>}
+        </div>
+      )}
     </div>
   );
 }

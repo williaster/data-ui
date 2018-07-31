@@ -1,8 +1,4 @@
-import {
-  TS,
-  EVENT_NAME,
-  ENTITY_ID,
-} from '../constants';
+import { TS, EVENT_NAME, ENTITY_ID } from '../constants';
 
 function intBetween(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
@@ -27,9 +23,7 @@ export function generateEvents({
     const elapsedMs = intBetween(minElapsedMs, maxElapsedMs);
     const eventIndex = intBetween(
       0,
-      Math.random() < 0.7
-        ? eventCardinality - (intBetween(1, eventCardinality))
-        : eventCardinality,
+      Math.random() < 0.7 ? eventCardinality - intBetween(1, eventCardinality) : eventCardinality,
     );
     const event = eventNames.slice(eventIndex, eventIndex + eventNameLength);
 
@@ -41,6 +35,7 @@ export function generateEvents({
       [EVENT_NAME]: event,
     });
   }
+
   return events;
 }
 
@@ -79,7 +74,14 @@ export default {
   twentyUsers: generateEventsForUsers({ nUsers: 20 }),
   fiftyUsers: generateEventsForUsers({ nUsers: 50 }),
   hundredUsers: generateEventsForUsers({ nUsers: 100 }),
-  variableLength: generateEventsForUsers({ nUsers: 50, maxElapsedMs: 5 * 1000 * 60 * 60 * 24 }),
-  manyEvents: generateEventsForUsers({ nUsers: 50, minEvents: 10, maxEvents: 30 }),
+  variableLength: generateEventsForUsers({
+    nUsers: 50,
+    maxElapsedMs: 5 * 1000 * 60 * 60 * 24,
+  }),
+  manyEvents: generateEventsForUsers({
+    nUsers: 50,
+    minEvents: 10,
+    maxEvents: 30,
+  }),
   manyEventTypes: generateEventsForUsers({ nUsers: 50, eventCardinality: 15 }),
 };
