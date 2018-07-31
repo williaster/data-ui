@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import Line from '@vx/shape/build/shapes/Line';
+import { Line } from '@vx/shape';
 
 import { XYChart, HorizontalReferenceLine } from '../../src';
 

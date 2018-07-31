@@ -1,5 +1,5 @@
-import GlyphDot from '@vx/glyph/build/glyphs/Dot';
-import LinePath from '@vx/shape/build/shapes/LinePath';
+import { GlyphDot } from '@vx/glyph';
+import { LinePath } from '@vx/shape';
 import React from 'react';
 import { shallow } from 'enzyme';
 import { FocusBlurHandler } from '@data-ui/shared';

@@ -1,4 +1,4 @@
-import Bar from '@vx/shape/build/shapes/Bar';
+import { Bar } from '@vx/shape';
 import React from 'react';
 import { shallow } from 'enzyme';
 import { FocusBlurHandler } from '@data-ui/shared';

@@ -1,8 +1,8 @@
 import React from 'react';
 import { shallow, mount } from 'enzyme';
-import Area from '@vx/shape/build/shapes/Area';
-import LinePath from '@vx/shape/build/shapes/LinePath';
+import { Area, LinePath } from '@vx/shape';
 import { FocusBlurHandler } from '@data-ui/shared';
+
 import { XYChart, AreaSeries } from '../../src';
 
 describe('<AreaSeries />', () => {

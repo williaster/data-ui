@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import ViolinPlot from '@vx/stats/build/violinplot/ViolinPlot';
+import { ViolinPlot } from '@vx/stats';
 import { FocusBlurHandler } from '@data-ui/shared';
 
 import { XYChart, ViolinPlotSeries, computeStats } from '../../src';

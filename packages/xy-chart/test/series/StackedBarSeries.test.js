@@ -1,5 +1,4 @@
-import Bar from '@vx/shape/build/shapes/Bar';
-import BarStack from '@vx/shape/build/shapes/BarStack';
+import { Bar, BarStack } from '@vx/shape';
 import React from 'react';
 import { shallow, mount } from 'enzyme';
 import { XYChart, StackedBarSeries } from '../../src';

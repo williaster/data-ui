@@ -1,5 +1,5 @@
-import Grid from '@vx/grid/build/grids/Grid';
-import Group from '@vx/group/build/Group';
+import { Grid } from '@vx/grid';
+import { Group } from '@vx/group';
 import React from 'react';
 import { shallow, mount } from 'enzyme';
 

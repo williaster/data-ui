@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import BoxPlot from '@vx/stats/build/boxplot/BoxPlot';
+import { BoxPlot } from '@vx/stats';
 import { FocusBlurHandler } from '@data-ui/shared';
 
 import { XYChart, BoxPlotSeries, computeStats } from '../../src';

@@ -1,5 +1,5 @@
-import scaleLinear from '@vx/scale/build/scales/linear';
-import scaleBand from '@vx/scale/build/scales/band';
+import { scaleBand, scaleLinear } from '@vx/scale';
+
 import findClosestDatum from '../../src/utils/findClosestDatum';
 
 describe('findClosestDatum', () => {

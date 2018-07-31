@@ -1,6 +1,5 @@
 import React from 'react';
-import scaleLinear from '@vx/scale/build/scales/linear';
-import scaleBand from '@vx/scale/build/scales/band';
+import { scaleBand, scaleLinear } from '@vx/scale';
 import findClosestDatums from '../../src/utils/findClosestDatums';
 
 import { LineSeries } from '../../src';

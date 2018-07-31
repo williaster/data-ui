@@ -1,8 +1,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import AxisBottom from '@vx/axis/build/axis/AxisBottom';
-import AxisTop from '@vx/axis/build/axis/AxisTop';
-import scaleLinear from '@vx/scale/build/scales/linear';
+import { AxisBottom, AxisTop } from '@vx/axis';
+import { scaleLinear } from '@vx/scale';
 import { XYChart, XAxis, LineSeries } from '../../src';
 
 describe('<XAxis />', () => {

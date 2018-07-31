@@ -1,4 +1,4 @@
-import scaleLinear from '@vx/scale/build/scales/linear';
+import { scaleLinear } from '@vx/scale';
 import computeCirclePack from '../../src/utils/computeCirclePack';
 
 describe('computeCirclePack', () => {

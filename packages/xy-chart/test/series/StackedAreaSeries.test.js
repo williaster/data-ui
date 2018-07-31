@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallow, mount } from 'enzyme';
-import Stack from '@vx/shape/build/shapes/Stack';
+import { Stack } from '@vx/shape';
 
 import { XYChart, StackedAreaSeries } from '../../src';
 
