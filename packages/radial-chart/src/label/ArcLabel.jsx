@@ -1,8 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { svgLabel as baseLabel } from '@data-ui/theme';
+import { svgLabel } from '@data-ui/theme';
 
 import additionalProps from '../util/additionalProps';
+
+const { baseLabel } = svgLabel;
 
 const propTypes = {
   x: PropTypes.number,

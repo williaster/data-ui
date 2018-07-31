@@ -1,6 +1,6 @@
 /* eslint react/default-props-match-prop-types: 'off' */
 import React from 'react';
-import { GlyphDot } from '@vx/glyph/build/glyphs/Dot';
+import { GlyphDot } from '@vx/glyph';
 
 import { pointComponentPropTypes } from '../utils/propShapes';
 

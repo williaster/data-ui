@@ -1,6 +1,6 @@
-import { colors } from '@data-ui/theme';
+import { color } from '@data-ui/theme';
 import { FocusBlurHandler } from '@data-ui/shared';
-import GlyphDot from '@vx/glyph/build/glyphs/Dot';
+import { GlyphDot } from '@vx/glyph';
 import { LinePath } from '@vx/shape';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -25,7 +25,7 @@ const propTypes = {
 const defaultProps = {
   interpolation: 'monotoneX',
   showPoints: false,
-  stroke: colors.default,
+  stroke: color.default,
   strokeDasharray: null,
   strokeWidth: 3,
   strokeLinecap: 'round',

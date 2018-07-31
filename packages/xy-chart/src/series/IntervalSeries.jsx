@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Bar } from '@vx/shape';
-import { colors } from '@data-ui/theme';
+import { color } from '@data-ui/theme';
 import { FocusBlurHandler } from '@data-ui/shared';
 import { Group } from '@vx/group';
 
@@ -19,7 +19,7 @@ const propTypes = {
 };
 
 const defaultProps = {
-  fill: colors.default,
+  fill: color.default,
   fillOpacity: 1,
   stroke: 'none',
   strokeWidth: 1,

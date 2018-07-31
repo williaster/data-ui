@@ -3,7 +3,7 @@ import { FocusBlurHandler } from '@data-ui/shared';
 import { Group } from '@vx/group';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { colors as themeColors } from '@data-ui/theme';
+import { color as themeColors } from '@data-ui/theme';
 
 import { callOrValue, isDefined } from '../utils/chartUtils';
 import { boxPlotSeriesDataShape } from '../utils/propShapes';
