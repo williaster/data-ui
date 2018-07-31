@@ -1,6 +1,6 @@
 {
   "name": "@data-ui/xy-chart",
-  "version": "0.0.60-alpha.3.0",
+  "version": "0.0.60",
   "description": "A package of charts with standard x- and y- axes. https://williaster.github.io/data-ui",
   "sideEffects": false,
   "main": "lib/index.js",
@@ -33,8 +33,8 @@
   "author": "Chris Williams <chris.williams@airbnb.com>",
   "license": "MIT",
   "dependencies": {
-    "@data-ui/shared": "^0.0.60-alpha.3.0",
-    "@data-ui/theme": "^0.0.60-alpha.3.0",
+    "@data-ui/shared": "^0.0.60",
+    "@data-ui/theme": "^0.0.60",
     "@vx/axis": "^0.0.168",
     "@vx/curve": "^0.0.165",
     "@vx/event": "^0.0.165",
