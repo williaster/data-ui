@@ -6,8 +6,8 @@
   "scripts": {
     "jest": "lerna run test",
     "lint": "lerna run lint",
-    "prepare-release": "git checkout master && git pull --rebase origin master && npm run test && lerna updated",
-    "release": "npm run prepare-release && lerna publish --exact && lerna run gh-pages",
+    "prepare-release": "git checkout master && git pull --rebase origin master && npm run test",
+    "release": "npm run prepare-release && lerna publish && lerna run gh-pages",
     "test": "lerna bootstrap && npm run lint && npm run jest"
   },
   "repository": "https://github.com/williaster/data-ui.git",
