@@ -5,6 +5,7 @@ import React from 'react';
 import Button from './Button';
 
 const unit = 8;
+const halfUnit = unit / 2;
 
 const styles = StyleSheet.create({
   container: {
@@ -22,7 +23,7 @@ const styles = StyleSheet.create({
 
   label: {
     fontWeight: 700,
-    paddingRight: 1 * unit,
+    paddingRight: Number(unit),
   },
 
   buttons: {
@@ -30,7 +31,7 @@ const styles = StyleSheet.create({
   },
 
   spacer: {
-    width: 0.5 * unit,
+    width: halfUnit,
   },
 });
 
@@ -59,8 +60,8 @@ const defaultProps = {
 class StepIncrementer extends React.Component {
   constructor(props) {
     super(props);
-    this.incrementValue = this.incrementValue.bind(this);
-    this.decrementValue = this.decrementValue.bind(this);
+    this.handleIncrementValue = this.handleIncrementValue.bind(this);
+    this.handleDecrementValue = this.handleDecrementValue.bind(this);
 
     const { value, disableZero } = props;
     this.state = {
@@ -69,30 +70,34 @@ class StepIncrementer extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.value !== this.state.value) {
+    const { value } = this.state;
+    const { value: nextValue } = nextProps;
+    if (nextValue !== value) {
       this.setState({
-        value: nextProps.value,
+        value: nextValue,
       });
     }
   }
 
-  incrementValue() {
+  handleIncrementValue() {
     const { onChange, max, disableZero } = this.props;
-    if (this.state.value < max) {
-      let value = this.state.value + 1;
-      if (value === 0 && disableZero) value += 1;
-      this.setState({ value });
-      if (onChange) onChange(value);
+    const { value } = this.state;
+    if (value < max) {
+      let nextValue = value + 1;
+      if (nextValue === 0 && disableZero) nextValue += 1;
+      this.setState({ value: nextValue });
+      if (onChange) onChange(nextValue);
     }
   }
 
-  decrementValue() {
+  handleDecrementValue() {
     const { onChange, min, disableZero } = this.props;
-    if (this.state.value > min) {
-      let value = this.state.value - 1;
-      if (value === 0 && disableZero) value -= 1;
-      this.setState({ value });
-      if (onChange) onChange(value);
+    const { value } = this.state;
+    if (value > min) {
+      let nextValue = value - 1;
+      if (nextValue === 0 && disableZero) nextValue -= 1;
+      this.setState({ value: nextValue });
+      if (onChange) onChange(nextValue);
     }
   }
 
@@ -106,21 +111,11 @@ class StepIncrementer extends React.Component {
           {formatValue(value)}
         </div>
         <div className={css(styles.buttons)}>
-          <Button
-            onClick={this.decrementValue}
-            disabled={value <= min}
-            round
-            small
-          >
+          <Button onClick={this.handleDecrementValue} disabled={value <= min} round small>
             -
           </Button>
           <div className={css(styles.spacer)} />
-          <Button
-            onClick={this.incrementValue}
-            disabled={value >= max}
-            round
-            small
-          >
+          <Button onClick={this.handleIncrementValue} disabled={value >= max} round small>
             +
           </Button>
         </div>

@@ -7,8 +7,11 @@
     "build": "webpack -p && npm run copy-styles",
     "copy-styles": "cp ./node_modules/react-select/dist/react-select.min.css ./build/react-select.min.css",
     "dev": "webpack --progress --colors --watch",
-    "dev:nowatch": "webpack --progress --colors",
+    "eslint": "beemo eslint \"./{src,test}/**/*.{js,jsx,json,md}\"",
+    "lint": "npm run prettier && npm run eslint",
+    "prettier": "beemo prettier \"./{src,test}/**/*.{js,jsx,json,md}\"",
     "prepublish": "npm run build",
+    "sync:gitignore": "beemo sync-dotfiles --filter=gitignore",
     "test": "jest --colors --verbose --coverage"
   },
   "repository": "https://github.com/williaster/data-ui",
@@ -24,6 +27,7 @@
     "react-select": "^1.0.0-rc.5"
   },
   "devDependencies": {
+    "@data-ui/build-config": "^0.0.8",
     "aphrodite": "^1.2.0",
     "babel-core": "^6.24.1",
     "babel-jest": "^20.0.3",
@@ -51,5 +55,20 @@
       "<rootDir>/test/setup.js"
     ],
     "setupTestFrameworkScriptFile": "./test/testsSetup.js"
+  },
+  "engines": {
+    "node": ">=8.10.0"
+  },
+  "beemo": {
+    "module": "@data-ui/build-config",
+    "drivers": [
+      "prettier",
+      "eslint"
+    ],
+    "eslint": {
+      "rules": {
+        "sort-keys": "off"
+      }
+    }
   }
 }

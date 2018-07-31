@@ -4,7 +4,7 @@ import { shallow } from 'enzyme';
 import BaseIcon from '../src/icons/BaseIcon';
 
 describe('<BaseIcon />', () => {
-  test('it should be defined', () => {
+  it('it should be defined', () => {
     expect(BaseIcon).toBeDefined();
   });
 

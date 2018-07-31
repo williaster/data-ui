@@ -4,7 +4,7 @@ import { shallow } from 'enzyme';
 import IconChevronDown from '../src/icons/IconChevronDown';
 
 describe('<IconChevronDown />', () => {
-  test('it should be defined', () => {
+  it('it should be defined', () => {
     expect(IconChevronDown).toBeDefined();
   });
 
@@ -14,7 +14,7 @@ describe('<IconChevronDown />', () => {
       wrapper
         .dive() // BaseIcon
         .dive() // IconX
-        .find('svg').length,
-    ).toBe(1);
+        .find('svg'),
+    ).toHaveLength(1);
   });
 });

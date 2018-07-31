@@ -8,8 +8,7 @@
     "lint": "lerna run lint",
     "prepare-release": "git checkout master && git pull --rebase origin master && npm run test && lerna updated",
     "release": "npm run prepare-release && lerna publish --exact && lerna run gh-pages",
-    "test": "lerna exec npm install && npm run lint && npm run jest",
-    "sync:gitignore": "beemo sync-dotfiles --filter=gitignore --workspaces=*"
+    "test": "lerna exec npm install && npm run lint && npm run jest"
   },
   "repository": "https://github.com/williaster/data-ui.git",
   "keywords": [
@@ -24,25 +23,10 @@
   "author": "Chris Williams <chris.williams@airbnb.com>",
   "license": "MIT",
   "devDependencies": {
-    "@data-ui/build-config": "^0.0.7",
     "coveralls": "^3.0.0",
     "lerna": "^2.0.0-rc.2"
   },
   "engines": {
     "node": ">=8.10.0"
-  },
-  "beemo": {
-    "module": "@data-ui/build-config",
-    "drivers": [
-      "prettier",
-      "eslint",
-      "jest"
-    ],
-    "eslint": {
-      "rules": {
-        "complexity": "off",
-        "sort-keys": "off"
-      }
-    }
   }
 }

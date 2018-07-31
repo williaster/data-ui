@@ -15,7 +15,7 @@
     "build": "npm run build:cjs && npm run build:esm",
     "jest": "beemo jest --react --color --coverage",
     "eslint": "beemo eslint \"./{src,test}/**/*.{js,jsx,json,md}\"",
-"lint": "npm run prettier && npm run eslint",
+    "lint": "npm run prettier && npm run eslint",
     "test": "npm run jest",
     "prettier": "beemo prettier \"./{src,test}/**/*.{js,jsx,json,md}\"",
     "sync:gitignore": "beemo sync-dotfiles --filter=gitignore",
@@ -43,7 +43,7 @@
   },
   "homepage": "https://github.com/williaster/data-ui#readme",
   "devDependencies": {
-    "@data-ui/build-config": "^0.0.7",
+    "@data-ui/build-config": "^0.0.8",
     "react": "^16.0.0",
     "react-dom": "^16.0.0"
   },
