@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Grid } from '@vx/grid/dist/vx-grid.es';
-import { Group } from '@vx/group/dist/vx-group.es';
+import { Grid } from '@vx/grid';
+import { Group } from '@vx/group';
 import { WithTooltip, withTooltipPropTypes } from '@data-ui/shared';
 
 import collectVoronoiData from '../utils/collectVoronoiData';

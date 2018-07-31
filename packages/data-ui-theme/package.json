@@ -27,7 +27,7 @@
     "visualization",
     "theme"
   ],
-  "author": "Chris Williams <chris.williams@airbnb.com>",
+  "author": "Chris Williams @williaster",
   "license": "MIT",
   "homepage": "https://github.com/williaster/data-ui#readme",
   "dependencies": {
