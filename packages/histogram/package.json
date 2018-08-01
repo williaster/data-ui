@@ -71,9 +71,6 @@
     "prop-types": "^15.5.10",
     "react-move": "^2.1.0"
   },
-  "engines": {
-    "node": ">=8.10.0"
-  },
   "beemo": {
     "module": "@data-ui/build-config",
     "drivers": [
