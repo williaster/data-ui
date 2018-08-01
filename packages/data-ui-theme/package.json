@@ -36,9 +36,6 @@
   "devDependencies": {
     "@data-ui/build-config": "^0.0.8"
   },
-  "engines": {
-    "node": ">=8.10.0"
-  },
   "beemo": {
     "module": "@data-ui/build-config",
     "drivers": [

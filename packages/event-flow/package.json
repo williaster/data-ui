@@ -79,9 +79,6 @@
     "react-with-styles-interface-aphrodite": "^1.2.0",
     "recompose": "^0.23.5"
   },
-  "engines": {
-    "node": ">=8.10.0"
-  },
   "beemo": {
     "module": "@data-ui/build-config",
     "drivers": [

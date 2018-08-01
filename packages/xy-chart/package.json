@@ -63,9 +63,6 @@
     "react": "^15.0.0-0 || ^16.0.0-0",
     "react-dom": "^15.0.0-0 || ^16.0.0-0"
   },
-  "engines": {
-    "node": ">=8.10.0"
-  },
   "beemo": {
     "module": "@data-ui/build-config",
     "drivers": [

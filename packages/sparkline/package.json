@@ -68,9 +68,6 @@
     "d3-array": "^1.2.0",
     "prop-types": "^15.5.10"
   },
-  "engines": {
-    "node": ">=8.10.0"
-  },
   "beemo": {
     "module": "@data-ui/build-config",
     "drivers": [
