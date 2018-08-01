@@ -1,4 +1,5 @@
 # Changelog
+- [v0.0.61](#v0061)
 - [v0.0.60](#v0060)
 - [v0.0.59](#v0059)
 - [v0.0.58](#v0058)
@@ -13,6 +14,11 @@
 - [v0.0.49](#v0049)
 - [v0.0.48](#v0048)
 - [v0.0.47](#v0047)
+
+## v0.0.61
+
+🏠 Internal
+Remove node engine requirement from packages, and specify in root `package.json` only (for dev) [#112](https://github.com/williaster/data-ui/pull/112)
 
 ## v0.0.60
 
