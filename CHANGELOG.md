@@ -23,7 +23,7 @@ Remove node engine requirement from packages, and specify in root `package.json`
 ## v0.0.60
 
 🏠 Internal
-- Use `@data-ui/build-config` across all packages for linting, prettier, jest, and babel (`forms` + `event-flow` require webpack and still have jest deps) [#110](https://github.com/williaster/data-ui/pull/110). This 
+- Use `@data-ui/build-config` across all packages for linting, prettier, jest, and babel (`forms` + `event-flow` require webpack and still have jest deps) [#111](https://github.com/williaster/data-ui/pull/111). This 
   - fixes an issue where `node_modules` were included in builds, this improves bundle size.
   - adds `esm` builds in addition to `commonjs`
   - adds `sideEffects: false` to `package.json`'s for tree-shaking support 
