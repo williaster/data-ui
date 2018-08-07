@@ -1,55 +1,33 @@
 import { color } from '@data-ui/theme';
-import { FocusBlurHandler } from '@data-ui/shared';
-import { GlyphDot } from '@vx/glyph';
 import { Threshold } from '@vx/threshold';
 import PropTypes from 'prop-types';
 import React, { Children } from 'react';
 
-import { callOrValue, isDefined } from '../utils/chartUtils';
-import findClosestDatum from '../utils/findClosestDatum';
 import interpolatorLookup from '../utils/interpolatorLookup';
-import { interpolationShape, lineSeriesDataShape } from '../utils/propShapes';
+import { interpolationShape } from '../utils/propShapes';
 import sharedSeriesProps from '../utils/sharedSeriesProps';
 
 const propTypes = {
   ...sharedSeriesProps,
-
-  // data: lineSeriesDataShape.isRequired,
+  children: PropTypes.node.isRequired, // AreaSeries type
   interpolation: interpolationShape,
-  // showPoints: PropTypes.bool,
-  // stroke: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
-  // strokeDasharray: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
-  // strokeWidth: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
-  // strokeLinecap: PropTypes.oneOf(['butt', 'square', 'round', 'inherit']),
 };
 
 const defaultProps = {
   interpolation: 'monotoneX',
-  // showPoints: false,
-  // stroke: color.default,
-  // strokeDasharray: null,
-  // strokeWidth: 3,
-  // strokeLinecap: 'round',
 };
 
-const x = d => d.x;
-const y = d => d.y;
-const defined = d => isDefined(y(d));
-const noEventsStyles = { pointerEvents: 'none' };
+const DEFAULT_OPACITY = 0.4;
 
-export default class ThresholdSeries extends React.PureComponent {
+const getX = d => d.x;
+const getY0 = d => d.y0;
+const getY1 = d => d.y1;
+
+export default class AreaDifference extends React.PureComponent {
   render() {
     const {
-      // data,
-      fills,
-      fillOpacities,
       disableMouseEvents,
       interpolation,
-      // showPoints,
-      // stroke,
-      // strokeDasharray,
-      // strokeWidth,
-      // strokeLinecap,
       xScale,
       yScale,
       onClick,
@@ -57,47 +35,71 @@ export default class ThresholdSeries extends React.PureComponent {
       onMouseLeave,
       children,
     } = this.props;
+
+    if (!xScale || !yScale) return null;
+
     const childArray = Children.toArray(children);
-    if (!xScale || !yScale || childArray.length !== 2) return null;
-    const childData1 = childArray[0].props.data;
-    const childData2 = childArray[1].props.data;
-    const mergedData = childData1.map((d, i) => ({
-      x: d.x,
-      y0: d.y,
-      y1: childData2[i].y,
-    }));
+    const [child1, child2] = childArray;
+
+    if (
+      childArray.length !== 2 ||
+      child1.type.displayName !== 'AreaSeries' ||
+      child2.type.displayName !== 'AreaSeries'
+    ) {
+      console.warn('ThresholdSeries expects exactly two AreaSeries children');
+
+      return null;
+    }
+
+    const { data: data1, fill: fill1, fillOpacity: opacity1 } = child1.props;
+    const { data: data2, fill: fill2, fillOpacity: opacity2 } = child2.props;
+
+    if (data1.length !== data2.length) {
+      console.warn('ThresholdSeries children should have the same data length');
+
+      return null;
+    }
+
     const curve = interpolatorLookup[interpolation] || interpolatorLookup.monotoneX;
     const yExtent = yScale.range();
+    const mergedData = data1.map((d, i) => ({
+      x: d.x,
+      y0: d.y,
+      y1: data2[i].y,
+    }));
 
     return (
       <g>
         <Threshold
           data={mergedData}
-          x={d => d.x}
-          y0={d => d.y0}
-          y1={d => d.y1}
+          x={getX}
+          y0={getY0}
+          y1={getY1}
           xScale={xScale}
           yScale={yScale}
           clipAboveTo={Math.min(...yExtent)}
           clipBelowTo={Math.max(...yExtent)}
           curve={curve}
           aboveAreaProps={{
-            fill: (fills && fills[0]) || color.categories[0],
-            fillOpacity: (fillOpacities && fillOpacities[0]) || 0.4,
+            fill: fill1 || color.categories[0],
+            fillOpacity: opacity1 || DEFAULT_OPACITY,
           }}
           belowAreaProps={{
-            fill: (fills && fills[1]) || color.categories[1],
-            fillOpacity: (fillOpacities && fillOpacities[1]) || 0.4,
+            fill: fill2 || color.categories[0],
+            fillOpacity: opacity2 || DEFAULT_OPACITY,
           }}
         />
-        {Children.map(children, Child =>
+        {/* Threshold series do NOT plot lines, so render the area series without fill */}
+        {childArray.map(Child =>
           React.cloneElement(Child, {
             xScale,
             yScale,
-            interpolation,
             onClick,
             onMouseMove,
             onMouseLeave,
+            interpolation,
+            disableMouseEvents: Child.props.disableMouseEvents || disableMouseEvents,
+            fill: 'transparent',
           }),
         )}
       </g>
@@ -105,6 +107,6 @@ export default class ThresholdSeries extends React.PureComponent {
   }
 }
 
-ThresholdSeries.propTypes = propTypes;
-ThresholdSeries.defaultProps = defaultProps;
-ThresholdSeries.displayName = 'ThresholdSeries';
+AreaDifference.propTypes = propTypes;
+AreaDifference.defaultProps = defaultProps;
+AreaDifference.displayName = 'AreaDifference';

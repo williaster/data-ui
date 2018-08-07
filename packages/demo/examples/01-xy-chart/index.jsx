@@ -33,6 +33,7 @@ import ResponsiveXYChart, { dateFormatter } from './ResponsiveXYChart';
 import StackedAreaExample from './StackedAreaExample';
 import ScatterWithHistogram from './ScatterWithHistograms';
 import TickLabelPlayground from './TickLabelPlayground';
+import ThresholdSeriesExample from './ThresholdSeriesExample';
 import { BoxPlotSeriesExample, BoxPlotViolinPlotSeriesExample } from './StatsSeriesExample';
 
 import {
@@ -240,48 +241,8 @@ export default {
     },
     {
       description: 'ThresholdSeries',
-      components: [XYChart, ThresholdSeries, LineSeries],
-      example: () => (
-        <ResponsiveXYChart
-          ariaLabel="Threshold series example"
-          snapTooltipToDataX
-          eventTrigger="container"
-          xScale={{ type: 'time' }}
-          yScale={{ type: 'linear' }}
-        >
-          <PatternLines
-            id="threshold-pattern"
-            height={5}
-            width={5}
-            stroke={allColors.grape[5]}
-            strokeWidth={1}
-            orientation={['diagonal']}
-          />
-          <ThresholdSeries
-            fills={['url(#threshold-pattern)', allColors.pink[5]]}
-            fillOpacities={[1, 0.4]}
-          >
-            <LineSeries stroke={allColors.grape[5]} data={timeSeriesData} />
-            <LineSeries
-              stroke={allColors.pink[5]}
-              data={timeSeriesData.map(d => ({
-                ...d,
-                y: Math.random() < 0.3 ? d.y * 3 : d.y / 3,
-              }))}
-            />
-          </ThresholdSeries>
-          <CrossHair
-            fullHeight
-            showHorizontalLine={false}
-            strokeDasharray=""
-            stroke={colors.darkGray}
-            circleStroke={colors.darkGray}
-            circleFill="white"
-          />
-          <XAxis label="Time" numTicks={5} />
-          <YAxis numTicks={4} />
-        </ResponsiveXYChart>
-      ),
+      components: [XYChart, ThresholdSeries, AreaSeries],
+      example: () => <ThresholdSeriesExample />,
     },
     {
       description: 'AreaSeries -- confidence intervals',

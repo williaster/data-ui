@@ -13,8 +13,9 @@
     "build:cjs": "beemo babel ./src --out-dir lib/ --react --minify",
     "build:esm": "beemo babel ./src --out-dir esm/ --react --esm --minify",
     "build": "npm run build:cjs && npm run build:esm",
+    "dev": "beemo babel --watch ./src --out-dir esm/ --react --esm",
     "jest": "beemo jest --react --color --coverage",
-    "eslint": "beemo eslint \"./{src,test}/**/*.{js,jsx,json,md}\"",
+    "eslint": "beemo eslint \"./{src,test}/**/*.{js,jsx,json,md}\" --fix",
     "lint": "npm run prettier && npm run eslint",
     "test": "npm run jest",
     "prettier": "beemo prettier \"./{src,test}/**/*.{js,jsx,json,md}\"",
@@ -58,7 +59,8 @@
   "devDependencies": {
     "@data-ui/build-config": "^0.0.8",
     "react": "^16.0.0",
-    "react-dom": "^16.0.0"
+    "react-dom": "^16.0.0",
+    "watch": "^1.0.2"
   },
   "peerDependencies": {
     "react": "^15.0.0-0 || ^16.0.0-0",
@@ -75,7 +77,8 @@
     "eslint": {
       "rules": {
         "sort-keys": "off",
-        "complexity": "off"
+        "complexity": "off",
+        "react/jsx-no-literals": "off"
       }
     }
   }

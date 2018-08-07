@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { BarSeries, LineSeries } from '../../src';
+import { BarSeries, LineSeries, ThresholdSeries, AreaSeries } from '../../src';
 import collectDataFromChildSeries from '../../src/utils/collectDataFromChildSeries';
 
 describe('collectDataFromChildSeries', () => {
@@ -16,30 +16,29 @@ describe('collectDataFromChildSeries', () => {
     null,
   ];
 
+  it('should concatenate all data', () => {
+    expect(collectDataFromChildSeries(children)).toEqual([...barData, ...lineData, ...barData]);
+  });
+
   it('should ignore non-series children', () => {
     expect(
-      collectDataFromChildSeries([<span key="span" data={[]} />, <div key="div" />]).allData,
+      collectDataFromChildSeries([
+        <span key="span" data={barData} />,
+        <div key="div" data={barData} />,
+      ]),
     ).toEqual([]);
   });
 
-  const output = collectDataFromChildSeries(children);
-
-  it('should concatenate all data', () => {
-    expect(output.allData).toEqual([...barData, ...lineData, ...barData]);
-  });
-
-  it('should collect data by Series type', () => {
-    expect(output.dataBySeriesType).toEqual({
-      BarSeries: [...barData, ...barData],
-      LineSeries: [...lineData],
-    });
-  });
-
-  it('should collect data by child index', () => {
-    expect(output.dataByIndex).toEqual({
-      1: barData,
-      2: lineData,
-      3: barData,
-    });
+  it('should collect data from Threshold child series', () => {
+    const data1 = [{ x: 'area1', y: 123 }];
+    const data2 = [{ x: 'area2', y: 135 }];
+    expect(
+      collectDataFromChildSeries([
+        <ThresholdSeries key="threshold" {...dummyProps}>
+          <AreaSeries data={data1} />
+          <AreaSeries data={data2} />
+        </ThresholdSeries>,
+      ]),
+    ).toEqual([...data1, ...data2]);
   });
 });

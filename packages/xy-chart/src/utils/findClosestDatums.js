@@ -25,10 +25,10 @@ export default function findClosestDatums({
   let minDeltaY = Infinity;
 
   const flatSeriesChildren = [];
-  Children.forEach(children, (Child) => {
+  Children.forEach(children, Child => {
     const name = componentName(Child);
     if (name === 'ThresholdSeries') {
-      Children.forEach(Child.props.children, (NestedChild) => {
+      Children.forEach(Child.props.children, NestedChild => {
         flatSeriesChildren.push(NestedChild);
       });
     } else if (isSeries(name)) {
