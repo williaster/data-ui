@@ -1,7 +1,7 @@
-import color from '@data-ui/theme/build/color';
-import FocusBlurHandler from '@data-ui/shared/build/components/FocusBlurHandler';
-import GlyphDot from '@vx/glyph/build/glyphs/Dot';
-import Threshold from '@vx/threshold/build/Threshold';
+import { color } from '@data-ui/theme';
+import { FocusBlurHandler } from '@data-ui/shared';
+import { GlyphDot } from '@vx/glyph';
+import { Threshold } from '@vx/threshold';
 import PropTypes from 'prop-types';
 import React, { Children } from 'react';
 
@@ -68,6 +68,7 @@ export default class ThresholdSeries extends React.PureComponent {
     }));
     const curve = interpolatorLookup[interpolation] || interpolatorLookup.monotoneX;
     const yExtent = yScale.range();
+
     return (
       <g>
         <Threshold
