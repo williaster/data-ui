@@ -33,7 +33,9 @@ const chartProps = {
   margin: { top: 0, left: 0, bottom: 0, right: 0 },
   width,
   height,
-  renderTooltip: ({ datum, fraction }) => ( // eslint-disable-line
+  renderTooltip: (
+    { datum, fraction }, // eslint-disable-line
+  ) => (
     <div>
       <div>
         <strong>{datum.label}</strong>
@@ -46,7 +48,7 @@ const chartProps = {
 const seriesProps = {
   data: browserFractions,
   pieValue: d => d.value,
-  label: arc => `${(arc.data.value).toFixed(1)}%`,
+  label: arc => `${arc.data.value.toFixed(1)}%`,
   labelComponent: <ArcLabel fill="#fff" fontSize={10} />,
   innerRadius: radius => 0.35 * radius,
   outerRadius: radius => 0.6 * radius,
@@ -88,6 +90,7 @@ export default {
             renderTooltip={({ datum, fraction }) => {
               const { label } = datum;
               const style = { color: categoryColorScale(label) };
+
               return (
                 <div>
                   <div>
@@ -119,6 +122,7 @@ export default {
             renderTooltip={({ datum, fraction }) => {
               const { label } = datum;
               const style = { color: pinkColorScale(label) };
+
               return (
                 <div>
                   <div>
@@ -138,11 +142,9 @@ export default {
               padAngle={0.03}
               cornerRadius={5}
               labelComponent={
-                <ArcLabel
+                <ArcLabel // eslint-disable-line react/jsx-wrap-multilines
                   fontSize={10}
-                  textAnchor={arc => (
-                    ((arc.endAngle + arc.startAngle) / 2) > 3.14 ? 'end' : 'start'
-                  )}
+                  textAnchor={arc => ((arc.endAngle + arc.startAngle) / 2 > 3.14 ? 'end' : 'start')}
                   fill={arc => pinkColorScale(arc.data.label)}
                 />
               }

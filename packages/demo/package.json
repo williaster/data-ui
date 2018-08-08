@@ -9,7 +9,7 @@
     "gh-pages": "npm run gh-pages:clean && npm run gh-pages:build && npm run gh-pages:publish && npm run gh-pages:clean",
     "dev": "start-storybook -p 9001 -c ./storybook-config -s ../../assets/",
     "test": "echo no tests in @data-ui/demo",
-    "eslint": "beemo eslint \"./examples/**/*.{js,jsx,json,md}\"",
+    "eslint": "beemo eslint \"./examples/**/*.{js,jsx,json,md}\" --fix",
     "lint": "npm run prettier && npm run eslint",
     "prettier": "beemo prettier \"./examples/**/*.{js,jsx,json,md}\"",
     "sync:gitignore": "beemo sync-dotfiles --filter=gitignore"
@@ -81,7 +81,13 @@
     "eslint": {
       "rules": {
         "sort-keys": "off",
-        "complexity": "off"
+        "complexity": "off",
+        "react/jsx-no-literals": "off",
+        "jsx-a11y/label-has-for": "off",
+        "no-magic-numbers": "off",
+        "import/no-extraneous-dependencies": "off",
+        "react/forbid-prop-types": "off",
+        "react/destructuring-assignment": "off"
       }
     }
   }

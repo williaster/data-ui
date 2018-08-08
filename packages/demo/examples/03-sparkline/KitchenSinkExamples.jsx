@@ -5,16 +5,13 @@ import { color, allColors } from '@data-ui/theme';
 
 import {
   Sparkline,
-
   BarSeries,
   LineSeries,
   PointSeries,
-
   BandLine,
   HorizontalReferenceLine,
   VerticalReferenceLine,
   WithTooltip,
-
   PatternLines,
 } from '@data-ui/sparkline';
 
@@ -31,14 +28,17 @@ const sparklineProps = {
   valueAccessor: d => d.y,
 };
 
-const randomData = n => range(n).map((_, i) => ({
-  y: Math.random() * (Math.random() > 0.2 ? 1 : 2),
-  x: `Day ${i + 1}`,
-}));
+const randomData = n =>
+  range(n).map((_, i) => ({
+    y: Math.random() * (Math.random() > 0.2 ? 1 : 2),
+    x: `Day ${i + 1}`,
+  }));
 
 const renderLabel = d => d.toFixed(2);
 
-const renderTooltip = ({ datum }) => ( // eslint-disable-line react/prop-types
+const renderTooltip = (
+  { datum }, // eslint-disable-line react/prop-types
+) => (
   <div>
     {datum.x && <div>{datum.x}</div>}
     <div>{datum.y ? datum.y.toFixed(2) : '--'}</div>
@@ -72,11 +72,13 @@ export default [
                   <BarSeries
                     fill={(d, i) => {
                       const indexToHighlight = tooltipData ? tooltipData.index : 5;
+
                       return allColors.grape[i === indexToHighlight ? 8 : 2];
                     }}
                     fillOpacity={0.8}
                     renderLabel={(d, i) => {
                       const indexToHighlight = tooltipData ? tooltipData.index : 5;
+
                       return i === indexToHighlight ? '🤔' : null;
                     }}
                   />
@@ -104,17 +106,8 @@ export default [
                     strokeWidth={1}
                     orientation={['diagonal']}
                   />
-                  <LineSeries
-                    showArea
-                    stroke={allColors.indigo[5]}
-                    fill="url(#area_pattern)"
-                  />
-                  <PointSeries
-                    points={['all']}
-                    stroke={allColors.indigo[4]}
-                    fill="#fff"
-                    size={3}
-                  />
+                  <LineSeries showArea stroke={allColors.indigo[5]} fill="url(#area_pattern)" />
+                  <PointSeries points={['all']} stroke={allColors.indigo[4]} fill="#fff" size={3} />
                   <PointSeries
                     points={['last']}
                     fill={allColors.indigo[5]}

@@ -45,7 +45,6 @@ export default class CirclePackWithCallback extends React.Component {
         yScale={{ type: 'linear' }}
         {...heightOverride}
       >
-
         <CirclePackSeries
           data={circlePackData.concat(circlePackData)}
           size={d => d.r}

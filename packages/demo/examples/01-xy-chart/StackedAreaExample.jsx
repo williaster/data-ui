@@ -4,18 +4,9 @@ import { timeParse, timeFormat } from 'd3-time-format';
 import LegendOrdinal from '@vx/legend/build/legends/Ordinal';
 import scaleOrdinal from '@vx/scale/build/scales/ordinal';
 
-import {
-  CrossHair,
-  StackedAreaSeries,
-  PatternCircles,
-  theme,
-  XAxis,
-} from '@data-ui/xy-chart';
+import { CrossHair, StackedAreaSeries, PatternCircles, theme, XAxis } from '@data-ui/xy-chart';
 
-import {
-  stackedData as initialStackedData,
-  groupKeys as stackKeys,
-} from './data';
+import { stackedData as initialStackedData, groupKeys as stackKeys } from './data';
 
 import ResponsiveXYChart from './ResponsiveXYChart';
 import WithToggle from '../shared/WithToggle';
@@ -30,11 +21,15 @@ export const formatDate = timeFormat('%b %d');
 
 const stackedData = initialStackedData.map(d => ({
   x: parseDate(d.x),
-  ...stackKeys.reduce((obj, key) => {
-    // multple by a random fraction bc there isn't much variation in temp
-    const value = d[key] * Math.max(0.1, Math.random());
-    return { ...obj, y: obj.y + value, [key]: value };
-  }, { y: 0 }),
+  ...stackKeys.reduce(
+    (obj, key) => {
+      // multple by a random fraction bc there isn't much variation in temp
+      const value = d[key] * Math.max(0.1, Math.random());
+
+      return { ...obj, y: obj.y + value, [key]: value };
+    },
+    { y: 0 },
+  ),
 }));
 
 const percentStackedData = stackedData.map(d => ({
@@ -59,11 +54,7 @@ export default function StackedAreaExample() {
               scale={legendScale}
               shape={({ fill, width, height }) => (
                 <svg width={width} height={height}>
-                  <rect
-                    width={width}
-                    height={height}
-                    fill={fill}
-                  />
+                  <rect width={width} height={height} fill={fill} />
                 </svg>
               )}
               fill={({ datum }) => legendScale(datum)}
@@ -83,7 +74,7 @@ export default function StackedAreaExample() {
               height={8}
               radius={2}
               stroke={PATTERN_COLOR}
-              fill={'#fff'}
+              fill="#fff"
             />
             <PatternCircles
               id={PATTERN_ID_2}
@@ -99,7 +90,7 @@ export default function StackedAreaExample() {
               height={4}
               radius={2}
               stroke={PATTERN_COLOR}
-              fill={'#fff'}
+              fill="#fff"
             />
             <StackedAreaSeries
               data={asPercent ? percentStackedData : stackedData}

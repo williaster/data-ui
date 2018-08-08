@@ -45,7 +45,6 @@ class TickLabelPlayground extends React.PureComponent {
       fontSize: '0.9em',
       fontWeight: 200,
       lineHeight: '1em',
-      fill: allColors[color][8],
       axisOrientation: 'left',
     };
 
@@ -53,18 +52,18 @@ class TickLabelPlayground extends React.PureComponent {
   }
 
   componentDidMount() {
-    this.animateAngle();
+    this.animateAngle({ currAngle: this.state.angle });
   }
 
   componentWillUnmount() {
     clearTimeout(this.angleTimeout);
   }
 
-  animateAngle() {
-    const nextAngle = this.state.angle >= 360 ? 0 : this.state.angle + 20;
+  animateAngle({ currAngle }) {
+    const nextAngle = currAngle >= 360 ? 0 : currAngle + 20;
     this.setState({ angle: nextAngle }, () => {
       if (nextAngle) {
-        this.angleTimeout = setTimeout(this.animateAngle, 20);
+        this.angleTimeout = setTimeout(() => this.animateAngle({ currAngle }), 40);
       }
     });
   }
@@ -224,9 +223,9 @@ class TickLabelPlayground extends React.PureComponent {
             <input
               type="checkbox"
               onChange={() =>
-                this.setState({
-                  scaleToFit: !this.state.scaleToFit,
-                })
+                this.setState(({ scaleToFit }) => ({
+                  scaleToFit: !scaleToFit,
+                }))
               }
               checked={this.state.scaleToFit}
             />
@@ -272,6 +271,7 @@ class TickLabelPlayground extends React.PureComponent {
       bottom: 32,
       right: axisOrientation === 'right' ? tickLabelProps.width + 20 : 8,
     };
+
     return (
       <div className="tick-demo">
         {this.renderControls()}
@@ -290,6 +290,7 @@ class TickLabelPlayground extends React.PureComponent {
           {temperatureBands.map((data, i) => [
             <PatternLines
               id={`band-${i}`}
+              key={`pattern-${data[0].key}`}
               height={2 + 2 * i}
               width={2 + 2 * i}
               stroke={allColors[bandColor][6]}
@@ -322,7 +323,8 @@ class TickLabelPlayground extends React.PureComponent {
           />
         </ResponsiveXYChart>
 
-        <style type="text/css">{`
+        <style type="text/css">
+          {`
           .tick-demo {
              display: flex;
              flex-direction: row;
@@ -335,7 +337,8 @@ class TickLabelPlayground extends React.PureComponent {
             justify-content: space-between;
             margin-bottom: 8px;
           }
-        `}</style>
+        `}
+        </style>
       </div>
     );
   }

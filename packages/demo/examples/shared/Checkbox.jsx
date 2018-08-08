@@ -6,16 +6,8 @@ import Spacer from './Spacer';
 export default function Checkbox({ id, label, checked, onChange }) {
   return (
     <Spacer>
-      <input
-        id={id}
-        type="checkbox"
-        checked={checked}
-        onChange={onChange}
-      />
-      <label
-        style={{ textTransform: 'capitalize' }}
-        htmlFor={id}
-      >
+      <input id={id} type="checkbox" checked={checked} onChange={onChange} />
+      <label style={{ textTransform: 'capitalize' }} htmlFor={id}>
         {label}
       </label>
     </Spacer>

@@ -21,6 +21,7 @@ const { colors } = theme;
 function renderViolinPlotTooltip({ datum, color }) {
   const { x, y, binData } = datum;
   const label = x || y;
+
   return (
     <div>
       <div>
@@ -35,60 +36,60 @@ function renderViolinPlotTooltip({ datum, color }) {
 }
 
 function renderBoxPlotTooltip({ datum, color }) {
-  const {
-    x,
-    y,
-    min,
-    max,
-    median,
-    firstQuartile,
-    thirdQuartile,
-    outliers,
-  } = datum;
+  const { x, y, min, max, median, firstQuartile, thirdQuartile, outliers } = datum;
 
   const label = x || y;
+
   return (
     <div>
       <div>
         <strong style={{ color }}>{label}</strong>
       </div>
-      {min &&
+      {min && (
         <div>
           <strong style={{ color }}>Min </strong>
           {min && min.toFixed ? min.toFixed(2) : min}
-        </div>}
-      {max &&
+        </div>
+      )}
+      {max && (
         <div>
           <strong style={{ color }}>Max </strong>
           {max && max.toFixed ? max.toFixed(2) : max}
-        </div>}
-      {median &&
+        </div>
+      )}
+      {median && (
         <div>
           <strong style={{ color }}>Median </strong>
           {median && median.toFixed ? median.toFixed(2) : median}
-        </div>}
-      {firstQuartile &&
+        </div>
+      )}
+      {firstQuartile && (
         <div>
           <strong style={{ color }}>First quartile </strong>
           {firstQuartile && firstQuartile.toFixed ? firstQuartile.toFixed(2) : firstQuartile}
-        </div>}
-      {thirdQuartile &&
+        </div>
+      )}
+      {thirdQuartile && (
         <div>
           <strong style={{ color }}>Third quartile </strong>
           {thirdQuartile && thirdQuartile.toFixed ? thirdQuartile.toFixed(2) : thirdQuartile}
-        </div>}
-      {outliers && outliers.length > 0 &&
-        <div>
-          <strong style={{ color }}># Outliers </strong>
-          {outliers.length}
-        </div>}
+        </div>
+      )}
+      {outliers &&
+        outliers.length > 0 && (
+          <div>
+            <strong style={{ color }}># Outliers </strong>
+            {outliers.length}
+          </div>
+        )}
     </div>
   );
 }
 
 function MouseEventTargetStyles({ containerEvents, color = colors.categories[7] }) {
   return (
-    <style type="text/css">{`
+    <style type="text/css">
+      {`
       .vx-boxplot rect:not(:last-child),
       .vx-boxplot circle {
         stroke: ${containerEvents ? undefined : color};
@@ -107,28 +108,31 @@ function MouseEventTargetStyles({ containerEvents, color = colors.categories[7] 
         fill: ${color};
         fill-opacity: ${containerEvents ? 0.5 : 0};
       }
-    `}</style>
+    `}
+    </style>
   );
 }
 
 // Boxplot example
 const verticalBoxPlotData = statsData.map(s => s.boxPlot);
-const horizontalBoxPlotData = statsData.map((s) => {
+const horizontalBoxPlotData = statsData.map(s => {
   const { boxPlot } = s;
   const { x, ...rest } = boxPlot;
+
   return {
     y: x,
     ...rest,
   };
 });
-const boxPlotValues = verticalBoxPlotData.reduce((r, e) => (
-  r.push(e.min, e.max, ...e.outliers) && r
-), []);
+const boxPlotValues = verticalBoxPlotData.reduce(
+  (r, e) => r.push(e.min, e.max, ...e.outliers) && r,
+  [],
+);
 const minBoxPlotValue = Math.min(...boxPlotValues);
 const maxBoxPlotValue = Math.max(...boxPlotValues);
 const valueDomain = [
-  minBoxPlotValue - (0.1 * Math.abs(minBoxPlotValue)),
-  maxBoxPlotValue + (0.1 * Math.abs(maxBoxPlotValue)),
+  minBoxPlotValue - 0.1 * Math.abs(minBoxPlotValue),
+  maxBoxPlotValue + 0.1 * Math.abs(maxBoxPlotValue),
 ];
 const boxPlotBandScaleConfig = {
   type: 'band',
@@ -147,9 +151,10 @@ export function BoxPlotSeriesExample() {
         <WithToggle id="toggle_boxplot_container_e" label="Container mouse events" initialChecked>
           {containerEvents => (
             <WithToggle id="toggle_boxplot_show_container" label="Show mouse targets">
-              {showTargets => ([
-                showTargets &&
-                  <MouseEventTargetStyles key="mouse_styles" containerEvents={containerEvents} />,
+              {showTargets => [
+                showTargets && (
+                  <MouseEventTargetStyles key="mouse_styles" containerEvents={containerEvents} />
+                ),
                 <ResponsiveXYChart
                   key="boxplot_chart"
                   ariaLabel="Boxplot example"
@@ -183,7 +188,7 @@ export function BoxPlotSeriesExample() {
                   />
                   <XAxis numTicks={4} />
                 </ResponsiveXYChart>,
-              ])}
+              ]}
             </WithToggle>
           )}
         </WithToggle>
@@ -193,9 +198,10 @@ export function BoxPlotSeriesExample() {
 }
 
 // Violin + boxplot
-const boxPlotData = statsData.map((s) => {
+const boxPlotData = statsData.map(s => {
   const { boxPlot } = s;
   const { x, ...rest } = boxPlot;
+
   return {
     y: x,
     ...rest,
@@ -205,10 +211,7 @@ const violinData = statsData.map(s => ({ y: s.boxPlot.x, binData: s.binData }));
 const values = boxPlotData.reduce((r, e) => r.push(e.min, e.max, ...e.outliers) && r, []);
 const minXValue = Math.min(...values);
 const maxXValue = Math.max(...values);
-const xDomain = [
-  minXValue - (0.1 * Math.abs(minXValue)),
-  maxXValue + (0.1 * Math.abs(maxXValue)),
-];
+const xDomain = [minXValue - 0.1 * Math.abs(minXValue), maxXValue + 0.1 * Math.abs(maxXValue)];
 export function BoxPlotViolinPlotSeriesExample() {
   return (
     <WithToggle id="boxplot_violin_box_toggle" label="Show boxplot" initialChecked>
@@ -240,7 +243,7 @@ export function BoxPlotViolinPlotSeriesExample() {
                 orientation={['diagonal']}
               />
               <YAxis numTicks={4} />
-              {showViolin &&
+              {showViolin && (
                 <ViolinPlotSeries
                   data={violinData}
                   fill="url(#horiz_box_violin_lines)"
@@ -248,8 +251,9 @@ export function BoxPlotViolinPlotSeriesExample() {
                   strokeWidth={1}
                   horizontal
                   disableMouseEvents={showBoxplot}
-                />}
-              {showBoxplot &&
+                />
+              )}
+              {showBoxplot && (
                 <BoxPlotSeries
                   data={boxPlotData}
                   fill={colors.categories[7]}
@@ -258,7 +262,8 @@ export function BoxPlotViolinPlotSeriesExample() {
                   fillOpacity={0.2}
                   strokeWidth={1}
                   horizontal
-                />}
+                />
+              )}
               <XAxis />
             </ResponsiveXYChart>
           )}

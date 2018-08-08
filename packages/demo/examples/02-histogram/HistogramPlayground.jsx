@@ -28,6 +28,7 @@ function datumGenerator(generator) {
 
 function getDataset({ n, mu, sigma, distribution, ...rest }) {
   const distributionGenerator = distributionLookup[distribution](mu, sigma);
+
   return {
     showBars: true,
     ...rest,
@@ -50,7 +51,7 @@ const defaultProps = {
 };
 
 class HistogramPlayground extends React.PureComponent {
-  static onClick({ datum, index }) {
+  static handleClick({ datum, index }) {
     console.log('clicked bar', index, datum);
   }
 
@@ -103,6 +104,7 @@ class HistogramPlayground extends React.PureComponent {
 
   renderHistogramControls() {
     const { binCount } = this.state;
+
     return (
       <div style={{ display: 'flex', flexDirection: 'column', paddingBottom: 8 }}>
         {['cumulative', 'normalized', 'xAxis', 'yAxis', 'horizontal'].map(key => (
@@ -112,7 +114,7 @@ class HistogramPlayground extends React.PureComponent {
             label={key}
             checked={Boolean(this.state[key])}
             onChange={() => {
-              this.setState({ [key]: !this.state[key] });
+              this.setState(currState => ({ [key]: !currState[key] }));
             }}
           />
         ))}
@@ -132,6 +134,7 @@ class HistogramPlayground extends React.PureComponent {
   renderDatasetControls(datasetKey) {
     const dataset = this.state[datasetKey];
     const { distribution, mu, sigma, showBars, showDensity, color } = dataset;
+
     return (
       <div key={datasetKey} style={{ display: 'flex', flexDirection: 'row', paddingBottom: 8 }}>
         <Spacer>
@@ -140,7 +143,7 @@ class HistogramPlayground extends React.PureComponent {
         <Spacer>
           <select
             name="distribution"
-            onChange={(e) => {
+            onChange={e => {
               this.handleChangeDistribution(datasetKey, e.target.value);
             }}
             value={distribution}
@@ -156,7 +159,7 @@ class HistogramPlayground extends React.PureComponent {
           max={10}
           step={1}
           value={mu}
-          onChange={(e) => {
+          onChange={e => {
             this.handleChangeMu(datasetKey, e.target.value);
           }}
         />
@@ -167,7 +170,7 @@ class HistogramPlayground extends React.PureComponent {
           max={15}
           step={1}
           value={sigma}
-          onChange={(e) => {
+          onChange={e => {
             this.handleChangeSigma(datasetKey, e.target.value);
           }}
         />
@@ -176,13 +179,13 @@ class HistogramPlayground extends React.PureComponent {
           label="Show density"
           checked={Boolean(showDensity)}
           onChange={() => {
-            this.setState({
+            this.setState(currState => ({
               [datasetKey]: {
-                ...this.state[datasetKey],
+                ...currState[datasetKey],
                 showDensity: !showDensity,
-                showBars: !showDensity ? true : this.state[datasetKey].showBars,
+                showBars: showDensity ? currState[datasetKey].showBars : true,
               },
-            });
+            }));
           }}
         />
         {showDensity && (
@@ -191,9 +194,9 @@ class HistogramPlayground extends React.PureComponent {
             label="Show bars"
             checked={Boolean(showBars)}
             onChange={() => {
-              this.setState({
-                [datasetKey]: { ...this.state[datasetKey], showBars: !showBars },
-              });
+              this.setState(currState => ({
+                [datasetKey]: { ...currState[datasetKey], showBars: !showBars },
+              }));
             }}
           />
         )}
@@ -214,21 +217,22 @@ class HistogramPlayground extends React.PureComponent {
           binCount={binCount}
           horizontal={horizontal}
         >
-          {datasets.map((key) => {
+          {datasets.map(key => {
             if (!this.state[key].showDensity || this.state[key].showBars) {
               return (
                 <BarSeries
                   key={key}
                   fill={this.state[key].color}
                   rawData={this.state[key].rawData}
-                  onClick={HistogramPlayground.onClick}
+                  onClick={HistogramPlayground.handleClick}
                 />
               );
             }
+
             return null;
           })}
 
-          {datasets.map((key) => {
+          {datasets.map(key => {
             if (this.state[key].showDensity) {
               return (
                 <DensitySeries
@@ -239,6 +243,7 @@ class HistogramPlayground extends React.PureComponent {
                 />
               );
             }
+
             return null;
           })}
 

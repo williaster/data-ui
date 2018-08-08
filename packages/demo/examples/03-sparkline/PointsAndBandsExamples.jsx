@@ -6,12 +6,10 @@ import {
   Sparkline,
   LineSeries,
   PointSeries,
-
   BandLine,
   HorizontalReferenceLine,
   VerticalReferenceLine,
   WithTooltip,
-
   PatternLines,
   withScreenSize,
 } from '@data-ui/sparkline';
@@ -30,42 +28,27 @@ const sparklineProps = {
   margin: { top: 24, right: 72, bottom: 24, left: 8 },
 };
 
-const randomData = n => range(n).map(() => (Math.random() * (Math.random() > 0.2 ? 1 : 2)));
+const randomData = n => range(n).map(() => Math.random() * (Math.random() > 0.2 ? 1 : 2));
 const ResponsiveSparkline = withScreenSize(({ screenWidth, width, ...rest }) => (
-  <Sparkline
-    width={Math.min(
-      sparklineProps.width,
-      Math.max(20, screenWidth * 0.65),
-    )}
-    {...rest}
-  />
+  <Sparkline width={Math.min(sparklineProps.width, Math.max(20, screenWidth * 0.65))} {...rest} />
 ));
 
 export default [
   {
     description: 'Miscellaneous❗️',
-    components: [
-      Sparkline,
-      LineSeries,
-    ],
+    components: [Sparkline, LineSeries],
     example: () => (
       <Spacer top={2} left={2} flexDirection="column">
         <Example title="All points">
-          <Sparkline
-            {...sparklineProps}
-            data={randomData(40)}
-          >
-            <LineSeries
-              strokeWidth={1}
-              stroke={allColors.cyan[3]}
-            />
+          <Sparkline {...sparklineProps} data={randomData(40)}>
+            <LineSeries strokeWidth={1} stroke={allColors.cyan[3]} />
             <PointSeries points={['all']} />
             <PointSeries points={['max']} fill={allColors.yellow[6]} />
           </Sparkline>
         </Example>
 
         <Example title="Same scales for comparison">
-          <Spacer flexDirection="column"r>
+          <Spacer flexDirection="column" r>
             {[9, 3].map(multiplier => (
               <Sparkline
                 key={multiplier}
@@ -76,10 +59,7 @@ export default [
                 min={0}
                 max={10}
               >
-                <BandLine
-                  fill={allColors.teal[1]}
-                  band={{ from: {}, to: {} }}
-                />
+                <BandLine fill={allColors.teal[1]} band={{ from: {}, to: {} }} />
                 <HorizontalReferenceLine
                   reference={10}
                   stroke={allColors.teal[7]}
@@ -88,25 +68,15 @@ export default [
                   strokeWidth={1}
                   renderLabel={d => <tspan fill={allColors.teal[7]}>{d.toFixed(1)}</tspan>}
                 />
-                <LineSeries
-                  curve="cardinal"
-                  strokeWidth={2}
-                  stroke={allColors.teal[6]}
-                />
-                <PointSeries
-                  points={['min', 'max']}
-                  fill={allColors.teal[6]}
-                />
+                <LineSeries curve="cardinal" strokeWidth={2} stroke={allColors.teal[6]} />
+                <PointSeries points={['min', 'max']} fill={allColors.teal[6]} />
               </Sparkline>
             ))}
           </Spacer>
         </Example>
 
         <Example title="Nonsense bands">
-          <Sparkline
-            {...sparklineProps}
-            data={[10, -10, 5, -5, 1, -1, 0]}
-          >
+          <Sparkline {...sparklineProps} data={[10, -10, 5, -5, 1, -1, 0]}>
             <PatternLines
               id="band_pattern"
               height={4}
@@ -115,24 +85,15 @@ export default [
               strokeWidth={1}
               orientation={['diagonal']}
             />
-            <BandLine
-              band={{ from: { y: 1 }, to: { y: 10 } }}
-              fill="url(#band_pattern)"
-            />
-            <BandLine
-              band={{ from: { x: 1 }, to: { x: 3 } }}
-              fill="url(#band_pattern)"
-            />
-            <LineSeries
-              strokeWidth={2}
-              stroke={allColors.grape[6]}
-            />
+            <BandLine band={{ from: { y: 1 }, to: { y: 10 } }} fill="url(#band_pattern)" />
+            <BandLine band={{ from: { x: 1 }, to: { x: 3 } }} fill="url(#band_pattern)" />
+            <LineSeries strokeWidth={2} stroke={allColors.grape[6]} />
             <PointSeries points={['all']} fill={allColors.grape[4]} />
           </Sparkline>
         </Example>
 
-        {(data =>
-          (<Example title="Vertical lines for every point + CrossHair tooltip">
+        {(data => (
+          <Example title="Vertical lines for every point + CrossHair tooltip">
             <WithTooltip renderTooltip={({ datum }) => datum.y.toFixed(2)}>
               {({ onMouseMove, onMouseLeave, tooltipData }) => (
                 <Sparkline
@@ -178,13 +139,11 @@ export default [
                 </Sparkline>
               )}
             </WithTooltip>
-          </Example>))(randomData(30))}
+          </Example>
+        ))(randomData(30))}
 
         <Example title="Responsive">
-          <ResponsiveSparkline
-            {...sparklineProps}
-            data={randomData(25)}
-          >
+          <ResponsiveSparkline {...sparklineProps} data={randomData(25)}>
             <PatternLines
               id="area_pattern"
               height={4}
@@ -193,11 +152,7 @@ export default [
               strokeWidth={1}
               orientation={['diagonal']}
             />
-            <LineSeries
-              showArea
-              stroke={allColors.indigo[5]}
-              fill="url(#area_pattern)"
-            />
+            <LineSeries showArea stroke={allColors.indigo[5]} fill="url(#area_pattern)" />
           </ResponsiveSparkline>
         </Example>
       </Spacer>

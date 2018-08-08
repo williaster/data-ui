@@ -13,10 +13,4 @@ const withStylesPropTypes = {
   theme: PropTypes.object.isRequired,
 };
 
-export {
-  css,
-  ThemedStyleSheet,
-  ThemeProvider,
-  withStyles,
-  withStylesPropTypes,
-};
+export { css, ThemedStyleSheet, ThemeProvider, withStyles, withStylesPropTypes };

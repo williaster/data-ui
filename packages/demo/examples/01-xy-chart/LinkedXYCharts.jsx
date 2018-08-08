@@ -36,18 +36,20 @@ const tickValues = data.map(d => d.x);
 const stackKeys = ['a', 'b', 'c'];
 const stackFills = theme.colors.categories.slice(2);
 
-const stackedData = data.map((d) => {
+const stackedData = data.map(d => {
   let total = 1;
 
   return stackKeys.reduce((ret, key, i) => {
     const fraction = i === stackKeys.length - 1 ? total : 0.33;
     total -= fraction;
+
     return { ...ret, [key]: fraction * ret.y };
   }, d);
 });
 
 const getYForKey = (d, key) => {
   const index = stackKeys.indexOf(key);
+
   return stackKeys.slice(0, index + 1).reduce((sum, currKey) => sum + d[currKey], 0);
 };
 
@@ -66,9 +68,9 @@ const stackedChartProps = {
 class LinkedXYCharts extends React.Component {
   constructor(props) {
     super(props);
-    this.onClick = this.onClick.bind(this);
-    this.onMouseMove = this.onMouseMove.bind(this);
-    this.onMouseLeave = this.onMouseLeave.bind(this);
+    this.handleClick = this.handleClick.bind(this);
+    this.handleMouseMove = this.handleMouseMove.bind(this);
+    this.handleMouseLeave = this.handleMouseLeave.bind(this);
 
     this.state = {
       selectedDatum: null,
@@ -77,19 +79,19 @@ class LinkedXYCharts extends React.Component {
     };
   }
 
-  onClick({ datum }) {
+  handleClick({ datum }) {
     this.setState(({ selectedDatum }) => ({
       selectedDatum: datum === selectedDatum ? null : datum,
     }));
   }
 
-  onMouseMove({ datum, seriesKey }) {
+  handleMouseMove({ datum, seriesKey }) {
     if (this.state.mousedOverDatum !== datum || this.state.mousedOverKey !== seriesKey) {
       this.setState(() => ({ mousedOverDatum: datum, mousedOverKey: seriesKey }));
     }
   }
 
-  onMouseLeave() {
+  handleMouseLeave() {
     this.setState(() => ({ mousedOverDatum: null, mousedOverKey: null }));
   }
 
@@ -99,14 +101,16 @@ class LinkedXYCharts extends React.Component {
     const width = Math.max(400, Math.min(700, screenWidth / 1.5));
     const height = 100;
 
-    const intervalData = selectedDatum ? [
-      {
-        x0: selectedDatum.x,
-        x1: new Date(
-          new Date(selectedDatum.x).setFullYear(new Date(selectedDatum.x).getFullYear() + 1),
-        ),
-      },
-    ] : null;
+    const intervalData = selectedDatum
+      ? [
+          {
+            x0: selectedDatum.x,
+            x1: new Date(
+              new Date(selectedDatum.x).setFullYear(new Date(selectedDatum.x).getFullYear() + 1),
+            ),
+          },
+        ]
+      : null;
 
     const crossHairData = mousedOverDatum
       ? { datum: { ...mousedOverDatum, y: mousedOverDatum[mousedOverKey] } }
@@ -152,23 +156,25 @@ class LinkedXYCharts extends React.Component {
             stackFills={stackFills}
             stroke={theme.colors.darkGray}
             strokeWidth={0.5}
-            onMouseMove={this.onMouseMove}
-            onMouseLeave={this.onMouseLeave}
-            onClick={this.onClick}
+            onMouseMove={this.handleMouseMove}
+            onMouseLeave={this.handleMouseLeave}
+            onClick={this.handleClick}
           />
-          {selectedDatum &&
+          {selectedDatum && (
             <StackedBarSeries
               data={[selectedDatum]}
               stackKeys={['y']}
               stackFills={[`url(#${PATTERN_ID})`]}
               disableMouseEvents
-            />}
-          {stackCrossHairData &&
+            />
+          )}
+          {stackCrossHairData && (
             <CrossHair
               fullHeight
               showHorizontalLine={false}
               circleFill={stackFills[stackKeys.indexOf(mousedOverKey)]}
-            />}
+            />
+          )}
           <XAxis tickFormat={formatDate} />
         </XYChart>
 
@@ -189,28 +195,27 @@ class LinkedXYCharts extends React.Component {
               fillOpacity={0.9}
               strokeWidth={1}
               stroke={stackFills[stackIndex]}
-              onMouseMove={({ datum }) => { this.onMouseMove({ datum, seriesKey }); }}
-              onMouseLeave={this.onMouseLeave}
+              onMouseMove={({ datum }) => {
+                this.handleMouseMove({ datum, seriesKey });
+              }}
+              onMouseLeave={this.handleMouseLeave}
             />
-            {intervalData &&
-              <IntervalSeries
-                fill={`url(#${PATTERN_ID})`}
-                opacity={0.3}
-                data={intervalData}
-              />}
-            {mousedOverDatum &&
+            {intervalData && (
+              <IntervalSeries fill={`url(#${PATTERN_ID})`} opacity={0.3} data={intervalData} />
+            )}
+            {mousedOverDatum && (
               <CrossHair
                 fullHeight
                 showHorizontalLine={false}
                 showCircle={seriesKey === mousedOverKey}
                 circleFill={stackFills[stackIndex]}
-              />}
+              />
+            )}
           </XYChart>
         ))}
       </div>
     );
   }
 }
-
 
 export default withScreenSize(LinkedXYCharts);

@@ -1,10 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import {
-  Table,
-  withFiltering,
-} from '@data-ui/data-table';
+import { Table, withFiltering } from '@data-ui/data-table';
 
 import LabeledInput from '../shared/LabeledInput';
 
@@ -25,7 +22,9 @@ function FilterableTable({ onChangeFilterText, filterText, ...tableProps }) {
         label=""
         placeholder="Filter rows"
         value={filterText}
-        onChange={(event) => { onChangeFilterText(event.target.value); }}
+        onChange={event => {
+          onChangeFilterText(event.target.value);
+        }}
       />
       <Table {...tableProps} />
     </div>

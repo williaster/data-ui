@@ -2,9 +2,10 @@
 import { color } from '@data-ui/theme';
 
 function getRandomID() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (char) => {
-    const randomNumber = Math.random() * 16 | 0;
-    const value = char === 'x' ? randomNumber : ((randomNumber & 0x3) | 0x8);
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, char => {
+    const randomNumber = (Math.random() * 16) | 0;
+    const value = char === 'x' ? randomNumber : (randomNumber & 0x3) | 0x8;
+
     return value.toString(16);
   });
 }
@@ -98,5 +99,6 @@ export function expandGraph(graph, targetNode) {
 
     nodes.push(node);
   }
+
   return { nodes, links };
 }

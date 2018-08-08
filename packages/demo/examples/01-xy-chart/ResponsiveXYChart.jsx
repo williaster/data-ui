@@ -2,11 +2,7 @@
 import React from 'react';
 import { timeParse, timeFormat } from 'd3-time-format';
 
-import {
-  XYChart,
-  theme,
-  withScreenSize,
-} from '@data-ui/xy-chart';
+import { XYChart, theme, withScreenSize } from '@data-ui/xy-chart';
 
 export const parseDate = timeParse('%Y%m%d');
 export const formatDate = timeFormat('%b %d');
@@ -22,13 +18,15 @@ export function renderTooltip({ datum, seriesKey, color, data }) {
   } else if (typeof xVal !== 'string' && Number(xVal) > 1000000) {
     xVal = formatDate(xVal);
   }
-  const yVal = seriesKey && datum[seriesKey] ? datum[seriesKey] : (y || value || '--');
+  const yVal = seriesKey && datum[seriesKey] ? datum[seriesKey] : y || value || '--';
+
   return (
     <div>
-      {seriesKey &&
+      {seriesKey && (
         <div>
           <strong style={{ color }}>{seriesKey}</strong>
-        </div>}
+        </div>
+      )}
       <div>
         <strong style={{ color }}>x </strong>
         {xVal && xVal.toFixed ? xVal.toFixed(2) : xVal}

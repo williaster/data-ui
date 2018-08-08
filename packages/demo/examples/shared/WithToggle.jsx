@@ -23,13 +23,16 @@ class WithToggle extends React.PureComponent {
   render() {
     const { children, id, label } = this.props;
     const { checked } = this.state;
+
     return (
       <div>
         <Checkbox
           id={id}
           label={label}
           checked={checked}
-          onChange={() => { this.setState({ checked: !checked }); }}
+          onChange={() => {
+            this.setState({ checked: !checked });
+          }}
         />
         {children(checked)}
       </div>
