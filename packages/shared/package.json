@@ -18,7 +18,8 @@
     "lint": "npm run prettier && npm run eslint",
     "test": "npm run jest",
     "prettier": "beemo prettier \"./{src,test}/**/*.{js,jsx,json,md}\"",
-    "sync:gitignore": "beemo sync-dotfiles --filter=gitignore"
+    "sync:gitignore": "beemo sync-dotfiles --filter=gitignore",
+    "prepublish": "npm run build"
   },
   "repository": {
     "type": "git",
