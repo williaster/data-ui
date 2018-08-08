@@ -21,15 +21,15 @@ describe('<AreaSeries />', () => {
     { date: new Date('2019-01-05'), cat: 'c', num: 377 },
   ];
 
-  it('it should be defined', () => {
+  it('should be defined', () => {
     expect(AreaSeries).toBeDefined();
   });
 
-  it('it should not render without x- and y-scales', () => {
+  it('should not render without x- and y-scales', () => {
     expect(shallow(<AreaSeries data={[]} />).type()).toBeNull();
   });
 
-  it('it should render an Area for each AreaSeries', () => {
+  it('should render an Area for each AreaSeries', () => {
     const wrapper = shallow(
       <XYChart {...mockProps}>
         <AreaSeries data={mockData.map(d => ({ ...d, x: d.date, y: d.num }))} />
@@ -46,7 +46,7 @@ describe('<AreaSeries />', () => {
     ).toHaveLength(1);
   });
 
-  it('it should render a LinePath', () => {
+  it('should render a LinePath', () => {
     const data = mockData.map(d => ({ ...d, x: d.date, y: d.num }));
     const wrapperWithLine = shallow(
       <XYChart {...mockProps}>
@@ -57,7 +57,7 @@ describe('<AreaSeries />', () => {
     expect(areaSeriesWithLinePath.find(LinePath)).toHaveLength(1);
   });
 
-  it('it should call onMouseMove({ datum, data, event, color }), onMouseLeave(), and onClick({ datum, data, event, color }) on trigger', () => {
+  it('should call onMouseMove({ datum, data, event, color }), onMouseLeave(), and onClick({ datum, data, event, color }) on trigger', () => {
     const data = mockData.map(d => ({ ...d, x: d.date, y: d.num }));
     const onMouseMove = jest.fn();
     const onMouseLeave = jest.fn();
@@ -96,7 +96,7 @@ describe('<AreaSeries />', () => {
     expect(args.color).toBe('hot-pink');
   });
 
-  it('it should not trigger onMouseMove, onMouseLeave, or onClick if disableMouseEvents is true', () => {
+  it('should not trigger onMouseMove, onMouseLeave, or onClick if disableMouseEvents is true', () => {
     const data = mockData.map(d => ({ ...d, x: d.date, y: d.num }));
     const onMouseMove = jest.fn();
     const onMouseLeave = jest.fn();
@@ -125,7 +125,7 @@ describe('<AreaSeries />', () => {
     expect(onClick).toHaveBeenCalledTimes(0);
   });
 
-  it('it should render a FocusBlurHandler for each point', () => {
+  it('should render a FocusBlurHandler for each point', () => {
     const data = mockData.map(d => ({ ...d, x: d.date, y: d.num }));
 
     const wrapper = mount(
@@ -138,7 +138,7 @@ describe('<AreaSeries />', () => {
     expect(area.find(FocusBlurHandler)).toHaveLength(data.length);
   });
 
-  it('it should invoke onMouseMove when focused', () => {
+  it('should invoke onMouseMove when focused', () => {
     const data = mockData.map(d => ({ ...d, x: d.date, y: d.num }));
     const onMouseMove = jest.fn();
 
@@ -156,7 +156,7 @@ describe('<AreaSeries />', () => {
     expect(onMouseMove).toHaveBeenCalledTimes(1);
   });
 
-  it('it should invoke onMouseLeave when blured', () => {
+  it('should invoke onMouseLeave when blured', () => {
     const data = mockData.map(d => ({ ...d, x: d.date, y: d.num }));
     const onMouseLeave = jest.fn();
 

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { BarSeries, LineSeries } from '../../src';
+import { BarSeries, LineSeries, AreaDifferenceSeries, AreaSeries } from '../../src';
 import collectVoronoiData from '../../src/utils/collectVoronoiData';
 
 describe('interpolatorLookup', () => {
@@ -20,15 +20,15 @@ describe('interpolatorLookup', () => {
     null,
   ];
 
-  it('it should be defined', () => {
+  it('should be defined', () => {
     expect(collectVoronoiData).toBeDefined();
   });
 
-  it('it should return an array', () => {
+  it('should return an array', () => {
     expect(collectVoronoiData({ children, getX, getY })).toEqual(expect.any(Array));
   });
 
-  it('it should not include datum from <*Series /> with disableMouseEvents set to true', () => {
+  it('should not include datum from <*Series /> with disableMouseEvents set to true', () => {
     expect(
       collectVoronoiData({
         children: [
@@ -42,7 +42,7 @@ describe('interpolatorLookup', () => {
     ).toHaveLength(2);
   });
 
-  it('it should not include datum from non-<*Series /> children', () => {
+  it('should not include datum from non-<*Series /> children', () => {
     expect(
       collectVoronoiData({
         children: [<div key="div" />, <BarSeries key="bar" data={barData} {...dummyProps} />, null],
@@ -52,7 +52,7 @@ describe('interpolatorLookup', () => {
     ).toHaveLength(1);
   });
 
-  it('it should not include datum with undefined x or y values', () => {
+  it('should not include datum with undefined x or y values', () => {
     expect(
       collectVoronoiData({
         children: [
@@ -64,5 +64,20 @@ describe('interpolatorLookup', () => {
         getY,
       }),
     ).toHaveLength(0);
+  });
+
+  it('should collect data from AreaDifferenceSeries child series', () => {
+    expect(
+      collectVoronoiData({
+        children: [
+          <AreaDifferenceSeries key="area-difference" {...dummyProps}>
+            <AreaSeries data={lineData} />
+            <AreaSeries data={lineData} />
+          </AreaDifferenceSeries>,
+        ],
+        getX,
+        getY,
+      }),
+    ).toEqual([...lineData, ...lineData]);
   });
 });

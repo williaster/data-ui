@@ -3,17 +3,17 @@ import { shallow } from 'enzyme';
 import { theme as defaultTheme, withTheme } from '../../src';
 
 describe('withTheme', () => {
-  it('it should be a fn', () => {
+  it('should be a fn', () => {
     expect(withTheme).toBeInstanceOf(Function);
   });
 
-  it('it should return a fn', () => {
+  it('should return a fn', () => {
     expect(withTheme()).toBeInstanceOf(Function);
   });
 });
 
 describe('HOC', () => {
-  it('it has a wrapped displayName', () => {
+  it('has a wrapped displayName', () => {
     function MyComponent() {
       return null;
     }
@@ -29,7 +29,7 @@ describe('HOC', () => {
     expect(hoc2.displayName).toBe('withTheme(MyDisplayName)');
   });
 
-  it('it passes the theme prop to the wrapped component', () => {
+  it('passes the theme prop to the wrapped component', () => {
     const testTheme = { my: 'theme' };
     function MyComponent({ theme }) {
       expect(theme).toBe(testTheme);
@@ -40,7 +40,7 @@ describe('HOC', () => {
     shallow(<HOC />).dive();
   });
 
-  it('it passes the default theme when no theme is passed', () => {
+  it('passes the default theme when no theme is passed', () => {
     function MyComponent({ theme }) {
       expect(theme).toBe(defaultTheme);
 
@@ -50,7 +50,7 @@ describe('HOC', () => {
     shallow(<HOC />).dive();
   });
 
-  it('it allows theme to be overridden', () => {
+  it('allows theme to be overridden', () => {
     const overrideTheme = { override: 'theme' };
     function MyComponent() {
       return null;

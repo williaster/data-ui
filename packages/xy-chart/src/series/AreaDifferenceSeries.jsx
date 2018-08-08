@@ -23,7 +23,7 @@ const getX = d => d.x;
 const getY0 = d => d.y0;
 const getY1 = d => d.y1;
 
-export default class AreaDifference extends React.PureComponent {
+export default class AreaDifferenceSeries extends React.PureComponent {
   render() {
     const {
       disableMouseEvents,
@@ -46,7 +46,7 @@ export default class AreaDifference extends React.PureComponent {
       child1.type.displayName !== 'AreaSeries' ||
       child2.type.displayName !== 'AreaSeries'
     ) {
-      console.warn('ThresholdSeries expects exactly two AreaSeries children');
+      console.warn('AreaDifferenceSeries expects exactly two AreaSeries children');
 
       return null;
     }
@@ -55,7 +55,7 @@ export default class AreaDifference extends React.PureComponent {
     const { data: data2, fill: fill2, fillOpacity: opacity2 } = child2.props;
 
     if (data1.length !== data2.length) {
-      console.warn('ThresholdSeries children should have the same data length');
+      console.warn('AreaDifferenceSeries children should have the same data length');
 
       return null;
     }
@@ -107,6 +107,6 @@ export default class AreaDifference extends React.PureComponent {
   }
 }
 
-AreaDifference.propTypes = propTypes;
-AreaDifference.defaultProps = defaultProps;
-AreaDifference.displayName = 'AreaDifference';
+AreaDifferenceSeries.propTypes = propTypes;
+AreaDifferenceSeries.defaultProps = defaultProps;
+AreaDifferenceSeries.displayName = 'AreaDifferenceSeries';

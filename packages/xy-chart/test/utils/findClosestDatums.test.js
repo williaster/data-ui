@@ -30,11 +30,11 @@ describe('findClosestDatums', () => {
   const getX = d => d.x;
   const getY = d => d.y;
 
-  it('it should be defined', () => {
+  it('should be defined', () => {
     expect(findClosestDatums).toBeDefined();
   });
 
-  it('it should return an object with closestDatum and series', () => {
+  it('should return an object with closestDatum and series', () => {
     const data = [
       [{ x: 'a', y: 5 }, { x: 'b', y: 0 }, { x: 'c', y: 8 }],
       [{ x: 'a', y: 2 }, { x: 'b', y: 5 }, { x: 'c', y: 9 }],
@@ -62,7 +62,7 @@ describe('findClosestDatums', () => {
     );
   });
 
-  it('it should return one datum per series and use `seriesKey`s for series keys when possible', () => {
+  it('should return one datum per series and use `seriesKey`s for series keys when possible', () => {
     const data = [
       [{ x: 'a', y: 5 }, { x: 'b', y: 0 }, { x: 'c', y: 8 }],
       [{ x: 'a', y: 2 }, { x: 'b', y: 5 }, { x: 'c', y: 9 }],
@@ -97,7 +97,7 @@ describe('findClosestDatums', () => {
     expect(data[2].indexOf(result.series[2])).toBeGreaterThan(-1);
   });
 
-  it('it should ignore non-series children and series with disableMouseEvents set to true', () => {
+  it('should ignore non-series children and series with disableMouseEvents set to true', () => {
     const args = {
       event,
       getX,

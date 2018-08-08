@@ -21,15 +21,15 @@ describe('<PointSeries />', () => {
     { x0: new Date('2017-01-20'), x1: new Date('2017-01-26') },
   ];
 
-  it('it should be defined', () => {
+  it('should be defined', () => {
     expect(IntervalSeries).toBeDefined();
   });
 
-  it('it should not render without x- and y-scales', () => {
+  it('should not render without x- and y-scales', () => {
     expect(shallow(<IntervalSeries data={[]} />).type()).toBeNull();
   });
 
-  it('it should render a Bar for each datum', () => {
+  it('should render a Bar for each datum', () => {
     const wrapper = shallow(
       <XYChart {...mockProps}>
         <IntervalSeries data={mockData} />
@@ -44,7 +44,7 @@ describe('<PointSeries />', () => {
     ).toHaveLength(mockData.length);
   });
 
-  it('it should call onMouseMove({ datum, data, event, color }), onMouseLeave(), and onClick({ datum, data, event, color }) on trigger', () => {
+  it('should call onMouseMove({ datum, data, event, color }), onMouseLeave(), and onClick({ datum, data, event, color }) on trigger', () => {
     const onMouseMove = jest.fn();
     const onMouseLeave = jest.fn();
     const onClick = jest.fn();
@@ -87,7 +87,7 @@ describe('<PointSeries />', () => {
     expect(args.color).toBe('purple');
   });
 
-  it('it should not trigger onMouseMove, onMouseLeave, or onClick if disableMouseEvents is true', () => {
+  it('should not trigger onMouseMove, onMouseLeave, or onClick if disableMouseEvents is true', () => {
     const onMouseMove = jest.fn();
     const onMouseLeave = jest.fn();
     const onClick = jest.fn();
@@ -120,7 +120,7 @@ describe('<PointSeries />', () => {
     expect(onClick).toHaveBeenCalledTimes(0);
   });
 
-  it('it should render a FocusBlurHandler for each point', () => {
+  it('should render a FocusBlurHandler for each point', () => {
     const data = mockData.map(d => ({ ...d, x: d.date, y: d.num }));
 
     const wrapper = shallow(
@@ -133,7 +133,7 @@ describe('<PointSeries />', () => {
     expect(intervals.find(FocusBlurHandler)).toHaveLength(data.length);
   });
 
-  it('it should invoke onMouseMove when focused', () => {
+  it('should invoke onMouseMove when focused', () => {
     const data = mockData.map(d => ({ ...d, x: d.date, y: d.num }));
     const onMouseMove = jest.fn();
 
@@ -153,7 +153,7 @@ describe('<PointSeries />', () => {
     expect(onMouseMove).toHaveBeenCalledTimes(1);
   });
 
-  it('it should invoke onMouseLeave when blured', () => {
+  it('should invoke onMouseLeave when blured', () => {
     const data = mockData.map(d => ({ ...d, x: d.date, y: d.num }));
     const onMouseLeave = jest.fn();
 

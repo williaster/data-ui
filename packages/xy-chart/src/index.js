@@ -13,7 +13,7 @@ export { default as PointSeries } from './series/PointSeries';
 export { pointComponentPropTypes } from './utils/propShapes';
 export { default as StackedAreaSeries } from './series/StackedAreaSeries';
 export { default as StackedBarSeries } from './series/StackedBarSeries';
-export { default as ThresholdSeries } from './series/ThresholdSeries';
+export { default as AreaDifferenceSeries } from './series/AreaDifferenceSeries';
 export { default as ViolinPlotSeries } from './series/ViolinPlotSeries';
 export { computeStats } from '@vx/stats';
 

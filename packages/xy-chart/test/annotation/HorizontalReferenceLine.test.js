@@ -16,15 +16,15 @@ describe('<HorizontalReferenceLine />', () => {
     ariaLabel: 'label',
   };
 
-  it('it should be defined', () => {
+  it('should be defined', () => {
     expect(HorizontalReferenceLine).toBeDefined();
   });
 
-  it('it should render null if no accessors or scales are passed', () => {
+  it('should render null if no accessors or scales are passed', () => {
     expect(shallow(<HorizontalReferenceLine reference={reference} />).type()).toBeNull();
   });
 
-  it('it should render a Line', () => {
+  it('should render a Line', () => {
     const wrapper = shallow(
       <XYChart {...mockProps}>
         <HorizontalReferenceLine reference={reference} />
@@ -50,7 +50,7 @@ describe('<HorizontalReferenceLine />', () => {
     expect(line.prop('to').x).toBe(mockProps.width);
   });
 
-  it('it should render a line at the passed reference number', () => {
+  it('should render a line at the passed reference number', () => {
     const wrapper = shallow(
       <XYChart {...mockProps}>
         <HorizontalReferenceLine reference={reference} />
@@ -64,7 +64,7 @@ describe('<HorizontalReferenceLine />', () => {
     expect(line.prop('to').y).toBe(scaledValue);
   });
 
-  it('it should render a label if specified', () => {
+  it('should render a label if specified', () => {
     const label = 'label!';
 
     const noLabelWrapper = shallow(
@@ -88,7 +88,7 @@ describe('<HorizontalReferenceLine />', () => {
     expect(withLabelWrapper.find('text').text()).toBe(label);
   });
 
-  it('it should use labelProps if passed', () => {
+  it('should use labelProps if passed', () => {
     const wrapper = shallow(
       <XYChart {...mockProps}>
         <HorizontalReferenceLine

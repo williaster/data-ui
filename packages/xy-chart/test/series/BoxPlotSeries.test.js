@@ -20,15 +20,15 @@ describe('<BoxPlotSeries />', () => {
     data: [{ x: 'label1', ...mockStats.boxPlot }],
   };
 
-  it('it should be defined', () => {
+  it('should be defined', () => {
     expect(BoxPlotSeries).toBeDefined();
   });
 
-  it('it should not render without x- and y-scales', () => {
+  it('should not render without x- and y-scales', () => {
     expect(shallow(<BoxPlotSeries data={[]} />).type()).toBeNull();
   });
 
-  it('it should render one boxplot per datum', () => {
+  it('should render one boxplot per datum', () => {
     const wrapper = shallow(
       <XYChart {...mockProps}>
         <BoxPlotSeries {...boxplotProps} />
@@ -44,7 +44,7 @@ describe('<BoxPlotSeries />', () => {
     ).toHaveLength(1);
   });
 
-  it('it should pass containerProps, outlierProps, boxProps, minProps, maxProps, and medianProps to BoxPlot', () => {
+  it('should pass containerProps, outlierProps, boxProps, minProps, maxProps, and medianProps to BoxPlot', () => {
     const extraBoxplotProps = {
       containerProps: {
         fill: 'pink',
@@ -86,7 +86,7 @@ describe('<BoxPlotSeries />', () => {
     });
   });
 
-  it('it should call onMouseMove({ datum, data, event, index }), onMouseLeave(), and onClick({ datum, data, event, index }) on trigger when disableMouseEvents is falsy', () => {
+  it('should call onMouseMove({ datum, data, event, index }), onMouseLeave(), and onClick({ datum, data, event, index }) on trigger when disableMouseEvents is falsy', () => {
     const onMouseMove = jest.fn();
     const onMouseLeave = jest.fn();
     const onClick = jest.fn();
@@ -159,7 +159,7 @@ describe('<BoxPlotSeries />', () => {
     expect(onClick).toHaveBeenCalledTimes(1);
   });
 
-  it('it should render a FocusBlurHandler for each point', () => {
+  it('should render a FocusBlurHandler for each point', () => {
     const wrapper = shallow(
       <XYChart {...mockProps}>
         <BoxPlotSeries {...boxplotProps} />
@@ -170,7 +170,7 @@ describe('<BoxPlotSeries />', () => {
     expect(boxes.find(FocusBlurHandler)).toHaveLength(boxplotProps.data.length);
   });
 
-  it('it should invoke onMouseMove when focused', () => {
+  it('should invoke onMouseMove when focused', () => {
     const onMouseMove = jest.fn();
 
     const wrapper = shallow(
@@ -188,7 +188,7 @@ describe('<BoxPlotSeries />', () => {
     expect(onMouseMove).toHaveBeenCalledTimes(1);
   });
 
-  it('it should invoke onMouseLeave when blured', () => {
+  it('should invoke onMouseLeave when blured', () => {
     const onMouseLeave = jest.fn();
 
     const wrapper = shallow(

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { BarSeries, LineSeries, ThresholdSeries, AreaSeries } from '../../src';
+import { BarSeries, LineSeries, AreaDifferenceSeries, AreaSeries } from '../../src';
 import collectDataFromChildSeries from '../../src/utils/collectDataFromChildSeries';
 
 describe('collectDataFromChildSeries', () => {
@@ -29,15 +29,15 @@ describe('collectDataFromChildSeries', () => {
     ).toEqual([]);
   });
 
-  it('should collect data from Threshold child series', () => {
+  it('should collect data from AreaDifferenceSeries child series', () => {
     const data1 = [{ x: 'area1', y: 123 }];
     const data2 = [{ x: 'area2', y: 135 }];
     expect(
       collectDataFromChildSeries([
-        <ThresholdSeries key="threshold" {...dummyProps}>
+        <AreaDifferenceSeries key="threshold" {...dummyProps}>
           <AreaSeries data={data1} />
           <AreaSeries data={data2} />
-        </ThresholdSeries>,
+        </AreaDifferenceSeries>,
       ]),
     ).toEqual([...data1, ...data2]);
   });

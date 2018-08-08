@@ -13,17 +13,17 @@ describe('<Voronoi />', () => {
     data: [{ x: 20, y: 20 }, { x: 90, y: 50 }, { x: 0, y: 80 }],
   };
 
-  it('it should be defined', () => {
+  it('should be defined', () => {
     expect(Voronoi).toBeDefined();
   });
 
-  it('it should render one voronoi polygon per point', () => {
+  it('should render one voronoi polygon per point', () => {
     const wrapper = shallow(<Voronoi {...props} />);
     const { data } = props;
     expect(wrapper.find(VoronoiPolygon)).toHaveLength(data.length);
   });
 
-  it('it should pass the relevant datum to onMouseMove on trigger', () => {
+  it('should pass the relevant datum to onMouseMove on trigger', () => {
     const onMouseMove = jest.fn();
     const { data } = props;
     const wrapper = mount(<Voronoi {...props} onMouseMove={onMouseMove} />);
@@ -35,7 +35,7 @@ describe('<Voronoi />', () => {
     expect(data.includes(datum)).toBe(true);
   });
 
-  it('it should call onMouseLeave on trigger', () => {
+  it('should call onMouseLeave on trigger', () => {
     const onMouseLeave = jest.fn();
     const wrapper = mount(<Voronoi {...props} onMouseLeave={onMouseLeave} />);
     const polygon = wrapper.find(VoronoiPolygon).first();
@@ -44,7 +44,7 @@ describe('<Voronoi />', () => {
     expect(onMouseLeave).toHaveBeenCalledTimes(1);
   });
 
-  it('it should pass the relevant datum to onClick on trigger', () => {
+  it('should pass the relevant datum to onClick on trigger', () => {
     const onClick = jest.fn();
     const { data } = props;
     const wrapper = mount(<Voronoi {...props} onClick={onClick} />);
@@ -56,7 +56,7 @@ describe('<Voronoi />', () => {
     expect(data.includes(datum)).toBe(true);
   });
 
-  it('it should update its voronoi if the data update', () => {
+  it('should update its voronoi if the data update', () => {
     const wrapper = shallow(<Voronoi {...props} />);
     const voronoi0 = wrapper.state('voronoi');
 

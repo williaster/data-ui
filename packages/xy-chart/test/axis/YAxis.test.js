@@ -13,11 +13,11 @@ describe('<YAxis />', () => {
     ariaLabel: 'label',
   };
 
-  it('it should be defined', () => {
+  it('should be defined', () => {
     expect(YAxis).toBeDefined();
   });
 
-  it('it should not render without a scale', () => {
+  it('should not render without a scale', () => {
     expect(shallow(<YAxis />).type()).toBeNull();
   });
 
@@ -55,7 +55,7 @@ describe('<YAxis />', () => {
     expect(axis.prop('tickStyles')).toEqual(yTickStyles);
   });
 
-  it('It should render the appropriate axis based on props.orientation', () => {
+  it('should render the appropriate axis based on props.orientation', () => {
     const defaultAxis = shallow(
       <XYChart {...chartProps}>
         <YAxis />
@@ -90,7 +90,7 @@ describe('<YAxis />', () => {
     expect(leftAxis.find(AxisLeft)).toHaveLength(1);
   });
 
-  it('It should render a label if passed', () => {
+  it('should render a label if passed', () => {
     const wrapper = shallow(
       <XYChart {...chartProps}>
         <YAxis label="apple" />
@@ -105,7 +105,7 @@ describe('<YAxis />', () => {
     ).toBe('apple');
   });
 
-  it('It should use the output of tickFormat() when passed', () => {
+  it('should use the output of tickFormat() when passed', () => {
     const tickFormat = () => 'iNvaRiAnT LabEl';
     const wrapper = shallow(
       <XYChart {...chartProps}>
@@ -120,7 +120,7 @@ describe('<YAxis />', () => {
     expect(tick.find('text').text()).toBe(tickFormat());
   });
 
-  it('It should render a custom tickComponent if passed', () => {
+  it('should render a custom tickComponent if passed', () => {
     const wrapper = shallow(
       <YAxis
         scale={scaleLinear({ range: [0, 100], domain: [0, 100] })}

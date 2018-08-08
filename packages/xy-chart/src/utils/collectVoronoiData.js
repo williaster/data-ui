@@ -1,5 +1,6 @@
 import { Children } from 'react';
 
+import AreaDifferenceSeries from '../series/AreaDifferenceSeries';
 import { isSeries, isDefined, componentName } from './chartUtils';
 
 // this function collects all data from child series to defines a voronoi overlay
@@ -9,7 +10,7 @@ export default function collectVoronoiData({ children, getX, getY }) {
   return Children.toArray(children).reduce((result, Child) => {
     const name = componentName(Child);
     if (isSeries(name) && !Child.props.disableMouseEvents) {
-      if (name === 'ThresholdSeries') {
+      if (name === AreaDifferenceSeries.displayName) {
         return result.concat(collectVoronoiData({ children: Child.props.children, getX, getY }));
       }
 

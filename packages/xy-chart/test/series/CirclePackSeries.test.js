@@ -19,11 +19,11 @@ describe('<CirclePackSeries />', () => {
     { x: new Date('2017-01-05 02:00:00'), size: 5 },
   ];
 
-  it('it should be defined', () => {
+  it('should be defined', () => {
     expect(CirclePackSeries).toBeDefined();
   });
 
-  it('it should render a PointSeries', () => {
+  it('should render a PointSeries', () => {
     const wrapper = shallow(
       <XYChart {...mockProps}>
         <CirclePackSeries data={mockData} />
@@ -47,7 +47,7 @@ describe('<CirclePackSeries />', () => {
     expect(data[0].y).toEqual(expect.any(Number));
   });
 
-  it('it should call onMouseMove({ datum, data, event, color }), onMouseLeave(), and onClick({ datum, data, event, color }) on trigger', () => {
+  it('should call onMouseMove({ datum, data, event, color }), onMouseLeave(), and onClick({ datum, data, event, color }) on trigger', () => {
     const onMouseMove = jest.fn();
     const onMouseLeave = jest.fn();
     const onClick = jest.fn();
@@ -85,7 +85,7 @@ describe('<CirclePackSeries />', () => {
     expect(args.color).toBe('army-green');
   });
 
-  it('it should not trigger onMouseMove, onMouseLeave, or onClick if disableMouseEvents is true', () => {
+  it('should not trigger onMouseMove, onMouseLeave, or onClick if disableMouseEvents is true', () => {
     const onMouseMove = jest.fn();
     const onMouseLeave = jest.fn();
     const onClick = jest.fn();
@@ -113,7 +113,7 @@ describe('<CirclePackSeries />', () => {
     expect(onClick).toHaveBeenCalledTimes(0);
   });
 
-  it('it should invoke layoutCallback if passed with y-range and -domain arguments', () => {
+  it('should invoke layoutCallback if passed with y-range and -domain arguments', () => {
     jest.useFakeTimers();
     const layoutCallback = jest.fn();
 

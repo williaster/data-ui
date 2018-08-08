@@ -15,7 +15,7 @@ describe('computeCirclePack', () => {
     domain: [1, 100],
   });
 
-  it('it should be defined', () => {
+  it('should be defined', () => {
     expect(computeCirclePack).toBeDefined();
   });
 

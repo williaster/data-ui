@@ -3,9 +3,9 @@ import { shallow } from 'enzyme';
 import { scaleLinear } from '@vx/scale';
 import { Threshold } from '@vx/threshold';
 
-import { ThresholdSeries, AreaSeries, LineSeries } from '../../src';
+import { AreaDifferenceSeries, AreaSeries, LineSeries } from '../../src';
 
-describe('<ThresholdSeries />', () => {
+describe('<AreaDifferenceSeries />', () => {
   const mockScale = scaleLinear({ domain: [0, 100], range: [0, 100] });
 
   const mockData = [
@@ -21,15 +21,15 @@ describe('<ThresholdSeries />', () => {
   ];
 
   it('should be defined', () => {
-    expect(ThresholdSeries).toBeDefined();
+    expect(AreaDifferenceSeries).toBeDefined();
   });
 
   it('should render a <g /> with a Threshold and 2 AreaSeries', () => {
     const wrapper = shallow(
-      <ThresholdSeries xScale={mockScale} yScale={mockScale}>
+      <AreaDifferenceSeries xScale={mockScale} yScale={mockScale}>
         <AreaSeries data={mockData} />
         <AreaSeries data={mockData} />
-      </ThresholdSeries>,
+      </AreaDifferenceSeries>,
     );
 
     expect(wrapper.find('g')).toHaveLength(1);
@@ -39,10 +39,10 @@ describe('<ThresholdSeries />', () => {
 
   it('should pass data from both AreaSeries to Threshold', () => {
     const wrapper = shallow(
-      <ThresholdSeries xScale={mockScale} yScale={mockScale}>
+      <AreaDifferenceSeries xScale={mockScale} yScale={mockScale}>
         <AreaSeries data={mockData} />
         <AreaSeries data={mockData2} />
-      </ThresholdSeries>,
+      </AreaDifferenceSeries>,
     );
 
     const threshold = wrapper.find(Threshold);
@@ -58,10 +58,10 @@ describe('<ThresholdSeries />', () => {
   it('should pass appropriate fill and fillOpacity to Threshold', () => {
     const seriesProps = [{ fill: 'orange', fillOpacity: 0.4 }, { fill: 'pink', fillOpacity: 0.1 }];
     const wrapper = shallow(
-      <ThresholdSeries xScale={mockScale} yScale={mockScale}>
+      <AreaDifferenceSeries xScale={mockScale} yScale={mockScale}>
         <AreaSeries data={mockData} {...seriesProps[0]} />
         <AreaSeries data={mockData} {...seriesProps[1]} />
-      </ThresholdSeries>,
+      </AreaDifferenceSeries>,
     );
 
     const threshold = wrapper.find(Threshold);
@@ -80,10 +80,10 @@ describe('<ThresholdSeries />', () => {
       onMouseLeave: () => {},
     };
     const wrapper = shallow(
-      <ThresholdSeries {...propsToPass}>
+      <AreaDifferenceSeries {...propsToPass}>
         <AreaSeries data={mockData} />
         <AreaSeries data={mockData} />
-      </ThresholdSeries>,
+      </AreaDifferenceSeries>,
     );
 
     const area1 = wrapper.find(AreaSeries).at(0);
@@ -98,7 +98,7 @@ describe('<ThresholdSeries />', () => {
 
   it('should pass interpolation and disableMouseEvents to AreaSeries children', () => {
     const wrapper = shallow(
-      <ThresholdSeries
+      <AreaDifferenceSeries
         xScale={mockScale}
         yScale={mockScale}
         interpolation="linear"
@@ -106,7 +106,7 @@ describe('<ThresholdSeries />', () => {
       >
         <AreaSeries disableMouseEvents={false} interpolation="banana" data={mockData} />
         <AreaSeries disableMouseEvents={false} interpolation="banana" data={mockData2} />
-      </ThresholdSeries>,
+      </AreaDifferenceSeries>,
     );
 
     const area1 = wrapper.find(AreaSeries).at(0);
@@ -121,10 +121,10 @@ describe('<ThresholdSeries />', () => {
   it('should not render without x- and y-scales', () => {
     expect(
       shallow(
-        <ThresholdSeries>
+        <AreaDifferenceSeries>
           <AreaSeries data={mockData} />
           <AreaSeries data={mockData} />
-        </ThresholdSeries>,
+        </AreaDifferenceSeries>,
       ).type(),
     ).toBeNull();
   });
@@ -132,28 +132,28 @@ describe('<ThresholdSeries />', () => {
   it('should not render without exactly 2 AreaSeries children', () => {
     expect(
       shallow(
-        <ThresholdSeries xScale={mockScale} yScale={mockScale}>
+        <AreaDifferenceSeries xScale={mockScale} yScale={mockScale}>
           <AreaSeries data={mockData} />
-        </ThresholdSeries>,
+        </AreaDifferenceSeries>,
       ).type(),
     ).toBeNull();
 
     expect(
       shallow(
-        <ThresholdSeries xScale={mockScale} yScale={mockScale}>
+        <AreaDifferenceSeries xScale={mockScale} yScale={mockScale}>
           <AreaSeries data={mockData} />
           <LineSeries data={mockData} />
-        </ThresholdSeries>,
+        </AreaDifferenceSeries>,
       ).type(),
     ).toBeNull();
 
     expect(
       shallow(
-        <ThresholdSeries xScale={mockScale} yScale={mockScale}>
+        <AreaDifferenceSeries xScale={mockScale} yScale={mockScale}>
           <AreaSeries data={mockData} />
           <AreaSeries data={mockData} />
           <LineSeries data={mockData} />
-        </ThresholdSeries>,
+        </AreaDifferenceSeries>,
       ).type(),
     ).toBeNull();
   });
@@ -161,10 +161,10 @@ describe('<ThresholdSeries />', () => {
   it('should not render if AreaSeries have data of different lengths', () => {
     expect(
       shallow(
-        <ThresholdSeries xScale={mockScale} yScale={mockScale}>
+        <AreaDifferenceSeries xScale={mockScale} yScale={mockScale}>
           <AreaSeries data={mockData} />
           <AreaSeries data={mockData.slice(1)} />
-        </ThresholdSeries>,
+        </AreaDifferenceSeries>,
       ).type(),
     ).toBeNull();
   });

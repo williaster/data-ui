@@ -21,15 +21,15 @@ describe('<GroupedBarSeries />', () => {
 
   const mockGroupKeys = ['a', 'b', 'c'];
 
-  it('it should be defined', () => {
+  it('should be defined', () => {
     expect(GroupedBarSeries).toBeDefined();
   });
 
-  it('it should not render without x- and y-scales', () => {
+  it('should not render without x- and y-scales', () => {
     expect(shallow(<GroupedBarSeries groupKeys={[]} data={[]} />).type()).toBeNull();
   });
 
-  it('it should render a BarGroup', () => {
+  it('should render a BarGroup', () => {
     const wrapper = shallow(
       <XYChart {...mockProps}>
         <GroupedBarSeries groupKeys={mockGroupKeys} data={mockData} />
@@ -39,7 +39,7 @@ describe('<GroupedBarSeries />', () => {
     expect(series.find(BarGroup)).toHaveLength(1);
   });
 
-  it('it should render one rect per x value per group key', () => {
+  it('should render one rect per x value per group key', () => {
     const wrapper = shallow(
       <XYChart {...mockProps}>
         <GroupedBarSeries groupKeys={mockGroupKeys} data={mockData} />
@@ -49,7 +49,7 @@ describe('<GroupedBarSeries />', () => {
     expect(rects).toHaveLength(mockGroupKeys.length * mockData.length);
   });
 
-  it('it should use groupFills for color', () => {
+  it('should use groupFills for color', () => {
     const fills = ['magenta', 'maplesyrup', 'banana'];
     const wrapper = shallow(
       <XYChart {...mockProps}>
@@ -63,7 +63,7 @@ describe('<GroupedBarSeries />', () => {
     });
   });
 
-  it('it should call onMouseMove({ datum, data, event, seriesKey, color }), onMouseLeave(), and onClick({ datum, data, event, seriesKey, color }) on trigger', () => {
+  it('should call onMouseMove({ datum, data, event, seriesKey, color }), onMouseLeave(), and onClick({ datum, data, event, seriesKey, color }) on trigger', () => {
     const fills = ['magenta', 'maplesyrup', 'banana'];
     const stackKeys = ['a', 'b', 'c'];
     const onMouseMove = jest.fn();
@@ -105,7 +105,7 @@ describe('<GroupedBarSeries />', () => {
     expect(fills.includes(args.color)).toBe(true);
   });
 
-  it('it should not trigger onMouseMove, onMouseLeave, or onClick if disableMouseEvents is true', () => {
+  it('should not trigger onMouseMove, onMouseLeave, or onClick if disableMouseEvents is true', () => {
     const fills = ['magenta', 'maplesyrup', 'banana'];
     const onMouseMove = jest.fn();
     const onMouseLeave = jest.fn();

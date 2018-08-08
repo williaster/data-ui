@@ -14,7 +14,7 @@ import {
   LineSeries,
   PointSeries,
   StackedBarSeries,
-  ThresholdSeries,
+  AreaDifferenceSeries,
   ViolinPlotSeries,
   HorizontalReferenceLine,
   PatternLines,
@@ -32,7 +32,7 @@ import ResponsiveXYChart, { dateFormatter } from './ResponsiveXYChart';
 import StackedAreaExample from './StackedAreaExample';
 import ScatterWithHistogram from './ScatterWithHistograms';
 import TickLabelPlayground from './TickLabelPlayground';
-import ThresholdSeriesExample from './ThresholdSeriesExample';
+import AreaDifferenceSeriesExample from './AreaDifferenceSeriesExample';
 import { BoxPlotSeriesExample, BoxPlotViolinPlotSeriesExample } from './StatsSeriesExample';
 
 import {
@@ -239,9 +239,9 @@ export default {
       ),
     },
     {
-      description: 'ThresholdSeries',
-      components: [XYChart, ThresholdSeries, AreaSeries],
-      example: () => <ThresholdSeriesExample />,
+      description: 'AreaDifferenceSeries',
+      components: [XYChart, AreaDifferenceSeries, AreaSeries],
+      example: () => <AreaDifferenceSeriesExample />,
     },
     {
       description: 'AreaSeries -- confidence intervals',

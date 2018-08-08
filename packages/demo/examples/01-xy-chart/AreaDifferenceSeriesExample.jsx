@@ -5,7 +5,7 @@ import { scaleOrdinal } from '@vx/scale';
 import { color as colors, allColors } from '@data-ui/theme';
 import {
   AreaSeries,
-  ThresholdSeries,
+  AreaDifferenceSeries,
   CrossHair,
   PatternLines,
   XAxis,
@@ -46,7 +46,7 @@ const randomTimeSeries = timeSeriesData.map(d => ({
   y: Math.random() < 0.5 ? d.y * 5 : d.y / 5,
 }));
 
-class ThresholdSeriesExample extends React.PureComponent {
+class AreaDifferenceSeriesExample extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -133,7 +133,7 @@ class ThresholdSeriesExample extends React.PureComponent {
         <ResponsiveXYChart
           ariaLabel="Threshold series example"
           snapTooltipToDataX
-          eventTrigger="voronoi"
+          eventTrigger="container"
           xScale={{ type: 'time' }}
           yScale={{ type: 'linear' }}
           margin={{ top: 5, left: 5 }}
@@ -147,10 +147,10 @@ class ThresholdSeriesExample extends React.PureComponent {
             strokeWidth={1}
             orientation={['diagonal']}
           />
-          <ThresholdSeries>
+          <AreaDifferenceSeries>
             <AreaSeries {...seriesProps[0]} data={timeSeriesData} />
             <AreaSeries {...seriesProps[1]} data={thresholdData} />
-          </ThresholdSeries>
+          </AreaDifferenceSeries>
           <CrossHair
             fullHeight
             showHorizontalLine={false}
@@ -167,4 +167,4 @@ class ThresholdSeriesExample extends React.PureComponent {
   }
 }
 
-export default ThresholdSeriesExample;
+export default AreaDifferenceSeriesExample;

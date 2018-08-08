@@ -27,7 +27,7 @@ export default function findClosestDatums({
   const flatSeriesChildren = [];
   Children.forEach(children, Child => {
     const name = componentName(Child);
-    if (name === 'ThresholdSeries') {
+    if (name === 'AreaDifferenceSeries') {
       Children.forEach(Child.props.children, NestedChild => {
         flatSeriesChildren.push(NestedChild);
       });
