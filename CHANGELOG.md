@@ -1,4 +1,5 @@
 # Changelog
+- [v0.0.62](#v0062)
 - [v0.0.61](#v0061)
 - [v0.0.60](#v0060)
 - [v0.0.59](#v0059)
@@ -14,6 +15,35 @@
 - [v0.0.49](#v0049)
 - [v0.0.48](#v0048)
 - [v0.0.47](#v0047)
+
+
+## v0.0.62
+
+Makes the following changes to `@data-ui/xy-chart` [#113](https://github.com/williaster/data-ui/pull/113)
+
+🏆 Enhancements
+- Adds a new `<AreaDifferenceSeries />` to shade the area between two different `<AreaSeries />` based on which one has the larger value. This uses [`@vx`'s "Threshold" visualization](https://vx-demo.now.sh/threshold)
+
+- Adds an example to the Storybook
+
+📜 Documentation
+- Updates documentation to include `<AreaDifferenceSeries />`
+
+🏠 Internal
+- uses `@data-ui/build-config` for linting + prettier in the `demo` package
+
+```
+Changes:
+ - @data-ui/theme: 0.0.61 => 0.0.62
+ - @data-ui/demo: 0.0.61 => 0.0.62 (private)
+ - @data-ui/event-flow: 0.0.61 => 0.0.62
+ - @data-ui/histogram: 0.0.61 => 0.0.62
+ - @data-ui/network: 0.0.61 => 0.0.62
+ - @data-ui/radial-chart: 0.0.61 => 0.0.62
+ - @data-ui/shared: 0.0.61 => 0.0.62
+ - @data-ui/sparkline: 0.0.61 => 0.0.62
+ - @data-ui/xy-chart: 0.0.61 => 0.0.62
+```
 
 ## v0.0.61
 
