@@ -136,14 +136,14 @@ Series | supported x scale type | supported y scale types | data shape | support
 `<IntervalSeries />` | `time`, `linear` | `linear` | `{ x0, x1 [, fill, stroke] }` | `series` | no | yes
 `<BoxPlotSeries />` | `linear`, `band` | `band`, `linear` | `{ x (or y), min, max, median, firstQuartile, thirdQuartile, outliers [, fill, stroke] }` | `series` | no | yes
 `<ViolinPlotSeries />` | `linear`, `band` | `band`, `linear` | `{ x (or y), binData [, fill, stroke] }` | `series` | no | yes
-
+`<AreaDifferenceSeries />` | `time`, `linear` | `linear` | data passed to children | all supported by `AreaSeries` | yes | yes
 
 \* The y boundaries of the `<AreaSeries/>` may be specified by either
  - defined `y0` and `y1` values or
  - a single `y` value, in which case its lower bound is set to 0 (a "closed" area series)
 
 
-#### CirclePackSeries
+#### `<CirclePackSeries />`
 
 <p align="center">
   <img src="https://user-images.githubusercontent.com/4496521/30147216-07514a16-9352-11e7-9459-5802b771c750.png" width="500" />
@@ -153,6 +153,17 @@ This series implements the Circle packing algorithm described by <a href="https:
 
 Note that only `x` values are needed for `CirclePackSeries`, `y` values are computed based on `x` and `size` (if specified). Similar to `PointSeries`, `size`, `fill`, and `fillOpacity` may be set on datum themseleves or passed as props to the `CirclePackSeries` component.
 
+#### `<AreaDifferenceSeries />`
+This series has a different API from other series in that it _wraps_ two `AreaSeries` (see the storybook example for more details):
+
+```javascript
+<AreaDifferenceSeries>
+  <AreaSeries data={data1} {...moreAreaSeriesProps} />
+  <AreaSeries data={data2} {...moreAreaSeriesProps} />
+</AreaDifferenceSeries>
+```
+
+The result will show the difference between the two `AreaSeries`, with a fill that matches the AreaSeries with the greater y-value.
 
 ### Tooltips, Mouse Events, and Triggers
 
