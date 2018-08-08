@@ -20,15 +20,15 @@ import path from 'path';
 import { storiesOf } from '@storybook/react';
 import GoogleAnalyticsDecorator from '../storybook-config/components/GoogleAnalytics';
 
-const requireContext = require.context('./', /* subdirs= */true, /index\.jsx?$/);
+const requireContext = require.context('./', /* subdirs= */ true, /index\.jsx?$/);
 
-requireContext.keys().forEach((packageName) => {
+requireContext.keys().forEach(packageName => {
   if (packageName !== 'shared') {
     const packageExport = requireContext(packageName);
     if (packageExport && packageExport.default && !Array.isArray(packageExport.default)) {
       const { examples, usage } = packageExport.default;
       let name = path.dirname(packageName).slice(2); // no './'
-      if ((/^\d\d-/).test(name)) name = name.slice(3); // no 'XX-'
+      if (/^\d\d-/.test(name)) name = name.slice(3); // no 'XX-'
 
       const stories = storiesOf(name, module);
 
@@ -36,7 +36,7 @@ requireContext.keys().forEach((packageName) => {
       stories.addDecorator(GoogleAnalyticsDecorator);
 
       // wrap stories
-      examples.forEach((example) => {
+      examples.forEach(example => {
         stories.addWithInfo({
           kind: name,
           story: example.description,

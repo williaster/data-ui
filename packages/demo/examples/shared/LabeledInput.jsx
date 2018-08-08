@@ -1,10 +1,10 @@
 /* Controlled, labeled input */
 import PropTypes from 'prop-types';
 import React from 'react';
-import { css, withStyles, withStylesProps } from '../../themes/withStyles';
+import { css, withStyles, withStylesPropTypes } from '../../themes/withStyles';
 
 const propTypes = {
-  ...withStylesProps,
+  ...withStylesPropTypes,
   disabled: PropTypes.bool,
   label: PropTypes.string,
   name: PropTypes.string.isRequired,
@@ -22,27 +22,16 @@ const defaultProps = {
   onKeyDown: null,
 };
 
-function LabeledInput({
-  disabled,
-  label,
-  name,
-  onChange,
-  onKeyDown,
-  placeholder,
-  styles,
-  value,
-}) {
+function LabeledInput({ disabled, label, name, onChange, onKeyDown, placeholder, styles, value }) {
   return (
-    <div {...(css(styles.container))}>
-      {label &&
-        <label
-          title={label}
-          htmlFor={name}
-        >
+    <div {...css(styles.container)}>
+      {label && (
+        <label title={label} htmlFor={name}>
           {label}
-        </label>}
+        </label>
+      )}
       <input
-        {...(css(styles.input))}
+        {...css(styles.input)}
         aria-label={label}
         name={name}
         placeholder={placeholder}

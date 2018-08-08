@@ -7,13 +7,14 @@ import {
   YAxis,
   AreaSeries,
   BarSeries,
+  BoxPlotSeries,
   CirclePackSeries,
   GroupedBarSeries,
   IntervalSeries,
   LineSeries,
   PointSeries,
   StackedBarSeries,
-  BoxPlotSeries,
+  AreaDifferenceSeries,
   ViolinPlotSeries,
   HorizontalReferenceLine,
   PatternLines,
@@ -21,7 +22,7 @@ import {
   WithTooltip,
 } from '@data-ui/xy-chart';
 
-import { color as colors } from '@data-ui/theme';
+import colors from '@data-ui/theme/lib/color';
 import readme from '../../node_modules/@data-ui/xy-chart/README.md';
 import CirclePackWithCallback from './CirclePackWithCallback';
 import LineSeriesExample from './LineSeriesExample';
@@ -31,6 +32,7 @@ import ResponsiveXYChart, { dateFormatter } from './ResponsiveXYChart';
 import StackedAreaExample from './StackedAreaExample';
 import ScatterWithHistogram from './ScatterWithHistograms';
 import TickLabelPlayground from './TickLabelPlayground';
+import AreaDifferenceSeriesExample from './AreaDifferenceSeriesExample';
 import { BoxPlotSeriesExample, BoxPlotViolinPlotSeriesExample } from './StatsSeriesExample';
 
 import {
@@ -174,6 +176,7 @@ export default {
               <br />
               {temperatureBands.map((_, i) => {
                 const key = `band-${i}`;
+
                 return (
                   series &&
                   series[key] && (
@@ -201,6 +204,7 @@ export default {
           {temperatureBands.map((data, i) => [
             <PatternLines
               id={`band-${i}`}
+              key={`pattern-${data[0].key}`}
               height={5}
               width={5}
               stroke={colors.categories[i + 1]}
@@ -208,14 +212,15 @@ export default {
               orientation={['diagonal']}
             />,
             <AreaSeries
-              seriesKey={`band-${i}`}
-              key={`band-${data[0].key}`}
+              seriesKey={`area-${data[0].key}`}
+              key={`area-${data[0].key}`}
               data={data}
               strokeWidth={0.5}
               stroke={colors.categories[i + 1]}
               fill={`url(#band-${i})`}
             />,
             <LineSeries
+              key={`line-${data[0].key}`}
               seriesKey={`line-${data[0].key}`}
               data={data}
               stroke={colors.categories[i + 1]}
@@ -232,6 +237,11 @@ export default {
           />
         </ResponsiveXYChart>
       ),
+    },
+    {
+      description: 'AreaDifferenceSeries',
+      components: [XYChart, AreaDifferenceSeries, AreaSeries],
+      example: () => <AreaDifferenceSeriesExample />,
     },
     {
       description: 'AreaSeries -- confidence intervals',

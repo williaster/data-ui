@@ -22,15 +22,15 @@ describe('<LineSeries />', () => {
     { date: new Date('2019-01-05'), cat: 'c', num: 377 },
   ];
 
-  it('it should be defined', () => {
+  it('should be defined', () => {
     expect(LineSeries).toBeDefined();
   });
 
-  it('it should not render without x- and y-scales', () => {
+  it('should not render without x- and y-scales', () => {
     expect(shallow(<LineSeries data={[]} />).type()).toBeNull();
   });
 
-  it('it should render a LinePath for each LineSeries', () => {
+  it('should render a LinePath for each LineSeries', () => {
     const wrapper = shallow(
       <XYChart {...mockProps}>
         <LineSeries data={mockData.map(d => ({ ...d, x: d.date, y: d.num }))} />
@@ -47,7 +47,7 @@ describe('<LineSeries />', () => {
     ).toHaveLength(1);
   });
 
-  it('it should render points depending on props', () => {
+  it('should render points depending on props', () => {
     const data = mockData.map(d => ({ ...d, x: d.date, y: d.num }));
     const wrapperWithPoints = shallow(
       <XYChart {...mockProps}>
@@ -68,7 +68,7 @@ describe('<LineSeries />', () => {
     expect(linePathNoPoints.find(GlyphDot)).toHaveLength(0);
   });
 
-  it('it should not render points for null data', () => {
+  it('should not render points for null data', () => {
     const wrapper = shallow(
       <XYChart {...mockProps}>
         <LineSeries
@@ -86,7 +86,7 @@ describe('<LineSeries />', () => {
     expect(path.find(GlyphDot)).toHaveLength(mockData.length - 2);
   });
 
-  it('it should call onMouseMove({ datum, data, event, color }), onMouseLeave(), and onClick({ datum, data, event, color }) on trigger', () => {
+  it('should call onMouseMove({ datum, data, event, color }), onMouseLeave(), and onClick({ datum, data, event, color }) on trigger', () => {
     const data = mockData.map(d => ({ ...d, x: d.date, y: d.num }));
     const onMouseMove = jest.fn();
     const onMouseLeave = jest.fn();
@@ -130,7 +130,7 @@ describe('<LineSeries />', () => {
     expect(args.color).toBe('gray-or-grey?');
   });
 
-  it('it should not trigger onMouseMove, onMouseLeave, or onClick if disableMouseEvents is true', () => {
+  it('should not trigger onMouseMove, onMouseLeave, or onClick if disableMouseEvents is true', () => {
     const data = mockData.map(d => ({ ...d, x: d.date, y: d.num }));
     const onMouseMove = jest.fn();
     const onMouseLeave = jest.fn();
@@ -164,7 +164,7 @@ describe('<LineSeries />', () => {
     expect(onMouseMove).toHaveBeenCalledTimes(0);
   });
 
-  it('it should render a FocusBlurHandler for each point', () => {
+  it('should render a FocusBlurHandler for each point', () => {
     const data = mockData.map(d => ({ ...d, x: d.date, y: d.num }));
     const wrapper = shallow(
       <XYChart {...mockProps}>
@@ -181,7 +181,7 @@ describe('<LineSeries />', () => {
     expect(line.find(FocusBlurHandler)).toHaveLength(data.length);
   });
 
-  it('it should invoke onMouseMove when focused', () => {
+  it('should invoke onMouseMove when focused', () => {
     const data = mockData.map(d => ({ ...d, x: d.date, y: d.num }));
     const onMouseMove = jest.fn();
 
@@ -203,7 +203,7 @@ describe('<LineSeries />', () => {
     expect(onMouseMove).toHaveBeenCalledTimes(1);
   });
 
-  it('it should invoke onMouseLeave when blured', () => {
+  it('should invoke onMouseLeave when blured', () => {
     const data = mockData.map(d => ({ ...d, x: d.date, y: d.num }));
     const onMouseLeave = jest.fn();
 

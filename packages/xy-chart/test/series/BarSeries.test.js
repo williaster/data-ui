@@ -21,15 +21,15 @@ describe('<BarSeries />', () => {
     { date: new Date('2019-01-05'), cat: 'c', num: 377 },
   ];
 
-  it('it should be defined', () => {
+  it('should be defined', () => {
     expect(BarSeries).toBeDefined();
   });
 
-  it('it should not render without x- and y-scales', () => {
+  it('should not render without x- and y-scales', () => {
     expect(shallow(<BarSeries data={[]} />).type()).toBeNull();
   });
 
-  it('it should render one bar per datum', () => {
+  it('should render one bar per datum', () => {
     const wrapper = shallow(
       <XYChart {...mockProps}>
         <BarSeries data={mockData.map(d => ({ ...d, x: d.date, y: d.num }))} />
@@ -47,7 +47,7 @@ describe('<BarSeries />', () => {
     expect(noDataBarSeries.find(Bar)).toHaveLength(0);
   });
 
-  it('it should not render bars for null data', () => {
+  it('should not render bars for null data', () => {
     const wrapper = shallow(
       <XYChart {...mockProps}>
         <BarSeries
@@ -62,7 +62,7 @@ describe('<BarSeries />', () => {
     expect(barSeries.find(Bar)).toHaveLength(mockData.length - 1);
   });
 
-  it('it should work with time or band scales', () => {
+  it('should work with time or band scales', () => {
     const timeWrapper = shallow(
       <XYChart {...mockProps} xScale={{ type: 'time' }}>
         <BarSeries data={mockData.map(d => ({ ...d, x: d.date, y: d.num }))} />
@@ -90,7 +90,7 @@ describe('<BarSeries />', () => {
     ).toHaveLength(mockData.length);
   });
 
-  it('it should call onMouseMove({ datum, data, event, color }), onMouseLeave(), and onClick({ datum, data, event, color }) on trigger', () => {
+  it('should call onMouseMove({ datum, data, event, color }), onMouseLeave(), and onClick({ datum, data, event, color }) on trigger', () => {
     const data = mockData.map(d => ({ ...d, x: d.date, y: d.num }));
     const onMouseMove = jest.fn();
     const onMouseLeave = jest.fn();
@@ -134,7 +134,7 @@ describe('<BarSeries />', () => {
     expect(args.color).toBe('banana');
   });
 
-  it('it should not trigger onMouseMove, onMouseLeave, or onClick if disableMouseEvents is true', () => {
+  it('should not trigger onMouseMove, onMouseLeave, or onClick if disableMouseEvents is true', () => {
     const data = mockData.map(d => ({ ...d, x: d.date, y: d.num }));
     const onMouseMove = jest.fn();
     const onMouseLeave = jest.fn();
@@ -167,7 +167,7 @@ describe('<BarSeries />', () => {
     expect(onClick).toHaveBeenCalledTimes(0);
   });
 
-  it('it should render a FocusBlurHandler for each point', () => {
+  it('should render a FocusBlurHandler for each point', () => {
     const data = mockData.map(d => ({ ...d, x: d.date, y: d.num }));
 
     const wrapper = shallow(
@@ -180,7 +180,7 @@ describe('<BarSeries />', () => {
     expect(bars.find(FocusBlurHandler)).toHaveLength(data.length);
   });
 
-  it('it should invoke onMouseMove when focused', () => {
+  it('should invoke onMouseMove when focused', () => {
     const data = mockData.map(d => ({ ...d, x: d.date, y: d.num }));
     const onMouseMove = jest.fn();
 
@@ -199,7 +199,7 @@ describe('<BarSeries />', () => {
     expect(onMouseMove).toHaveBeenCalledTimes(1);
   });
 
-  it('it should invoke onMouseLeave when blured', () => {
+  it('should invoke onMouseLeave when blured', () => {
     const data = mockData.map(d => ({ ...d, x: d.date, y: d.num }));
     const onMouseLeave = jest.fn();
 

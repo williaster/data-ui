@@ -14,11 +14,7 @@ import {
   withParentSize,
 } from '@data-ui/xy-chart';
 
-import {
-  Histogram,
-  DensitySeries,
-  YAxis as HistYAxis,
-} from '@data-ui/histogram';
+import { Histogram, DensitySeries, YAxis as HistYAxis } from '@data-ui/histogram';
 
 import Checkbox from '../shared/Checkbox';
 
@@ -32,7 +28,7 @@ export const pointData = genRandomNormalPoints(n).forEach(([x, y], i) => {
   if (!datasets[dataSetIndex]) datasets[dataSetIndex] = [];
 
   datasets[dataSetIndex].push({
-    x: dataSetIndex !== 1 ? x + Math.random() : x,
+    x: dataSetIndex === 1 ? x : x + Math.random(),
     y: dataSetIndex === 1 ? y - Math.random() : y,
     fill: theme.colors.categories[dataSetIndex],
     size: Math.max(3, Math.random() * 10),
@@ -43,8 +39,10 @@ const marginScatter = { top: 10, right: 10, bottom: 64, left: 64 };
 const marginTopHist = { top: 10, right: marginScatter.right, bottom: 5, left: marginScatter.left };
 const marginSideHist = { top: 10, right: marginScatter.bottom, bottom: 5, left: marginScatter.top };
 
-function renderTooltip({ datum }) { // eslint-disable-line react/prop-types
+// eslint-disable-next-line react/prop-types
+function renderTooltip({ datum }) {
   const { x, y, fill: color } = datum;
+
   return (
     <div>
       <div>
@@ -63,9 +61,7 @@ const propTypes = {
   parentWidth: PropTypes.number.isRequired,
 };
 
-const defaultProps = {
-  parentWidth: null,
-};
+const defaultProps = {};
 
 class ScatterWithHistogram extends React.PureComponent {
   constructor(props) {
@@ -89,13 +85,7 @@ class ScatterWithHistogram extends React.PureComponent {
           showVoronoi={this.state.showVoronoi}
         >
           {datasets.map((dataset, i) => (
-            <PointSeries
-              key={i}
-              data={dataset}
-              fill={datasetColors[i]}
-              opacity={0.7}
-              size={5}
-            />
+            <PointSeries key={i} data={dataset} fill={datasetColors[i]} opacity={0.7} size={5} />
           ))}
           <CrossHair
             stroke={theme.colors.grays[6]}
@@ -195,7 +185,9 @@ class ScatterWithHistogram extends React.PureComponent {
           id="scatter_hist"
           label="Show Voronoi overlay"
           checked={showVoronoi}
-          onChange={() => { this.setState({ showVoronoi: !showVoronoi }); }}
+          onChange={() => {
+            this.setState({ showVoronoi: !showVoronoi });
+          }}
         />
       </div>
     ) : null;

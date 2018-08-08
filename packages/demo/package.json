@@ -8,7 +8,11 @@
     "gh-pages:publish": "git-directory-deploy --directory _gh-pages",
     "gh-pages": "npm run gh-pages:clean && npm run gh-pages:build && npm run gh-pages:publish && npm run gh-pages:clean",
     "dev": "start-storybook -p 9001 -c ./storybook-config -s ../../assets/",
-    "test": "echo no tests in @data-ui/demo"
+    "test": "echo no tests in @data-ui/demo",
+    "eslint": "beemo eslint \"./examples/**/*.{js,jsx,json,md}\" --fix",
+    "lint": "npm run prettier && npm run eslint",
+    "prettier": "beemo prettier \"./examples/**/*.{js,jsx,json,md}\"",
+    "sync:gitignore": "beemo sync-dotfiles --filter=gitignore"
   },
   "repository": "https://github.com/williaster/data-ui.git",
   "keywords": [
@@ -20,6 +24,7 @@
   "license": "MIT",
   "homepage": "https://github.com/williaster/data-ui#readme",
   "devDependencies": {
+    "@data-ui/build-config": "^0.0.8",
     "@data-ui/data-table": "^0.0.61",
     "@data-ui/event-flow": "^0.0.61",
     "@data-ui/forms": "^0.0.61",
@@ -66,5 +71,24 @@
     "aphrodite": "^1.2.0",
     "react": "^15.0.0-0 || ^16.0.0-0"
   },
-  "private": true
+  "private": true,
+  "beemo": {
+    "module": "@data-ui/build-config",
+    "drivers": [
+      "prettier",
+      "eslint"
+    ],
+    "eslint": {
+      "rules": {
+        "sort-keys": "off",
+        "complexity": "off",
+        "react/jsx-no-literals": "off",
+        "jsx-a11y/label-has-for": "off",
+        "no-magic-numbers": "off",
+        "import/no-extraneous-dependencies": "off",
+        "react/forbid-prop-types": "off",
+        "react/destructuring-assignment": "off"
+      }
+    }
+  }
 }

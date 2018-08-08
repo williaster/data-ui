@@ -1,11 +1,11 @@
 import getScaleForAccessor, { scaleTypeToScale } from '../../src/utils/getScaleForAccessor';
 
 describe('scaleTypeToScale', () => {
-  it('it should be defined', () => {
+  it('should be defined', () => {
     expect(scaleTypeToScale).toBeDefined();
   });
 
-  it('it should have time, timeUtc, linear, band, and ordinal entries', () => {
+  it('should have time, timeUtc, linear, band, and ordinal entries', () => {
     expect(scaleTypeToScale).toEqual(
       expect.objectContaining({
         time: expect.any(Function),

@@ -26,11 +26,11 @@ describe('findClosestDatum', () => {
     },
   };
 
-  it('it should be defined', () => {
+  it('should be defined', () => {
     expect(findClosestDatum).toBeDefined();
   });
 
-  it('it should return the closest datum', () => {
+  it('should return the closest datum', () => {
     const data = [{ x: 0 }, { x: 5 }, { x: 10 }];
     const props = {
       data,
@@ -60,7 +60,7 @@ describe('findClosestDatum', () => {
     ).toBe(data[2]);
   });
 
-  it('it should work for ordinal scales', () => {
+  it('should work for ordinal scales', () => {
     const data = [{ x: 'a' }, { x: 'b' }, { x: 'c' }];
     const props = {
       data,

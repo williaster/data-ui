@@ -1,11 +1,7 @@
 import React from 'react';
 import { withState } from 'recompose';
 
-import {
-  Button,
-  Select,
-  StepIncrementer,
-} from '@data-ui/forms';
+import { Button, Select, StepIncrementer } from '@data-ui/forms';
 
 import readme from '../../node_modules/@data-ui/forms/README.md';
 
@@ -26,20 +22,13 @@ export default {
     {
       description: 'Stepper',
       components: [StepIncrementer],
-      example: () => (
-        <StepIncrementer />
-      ),
+      example: () => <StepIncrementer />,
     },
     {
       description: 'Stepper -- disable zero, custom label',
       components: [StepIncrementer],
       example: () => (
-        <StepIncrementer
-          min={-1}
-          max={5}
-          formatValue={val => formatLookup[val]}
-          disableZero
-        />
+        <StepIncrementer min={-1} max={5} formatValue={val => formatLookup[val]} disableZero />
       ),
     },
     {
@@ -58,39 +47,38 @@ export default {
     {
       description: 'Select -- controlled',
       components: [Select],
-      example: () => React.createElement(
-        controlledSelect(({ value, setValue }) => (
-          <Select
-            value={value.value}
-            onChange={setValue}
-            options={[
-              { value: 'a', label: 'a' },
-              { value: 'b', label: 'b' },
-              { value: 'c', label: 'c' },
-            ]}
-          />
+      example: () =>
+        React.createElement(
+          controlledSelect(({ value, setValue }) => (
+            <Select
+              value={value.value}
+              onChange={setValue}
+              options={[
+                { value: 'a', label: 'a' },
+                { value: 'b', label: 'b' },
+                { value: 'c', label: 'c' },
+              ]}
+            />
+          )),
         ),
-      )),
     },
     {
       description: 'Button -- text',
       components: [Button],
-      example: () => (
-        <Button>Hello, world</Button>
-      ),
+      example: () => <Button>Hello, world</Button>,
     },
     {
       description: 'Button -- rounded',
       components: [Button],
-      example: () => (
-        <Button rounded>{'A bit round'}</Button>
-      ),
+      example: () => <Button rounded>A bit round</Button>,
     },
     {
       description: 'Button -- round, disabled',
       components: [Button],
       example: () => (
-        <Button rounded disabled>x</Button>
+        <Button rounded disabled>
+          x
+        </Button>
       ),
     },
   ],

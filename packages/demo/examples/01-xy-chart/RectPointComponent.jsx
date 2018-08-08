@@ -16,10 +16,11 @@ export default function RectComponent({
   datum,
 }) {
   const rectSize = size * 1.414;
+
   return (
     <rect
-      x={x - (rectSize / 2)}
-      y={y - (rectSize / 2)}
+      x={x - rectSize / 2}
+      y={y - rectSize / 2}
       width={rectSize}
       height={rectSize}
       fill={fill}
@@ -27,9 +28,12 @@ export default function RectComponent({
       stroke={stroke}
       strokeWidth={strokeWidth}
       strokeDasharray={strokeDasharray}
-      onMouseMove={onMouseMove && ((event) => {
-        onMouseMove({ event, data, datum, color: fill });
-      })}
+      onMouseMove={
+        onMouseMove &&
+        (event => {
+          onMouseMove({ event, data, datum, color: fill });
+        })
+      }
       onMouseLeave={onMouseLeave}
     />
   );

@@ -1,4 +1,10 @@
-import { cityTemperature, appleStock, genRandomNormalPoints, letterFrequency, genStats } from '@vx/mock-data';
+import {
+  cityTemperature,
+  appleStock,
+  genRandomNormalPoints,
+  letterFrequency,
+  genStats,
+} from '@vx/mock-data';
 import { theme } from '@data-ui/xy-chart';
 
 export const timeSeriesData = appleStock.filter((d, i) => i % 120 === 0).map(d => ({
@@ -12,7 +18,7 @@ export const categoricalData = letterFrequency.map(d => ({ x: d.letter, y: d.fre
 export const groupKeys = Object.keys(cityTemperature[0]).filter(attr => attr !== 'date');
 export const stackedData = cityTemperature.slice(0, 12).map(d => ({
   // convert all keys to numbers
-  ...(groupKeys.reduce((obj, key) => ({ ...obj, [key]: Number(d[key]) }), {})),
+  ...groupKeys.reduce((obj, key) => ({ ...obj, [key]: Number(d[key]) }), {}),
   x: d.date,
   y: groupKeys.reduce((ret, curr) => ret + Number(d[curr]), 0),
 }));
@@ -29,23 +35,24 @@ export const pointData = genRandomNormalPoints(n).map(([x, y], i) => ({
   y,
   fill: theme.colors.categories[Math.floor(i / n)],
   size: Math.max(3, Math.random() * 10),
-  label: (i % n) === 0 ? `(${parseInt(x, 10)},${parseInt(y, 10)})` : null,
+  label: i % n === 0 ? `(${parseInt(x, 10)},${parseInt(y, 10)})` : null,
 }));
 
 // band data
 const stdDev = 0.1;
-export const temperatureBands = groupKeys.map((city, cityIndex) => (
-  cityTemperature.slice(0, 25).map((d) => {
-    const y = Number(d[city]) - (20 * cityIndex);
+export const temperatureBands = groupKeys.map((city, cityIndex) =>
+  cityTemperature.slice(0, 25).map(d => {
+    const y = Number(d[city]) - 20 * cityIndex;
+
     return {
       key: city,
       x: d.date,
       y,
-      y0: y + (stdDev * y),
-      y1: y - (stdDev * y),
+      y0: y + stdDev * y,
+      y1: y - stdDev * y,
     };
-  })
-));
+  }),
+);
 
 export const priceBandData = {
   band: [
@@ -85,7 +92,7 @@ export const priceBandData = {
 priceBandData.points = priceBandData.band.map(({ x, y0, y1 }) => ({
   x,
   // Introduce noise within the y0-y1 range
-  y: ((y1 + y0) / 2) + ((Math.random() > 0.5 ? -1 : 1) * Math.random() * ((y1 - y0) / 4)),
+  y: (y1 + y0) / 2 + (Math.random() > 0.5 ? -1 : 1) * Math.random() * ((y1 - y0) / 4),
 }));
 
 // interval data
@@ -102,31 +109,36 @@ export const intervalData = intervals.reduce((ret, [i0, i1]) => {
     x0: cityTemperature[i0].date,
     x1: cityTemperature[i1].date,
   });
+
   return ret;
 }, []);
 
 // circle pack
-const dateBetween = (startDate, endDate) => (
-  new Date(
-    startDate.getTime() + (Math.random() * (endDate.getTime() - startDate.getTime())),
-  )
-);
+const dateBetween = (startDate, endDate) =>
+  new Date(startDate.getTime() + Math.random() * (endDate.getTime() - startDate.getTime()));
 
 const start = new Date('2017-01-05');
 const end = new Date('2017-02-05');
 const minSize = 2;
 const maxSize = 10;
 
-export const circlePackData = Array(400).fill(null).map((_, i) => ({
-  x: dateBetween(start, end),
-  r: minSize + (Math.random() * (maxSize - minSize)),
-  fillOpacity: Math.max(0.4, Math.random()),
-  fill: theme.colors.categories[i % 2 === 0 ? 1 : 3],
-})).concat(Array(70).fill(null).map((_, i) => ({
-  x: start,
-  r: minSize + (Math.random() * (maxSize - minSize)),
-  fillOpacity: Math.max(0.4, Math.random()),
-  fill: theme.colors.categories[i % 2 === 0 ? 1 : 3],
-})));
+export const circlePackData = Array(400)
+  .fill(null)
+  .map((_, i) => ({
+    x: dateBetween(start, end),
+    r: minSize + Math.random() * (maxSize - minSize),
+    fillOpacity: Math.max(0.4, Math.random()),
+    fill: theme.colors.categories[i % 2 === 0 ? 1 : 3],
+  }))
+  .concat(
+    Array(70)
+      .fill(null)
+      .map((_, i) => ({
+        x: start,
+        r: minSize + Math.random() * (maxSize - minSize),
+        fillOpacity: Math.max(0.4, Math.random()),
+        fill: theme.colors.categories[i % 2 === 0 ? 1 : 3],
+      })),
+  );
 
 export const statsData = genStats(5);

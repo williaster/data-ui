@@ -28,8 +28,9 @@ const defaultProps = {
 export default function AttributeNode(props) {
   const { nodeStyles, node, onMouseMove, onClick, onMouseLeave, onMouseEnter } = props;
   const { stroke, strokeWidth, fill, opacity, defaultSize } = nodeStyles;
+
   return (
-    <g opacity={node.opacity || opacity} >
+    <g opacity={node.opacity || opacity}>
       <rect
         x={-node.size / 2}
         y={-node.size / 2}
@@ -38,44 +39,52 @@ export default function AttributeNode(props) {
         fill={node.fill || fill}
         stroke={node.stroke || stroke}
         strokeWidth={strokeWidth}
-        onMouseMove={onMouseMove && ((event) => {
-          onMouseMove({
-            event,
-            index: node.index,
-            id: node.id,
-            data: node,
-          });
-        })}
-        onMouseLeave={onMouseLeave && ((event) => {
-          onMouseLeave({
-            event,
-            index: node.index,
-            id: node.id,
-            data: node,
-          });
-        })}
-        onMouseEnter={onMouseEnter && ((event) => {
-          onMouseEnter({
-            event,
-            index: node.index,
-            id: node.id,
-            data: node,
-          });
-        })}
-        onClick={onClick && ((event) => {
-          onClick({
-            event,
-            index: node.index,
-            id: node.id,
-            data: node,
-          });
-        })}
+        onMouseMove={
+          onMouseMove &&
+          (event => {
+            onMouseMove({
+              event,
+              index: node.index,
+              id: node.id,
+              data: node,
+            });
+          })
+        }
+        onMouseLeave={
+          onMouseLeave &&
+          (event => {
+            onMouseLeave({
+              event,
+              index: node.index,
+              id: node.id,
+              data: node,
+            });
+          })
+        }
+        onMouseEnter={
+          onMouseEnter &&
+          (event => {
+            onMouseEnter({
+              event,
+              index: node.index,
+              id: node.id,
+              data: node,
+            });
+          })
+        }
+        onClick={
+          onClick &&
+          (event => {
+            onClick({
+              event,
+              index: node.index,
+              id: node.id,
+              data: node,
+            });
+          })
+        }
       />
-      <text
-        textAnchor="middle"
-        pointerEvents="none"
-        y={2 * node.size}
-      >
+      <text textAnchor="middle" pointerEvents="none" y={2 * node.size}>
         {`Attr Node ${node.label}`}
       </text>
     </g>

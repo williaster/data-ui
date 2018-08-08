@@ -1,6 +1,7 @@
 import { Children } from 'react';
 
 import collectDataFromChildSeries from './collectDataFromChildSeries';
+// import collectExtentsFromChildSeries from './collectExtentsFromChildSeries';
 import getChartDimensions from './getChartDimensions';
 import getScaleForAccessor from './getScaleForAccessor';
 import { componentName, isBarSeries, isCirclePackSeries } from './chartUtils';
@@ -11,7 +12,16 @@ const xString = d => getX(d).toString();
 export default function collectScalesFromProps(props) {
   const { xScale: xScaleObject, yScale: yScaleObject, children } = props;
   const { innerWidth, innerHeight } = getChartDimensions(props);
-  const { allData } = collectDataFromChildSeries(children);
+  const allData = collectDataFromChildSeries(children);
+
+  // TODO could collect data extents from child series
+  // which would support passing arbitrary x/y accessors
+  // const [xExtent, yExtent] = collectExtentsFromChildSeries(children);
+  // issues:
+  //  voronoi transforms data via scale(getXorY(d))
+  //    => Could be solved by transforming in data collection
+  //  tooltip/crosshair transforms data via scale(getXorY(d))
+  //    => could be solved by transforming in the mousemove call so series own it?
 
   const xScale = getScaleForAccessor({
     allData,

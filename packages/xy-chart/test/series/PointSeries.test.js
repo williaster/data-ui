@@ -21,15 +21,15 @@ describe('<PointSeries />', () => {
     { date: new Date('2019-01-05'), cat: 'c', num: 377 },
   ];
 
-  it('it should be defined', () => {
+  it('should be defined', () => {
     expect(PointSeries).toBeDefined();
   });
 
-  it('it should not render without x- and y-scales', () => {
+  it('should not render without x- and y-scales', () => {
     expect(shallow(<PointSeries data={[]} />).type()).toBeNull();
   });
 
-  it('it should render a GlyphDotComponent for each datum', () => {
+  it('should render a GlyphDotComponent for each datum', () => {
     const wrapper = shallow(
       <XYChart {...mockProps}>
         <PointSeries data={mockData.map(d => ({ ...d, x: d.date, y: d.num }))} />
@@ -44,7 +44,7 @@ describe('<PointSeries />', () => {
     ).toHaveLength(mockData.length);
   });
 
-  it('it should not render points for null data', () => {
+  it('should not render points for null data', () => {
     const wrapper = shallow(
       <XYChart {...mockProps}>
         <PointSeries
@@ -60,7 +60,7 @@ describe('<PointSeries />', () => {
     expect(series.find(GlyphDotComponent)).toHaveLength(mockData.length - 2);
   });
 
-  it('it should render labels if present', () => {
+  it('should render labels if present', () => {
     const wrapper = shallow(
       <XYChart {...mockProps}>
         <PointSeries
@@ -78,7 +78,7 @@ describe('<PointSeries />', () => {
     expect(label.text()).toBe('LABEL');
   });
 
-  it('it should call onMouseMove({ datum, data, event, color }), onMouseLeave(), and onClick({ datum, data, event, color }) on trigger', () => {
+  it('should call onMouseMove({ datum, data, event, color }), onMouseLeave(), and onClick({ datum, data, event, color }) on trigger', () => {
     const data = mockData.map(d => ({ ...d, x: d.date, y: d.num }));
     const onMouseMove = jest.fn();
     const onMouseLeave = jest.fn();
@@ -122,7 +122,7 @@ describe('<PointSeries />', () => {
     expect(args.color).toBe('army-green');
   });
 
-  it('it should not trigger onMouseMove, onMouseLeave, or onClick if disableMouseEvents is true', () => {
+  it('should not trigger onMouseMove, onMouseLeave, or onClick if disableMouseEvents is true', () => {
     const data = mockData.map(d => ({ ...d, x: d.date, y: d.num }));
     const onMouseMove = jest.fn();
     const onMouseLeave = jest.fn();
@@ -156,7 +156,7 @@ describe('<PointSeries />', () => {
     expect(onClick).toHaveBeenCalledTimes(0);
   });
 
-  it('it should render a FocusBlurHandler for each point', () => {
+  it('should render a FocusBlurHandler for each point', () => {
     const data = mockData.map(d => ({ ...d, x: d.date, y: d.num }));
     const wrapper = shallow(
       <XYChart {...mockProps}>
@@ -168,7 +168,7 @@ describe('<PointSeries />', () => {
     expect(line.find(FocusBlurHandler)).toHaveLength(data.length);
   });
 
-  it('it should invoke onMouseMove when focused', () => {
+  it('should invoke onMouseMove when focused', () => {
     const data = mockData.map(d => ({ ...d, x: d.date, y: d.num }));
     const onMouseMove = jest.fn();
 
@@ -187,7 +187,7 @@ describe('<PointSeries />', () => {
     expect(onMouseMove).toHaveBeenCalledTimes(1);
   });
 
-  it('it should invoke onMouseLeave when blured', () => {
+  it('should invoke onMouseLeave when blured', () => {
     const data = mockData.map(d => ({ ...d, x: d.date, y: d.num }));
     const onMouseLeave = jest.fn();
 

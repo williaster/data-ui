@@ -6,13 +6,11 @@ import {
   Sparkline,
   LineSeries,
   PointSeries,
-
   Label,
   BandLine,
   HorizontalReferenceLine,
   VerticalReferenceLine,
   WithTooltip,
-
   PatternLines,
   LinearGradient,
 } from '@data-ui/sparkline';
@@ -38,16 +36,13 @@ const curves = ['cardinal', 'linear', 'monotoneX', 'basis'];
 export default [
   {
     description: 'LineSeries',
-    components: [
-      Sparkline,
-      LineSeries,
-    ],
+    components: [Sparkline, LineSeries],
     example: () => (
       <Spacer top={2} left={2} flexDirection="column">
         <Example title="Default with last point">
           <Sparkline
             {...sparklineProps}
-            data={range(50).map(() => (Math.random() * (Math.random() > 0.2 ? 1 : 2)))}
+            data={range(50).map(() => Math.random() * (Math.random() > 0.2 ? 1 : 2))}
           >
             <LineSeries />
             <PointSeries
@@ -63,7 +58,7 @@ export default [
 
         {(data => (
           <Example title="Filled with gradient + Tooltip">
-            <WithTooltip renderTooltip={({ datum }) => datum.y.toFixed(2)} >
+            <WithTooltip renderTooltip={({ datum }) => datum.y.toFixed(2)}>
               {({ onMouseMove, onMouseLeave, tooltipData }) => (
                 <Sparkline
                   {...sparklineProps}
@@ -71,17 +66,12 @@ export default [
                   onMouseMove={onMouseMove}
                   data={data}
                 >
-
                   <LinearGradient
                     id="area_gradient"
                     to={allColors.pink[1]}
                     from={allColors.pink[6]}
                   />
-                  <LineSeries
-                    showArea
-                    fill="url(#area_gradient)"
-                    stroke={allColors.pink[4]}
-                  />
+                  <LineSeries showArea fill="url(#area_gradient)" stroke={allColors.pink[4]} />
                   {tooltipData && [
                     <VerticalReferenceLine
                       key="ref-line"
@@ -100,12 +90,12 @@ export default [
               )}
             </WithTooltip>
           </Example>
-        ))(range(40).map(() => (Math.random() * (Math.random() > 0.2 ? 1 : 2))))}
+        ))(range(40).map(() => Math.random() * (Math.random() > 0.2 ? 1 : 2)))}
 
         <Example title="Min, max, median, and inner quartiles">
           <Sparkline
             {...sparklineProps}
-            data={range(30).map(() => (Math.random() * (Math.random() > 0.2 ? 1 : 2)))}
+            data={range(30).map(() => Math.random() * (Math.random() > 0.2 ? 1 : 2))}
           >
             <PatternLines
               id="innerquartile_pattern"
@@ -115,10 +105,7 @@ export default [
               strokeWidth={1}
               orientation={['diagonal']}
             />
-            <BandLine
-              band="innerquartiles"
-              fill="url(#innerquartile_pattern)"
-            />
+            <BandLine band="innerquartiles" fill="url(#innerquartile_pattern)" />
             <HorizontalReferenceLine
               stroke={allColors.blue[6]}
               strokeDasharray="3,3"
@@ -126,10 +113,7 @@ export default [
               strokeWidth={1}
               renderLabel={d => `Median ${d.toFixed(1)}`}
             />
-            <LineSeries
-              curve="linear"
-              stroke={allColors.blue[4]}
-            />
+            <LineSeries curve="linear" stroke={allColors.blue[4]} />
             <PointSeries
               points={['min', 'max']}
               fill={allColors.blue[6]}
@@ -141,10 +125,7 @@ export default [
         </Example>
 
         <Example title="All the curves">
-          <Sparkline
-            {...sparklineProps}
-            data={curvesData}
-          >
+          <Sparkline {...sparklineProps} data={curvesData}>
             {curvesData.map((_, i) => (
               <VerticalReferenceLine
                 key={i}
@@ -169,7 +150,7 @@ export default [
                 key={curve}
                 textAnchor="start"
                 x={sparklineProps.width - sparklineProps.margin.right}
-                dy={8 + (i * 12)}
+                dy={8 + i * 12}
                 label={curve}
                 fill={allColors.cyan[i + 2]}
                 strokeWidth={1}

@@ -100,16 +100,16 @@ class LineSeriesExample extends React.PureComponent {
             trigger === VORONOI_TRIGGER
               ? null
               : {
-                [seriesProps[0].seriesKey]: seriesProps[0].data[index],
-                [seriesProps[1].seriesKey]: seriesProps[1].data[index],
-                [seriesProps[2].seriesKey]: seriesProps[2].data[index],
-              },
+                  [seriesProps[0].seriesKey]: seriesProps[0].data[index],
+                  [seriesProps[1].seriesKey]: seriesProps[1].data[index],
+                  [seriesProps[2].seriesKey]: seriesProps[2].data[index],
+                },
           coords:
             trigger === VORONOI_TRIGGER
               ? null
               : {
-                y: 50,
-              },
+                  y: 50,
+                },
         });
 
         this.timeout = setTimeout(this.triggerTooltip, TOOLTIP_TIMEOUT);
@@ -137,6 +137,7 @@ class LineSeriesExample extends React.PureComponent {
   renderControls(disableMouseEvents) {
     const { trigger, stickyTooltip } = this.state;
     const useVoronoiTrigger = trigger === VORONOI_TRIGGER;
+
     return [
       <div key="buttons" style={{ display: 'flex' }}>
         <Button
@@ -193,6 +194,7 @@ class LineSeriesExample extends React.PureComponent {
 
   renderTooltip({ datum, series }) {
     const { programmaticTrigger, trigger } = this.state;
+
     return (
       <div>
         <div>
@@ -228,6 +230,7 @@ class LineSeriesExample extends React.PureComponent {
   render() {
     const { trigger, stickyTooltip } = this.state;
     const useVoronoiTrigger = trigger === VORONOI_TRIGGER;
+
     return (
       <WithToggle id="line_mouse_events_toggle" label="Disable mouse events">
         {disableMouseEvents => (
@@ -255,8 +258,8 @@ class LineSeriesExample extends React.PureComponent {
                 >
                   <XAxis label="Time" numTicks={5} />
                   <YAxis label="Stock price ($)" numTicks={4} />
-                  {seriesProps.map(props => (
-                    <LineSeries {...props} disableMouseEvents={disableMouseEvents} />
+                  {seriesProps.map(({ key, ...props }) => (
+                    <LineSeries key={key} {...props} disableMouseEvents={disableMouseEvents} />
                   ))}
                   <CrossHair
                     fullHeight

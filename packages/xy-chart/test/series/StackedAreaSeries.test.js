@@ -23,15 +23,15 @@ describe('<StackedAreaSeries />', () => {
   const mockStackKeys = ['a', 'b', 'c'];
   const mockStackFills = ['#fill1', '#fill2', '#fill3'];
 
-  it('it should be defined', () => {
+  it('should be defined', () => {
     expect(StackedAreaSeries).toBeDefined();
   });
 
-  it('it should not render without x- and y-scales', () => {
+  it('should not render without x- and y-scales', () => {
     expect(shallow(<StackedAreaSeries data={[]} stackKeys={[]} />).type()).toBeNull();
   });
 
-  it('it should render a <Stack />', () => {
+  it('should render a <Stack />', () => {
     const wrapper = shallow(
       <XYChart {...mockProps}>
         <StackedAreaSeries data={mockData} stackKeys={mockStackKeys} />
@@ -43,7 +43,7 @@ describe('<StackedAreaSeries />', () => {
     expect(series.find(Stack)).toHaveLength(1);
   });
 
-  it('it should render an path for each stackKey', () => {
+  it('should render an path for each stackKey', () => {
     const wrapper = shallow(
       <XYChart {...mockProps}>
         <StackedAreaSeries data={mockData} stackKeys={mockStackKeys} />
@@ -56,7 +56,7 @@ describe('<StackedAreaSeries />', () => {
     expect(stack.find('path')).toHaveLength(mockStackKeys.length);
   });
 
-  it('it should call onMouseMove({ datum, data, event, color, seriesKey }), onMouseLeave(), and onClick({ datum, data, event, color, seriesKey }) on trigger', () => {
+  it('should call onMouseMove({ datum, data, event, color, seriesKey }), onMouseLeave(), and onClick({ datum, data, event, color, seriesKey }) on trigger', () => {
     const onMouseMove = jest.fn();
     const onMouseLeave = jest.fn();
     const onClick = jest.fn();
@@ -98,7 +98,7 @@ describe('<StackedAreaSeries />', () => {
     expect(mockStackKeys.indexOf(args.seriesKey)).toBeGreaterThan(-1);
   });
 
-  it('it should not trigger onMouseMove, onMouseLeave, or onClick if disableMouseEvents is true', () => {
+  it('should not trigger onMouseMove, onMouseLeave, or onClick if disableMouseEvents is true', () => {
     const onMouseMove = jest.fn();
     const onMouseLeave = jest.fn();
     const onClick = jest.fn();

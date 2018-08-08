@@ -24,9 +24,21 @@ export default function findClosestDatums({
   let minDeltaX = Infinity;
   let minDeltaY = Infinity;
 
+  const flatSeriesChildren = [];
+  Children.forEach(children, Child => {
+    const name = componentName(Child);
+    if (name === 'AreaDifferenceSeries') {
+      Children.forEach(Child.props.children, NestedChild => {
+        flatSeriesChildren.push(NestedChild);
+      });
+    } else if (isSeries(name)) {
+      flatSeriesChildren.push(Child);
+    }
+  });
+
   // collect data from all series that have an x value near this point
-  Children.forEach(children, (Child, childIndex) => {
-    if (isSeries(componentName(Child)) && !Child.props.disableMouseEvents) {
+  flatSeriesChildren.forEach((Child, childIndex) => {
+    if (!Child.props.disableMouseEvents) {
       const { data, seriesKey } = Child.props;
 
       // @TODO data should be sorted, come up with a way to enforce+cache instead of relying on user

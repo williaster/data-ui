@@ -20,14 +20,15 @@ export default function Link(props) {
   const { linkStyles, link } = props;
   const { stroke, strokeWidth, strokeOpacity, radius } = linkStyles;
   const id = `arrow-id${link.id}`;
+
   return (
     <g>
       <defs>
         <marker
           id={id}
-          markerWidth={(radius * 3) + 1}
-          markerHeight={(radius * 3) + 1}
-          refX={(radius * 3) + 1}
+          markerWidth={radius * 3 + 1}
+          markerHeight={radius * 3 + 1}
+          refX={radius * 3 + 1}
           refY={radius}
           orient="auto"
           markerUnits="strokeWidth"
@@ -52,7 +53,6 @@ export default function Link(props) {
         markerEnd={`url(#${id})`}
       />
     </g>
-
   );
 }
 

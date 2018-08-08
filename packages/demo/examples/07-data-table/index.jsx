@@ -20,7 +20,7 @@ const DynamicCellHeight = withTableAutoSizer(withDynamicCellHeights(Table));
 const SortableTable = withSorting(Table);
 const SortableFilterableTable = withTableAutoSizer(withSorting(FilterableTable));
 
-const dataList = List(browserUsage);
+const dataList = List(browserUsage); // eslint-disable-line babel/new-cap
 const allColumns = Object.keys(browserUsage[0]);
 const someColumns = allColumns.slice(0, 4);
 
@@ -79,7 +79,8 @@ export default {
       description: 'with window scrolling + auto width HOCs',
       components: [WindowScrollingTable],
       useHOC: true,
-      example: () => ( // storybook container doesn't set an explicit size
+      example: () => (
+        // storybook container doesn't set an explicit size
         <WindowScrollingTable
           dataList={dataList}
           orderedColumnKeys={someColumns}
@@ -92,7 +93,8 @@ export default {
       description: 'with auto width + height HOC',
       components: [AutoSizedTable],
       useHOC: true,
-      example: () => ( // storybook container doesn't set an explicit size
+      example: () => (
+        // storybook container doesn't set an explicit size
         <div style={{ height: 500, background: '#FFB400' }}>
           <AutoSizedTable
             dataList={dataList}
@@ -167,13 +169,7 @@ export default {
           columnLabelByColumnKey={{
             [someColumns[0]]: `${someColumns[0]} (no sort)`,
           }}
-          headerRenderer={({
-            dataKey,
-            disableSort,
-            label,
-            sortBy,
-            sortDirection,
-          }) => (
+          headerRenderer={({ dataKey, disableSort, label, sortBy, sortDirection }) => (
             <div
               style={{
                 display: 'flex',

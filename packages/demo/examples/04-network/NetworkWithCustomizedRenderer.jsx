@@ -11,13 +11,13 @@ class NetworkWithCustomizedRenderer extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = { graph: props.graph };
-    this.onClick = this.onClick.bind(this);
+    this.handleClick = this.handleClick.bind(this);
     this.renderNode = this.renderNode.bind(this);
     this.renderLink = this.renderLink.bind(this);
   }
 
-  onClick({ index }) {
-    const graph = this.state.graph;
+  handleClick({ index }) {
+    const { graph } = this.state;
     const newGraph = expandGraph(graph, graph.nodes[index]);
     this.setState(() => ({ graph: newGraph }));
   }
@@ -53,6 +53,7 @@ class NetworkWithCustomizedRenderer extends React.PureComponent {
 
   render() {
     const { animated, ariaLabel, width, height, renderTooltip, margin } = this.props;
+
     return (
       <Network
         renderTooltip={renderTooltip}
@@ -62,7 +63,7 @@ class NetworkWithCustomizedRenderer extends React.PureComponent {
         animated={animated}
         ariaLabel={ariaLabel}
         graph={this.state.graph}
-        onClick={this.onClick}
+        onClick={this.handleClick}
         renderNode={this.renderNode}
         renderLink={this.renderLink}
       />

@@ -19,11 +19,11 @@ describe('<CrossHair />', () => {
     }),
   };
 
-  it('it should be defined', () => {
+  it('should be defined', () => {
     expect(CrossHair).toBeDefined();
   });
 
-  it('it should render a horizontal line, vertical line, and a circle depending on props', () => {
+  it('should render a horizontal line, vertical line, and a circle depending on props', () => {
     let wrapper = shallow(<CrossHair {...props} showHorizontalLine showVerticalLine showCircle />);
 
     expect(wrapper.find(Line)).toHaveLength(2);
@@ -45,7 +45,7 @@ describe('<CrossHair />', () => {
     expect(wrapper.find(Line)).toHaveLength(0);
   });
 
-  it('it should render a fullWidth line if specified', () => {
+  it('should render a fullWidth line if specified', () => {
     const fullWidthWrapper = shallow(
       <CrossHair {...props} showHorizontalLine fullWidth showVerticalLine={false} />,
     );
@@ -63,7 +63,7 @@ describe('<CrossHair />', () => {
     expect(partialWidthLine.prop('x2')).toBe(left);
   });
 
-  it('it should render a fullHeight line if specified', () => {
+  it('should render a fullHeight line if specified', () => {
     const fullHeightWrapper = shallow(
       <CrossHair {...props} showVerticalLine fullHeight showHorizontalLine={false} />,
     );

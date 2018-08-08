@@ -20,15 +20,15 @@ describe('<ViolinPlotSeries />', () => {
     data: [{ x: 'label1', binData: mockStats.binData }],
   };
 
-  it('it should be defined', () => {
+  it('should be defined', () => {
     expect(ViolinPlotSeries).toBeDefined();
   });
 
-  it('it should not render without x- and y-scales', () => {
+  it('should not render without x- and y-scales', () => {
     expect(shallow(<ViolinPlotSeries data={[]} />).type()).toBeNull();
   });
 
-  it('it should render one violin per datum', () => {
+  it('should render one violin per datum', () => {
     const wrapper = shallow(
       <XYChart {...mockProps}>
         <ViolinPlotSeries {...violinProps} />
@@ -44,7 +44,7 @@ describe('<ViolinPlotSeries />', () => {
     ).toHaveLength(1);
   });
 
-  it('it should call onMouseMove({ datum, data, event, index }), onMouseLeave(), and onClick({ datum, data, event, index }) on trigger when disableMouseEvents is falsy', () => {
+  it('should call onMouseMove({ datum, data, event, index }), onMouseLeave(), and onClick({ datum, data, event, index }) on trigger when disableMouseEvents is falsy', () => {
     const onMouseMove = jest.fn();
     const onMouseLeave = jest.fn();
     const onClick = jest.fn();
@@ -117,7 +117,7 @@ describe('<ViolinPlotSeries />', () => {
     expect(onClick).toHaveBeenCalledTimes(1);
   });
 
-  it('it should render a FocusBlurHandler for each point', () => {
+  it('should render a FocusBlurHandler for each point', () => {
     const wrapper = shallow(
       <XYChart {...mockProps}>
         <ViolinPlotSeries {...violinProps} />
@@ -128,7 +128,7 @@ describe('<ViolinPlotSeries />', () => {
     expect(violins.find(FocusBlurHandler)).toHaveLength(violinProps.data.length);
   });
 
-  it('it should invoke onMouseMove when focused', () => {
+  it('should invoke onMouseMove when focused', () => {
     const onMouseMove = jest.fn();
 
     const wrapper = shallow(
@@ -147,7 +147,7 @@ describe('<ViolinPlotSeries />', () => {
     expect(onMouseMove).toHaveBeenCalledTimes(1);
   });
 
-  it('it should invoke onMouseLeave when blured', () => {
+  it('should invoke onMouseLeave when blured', () => {
     const onMouseLeave = jest.fn();
 
     const wrapper = shallow(
