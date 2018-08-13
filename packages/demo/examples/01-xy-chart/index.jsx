@@ -52,6 +52,7 @@ import {
 import WithToggle from '../shared/WithToggle';
 
 import computeForceBasedCirclePack from './computeForceBasedCirclePack';
+import BrushableLineChart from './BrushableLineChart';
 
 PatternLines.displayName = 'PatternLines';
 LinearGradient.displayName = 'LinearGradient';
@@ -302,6 +303,11 @@ export default {
       description: 'Linked charts',
       components: [XYChart, StackedBarSeries, AreaSeries, CrossHair],
       example: () => <LinkedXYCharts />,
+    },
+    {
+      description: 'Brushable time series chart',
+      components: [XYChart, LineSeries],
+      example: () => <BrushableLineChart />,
     },
     {
       description: 'StackedAreaSeries',
