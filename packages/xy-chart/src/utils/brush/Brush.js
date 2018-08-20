@@ -62,19 +62,19 @@ export default class Brush extends React.Component {
   }
 
   handleDragStart(draw) {
-    const { onBrushStart, left, top } = this.props;
+    const { onBrushStart, left, top, inheritedMargin } = this.props;
     if (onBrushStart) {
       onBrushStart();
     }
     this.update(prevBrush => ({
       ...prevBrush,
       start: {
-        x: draw.x - left,
-        y: draw.y - top,
+        x: draw.x + draw.dx - left - inheritedMargin.left,
+        y: draw.y + draw.dy - top - inheritedMargin.top,
       },
       end: {
-        x: draw.x - left,
-        y: draw.y - top,
+        x: draw.x + draw.dx - left - inheritedMargin.left,
+        y: draw.y + draw.dy - top - inheritedMargin.top,
       },
       extent: {
         x0: -1,
@@ -87,11 +87,11 @@ export default class Brush extends React.Component {
   }
 
   handleDragMove(draw) {
-    const { left, top } = this.props;
+    const { left, top, inheritedMargin } = this.props;
     if (!draw.isDragging) return;
     const end = {
-      x: draw.x + draw.dx - left,
-      y: draw.y + draw.dy - top,
+      x: draw.x + draw.dx - left - inheritedMargin.left,
+      y: draw.y + draw.dy - top - inheritedMargin.top,
     };
     this.update((prevBrush) => {
       const { start } = prevBrush;
@@ -235,6 +235,7 @@ export default class Brush extends React.Component {
       onMouseMove,
       resizeTriggerAreas,
       brushDirection,
+      registerStartEvent
     } = this.props;
 
     const handles = this.handles();
@@ -242,7 +243,6 @@ export default class Brush extends React.Component {
     const width = this.width();
     const height = this.height();
     const resizeTriggerAreaSet = new Set(resizeTriggerAreas);
-
     return (
       <Group className="vx-brush" top={top} left={left}>
         {/* overlay */}
@@ -253,34 +253,37 @@ export default class Brush extends React.Component {
           onDragStart={this.handleDragStart}
           onDragMove={this.handleDragMove}
           onDragEnd={this.handleDragEnd}
+          registerStartEvent={registerStartEvent}
         >
-          {draw => {
-            return (
-              <Bar
-                data={data}
-                className="vx-brush-overlay"
-                fill="transparent"
-                x={0}
-                y={0}
-                width={stageWidth}
-                height={stageHeight}
-                onDoubleClick={data => event => this.reset(event)}
-                onMouseDown={data => event => draw.dragStart(event)}
-                onMouseLeave={data => event => {
-                  if (onMouseLeave) onMouseLeave(event);
-                }}
-                onMouseMove={data => event => {
-                  if (!draw.isDragging && onMouseMove)
-                    this.props.onMouseMove(event);
-                  if (draw.isDragging) draw.dragMove(event);
-                }}
-                onMouseUp={data => event => {
-                  if (onMouseUp) onMouseUp(event);
-                  draw.dragEnd(event);
-                }}
-                style={{ cursor: 'crosshair' }}
-              />
-            );
+          {(draw) => {
+            if (!registerStartEvent || (registerStartEvent && draw.isDragging)) {
+              return (
+                <Bar
+                  data={data}
+                  className="vx-brush-overlay"
+                  fill="transparent"
+                  x={0}
+                  y={0}
+                  width={stageWidth}
+                  height={stageHeight}
+                  onDoubleClick={data => event => this.reset(event)}
+                  onMouseDown={data => event => draw.dragStart(event)}
+                  onMouseLeave={data => event => {
+                    if (onMouseLeave) onMouseLeave(event);
+                  }}
+                  onMouseMove={data => event => {
+                    if (!draw.isDragging && onMouseMove)
+                      this.props.onMouseMove(event);
+                    if (draw.isDragging) draw.dragMove(event);
+                  }}
+                  onMouseUp={data => event => {
+                    if (onMouseUp) onMouseUp(event);
+                    draw.dragEnd(event);
+                  }}
+                  style={{ cursor: 'crosshair' }}
+                />
+              );
+            }
           }}
         </Drag>
         {/* selection */}

@@ -41,7 +41,8 @@ class BrushableLineChart extends React.PureComponent {
   handleBrushChange(domain) {
     let pointData;
     if (domain) {
-      pointData = timeSeriesData.filter(point => point.x > domain.x0 && point.x < domain.x1 && point.y > domain.y0 && point.y < domain.y1);
+      console.log(timeSeriesData);
+      pointData = timeSeriesData.filter(point => point.x > domain.x0 && point.x < domain.x1);
     } else {
       pointData = [...timeSeriesData];
     }
@@ -254,7 +255,7 @@ class BrushableLineChart extends React.PureComponent {
           ariaLabel="Required label"
           xScale={{ type: 'time' }}
           yScale={{ type: 'linear' }}
-          margin={{ left: 0, top: 0, bottom: 64 }}
+          margin={{ left: 8, top: 32, bottom: 64 }}
           {...rest}
         >
           <LinearGradient id="area_gradient" from={colors.categories[2]} to="#fff" />
@@ -289,6 +290,7 @@ class BrushableLineChart extends React.PureComponent {
             resizeTriggerAreas={resizeTriggerAreas}
             brushDirection={brushDirection}
             onChange={this.handleBrushChange}
+            brushRegion="chart"
           />
         </XYChart>
 

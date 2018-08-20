@@ -93,6 +93,7 @@ class XYChart extends React.PureComponent {
     this.handleMouseLeave = this.handleMouseLeave.bind(this);
     this.handleMouseMove = this.handleMouseMove.bind(this);
     this.handleContainerEvent = this.handleContainerEvent.bind(this);
+    this.registerBrushStartEvent = this.registerBrushStartEvent.bind(this);
   }
 
   componentDidMount() {
@@ -184,6 +185,10 @@ class XYChart extends React.PureComponent {
     }
   }
 
+  registerBrushStartEvent(event) {
+    this.fileBrushStart = event;
+  }
+
   handleMouseMove(args) {
     const { snapTooltipToDataX, snapTooltipToDataY, onMouseMove } = this.props;
     const isFocusEvent = args.event && args.event.type === 'focus';
@@ -260,6 +265,8 @@ class XYChart extends React.PureComponent {
     const { numXTicks, numYTicks } = this.getNumTicks(innerWidth, innerHeight);
     const barWidth = xScale.barWidth || (xScale.bandwidth && xScale.bandwidth()) || 0;
     const CrossHairs = []; // ensure these are the top-most layer
+    let hasBrush = false;
+    let Brush;
 
     return (
       innerWidth > 0 &&
@@ -324,13 +331,9 @@ class XYChart extends React.PureComponent {
               } else if (isReferenceLine(name)) {
                 return React.cloneElement(Child, { xScale, yScale });
               } else if (isBrush(name)) {
-                return React.cloneElement(Child, {
-                  xScale,
-                  yScale,
-                  innerHeight,
-                  innerWidth,
-                  margin,
-                });
+                hasBrush = true;
+                Brush = Child;
+                return null;
               }
 
               return Child;
@@ -344,6 +347,7 @@ class XYChart extends React.PureComponent {
                 width={innerWidth}
                 height={innerHeight}
                 onClick={this.handleClick}
+                onMouseDown={hasBrush ? this.fileBrushStart : null}
                 onMouseMove={this.handleMouseMove}
                 onMouseLeave={this.handleMouseLeave}
                 showVoronoi={showVoronoi}
@@ -358,10 +362,22 @@ class XYChart extends React.PureComponent {
                 height={innerHeight}
                 fill="transparent"
                 fillOpacity={0}
+                onMouseDown={hasBrush ? this.fileBrushStart : null}
                 onClick={this.handleContainerEvent}
                 onMouseMove={this.handleContainerEvent}
                 onMouseLeave={this.handleMouseLeave}
               />
+            )}
+
+            {hasBrush && (
+              React.cloneElement(Brush, {
+                xScale,
+                yScale,
+                innerHeight,
+                innerWidth,
+                margin,
+                registerStartEvent: this.registerBrushStartEvent,
+              })
             )}
 
             {tooltipData &&

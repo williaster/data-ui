@@ -15,6 +15,15 @@ export default class Drag extends React.Component {
     this.dragEnd = this.dragEnd.bind(this);
     this.dragMove = this.dragMove.bind(this);
     this.dragStart = this.dragStart.bind(this);
+    if (props.registerStartEvent) {
+      props.registerStartEvent(this.dragStart);
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.registerStartEvent) {
+      nextProps.registerStartEvent(this.dragStart);
+    }
   }
 
   dragStart(event) {
