@@ -57,7 +57,7 @@ export default class BrushSelection extends React.Component {
   }
 
   render() {
-    const { width, height, stageWidth, stageHeight, brush, updateBrush, ...restProps } = this.props;
+    const { width, height, stageWidth, stageHeight, brush, updateBrush, disableDraggingSelection, ...restProps } = this.props;
 
     return (
       <Drag
@@ -84,12 +84,12 @@ export default class BrushSelection extends React.Component {
               y={Math.min(brush.extent.y0, brush.extent.y1)}
               width={width}
               height={height}
-              onMouseDown={selection.dragStart}
+              onMouseDown={disableDraggingSelection ? null : selection.dragStart}
               onMouseMove={selection.dragMove}
               onMouseUp={selection.dragEnd}
               style={{
                 pointerEvents: brush.isBrushing || brush.activeHandle ? 'none' : 'all',
-                cursor: 'move',
+                cursor: disableDraggingSelection ? null : 'move',
               }}
               {...restProps}
             />

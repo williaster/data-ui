@@ -35,8 +35,14 @@ class BrushableLineChart extends React.PureComponent {
       brushRegion: 'chart',
       xAxisOrientation: 'bottom',
       yAxisOrientation: 'left',
+      disableDraggingSelection: false,
     };
     this.handleBrushChange = this.handleBrushChange.bind(this);
+    this.handleBrushEnd = this.handleBrushEnd.bind(this);
+  }
+
+  handleBrushEnd(domain) {
+    console.log(domain);
   }
 
   handleBrushChange(domain) {
@@ -65,12 +71,25 @@ class BrushableLineChart extends React.PureComponent {
   }
 
   renderControls() {
-    const { resizeTriggerAreas } = this.state;
+    const { disableDraggingSelection, resizeTriggerAreas } = this.state;
     const resizeTriggerAreaset = new Set(resizeTriggerAreas);
-
     return (
       <div className="brush-demo--form">
         <h4>Brush Props</h4>
+        <div>
+          Disable Dragging the Selection
+          <label>
+            <input
+              type="checkbox"
+              onChange={() => {
+                this.setState(() => ({
+                  disableDraggingSelection: !disableDraggingSelection,
+                }));
+              }}
+              checked={disableDraggingSelection}
+            />
+          </label>
+        </div>
         <div>
           Brush Direction:
           <label>
@@ -350,6 +369,7 @@ class BrushableLineChart extends React.PureComponent {
       brushRegion,
       xAxisOrientation,
       yAxisOrientation,
+      disableDraggingSelection,
     } = this.state;
 
     return (
@@ -390,7 +410,9 @@ class BrushableLineChart extends React.PureComponent {
             resizeTriggerAreas={resizeTriggerAreas}
             brushDirection={brushDirection}
             onChange={this.handleBrushChange}
+            onBrushEnd={this.handleBrushEnd}
             brushRegion={brushRegion}
+            disableDraggingSelection={disableDraggingSelection}
           />
         </XYChart>
 

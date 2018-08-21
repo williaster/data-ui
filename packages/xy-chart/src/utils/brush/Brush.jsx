@@ -101,10 +101,10 @@ export default class Brush extends React.Component {
   }
 
   handleDragEnd() {
+    const { onBrushEnd } = this.props;
     this.update(prevBrush => {
       const { extent } = prevBrush;
-
-      return {
+      const newState = {
         ...prevBrush,
         start: {
           x: extent.x0,
@@ -116,6 +116,11 @@ export default class Brush extends React.Component {
         },
         isBrushing: false,
       };
+      if (onBrushEnd) {
+        onBrushEnd(newState);
+      }
+
+      return newState;
     });
   }
 
@@ -233,6 +238,7 @@ export default class Brush extends React.Component {
       resizeTriggerAreas,
       registerStartEvent,
       selectedBoxStyle,
+      disableDraggingSelection,
     } = this.props;
 
     const handles = this.handles();
@@ -294,6 +300,7 @@ export default class Brush extends React.Component {
               stageWidth={stageWidth}
               stageHeight={stageHeight}
               brush={{ ...this.state }}
+              disableDraggingSelection={disableDraggingSelection}
               {...selectedBoxStyle}
             />
           )}
@@ -367,10 +374,12 @@ Brush.propTypes = {
   ]),
   registerStartEvent: PropTypes.func,
   onBrushStart: PropTypes.func,
+  onBrushEnd: PropTypes.func,
   selectedBoxStyle: generalStyleShape.isRequired,
   onMouseLeave: PropTypes.func,
   onMouseUp: PropTypes.func,
   onMouseMove: PropTypes.func,
+  disableDraggingSelection: PropTypes.bool,
 };
 
 Brush.defaultProps = {
@@ -386,7 +395,9 @@ Brush.defaultProps = {
   resizeTriggerAreas: ['left', 'right'],
   registerStartEvent: null,
   onBrushStart: null,
+  onBrushEnd: null,
   onMouseLeave: null,
   onMouseUp: null,
   onMouseMove: null,
+  disableDraggingSelection: false,
 };
