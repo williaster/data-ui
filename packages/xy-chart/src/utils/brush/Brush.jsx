@@ -235,6 +235,7 @@ export default class Brush extends React.Component {
       onMouseLeave,
       onMouseUp,
       onMouseMove,
+      onBrushEnd,
       resizeTriggerAreas,
       registerStartEvent,
       selectedBoxStyle,
@@ -301,6 +302,7 @@ export default class Brush extends React.Component {
               stageHeight={stageHeight}
               brush={{ ...this.state }}
               disableDraggingSelection={disableDraggingSelection}
+              onBrushEnd={onBrushEnd}
               {...selectedBoxStyle}
             />
           )}
@@ -321,6 +323,7 @@ export default class Brush extends React.Component {
                   stageHeight={stageHeight}
                   updateBrush={this.update}
                   brush={this.state}
+                  onBrushEnd={onBrushEnd}
                 />
               );
             })}
@@ -344,6 +347,7 @@ export default class Brush extends React.Component {
                   y={corner.y}
                   width={handleSize}
                   height={handleSize}
+                  onBrushEnd={onBrushEnd}
                   fill="transparent"
                 />
               );

@@ -1,3 +1,4 @@
+/* eslint react/jsx-handler-names: 0 react/forbid-prop-types: 0 */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Drag } from '../drag';
@@ -77,15 +78,15 @@ export default class BrushHandle extends React.Component {
     });
   }
 
-  handleDragEnd(drag) {
-    const { type, handle, updateBrush } = this.props;
+  handleDragEnd() {
+    const { updateBrush, onBrushEnd } = this.props;
     updateBrush(prevBrush => {
       const { start, end, extent } = prevBrush;
       start.x = Math.min(extent.x0, extent.x1);
       start.y = Math.min(extent.y0, extent.y0);
       end.x = Math.max(extent.x0, extent.x1);
       end.y = Math.max(extent.y0, extent.y1);
-      const nextState = {
+      const nextBrush = {
         ...prevBrush,
         start,
         end,
@@ -98,14 +99,17 @@ export default class BrushHandle extends React.Component {
           y1: Math.max(start.y, end.y),
         },
       };
+      if (onBrushEnd) {
+        onBrushEnd(nextBrush);
+      }
 
-      return nextState;
+      return nextBrush;
     });
   }
 
   render() {
-    const { stageWidth, stageHeight, brush, type } = this.props;
-    const { x, y, width, height } = this.props.handle;
+    const { stageWidth, stageHeight, brush, type, handle } = this.props;
+    const { x, y, width, height } = handle;
     const cursor = type === 'right' || type === 'left' ? 'ew-resize' : 'ns-resize';
 
     return (
@@ -116,7 +120,7 @@ export default class BrushHandle extends React.Component {
         onDragEnd={this.handleDragEnd}
         resetOnStart
       >
-        {handle => (
+        {drag => (
           <g>
             {handle.isDragging && (
               <rect
@@ -124,9 +128,9 @@ export default class BrushHandle extends React.Component {
                 width={stageWidth}
                 height={stageHeight}
                 style={{ cursor }}
-                onMouseMove={handle.dragMove}
-                onMouseUp={handle.dragEnd}
-                onMouseLeave={handle.dragEnd}
+                onMouseMove={drag.dragMove}
+                onMouseUp={drag.dragEnd}
+                onMouseLeave={drag.dragEnd}
               />
             )}
             <rect
@@ -136,9 +140,9 @@ export default class BrushHandle extends React.Component {
               height={height}
               fill="transparent"
               className="test-test"
-              onMouseDown={handle.dragStart}
-              onMouseMove={handle.dragMove}
-              onMouseUp={handle.dragEnd}
+              onMouseDown={drag.dragStart}
+              onMouseMove={drag.dragMove}
+              onMouseUp={drag.dragEnd}
               style={{
                 cursor,
                 pointerEvents: !!brush.activeHandle || !!brush.isBrushing ? 'none' : 'all',
@@ -150,3 +154,13 @@ export default class BrushHandle extends React.Component {
     );
   }
 }
+
+BrushHandle.propTypes = {
+  stageWidth: PropTypes.number.isRequired,
+  stageHeight: PropTypes.number.isRequired,
+  brush: PropTypes.object.isRequired,
+  updateBrush: PropTypes.func.isRequired,
+  onBrushEnd: PropTypes.func.isRequired,
+  handle: PropTypes.object.isRequired,
+  type: PropTypes.object.isRequired,
+};

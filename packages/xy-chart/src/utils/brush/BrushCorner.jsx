@@ -1,3 +1,4 @@
+/* eslint react/jsx-handler-names: 0 react/forbid-prop-types: 0 */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Drag } from '../drag';
@@ -10,10 +11,10 @@ export default class BrushCorner extends React.Component {
   }
 
   cornerDragMove(drag) {
-    const { handle, updateBrush, type } = this.props;
+    const { updateBrush, type } = this.props;
     if (!drag.isDragging) return;
     updateBrush(prevBrush => {
-      const { start, end, isBrushing } = prevBrush;
+      const { start, end } = prevBrush;
 
       const xMax = Math.max(start.x, end.x);
       const xMin = Math.min(start.x, end.x);
@@ -93,15 +94,15 @@ export default class BrushCorner extends React.Component {
     });
   }
 
-  cornerDragEnd(drag) {
-    const { type, handle, updateBrush } = this.props;
+  cornerDragEnd() {
+    const { updateBrush, onBrushEnd } = this.props;
     updateBrush(prevBrush => {
       const { start, end, extent } = prevBrush;
       start.x = Math.min(extent.x0, extent.x1);
       start.y = Math.min(extent.y0, extent.y0);
       end.x = Math.max(extent.x0, extent.x1);
       end.y = Math.max(extent.y0, extent.y1);
-      const nextState = {
+      const nextBrush = {
         ...prevBrush,
         start,
         end,
@@ -113,8 +114,11 @@ export default class BrushCorner extends React.Component {
           y1: Math.max(start.y, end.y),
         },
       };
+      if (onBrushEnd) {
+        onBrushEnd(nextBrush);
+      }
 
-      return nextState;
+      return nextBrush;
     });
   }
 
@@ -170,3 +174,18 @@ export default class BrushCorner extends React.Component {
     );
   }
 }
+
+BrushCorner.propTypes = {
+  stageWidth: PropTypes.number.isRequired,
+  stageHeight: PropTypes.number.isRequired,
+  brush: PropTypes.object.isRequired,
+  updateBrush: PropTypes.func.isRequired,
+  onBrushEnd: PropTypes.func.isRequired,
+  handle: PropTypes.object,
+  type: PropTypes.object.isRequired,
+  style: PropTypes.object.isRequired,
+};
+
+BrushCorner.defaultProps = {
+  handle: null,
+};

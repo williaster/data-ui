@@ -1,3 +1,4 @@
+/* eslint react/jsx-handler-names: 0 react/forbid-prop-types: 0 */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Drag } from '../drag';
@@ -38,26 +39,42 @@ export default class BrushSelection extends React.Component {
     });
   }
 
-  selectionDragEnd(drag) {
-    const { updateBrush } = this.props;
-    updateBrush(prevBrush => ({
-      ...prevBrush,
-      isBrushing: false,
-      start: {
-        ...prevBrush.start,
-        x: Math.min(prevBrush.extent.x0, prevBrush.extent.x1),
-        y: Math.min(prevBrush.extent.y0, prevBrush.extent.y1),
-      },
-      end: {
-        ...prevBrush.end,
-        x: Math.max(prevBrush.extent.x0, prevBrush.extent.x1),
-        y: Math.max(prevBrush.extent.y0, prevBrush.extent.y1),
-      },
-    }));
+  selectionDragEnd() {
+    const { updateBrush, onBrushEnd } = this.props;
+    updateBrush(prevBrush => {
+      const nextBrush = {
+        ...prevBrush,
+        isBrushing: false,
+        start: {
+          ...prevBrush.start,
+          x: Math.min(prevBrush.extent.x0, prevBrush.extent.x1),
+          y: Math.min(prevBrush.extent.y0, prevBrush.extent.y1),
+        },
+        end: {
+          ...prevBrush.end,
+          x: Math.max(prevBrush.extent.x0, prevBrush.extent.x1),
+          y: Math.max(prevBrush.extent.y0, prevBrush.extent.y1),
+        },
+      };
+      if (onBrushEnd) {
+        onBrushEnd(nextBrush);
+      }
+
+      return nextBrush;
+    });
   }
 
   render() {
-    const { width, height, stageWidth, stageHeight, brush, updateBrush, disableDraggingSelection, ...restProps } = this.props;
+    const {
+      width,
+      height,
+      stageWidth,
+      stageHeight,
+      brush,
+      updateBrush,
+      disableDraggingSelection,
+      ...restProps
+    } = this.props;
 
     return (
       <Drag
@@ -100,11 +117,13 @@ export default class BrushSelection extends React.Component {
   }
 }
 
-BrushSelection.propType = {
+BrushSelection.propTypes = {
   width: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired,
   stageWidth: PropTypes.number.isRequired,
   stageHeight: PropTypes.number.isRequired,
   brush: PropTypes.object.isRequired,
   updateBrush: PropTypes.func.isRequired,
+  onBrushEnd: PropTypes.func.isRequired,
+  disableDraggingSelection: PropTypes.bool.isRequired,
 };
