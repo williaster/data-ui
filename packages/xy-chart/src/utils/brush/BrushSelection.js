@@ -11,16 +11,19 @@ export default class BrushSelection extends React.Component {
 
   selectionDragMove(drag) {
     const { updateBrush } = this.props;
-    updateBrush((prevBrush) => {
+    updateBrush(prevBrush => {
       const { x: x0, y: y0 } = prevBrush.start;
       const { x: x1, y: y1 } = prevBrush.end;
-      const validDx = drag.dx > 0
-        ? Math.min(drag.dx, prevBrush.bounds.x1 - x1)
-        : Math.max(drag.dx, prevBrush.bounds.x0 - x0);
+      const validDx =
+        drag.dx > 0
+          ? Math.min(drag.dx, prevBrush.bounds.x1 - x1)
+          : Math.max(drag.dx, prevBrush.bounds.x0 - x0);
 
-      const validDy = drag.dy > 0
-        ? Math.min(drag.dy, prevBrush.bounds.y1 - y1)
-        : Math.max(drag.dy, prevBrush.bounds.y0 - y0);
+      const validDy =
+        drag.dy > 0
+          ? Math.min(drag.dy, prevBrush.bounds.y1 - y1)
+          : Math.max(drag.dy, prevBrush.bounds.y0 - y0);
+
       return {
         ...prevBrush,
         isBrushing: true,
@@ -37,74 +40,61 @@ export default class BrushSelection extends React.Component {
 
   selectionDragEnd(drag) {
     const { updateBrush } = this.props;
-    updateBrush(prevBrush => {
-      return {
-        ...prevBrush,
-        isBrushing: false,
-        start: {
-          ...prevBrush.start,
-          x: Math.min(prevBrush.extent.x0, prevBrush.extent.x1),
-          y: Math.min(prevBrush.extent.y0, prevBrush.extent.y1),
-        },
-        end: {
-          ...prevBrush.end,
-          x: Math.max(prevBrush.extent.x0, prevBrush.extent.x1),
-          y: Math.max(prevBrush.extent.y0, prevBrush.extent.y1),
-        },
-      };
-    });
+    updateBrush(prevBrush => ({
+      ...prevBrush,
+      isBrushing: false,
+      start: {
+        ...prevBrush.start,
+        x: Math.min(prevBrush.extent.x0, prevBrush.extent.x1),
+        y: Math.min(prevBrush.extent.y0, prevBrush.extent.y1),
+      },
+      end: {
+        ...prevBrush.end,
+        x: Math.max(prevBrush.extent.x0, prevBrush.extent.x1),
+        y: Math.max(prevBrush.extent.y0, prevBrush.extent.y1),
+      },
+    }));
   }
 
   render() {
-    const {
-      width,
-      height,
-      stageWidth,
-      stageHeight,
-      brush,
-      updateBrush,
-      ...restProps
-    } = this.props;
+    const { width, height, stageWidth, stageHeight, brush, updateBrush, ...restProps } = this.props;
+
     return (
       <Drag
         width={width}
         height={height}
-        resetOnStart={true}
+        resetOnStart
         onDragMove={this.selectionDragMove}
         onDragEnd={this.selectionDragEnd}
       >
-        {selection => {
-          return (
-            <g>
-              {selection.isDragging && (
-                <rect
-                  width={stageWidth}
-                  height={stageHeight}
-                  fill="transparent"
-                  onMouseUp={selection.dragEnd}
-                  onMouseMove={selection.dragMove}
-                  onMouseLeave={selection.dragEnd}
-                />
-              )}
+        {selection => (
+          <g>
+            {selection.isDragging && (
               <rect
-                x={Math.min(brush.extent.x0, brush.extent.x1)}
-                y={Math.min(brush.extent.y0, brush.extent.y1)}
-                width={width}
-                height={height}
-                onMouseDown={selection.dragStart}
-                onMouseMove={selection.dragMove}
+                width={stageWidth}
+                height={stageHeight}
+                fill="transparent"
                 onMouseUp={selection.dragEnd}
-                style={{
-                  pointerEvents:
-                    brush.isBrushing || brush.activeHandle
-                      ? 'none'
-                      : 'all',
-                }}
-                {...restProps}
+                onMouseMove={selection.dragMove}
+                onMouseLeave={selection.dragEnd}
               />
-            </g>
-          );
-        }}
+            )}
+            <rect
+              x={Math.min(brush.extent.x0, brush.extent.x1)}
+              y={Math.min(brush.extent.y0, brush.extent.y1)}
+              width={width}
+              height={height}
+              onMouseDown={selection.dragStart}
+              onMouseMove={selection.dragMove}
+              onMouseUp={selection.dragEnd}
+              style={{
+                pointerEvents: brush.isBrushing || brush.activeHandle ? 'none' : 'all',
+                cursor: 'move',
+              }}
+              {...restProps}
+            />
+          </g>
+        )}
       </Drag>
     );
   }

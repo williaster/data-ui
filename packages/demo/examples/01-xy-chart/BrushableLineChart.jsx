@@ -6,6 +6,7 @@ import {
   XYChart,
   CrossHair,
   XAxis,
+  YAxis,
   theme,
   withScreenSize,
   LineSeries,
@@ -16,16 +17,13 @@ import {
 
 import colors from '@data-ui/theme/lib/color';
 
-import {
-  timeSeriesData,
-} from './data';
+import { timeSeriesData } from './data';
 import PointSeries from '../../node_modules/@data-ui/xy-chart/lib/series/PointSeries';
 
 export const parseDate = timeParse('%Y%m%d');
 export const formatDate = timeFormat('%b %d');
 export const formatYear = timeFormat('%Y');
 export const dateFormatter = date => formatDate(parseDate(date));
-
 
 class BrushableLineChart extends React.PureComponent {
   constructor(props) {
@@ -34,15 +32,30 @@ class BrushableLineChart extends React.PureComponent {
       pointData: [...timeSeriesData],
       brushDirection: 'horizontal',
       resizeTriggerAreas: ['left', 'right'],
+      brushRegion: 'chart',
+      xAxisOrientation: 'bottom',
+      yAxisOrientation: 'left',
     };
     this.handleBrushChange = this.handleBrushChange.bind(this);
   }
 
   handleBrushChange(domain) {
+    const { brushDirection } = this.state;
     let pointData;
     if (domain) {
-      console.log(timeSeriesData);
-      pointData = timeSeriesData.filter(point => point.x > domain.x0 && point.x < domain.x1);
+      if (brushDirection === 'horizontal') {
+        pointData = timeSeriesData.filter(point => point.x > domain.x0 && point.x < domain.x1);
+      } else if (brushDirection === 'vertical') {
+        pointData = timeSeriesData.filter(point => point.y > domain.y0 && point.y < domain.y1);
+      } else {
+        pointData = timeSeriesData.filter(
+          point =>
+            point.x > domain.x0 &&
+            point.x < domain.x1 &&
+            point.y > domain.y0 &&
+            point.y < domain.y1,
+        );
+      }
     } else {
       pointData = [...timeSeriesData];
     }
@@ -54,6 +67,7 @@ class BrushableLineChart extends React.PureComponent {
   renderControls() {
     const { resizeTriggerAreas } = this.state;
     const resizeTriggerAreaset = new Set(resizeTriggerAreas);
+
     return (
       <div className="brush-demo--form">
         <h4>Brush Props</h4>
@@ -85,6 +99,91 @@ class BrushableLineChart extends React.PureComponent {
               checked={this.state.brushDirection === 'both'}
             />{' '}
             both
+          </label>
+        </div>
+
+        <div>
+          Brush brushRegion:
+          <label>
+            <input
+              type="radio"
+              value="xAxis"
+              onChange={e =>
+                this.setState({
+                  brushRegion: e.target.value,
+                  brushDirection: 'horizontal',
+                })
+              }
+              checked={this.state.brushRegion === 'xAxis'}
+            />{' '}
+            xAxis
+          </label>
+          <label>
+            <input
+              type="radio"
+              value="yAxis"
+              onChange={e =>
+                this.setState({
+                  brushRegion: e.target.value,
+                  brushDirection: 'vertical',
+                })
+              }
+              checked={this.state.brushRegion === 'yAxis'}
+            />{' '}
+            yAxis
+          </label>
+          <label>
+            <input
+              type="radio"
+              value="chart"
+              onChange={e => this.setState({ brushRegion: e.target.value })}
+              checked={this.state.brushRegion === 'chart'}
+            />{' '}
+            chart
+          </label>
+        </div>
+
+        <div>
+          X Axis Orientation:
+          <label>
+            <input
+              type="radio"
+              value="top"
+              onChange={e => this.setState({ xAxisOrientation: e.target.value })}
+              checked={this.state.xAxisOrientation === 'top'}
+            />{' '}
+            top
+          </label>
+          <label>
+            <input
+              type="radio"
+              value="bottom"
+              onChange={e => this.setState({ xAxisOrientation: e.target.value })}
+              checked={this.state.xAxisOrientation === 'bottom'}
+            />{' '}
+            bottom
+          </label>
+        </div>
+
+        <div>
+          Y Axis Orientation:
+          <label>
+            <input
+              type="radio"
+              value="left"
+              onChange={e => this.setState({ yAxisOrientation: e.target.value })}
+              checked={this.state.yAxisOrientation === 'left'}
+            />{' '}
+            left
+          </label>
+          <label>
+            <input
+              type="radio"
+              value="right"
+              onChange={e => this.setState({ yAxisOrientation: 'right' })}
+              checked={this.state.yAxisOrientation === 'right'}
+            />{' '}
+            right
           </label>
         </div>
 
@@ -244,7 +343,15 @@ class BrushableLineChart extends React.PureComponent {
 
   render() {
     const { screenWidth, ...rest } = this.props;
-    const { pointData, brushDirection, resizeTriggerAreas } = this.state;
+    const {
+      pointData,
+      brushDirection,
+      resizeTriggerAreas,
+      brushRegion,
+      xAxisOrientation,
+      yAxisOrientation,
+    } = this.state;
+
     return (
       <div className="brush-demo">
         {this.renderControls()}
@@ -255,7 +362,7 @@ class BrushableLineChart extends React.PureComponent {
           ariaLabel="Required label"
           xScale={{ type: 'time' }}
           yScale={{ type: 'linear' }}
-          margin={{ left: 8, top: 32, bottom: 64 }}
+          margin={{ left: 100, top: 64, bottom: 64 }}
           {...rest}
         >
           <LinearGradient id="area_gradient" from={colors.categories[2]} to="#fff" />
@@ -267,16 +374,8 @@ class BrushableLineChart extends React.PureComponent {
             strokeWidth={1}
             orientation={['diagonal']}
           />
-          <LineSeries
-            seriesKey="one"
-            data={timeSeriesData}
-            strokeWidth={1}
-          />
-          <PointSeries
-            seriesKey="one"
-            data={pointData}
-            strokeWidth={1}
-          />
+          <LineSeries seriesKey="one" data={timeSeriesData} strokeWidth={1} />
+          <PointSeries seriesKey="one" data={pointData} strokeWidth={1} />
           <CrossHair
             showHorizontalLine={false}
             fullHeight
@@ -284,13 +383,14 @@ class BrushableLineChart extends React.PureComponent {
             circleFill={colors.categories[2]}
             circleStroke="white"
           />
-          <XAxis label="Time" numTicks={5} />
+          <YAxis label="Value" numTicks={5} orientation={yAxisOrientation} />
+          <XAxis label="Time" numTicks={5} orientation={xAxisOrientation} />
           <Brush
             handleSize={4}
             resizeTriggerAreas={resizeTriggerAreas}
             brushDirection={brushDirection}
             onChange={this.handleBrushChange}
-            brushRegion="chart"
+            brushRegion={brushRegion}
           />
         </XYChart>
 

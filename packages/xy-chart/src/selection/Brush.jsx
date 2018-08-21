@@ -3,29 +3,58 @@ import React from 'react';
 import { color } from '@data-ui/theme';
 
 import BaseBrush from '../utils/brush/Brush';
+import { generalStyleShape, marginShape } from '../utils/propShapes';
 
 const SAFE_PIXEL = 2;
 
 export const propTypes = {
-  label: PropTypes.node,
-  stroke: PropTypes.string,
-  strokeDasharray: PropTypes.string,
-  strokeWidth: PropTypes.number,
+  selectedBoxStyle: generalStyleShape,
   xScale: PropTypes.func,
   yScale: PropTypes.func,
   innerHeight: PropTypes.number.isRequired,
   innerWidth: PropTypes.number.isRequired,
   onChange: PropTypes.func,
+  margin: marginShape,
+  brushDirection: PropTypes.oneOf(['vertical, horizontal, both']),
+  resizeTriggerAreas: PropTypes.arrayOf([
+    'left',
+    'right',
+    'top',
+    'bottom',
+    'topLeft',
+    'topRight',
+    'bottomLeft',
+    'bottomRight',
+  ]),
+  brushRegion: PropTypes.oneOf(['xAxis, yAxis, chart']),
+  registerStartEvent: PropTypes.func,
+  yAxisOrientation: PropTypes.oneOf(['left', 'right']),
+  xAxisOrientation: PropTypes.oneOf(['top', 'bottom']),
 };
 
 const defaultProps = {
-  label: null,
-  stroke: color.darkGray,
-  strokeDasharray: null,
-  strokeWidth: 1,
   xScale: null,
   yScale: null,
   onChange: () => {},
+  selectedBoxStyle: {
+    fill: color.default,
+    fillOpacity: 0.2,
+    stroke: color.default,
+    strokeWidth: 1,
+    strokeOpacity: 0.8,
+  },
+  margin: {
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
+  brushDirection: 'horizontal',
+  resizeTriggerAreas: ['left', 'right'],
+  brushRegion: 'chart',
+  registerStartEvent: null,
+  yAxisOrientation: 'right',
+  xAxisOrientation: 'bottom',
 };
 
 class Brush extends React.Component {
@@ -35,10 +64,11 @@ class Brush extends React.Component {
   }
 
   handleChange(brush) {
-    const { xScale, yScale, margin, onChange } = this.props;
+    const { xScale, yScale, onChange } = this.props;
     const { x0, x1, y0, y1 } = brush.extent;
     if (x0 < 0) {
       onChange(null);
+
       return;
     }
     const invertedX0 = xScale.invert(x0 + (x0 < x1 ? -SAFE_PIXEL : SAFE_PIXEL));
@@ -56,24 +86,25 @@ class Brush extends React.Component {
 
   render() {
     const {
-      label,
-      stroke,
-      strokeDasharray,
-      strokeWidth,
       xScale,
       yScale,
       innerHeight,
       innerWidth,
       margin,
-      onChange,
       brushDirection,
       resizeTriggerAreas,
       brushRegion,
       registerStartEvent,
+      yAxisOrientation,
+      xAxisOrientation,
+      selectedBoxStyle,
     } = this.props;
     if (!xScale || !yScale) return null;
 
-    let brushRegionWidth, brushRegionHeight, left, top;
+    let brushRegionWidth;
+    let brushRegionHeight;
+    let left;
+    let top;
 
     if (brushRegion === 'chart') {
       left = 0;
@@ -81,20 +112,29 @@ class Brush extends React.Component {
       brushRegionWidth = innerWidth;
       brushRegionHeight = innerHeight;
     } else if (brushRegion === 'yAxis') {
-      left = -margin.left;
       top = 0;
-      brushRegionWidth = margin.left;
       brushRegionHeight = innerHeight;
+      if (yAxisOrientation === 'right') {
+        left = innerWidth;
+        brushRegionWidth = margin.right;
+      } else {
+        left = -margin.left;
+        brushRegionWidth = margin.left;
+      }
     } else {
       left = 0;
-      top = innerHeight;
       brushRegionWidth = innerWidth;
-      brushRegionHeight = margin.bottom;
+      if (xAxisOrientation === 'bottom') {
+        top = innerHeight;
+        brushRegionHeight = margin.bottom;
+      } else {
+        top = -margin.top;
+        brushRegionHeight = margin.top;
+      }
     }
 
     return (
       <BaseBrush
-        data={[]}
         width={brushRegionWidth}
         height={brushRegionHeight}
         left={left}
@@ -105,7 +145,9 @@ class Brush extends React.Component {
         resizeTriggerAreas={resizeTriggerAreas}
         brushDirection={brushDirection}
         registerStartEvent={registerStartEvent}
-      />);
+        selectedBoxStyle={selectedBoxStyle}
+      />
+    );
   }
 }
 

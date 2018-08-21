@@ -3,6 +3,7 @@ import { Drag } from '../drag';
 
 function handleResizeMove(drag, onBrushEnd) {
   const { dx } = drag;
+
   return prevBrush => {
     const { start, end, domain } = prevBrush;
     const nextState = {
@@ -13,6 +14,7 @@ function handleResizeMove(drag, onBrushEnd) {
       },
     };
     if (onBrushEnd) onBrushEnd(nextState);
+
     return nextState;
   };
 }
@@ -35,6 +37,7 @@ function handleResizeEnd(drag, onBrushEnd) {
       },
     };
     if (onBrushEnd) onBrushEnd(nextState);
+
     return nextState;
   };
 }
@@ -45,54 +48,56 @@ export default class RightHandle extends React.Component {
     this.dragMove = this.dragMove.bind(this);
     this.dragEnd = this.dragEnd.bind(this);
   }
+
   dragMove(drag) {
     const { updateBrush, onBrushEnd } = this.props;
     updateBrush(handleResizeMove(drag, onBrushEnd));
   }
+
   dragEnd(drag) {
     const { updateBrush, onBrushEnd, brush } = this.props;
     updateBrush(handleResizeEnd(drag, onBrushEnd));
   }
+
   render() {
     const { width, height, top, left, brush } = this.props;
+
     return (
       <Drag
         width={width}
         height={height}
-        resetOnStart={true}
+        resetOnStart
         onDragMove={this.dragMove}
         onDragEnd={this.dragEnd}
       >
-        {right => {
-          return (
-            <rect
-              width={6}
-              height={height}
-              x={brush.domain.x1 - left - 3}
-              y={0}
-              fill="transparent"
-              style={{
-                cursor: brush.isBrushing ? undefined : 'ew-resize',
-              }}
-              onMouseUp={event => {
-                if (brush.isBrushing) {
-                  return this.dragEnd(event);
-                }
-                right.dragEnd(event);
-              }}
-              onMouseDown={event => {
-                if (brush.isBrushing) return;
-                right.dragStart(event);
-              }}
-              onMouseMove={event => {
-                if (brush.isBrushing) {
-                  return this.dragMove(event);
-                }
-                if (right.isDragging) right.dragMove(event);
-              }}
-            />
-          );
-        }}
+        {right => (
+          <rect
+            width={6}
+            height={height}
+            x={brush.domain.x1 - left - 3}
+            y={0}
+            fill="transparent"
+            style={{
+              cursor: brush.isBrushing ? undefined : 'ew-resize',
+            }}
+            onMouseUp={event => {
+              if (brush.isBrushing) {
+                return this.dragEnd(event);
+              }
+              right.dragEnd(event);
+            }}
+            onMouseDown={event => {
+              if (brush.isBrushing) return;
+              right.dragStart(event);
+            }}
+            onMouseMove={event => {
+              if (brush.isBrushing) {
+                return this.dragMove(event);
+              }
+              if (right.isDragging) right.dragMove(event);
+            }}
+          />
+        )}
       </Drag>
     );
   }

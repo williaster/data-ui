@@ -36,8 +36,18 @@ export const pointData = genRandomNormalPoints(n).forEach(([x, y], i) => {
 });
 
 const marginScatter = { top: 10, right: 10, bottom: 64, left: 64 };
-const marginTopHist = { top: 10, right: marginScatter.right, bottom: 5, left: marginScatter.left };
-const marginSideHist = { top: 10, right: marginScatter.bottom, bottom: 5, left: marginScatter.top };
+const marginTopHist = {
+  top: 10,
+  right: marginScatter.right,
+  bottom: 5,
+  left: marginScatter.left,
+};
+const marginSideHist = {
+  top: 10,
+  right: marginScatter.bottom,
+  bottom: 5,
+  left: marginScatter.top,
+};
 
 // eslint-disable-next-line react/prop-types
 function renderTooltip({ datum }) {
@@ -104,7 +114,13 @@ class ScatterWithHistogram extends React.PureComponent {
 
   renderRightHistogram({ width, height }) {
     return (
-      <div style={{ transform: 'rotate(90deg)', display: 'flex', alignItems: 'flex-end' }}>
+      <div
+        style={{
+          transform: 'rotate(90deg)',
+          display: 'flex',
+          alignItems: 'flex-end',
+        }}
+      >
         <Histogram
           width={width}
           height={height}
@@ -178,7 +194,10 @@ class ScatterWithHistogram extends React.PureComponent {
           {this.renderTopHistogram({ width: scatterSize, height: histSize })}
           <div style={{ display: 'flex', flexDirection: 'row' }}>
             {this.renderScatter({ width: scatterSize, height: scatterSize })}
-            {this.renderRightHistogram({ width: scatterSize, height: histSize })}
+            {this.renderRightHistogram({
+              width: scatterSize,
+              height: histSize,
+            })}
           </div>
         </div>
         <Checkbox

@@ -2,7 +2,7 @@ import React from 'react';
 import { allColors } from '@data-ui/theme';
 import { Button } from '@data-ui/forms';
 
-import { CrossHair, LineSeries, WithTooltip, XAxis, YAxis, Brush } from '@data-ui/xy-chart';
+import { CrossHair, LineSeries, WithTooltip, XAxis, YAxis } from '@data-ui/xy-chart';
 
 import ResponsiveXYChart, { formatYear } from './ResponsiveXYChart';
 import { timeSeriesData } from './data';

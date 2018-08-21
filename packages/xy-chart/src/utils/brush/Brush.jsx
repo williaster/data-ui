@@ -7,10 +7,12 @@ import BrushHandle from './BrushHandle';
 import BrushCorner from './BrushCorner';
 import BrushSelection from './BrushSelection';
 import { Drag } from '../drag';
+import { marginShape, generalStyleShape } from '../propShapes';
 
 export default class Brush extends React.Component {
   constructor(props) {
     super(props);
+    const { width, height } = props;
     this.state = {
       start: { x: 0, y: 0 },
       end: { x: 0, y: 0 },
@@ -22,9 +24,9 @@ export default class Brush extends React.Component {
       },
       bounds: {
         x0: 0,
-        x1: props.width,
+        x1: width,
         y0: 0,
-        y1: props.height,
+        y1: height,
       },
     };
     this.width = this.width.bind(this);
@@ -41,18 +43,11 @@ export default class Brush extends React.Component {
 
   getExtent(start, end) {
     const { brushDirection, width, height } = this.props;
-    const x0 = brushDirection === 'vertical'
-      ? 0
-      : Math.min(start.x, end.x);
-    const x1 = brushDirection === 'vertical'
-      ? width
-      : Math.max(start.x, end.x);
-    const y0 = brushDirection === 'horizontal'
-      ? 0
-      : Math.min(start.y, end.y);
-    const y1 = brushDirection === 'horizontal'
-      ? height
-      : Math.max(start.y, end.y);
+    const x0 = brushDirection === 'vertical' ? 0 : Math.min(start.x, end.x);
+    const x1 = brushDirection === 'vertical' ? width : Math.max(start.x, end.x);
+    const y0 = brushDirection === 'horizontal' ? 0 : Math.min(start.y, end.y);
+    const y1 = brushDirection === 'horizontal' ? height : Math.max(start.y, end.y);
+
     return {
       x0,
       x1,
@@ -93,9 +88,10 @@ export default class Brush extends React.Component {
       x: draw.x + draw.dx - left - inheritedMargin.left,
       y: draw.y + draw.dy - top - inheritedMargin.top,
     };
-    this.update((prevBrush) => {
+    this.update(prevBrush => {
       const { start } = prevBrush;
       const extent = this.getExtent(start, end);
+
       return {
         ...prevBrush,
         end,
@@ -105,8 +101,9 @@ export default class Brush extends React.Component {
   }
 
   handleDragEnd() {
-    this.update(((prevBrush) => {
+    this.update(prevBrush => {
       const { extent } = prevBrush;
+
       return {
         ...prevBrush,
         start: {
@@ -119,18 +116,20 @@ export default class Brush extends React.Component {
         },
         isBrushing: false,
       };
-    }));
+    });
   }
 
   width() {
     const { extent } = this.state;
     const { x0, x1 } = extent;
+
     return Math.max(Math.max(x0, x1) - Math.min(x0, x1), 0);
   }
 
   height() {
     const { extent } = this.state;
     const { y1, y0 } = extent;
+
     return Math.max(y1 - y0, 0);
   }
 
@@ -141,6 +140,7 @@ export default class Brush extends React.Component {
     const offset = handleSize / 2;
     const width = this.width();
     const height = this.height();
+
     return {
       top: {
         x: x0 - offset,
@@ -174,6 +174,7 @@ export default class Brush extends React.Component {
     const { extent } = this.state;
     const { x0, x1, y0, y1 } = extent;
     const offset = handleSize / 2;
+
     return {
       topLeft: {
         x: Math.min(x0, x1) - offset,
@@ -195,47 +196,43 @@ export default class Brush extends React.Component {
   }
 
   update(updater) {
+    const { onChange } = this.props;
     this.setState(updater, () => {
-      this.props.onChange(this.state);
+      if (onChange) {
+        onChange(this.state);
+      }
     });
   }
 
   reset() {
-    this.update(prevBrush => {
-      return {
-        start: undefined,
-        end: undefined,
-        extent: {
-          x0: undefined,
-          x1: undefined,
-          y0: undefined,
-          y1: undefined,
-        },
-        isBrushing: false,
-        activeHandle: undefined,
-      };
-    });
+    this.update(prevBrush => ({
+      start: undefined,
+      end: undefined,
+      extent: {
+        x0: undefined,
+        x1: undefined,
+        y0: undefined,
+        y1: undefined,
+      },
+      isBrushing: false,
+      activeHandle: undefined,
+    }));
   }
 
   render() {
-    const {
-      start,
-      end,
-    } = this.state;
+    const { start, end } = this.state;
     const {
       top,
       left,
-      data,
       width: stageWidth,
       height: stageHeight,
       handleSize,
-      onBrushStart,
       onMouseLeave,
       onMouseUp,
       onMouseMove,
       resizeTriggerAreas,
-      brushDirection,
-      registerStartEvent
+      registerStartEvent,
+      selectedBoxStyle,
     } = this.props;
 
     const handles = this.handles();
@@ -243,6 +240,7 @@ export default class Brush extends React.Component {
     const width = this.width();
     const height = this.height();
     const resizeTriggerAreaSet = new Set(resizeTriggerAreas);
+
     return (
       <Group className="vx-brush" top={top} left={left}>
         {/* overlay */}
@@ -255,28 +253,26 @@ export default class Brush extends React.Component {
           onDragEnd={this.handleDragEnd}
           registerStartEvent={registerStartEvent}
         >
-          {(draw) => {
+          {draw => {
             if (!registerStartEvent || (registerStartEvent && draw.isDragging)) {
               return (
                 <Bar
-                  data={data}
                   className="vx-brush-overlay"
                   fill="transparent"
                   x={0}
                   y={0}
                   width={stageWidth}
                   height={stageHeight}
-                  onDoubleClick={data => event => this.reset(event)}
-                  onMouseDown={data => event => draw.dragStart(event)}
-                  onMouseLeave={data => event => {
+                  onDoubleClick={() => event => this.reset(event)}
+                  onMouseDown={() => event => draw.dragStart(event)}
+                  onMouseLeave={() => event => {
                     if (onMouseLeave) onMouseLeave(event);
                   }}
-                  onMouseMove={data => event => {
-                    if (!draw.isDragging && onMouseMove)
-                      this.props.onMouseMove(event);
+                  onMouseMove={() => event => {
+                    if (!draw.isDragging && onMouseMove) onMouseMove(event);
                     if (draw.isDragging) draw.dragMove(event);
                   }}
-                  onMouseUp={data => event => {
+                  onMouseUp={() => event => {
                     if (onMouseUp) onMouseUp(event);
                     draw.dragEnd(event);
                   }}
@@ -284,6 +280,8 @@ export default class Brush extends React.Component {
                 />
               );
             }
+
+            return null;
           }}
         </Drag>
         {/* selection */}
@@ -296,52 +294,53 @@ export default class Brush extends React.Component {
               stageWidth={stageWidth}
               stageHeight={stageHeight}
               brush={{ ...this.state }}
-              fill="rgba(4, 154, 251, 1.000)"
-              fillOpacity={0.1}
-              stroke="rgba(4, 154, 251, 1.000)"
-              strokeWidth={1}
-              strokeOpacity={0.8}
+              {...selectedBoxStyle}
             />
           )}
         {/* handles */}
         {start &&
           end &&
-          Object.keys(handles).filter(handleKey => resizeTriggerAreaSet.has(handleKey)).map((handleKey, i) => {
-            const handle = handles[handleKey];
-            return (
-              <BrushHandle
-                key={`handle-${i}`}
-                type={handleKey}
-                handle={handle}
-                stageWidth={stageWidth}
-                stageHeight={stageHeight}
-                updateBrush={this.update}
-                brush={this.state}
-              />
-            );
-          })}
+          Object.keys(handles)
+            .filter(handleKey => resizeTriggerAreaSet.has(handleKey))
+            .map((handleKey, i) => {
+              const handle = handles[handleKey];
+
+              return (
+                <BrushHandle
+                  key={`handle-${handleKey}`}
+                  type={handleKey}
+                  handle={handle}
+                  stageWidth={stageWidth}
+                  stageHeight={stageHeight}
+                  updateBrush={this.update}
+                  brush={this.state}
+                />
+              );
+            })}
         {/* corners */}
         {start &&
           end &&
-          Object.keys(corners).filter(cornerKey => resizeTriggerAreaSet.has(cornerKey)).map((cornerKey, i) => {
-            const corner = corners[cornerKey];
-            return (
-              <BrushCorner
-                key={`corner-${i}`}
-                type={cornerKey}
-                brush={this.state}
-                updateBrush={this.update}
-                stageWidth={stageWidth}
-                stageHeight={stageHeight}
-                x={corner.x}
-                y={corner.y}
-                width={handleSize}
-                height={handleSize}
-                fill={'transparent'}
-              />
-            );
-          })}
-        )}
+          Object.keys(corners)
+            .filter(cornerKey => resizeTriggerAreaSet.has(cornerKey))
+            .map((cornerKey, i) => {
+              const corner = corners[cornerKey];
+
+              return (
+                <BrushCorner
+                  key={`corner-${cornerKey}`}
+                  type={cornerKey}
+                  brush={this.state}
+                  updateBrush={this.update}
+                  stageWidth={stageWidth}
+                  stageHeight={stageHeight}
+                  x={corner.x}
+                  y={corner.y}
+                  width={handleSize}
+                  height={handleSize}
+                  fill="transparent"
+                />
+              );
+            })}
       </Group>
     );
   }
@@ -349,8 +348,45 @@ export default class Brush extends React.Component {
 
 Brush.propTypes = {
   brushDirection: PropTypes.oneOf(['horizontal', 'vertical', 'both']),
+  width: PropTypes.number.isRequired,
+  height: PropTypes.number.isRequired,
+  left: PropTypes.number.isRequired,
+  top: PropTypes.number.isRequired,
+  inheritedMargin: marginShape,
+  onChange: PropTypes.func,
+  handleSize: PropTypes.number,
+  resizeTriggerAreas: PropTypes.arrayOf([
+    'left',
+    'right',
+    'top',
+    'bottom',
+    'topLeft',
+    'topRight',
+    'bottomLeft',
+    'bottomRight',
+  ]),
+  registerStartEvent: PropTypes.func,
+  onBrushStart: PropTypes.func,
+  selectedBoxStyle: generalStyleShape.isRequired,
+  onMouseLeave: PropTypes.func,
+  onMouseUp: PropTypes.func,
+  onMouseMove: PropTypes.func,
 };
 
 Brush.defaultProps = {
   brushDirection: 'both',
+  inheritedMargin: {
+    left: 0,
+    top: 0,
+    right: 0,
+    bottom: 0,
+  },
+  onChange: null,
+  handleSize: 4,
+  resizeTriggerAreas: ['left', 'right'],
+  registerStartEvent: null,
+  onBrushStart: null,
+  onMouseLeave: null,
+  onMouseUp: null,
+  onMouseMove: null,
 };

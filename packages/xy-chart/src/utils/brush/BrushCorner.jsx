@@ -8,6 +8,7 @@ export default class BrushCorner extends React.Component {
     this.cornerDragMove = this.cornerDragMove.bind(this);
     this.cornerDragEnd = this.cornerDragEnd.bind(this);
   }
+
   cornerDragMove(drag) {
     const { handle, updateBrush, type } = this.props;
     if (!drag.isDragging) return;
@@ -32,22 +33,10 @@ export default class BrushCorner extends React.Component {
             activeHandle: type,
             extent: {
               ...prevBrush.extent,
-              x0: Math.max(
-                Math.min(moveX, start.x),
-                prevBrush.bounds.x0,
-              ),
-              x1: Math.min(
-                Math.max(moveX, start.x),
-                prevBrush.bounds.x1,
-              ),
-              y0: Math.max(
-                Math.min(moveY, end.y),
-                prevBrush.bounds.y0,
-              ),
-              y1: Math.min(
-                Math.max(moveY, end.y),
-                prevBrush.bounds.y1,
-              ),
+              x0: Math.max(Math.min(moveX, start.x), prevBrush.bounds.x0),
+              x1: Math.min(Math.max(moveX, start.x), prevBrush.bounds.x1),
+              y0: Math.max(Math.min(moveY, end.y), prevBrush.bounds.y0),
+              y1: Math.min(Math.max(moveY, end.y), prevBrush.bounds.y1),
             },
           };
           break;
@@ -59,22 +48,10 @@ export default class BrushCorner extends React.Component {
             activeHandle: type,
             extent: {
               ...prevBrush.extent,
-              x0: Math.max(
-                Math.min(moveX, end.x),
-                prevBrush.bounds.x0,
-              ),
-              x1: Math.min(
-                Math.max(moveX, end.x),
-                prevBrush.bounds.x1,
-              ),
-              y0: Math.max(
-                Math.min(moveY, end.y),
-                prevBrush.bounds.y0,
-              ),
-              y1: Math.min(
-                Math.max(moveY, end.y),
-                prevBrush.bounds.y1,
-              ),
+              x0: Math.max(Math.min(moveX, end.x), prevBrush.bounds.x0),
+              x1: Math.min(Math.max(moveX, end.x), prevBrush.bounds.x1),
+              y0: Math.max(Math.min(moveY, end.y), prevBrush.bounds.y0),
+              y1: Math.min(Math.max(moveY, end.y), prevBrush.bounds.y1),
             },
           };
           break;
@@ -86,22 +63,10 @@ export default class BrushCorner extends React.Component {
             activeHandle: type,
             extent: {
               ...prevBrush.extent,
-              x0: Math.max(
-                Math.min(moveX, end.x),
-                prevBrush.bounds.x0,
-              ),
-              x1: Math.min(
-                Math.max(moveX, end.x),
-                prevBrush.bounds.x1,
-              ),
-              y0: Math.max(
-                Math.min(moveY, start.y),
-                prevBrush.bounds.y0,
-              ),
-              y1: Math.min(
-                Math.max(moveY, start.y),
-                prevBrush.bounds.y1,
-              ),
+              x0: Math.max(Math.min(moveX, end.x), prevBrush.bounds.x0),
+              x1: Math.min(Math.max(moveX, end.x), prevBrush.bounds.x1),
+              y0: Math.max(Math.min(moveY, start.y), prevBrush.bounds.y0),
+              y1: Math.min(Math.max(moveY, start.y), prevBrush.bounds.y1),
             },
           };
           break;
@@ -113,29 +78,21 @@ export default class BrushCorner extends React.Component {
             activeHandle: type,
             extent: {
               ...prevBrush.extent,
-              x0: Math.max(
-                Math.min(moveX, start.x),
-                prevBrush.bounds.x0,
-              ),
-              x1: Math.min(
-                Math.max(moveX, start.x),
-                prevBrush.bounds.x1,
-              ),
-              y0: Math.max(
-                Math.min(moveY, start.y),
-                prevBrush.bounds.y0,
-              ),
-              y1: Math.min(
-                Math.max(moveY, start.y),
-                prevBrush.bounds.y1,
-              ),
+              x0: Math.max(Math.min(moveX, start.x), prevBrush.bounds.x0),
+              x1: Math.min(Math.max(moveX, start.x), prevBrush.bounds.x1),
+              y0: Math.max(Math.min(moveY, start.y), prevBrush.bounds.y0),
+              y1: Math.min(Math.max(moveY, start.y), prevBrush.bounds.y1),
             },
           };
           break;
+        default:
+          break;
       }
+
       return nextState;
     });
   }
+
   cornerDragEnd(drag) {
     const { type, handle, updateBrush } = this.props;
     updateBrush(prevBrush => {
@@ -156,9 +113,11 @@ export default class BrushCorner extends React.Component {
           y1: Math.max(start.y, end.y),
         },
       };
+
       return nextState;
     });
   }
+
   render() {
     const {
       type,
@@ -169,49 +128,44 @@ export default class BrushCorner extends React.Component {
       style: styleProp,
       ...restProps
     } = this.props;
-    const cursor =
-      type === 'topLeft' || type === 'bottomRight'
-        ? 'nwse-resize'
-        : 'nesw-resize';
-    const pointerEvents =
-      brush.activeHandle || brush.isBrushing ? 'none' : 'all';
+    const cursor = type === 'topLeft' || type === 'bottomRight' ? 'nwse-resize' : 'nesw-resize';
+    const pointerEvents = brush.activeHandle || brush.isBrushing ? 'none' : 'all';
     const style = {
       cursor,
       pointerEvents,
       ...styleProp,
     };
+
     return (
       <Drag
         width={stageWidth}
         height={stageHeight}
         onDragMove={this.cornerDragMove}
         onDragEnd={this.cornerDragEnd}
-        resetOnStart={true}
+        resetOnStart
       >
-        {corner => {
-          return (
-            <g>
-              {corner.isDragging && (
-                <rect
-                  fill="transparent"
-                  width={stageWidth}
-                  height={stageHeight}
-                  style={{ cursor: style.cursor }}
-                  onMouseMove={corner.dragMove}
-                  onMouseUp={corner.dragEnd}
-                />
-              )}
+        {corner => (
+          <g>
+            {corner.isDragging && (
               <rect
                 fill="transparent"
-                onMouseDown={corner.dragStart}
+                width={stageWidth}
+                height={stageHeight}
+                style={{ cursor: style.cursor }}
                 onMouseMove={corner.dragMove}
                 onMouseUp={corner.dragEnd}
-                style={style}
-                {...restProps}
               />
-            </g>
-          );
-        }}
+            )}
+            <rect
+              fill="transparent"
+              onMouseDown={corner.dragStart}
+              onMouseMove={corner.dragMove}
+              onMouseUp={corner.dragEnd}
+              style={style}
+              {...restProps}
+            />
+          </g>
+        )}
       </Drag>
     );
   }

@@ -65,8 +65,20 @@ class HistogramPlayground extends React.PureComponent {
 
     this.state = {
       datasets: [0, 1],
-      0: getDataset({ n: NUM_POINTS, mu: 0, sigma: 1, distribution: 'normal', color: colors[0] }),
-      1: getDataset({ n: NUM_POINTS, mu: 2, sigma: 1, distribution: 'normal', color: colors[1] }),
+      0: getDataset({
+        n: NUM_POINTS,
+        mu: 0,
+        sigma: 1,
+        distribution: 'normal',
+        color: colors[0],
+      }),
+      1: getDataset({
+        n: NUM_POINTS,
+        mu: 2,
+        sigma: 1,
+        distribution: 'normal',
+        color: colors[1],
+      }),
 
       cumulative: false,
       normalized: false,

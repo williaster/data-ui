@@ -33,8 +33,11 @@ class Voronoi extends React.PureComponent {
   }
 
   componentWillReceiveProps(nextProps) {
-    // eslint-disable-next-line react/destructuring-assignment
-    if (['data', 'x', 'y', 'width', 'height'].some(prop => this.props[prop] !== nextProps[prop])) {
+    if (
+      ['data', 'x', 'y', 'width', 'height'].some(
+        prop => this.props[prop] !== nextProps[prop], // eslint-disable-line react/destructuring-assignment
+      )
+    ) {
       this.setState({ voronoi: Voronoi.getVoronoi(nextProps) });
     }
   }
@@ -58,12 +61,6 @@ class Voronoi extends React.PureComponent {
             fill="transparent"
             stroke={showVoronoi ? '#ddd' : 'transparent'}
             strokeWidth={1}
-            onClick={
-              onClick &&
-              (() => event => {
-                onClick({ event, datum: polygon.data });
-              })
-            }
             onClick={
               onClick &&
               (() => event => {

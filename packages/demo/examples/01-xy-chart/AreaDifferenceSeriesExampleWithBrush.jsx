@@ -62,6 +62,7 @@ class AreaDifferenceSeriesExampleWithBrush extends React.PureComponent {
 
   renderControls() {
     const { threshold } = this.state;
+
     return (
       <div style={{ display: 'flex', flexDirection: 'row' }}>
         <div>

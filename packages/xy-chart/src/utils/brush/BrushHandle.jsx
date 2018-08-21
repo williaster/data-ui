@@ -8,11 +8,12 @@ export default class BrushHandle extends React.Component {
     this.handleDragMove = this.handleDragMove.bind(this);
     this.handleDragEnd = this.handleDragEnd.bind(this);
   }
+
   handleDragMove(drag) {
-    const { handle, updateBrush, type } = this.props;
+    const { updateBrush, type } = this.props;
     if (!drag.isDragging) return;
     updateBrush(prevBrush => {
-      const { start, end, isBrushing } = prevBrush;
+      const { start, end } = prevBrush;
       let nextState = {};
       let move = 0;
       const xMax = Math.max(start.x, end.x);
@@ -27,14 +28,8 @@ export default class BrushHandle extends React.Component {
             activeHandle: type,
             extent: {
               ...prevBrush.extent,
-              x0: Math.max(
-                Math.min(move, start.x),
-                prevBrush.bounds.x0,
-              ),
-              x1: Math.min(
-                Math.max(move, start.x),
-                prevBrush.bounds.x1,
-              ),
+              x0: Math.max(Math.min(move, start.x), prevBrush.bounds.x0),
+              x1: Math.min(Math.max(move, start.x), prevBrush.bounds.x1),
             },
           };
           break;
@@ -74,10 +69,14 @@ export default class BrushHandle extends React.Component {
             },
           };
           break;
+        default:
+          break;
       }
+
       return nextState;
     });
   }
+
   handleDragEnd(drag) {
     const { type, handle, updateBrush } = this.props;
     updateBrush(prevBrush => {
@@ -99,56 +98,54 @@ export default class BrushHandle extends React.Component {
           y1: Math.max(start.y, end.y),
         },
       };
+
       return nextState;
     });
   }
+
   render() {
     const { stageWidth, stageHeight, brush, type } = this.props;
     const { x, y, width, height } = this.props.handle;
-    const cursor =
-      type === 'right' || type === 'left' ? 'ew-resize' : 'ns-resize';
+    const cursor = type === 'right' || type === 'left' ? 'ew-resize' : 'ns-resize';
+
     return (
       <Drag
         width={stageWidth}
         height={stageHeight}
         onDragMove={this.handleDragMove}
         onDragEnd={this.handleDragEnd}
-        resetOnStart={true}
+        resetOnStart
       >
-        {handle => {
-          return (
-            <g>
-              {handle.isDragging && (
-                <rect
-                  fill="transparent"
-                  width={stageWidth}
-                  height={stageHeight}
-                  style={{ cursor }}
-                  onMouseMove={handle.dragMove}
-                  onMouseUp={handle.dragEnd}
-                  onMouseLeave={handle.dragEnd}
-                />
-              )}
+        {handle => (
+          <g>
+            {handle.isDragging && (
               <rect
-                x={x}
-                y={y}
-                width={width}
-                height={height}
                 fill="transparent"
-                onMouseDown={handle.dragStart}
+                width={stageWidth}
+                height={stageHeight}
+                style={{ cursor }}
                 onMouseMove={handle.dragMove}
                 onMouseUp={handle.dragEnd}
-                style={{
-                  cursor,
-                  pointerEvents:
-                    !!brush.activeHandle || !!brush.isBrushing
-                      ? 'none'
-                      : 'all',
-                }}
+                onMouseLeave={handle.dragEnd}
               />
-            </g>
-          );
-        }}
+            )}
+            <rect
+              x={x}
+              y={y}
+              width={width}
+              height={height}
+              fill="transparent"
+              className="test-test"
+              onMouseDown={handle.dragStart}
+              onMouseMove={handle.dragMove}
+              onMouseUp={handle.dragEnd}
+              style={{
+                cursor,
+                pointerEvents: !!brush.activeHandle || !!brush.isBrushing ? 'none' : 'all',
+              }}
+            />
+          </g>
+        )}
       </Drag>
     );
   }

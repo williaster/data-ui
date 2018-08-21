@@ -197,3 +197,18 @@ export const pointComponentPropTypes = {
   data: pointSeriesDataShape.isRequired,
   datum: PropTypes.object.isRequired,
 };
+
+export const generalStyleShape = PropTypes.shape({
+  stroke: PropTypes.string,
+  strokeWidth: PropTypes.number,
+  strokeOpacity: PropTypes.number,
+  fill: PropTypes.string,
+  fillOpacity: PropTypes.number,
+});
+
+export const marginShape = PropTypes.shape({
+  top: PropTypes.number,
+  left: PropTypes.number,
+  right: PropTypes.number,
+  bottom: PropTypes.number,
+});
