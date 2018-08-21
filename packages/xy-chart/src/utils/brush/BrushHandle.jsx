@@ -139,7 +139,7 @@ export default class BrushHandle extends React.Component {
               width={width}
               height={height}
               fill="transparent"
-              className="test-test"
+              className={`vx-brush-handle-${type}`}
               onMouseDown={drag.dragStart}
               onMouseMove={drag.dragMove}
               onMouseUp={drag.dragEnd}
@@ -162,5 +162,5 @@ BrushHandle.propTypes = {
   updateBrush: PropTypes.func.isRequired,
   onBrushEnd: PropTypes.func.isRequired,
   handle: PropTypes.object.isRequired,
-  type: PropTypes.object.isRequired,
+  type: PropTypes.string.isRequired,
 };

@@ -73,6 +73,7 @@ export default class BrushSelection extends React.Component {
       brush,
       updateBrush,
       disableDraggingSelection,
+      onBrushEnd,
       ...restProps
     } = this.props;
 
@@ -94,6 +95,9 @@ export default class BrushSelection extends React.Component {
                 onMouseUp={selection.dragEnd}
                 onMouseMove={selection.dragMove}
                 onMouseLeave={selection.dragEnd}
+                style={{
+                  cursor: 'move',
+                }}
               />
             )}
             <rect
@@ -101,6 +105,7 @@ export default class BrushSelection extends React.Component {
               y={Math.min(brush.extent.y0, brush.extent.y1)}
               width={width}
               height={height}
+              className="vx-brush-selection"
               onMouseDown={disableDraggingSelection ? null : selection.dragStart}
               onMouseMove={selection.dragMove}
               onMouseUp={selection.dragEnd}

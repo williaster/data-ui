@@ -130,6 +130,7 @@ export default class BrushCorner extends React.Component {
       stageWidth,
       stageHeight,
       style: styleProp,
+      onBrushEnd,
       ...restProps
     } = this.props;
     const cursor = type === 'topLeft' || type === 'bottomRight' ? 'nwse-resize' : 'nesw-resize';
@@ -165,6 +166,7 @@ export default class BrushCorner extends React.Component {
               onMouseDown={corner.dragStart}
               onMouseMove={corner.dragMove}
               onMouseUp={corner.dragEnd}
+              className={`vx-brush-handle-${type}`}
               style={style}
               {...restProps}
             />
@@ -182,10 +184,11 @@ BrushCorner.propTypes = {
   updateBrush: PropTypes.func.isRequired,
   onBrushEnd: PropTypes.func.isRequired,
   handle: PropTypes.object,
-  type: PropTypes.object.isRequired,
-  style: PropTypes.object.isRequired,
+  type: PropTypes.string.isRequired,
+  style: PropTypes.object,
 };
 
 BrushCorner.defaultProps = {
   handle: null,
+  style: {},
 };

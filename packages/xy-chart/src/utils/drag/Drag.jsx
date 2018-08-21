@@ -1,3 +1,4 @@
+/* eslint react/jsx-handler-names: 0 */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { localPoint } from '@vx/event';
@@ -104,12 +105,15 @@ Drag.propTypes = {
   height: PropTypes.number.isRequired,
   captureDragArea: PropTypes.bool,
   resetOnStart: PropTypes.bool,
-  onDragStart: PropTypes.func.isRequired,
+  onDragStart: PropTypes.func,
   onDragMove: PropTypes.func.isRequired,
   onDragEnd: PropTypes.func.isRequired,
+  registerStartEvent: PropTypes.func,
 };
 
 Drag.defaultProps = {
   captureDragArea: true,
   resetOnStart: false,
+  registerStartEvent: null,
+  onDragStart: null,
 };
