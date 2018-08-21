@@ -17,7 +17,7 @@ export const propTypes = {
   onBrushStart: PropTypes.func,
   onBrushEnd: PropTypes.func,
   margin: marginShape,
-  brushDirection: PropTypes.oneOf(['vertical, horizontal, both']),
+  brushDirection: PropTypes.oneOf(['vertical', 'horizontal', 'both']),
   resizeTriggerAreas: PropTypes.arrayOf([
     'left',
     'right',
@@ -28,7 +28,7 @@ export const propTypes = {
     'bottomLeft',
     'bottomRight',
   ]),
-  brushRegion: PropTypes.oneOf(['xAxis, yAxis, chart']),
+  brushRegion: PropTypes.oneOf(['xAxis', 'yAxis', 'chart']),
   registerStartEvent: PropTypes.func,
   yAxisOrientation: PropTypes.oneOf(['left', 'right']),
   xAxisOrientation: PropTypes.oneOf(['top', 'bottom']),

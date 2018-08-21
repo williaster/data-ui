@@ -73,6 +73,7 @@ class BrushableLineChart extends React.PureComponent {
   renderControls() {
     const { disableDraggingSelection, resizeTriggerAreas } = this.state;
     const resizeTriggerAreaset = new Set(resizeTriggerAreas);
+
     return (
       <div className="brush-demo--form">
         <h4>Brush Props</h4>
