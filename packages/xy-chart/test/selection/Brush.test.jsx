@@ -1,5 +1,5 @@
 import React from 'react';
-import { shallow, mount } from 'enzyme';
+import { mount } from 'enzyme';
 import { scaleLinear } from '@vx/scale';
 
 import { Brush } from '../../src';
@@ -31,6 +31,13 @@ describe('<Brush />', () => {
     );
   }
 
+  function simulateFullDrag(target) {
+    const dragControlLayer = target.find('.vx-bar .vx-brush-overlay');
+    dragControlLayer.simulate('mousedown', startEvent);
+    dragControlLayer.simulate('mousemove', moveEvent);
+    dragControlLayer.simulate('mouseup', endEvent);
+  }
+
   it('should be defined', () => {
     expect(Brush).toBeDefined();
   });
@@ -56,28 +63,20 @@ describe('<Brush />', () => {
   it('should trigger onBrushEnd function when mouse up', () => {
     const brushEndFn = jest.fn();
     const wrapper = mount(setup({ onBrushEnd: brushEndFn }));
-    const dragControlLayer = wrapper.find('.vx-bar .vx-brush-overlay');
-    dragControlLayer.simulate('mousedown', startEvent);
-    dragControlLayer.simulate('mousemove', moveEvent);
-    dragControlLayer.simulate('mouseup', endEvent);
+    simulateFullDrag(wrapper);
     expect(brushEndFn).toHaveBeenCalledTimes(1);
   });
 
   it('should render selection rectangle after brushing', () => {
     const wrapper = mount(setup());
-    const dragControlLayer = wrapper.find('.vx-bar .vx-brush-overlay');
-    dragControlLayer.simulate('mousedown', startEvent);
-    dragControlLayer.simulate('mousemove', moveEvent);
-    dragControlLayer.simulate('mouseup', endEvent);
+    simulateFullDrag(wrapper);
     expect(wrapper.find('.vx-brush-selection')).toHaveLength(1);
   });
 
   it('should remove selection rectangle after click outside selection area', () => {
     const wrapper = mount(setup());
     const dragControlLayer = wrapper.find('.vx-bar .vx-brush-overlay');
-    dragControlLayer.simulate('mousedown', startEvent);
-    dragControlLayer.simulate('mousemove', moveEvent);
-    dragControlLayer.simulate('mouseup', endEvent);
+    simulateFullDrag(wrapper);
     expect(wrapper.find('.vx-brush-selection')).toHaveLength(1);
     dragControlLayer.simulate('click', clickEvent);
     expect(wrapper.find('.vx-brush-selection')).toHaveLength(1);
@@ -95,10 +94,7 @@ describe('<Brush />', () => {
       'bottomRight',
     ];
     const wrapper = mount(setup({ resizeTriggerAreas }));
-    const dragControlLayer = wrapper.find('.vx-bar .vx-brush-overlay');
-    dragControlLayer.simulate('mousedown', startEvent);
-    dragControlLayer.simulate('mousemove', moveEvent);
-    dragControlLayer.simulate('mouseup', endEvent);
+    simulateFullDrag(wrapper);
     resizeTriggerAreas.forEach(handle => {
       expect(wrapper.find(`.vx-brush-handle-${handle}`)).toHaveLength(1);
     });
