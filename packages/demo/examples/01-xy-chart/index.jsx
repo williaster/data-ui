@@ -33,7 +33,6 @@ import StackedAreaExample from './StackedAreaExample';
 import ScatterWithHistogram from './ScatterWithHistograms';
 import TickLabelPlayground from './TickLabelPlayground';
 import AreaDifferenceSeriesExample from './AreaDifferenceSeriesExample';
-import AreaDifferenceSeriesExampleWithBrush from './AreaDifferenceSeriesExampleWithBrush';
 import { BoxPlotSeriesExample, BoxPlotViolinPlotSeriesExample } from './StatsSeriesExample';
 
 import {
@@ -244,11 +243,6 @@ export default {
       description: 'AreaDifferenceSeries',
       components: [XYChart, AreaDifferenceSeries, AreaSeries],
       example: () => <AreaDifferenceSeriesExample />,
-    },
-    {
-      description: 'AreaDifferenceSeriesWithBrush',
-      components: [XYChart, AreaDifferenceSeries, AreaSeries],
-      example: () => <AreaDifferenceSeriesExampleWithBrush />,
     },
     {
       description: 'AreaSeries -- confidence intervals',
