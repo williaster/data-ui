@@ -281,5 +281,30 @@ export default {
         </ResponsiveHistogram>
       ),
     },
+    {
+      description: 'un-binned numeric',
+      components: [BarSeries, DensitySeries],
+      example: () => (
+        <ResponsiveHistogram>
+          <PatternLines
+            id="categorical"
+            height={8}
+            width={8}
+            background="#fff"
+            stroke={chartTheme.colors.default}
+            strokeWidth={0.5}
+            orientation={['diagonal']}
+          />
+          <BarSeries
+            rawData={[100]}
+            stroke={chartTheme.colors.default}
+            fill="url(#categorical)"
+            fillOpacity={0.7}
+          />
+          <XAxis />
+          <YAxis />
+        </ResponsiveHistogram>
+      ),
+    },
   ],
 };

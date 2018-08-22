@@ -52,7 +52,10 @@ export default function binNumericData({
     binsByIndex[index] = seriesBins.map((bin, i) => ({
       bin0: bin.x0,
       // if the upper limit equals the lower one, use the delta between this bin and the last
-      bin1: bin.x0 === bin.x1 ? (i > 0 && bin.x0 + bin.x0 - seriesBins[i - 1].x0) || 1 : bin.x1,
+      bin1:
+        bin.x0 === bin.x1
+          ? (i > 0 && bin.x0 + bin.x0 - seriesBins[i - 1].x0) || bin.x1 + 1
+          : bin.x1,
       data: bin,
       count: bin.length,
       id: i.toString(),
