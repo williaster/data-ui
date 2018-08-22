@@ -26,6 +26,9 @@ export default function binNumericData({
   rawDataByIndex,
   valueAccessor,
 }) {
+  const binThresholdCount = Math.max(
+    ...[2, binCount - 1, (binValues && binValues.length - 1) || 0],
+  );
   const binsByIndex = {};
   const histogram = d3Histogram();
   let extent = d3Extent(allData, valueAccessor);
@@ -37,30 +40,21 @@ export default function binNumericData({
   }
   const scale = scaleLinear()
     .domain(extent)
-    .nice(binCount);
+    .nice(binThresholdCount);
 
-  histogram.domain(limits || scale.domain()).thresholds(binValues || scale.ticks(binCount));
+  histogram.domain(limits || scale.domain()).thresholds(binValues || binThresholdCount); // || scale.ticks(binThresholdCount));
 
   Object.keys(rawDataByIndex).forEach(index => {
     const data = rawDataByIndex[index];
     const seriesBins = histogram.value(valueAccessor)(data);
 
-    // we remove the last bin because n bin thresholds give gives n+1 bins
-    // if binValues is not specified, our last threshold is the upper bound
-    // of the data so the final bin should always be zero
-    const trimmedBins = binValues ? seriesBins : seriesBins.slice(0, -1);
-    binsByIndex[index] = trimmedBins.map((bin, i) => ({
+    binsByIndex[index] = seriesBins.map((bin, i) => ({
       bin0: bin.x0,
-      bin1: bin.x1,
+      bin1: bin.x0 === bin.x1 ? (i > 0 && bin.x0 - seriesBins[i - 1].x0) || 1 : bin.x1,
       data: bin,
       count: bin.length,
       id: i.toString(),
     }));
-
-    // warn JIC
-    if (trimmedBins.length < seriesBins.length && seriesBins[seriesBins.length - 1].count > 0) {
-      console.warn('threw away non-zero bin');
-    }
   });
 
   return binsByIndex;

@@ -64,11 +64,6 @@ function BarSeries({
 
   const maxBarLength = Math.max(...valueScale.range());
 
-  // @TODO with custom bin values, bin1 - bin0 may be different for each bar, account for this
-  const barWidth = binScale.bandwidth
-    ? binScale.bandwidth() // categorical
-    : Math.abs(binScale(binnedData[0].bin1) - binScale(binnedData[0].bin0)); // numeric
-
   return (
     <Group>
       {animated && (
@@ -94,6 +89,10 @@ function BarSeries({
           const barLength = horizontal
             ? valueScale(d[valueKey])
             : maxBarLength - valueScale(d[valueKey]);
+
+          const barWidth = binScale.bandwidth
+            ? binScale.bandwidth() // categorical
+            : Math.abs(binScale(binnedData[i].bin1) - binScale(binnedData[i].bin0)); // numeric
 
           const color = d.fill || callOrValue(fill, d, i);
 
