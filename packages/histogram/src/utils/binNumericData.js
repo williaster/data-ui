@@ -26,9 +26,8 @@ export default function binNumericData({
   rawDataByIndex,
   valueAccessor,
 }) {
-  const binThresholdCount = Math.max(
-    ...[2, binCount - 1, (binValues && binValues.length - 1) || 0],
-  );
+  let binThresholdCount = Math.max(...[2, binCount - 1]);
+  if (Array.isArray(binValues)) binThresholdCount = binValues.length;
   const binsByIndex = {};
   const histogram = d3Histogram();
   let extent = d3Extent(allData, valueAccessor);
@@ -42,7 +41,9 @@ export default function binNumericData({
     .domain(extent)
     .nice(binThresholdCount);
 
-  histogram.domain(limits || scale.domain()).thresholds(binValues || binThresholdCount); // || scale.ticks(binThresholdCount));
+  histogram
+    .domain(limits || scale.domain())
+    .thresholds(binValues || scale.ticks(binThresholdCount)); // || scale.ticks(binThresholdCount));
 
   Object.keys(rawDataByIndex).forEach(index => {
     const data = rawDataByIndex[index];
@@ -50,12 +51,15 @@ export default function binNumericData({
 
     binsByIndex[index] = seriesBins.map((bin, i) => ({
       bin0: bin.x0,
-      bin1: bin.x0 === bin.x1 ? (i > 0 && bin.x0 - seriesBins[i - 1].x0) || 1 : bin.x1,
+      // if the upper limit equals the lower one, use the delta between this bin and the last
+      bin1: bin.x0 === bin.x1 ? (i > 0 && bin.x0 + bin.x0 - seriesBins[i - 1].x0) || 1 : bin.x1,
       data: bin,
       count: bin.length,
       id: i.toString(),
     }));
   });
+
+  console.log(binCount, binValues, binsByIndex);
 
   return binsByIndex;
 }
