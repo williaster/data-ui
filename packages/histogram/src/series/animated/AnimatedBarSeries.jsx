@@ -67,9 +67,13 @@ function AnimatedBarSeries({
 }) {
   const maxBarLength = Math.max(...valueScale.range());
 
-  const barWidth = binScale.bandwidth
-    ? binScale.bandwidth() // categorical
-    : Math.abs(binScale(binnedData[0].bin1) - binScale(binnedData[0].bin0)); // numeric
+  // compute once and use throughout
+  const barWidths = binnedData.map(
+    (_, i) =>
+      binScale.bandwidth
+        ? binScale.bandwidth() // categorical
+        : Math.abs(binScale(binnedData[i].bin1) - binScale(binnedData[i].bin0)), // numeric
+  );
 
   const getValue = d => d[valueKey];
 
@@ -86,14 +90,14 @@ function AnimatedBarSeries({
         x: horizontal ? 0 : xScale(getX(d)),
         y: horizontal ? yScale(getY(d)) : maxBarLength,
         fill: d.fill || callOrValue(fill, d, i),
-        width: horizontal ? 0 : barWidth,
-        height: horizontal ? barWidth : 0,
+        width: horizontal ? 0 : barWidths[i],
+        height: horizontal ? barWidths[i] : 0,
       })}
       enter={(d, i) => ({
         x: [horizontal ? 0 : xScale(getX(d))],
         y: [yScale(getY(d))],
-        width: [horizontal ? xScale(getX(d)) : barWidth],
-        height: [horizontal ? barWidth : maxBarLength - yScale(getY(d))],
+        width: [horizontal ? xScale(getX(d)) : barWidths[i]],
+        height: [horizontal ? barWidths[i] : maxBarLength - yScale(getY(d))],
         fill: [d.fill || callOrValue(fill, d, i)],
         stroke: [d.stroke || callOrValue(stroke, d, i)],
         timing: { duration: 300, delay: INDEX_DELAY_MULTIPLIER * i },
@@ -101,8 +105,8 @@ function AnimatedBarSeries({
       update={(d, i) => ({
         x: [horizontal ? 0 : xScale(getX(d))],
         y: [yScale(getY(d))],
-        width: [horizontal ? xScale(getX(d)) : barWidth],
-        height: [horizontal ? barWidth : maxBarLength - yScale(getY(d))],
+        width: [horizontal ? xScale(getX(d)) : barWidths[i]],
+        height: [horizontal ? barWidths[i] : maxBarLength - yScale(getY(d))],
         fill: [d.fill || callOrValue(fill, d, i)],
         stroke: [d.stroke || callOrValue(stroke, d, i)],
         timing: { duration: 300, delay: INDEX_DELAY_MULTIPLIER * i },
@@ -110,8 +114,8 @@ function AnimatedBarSeries({
       leave={(d, i) => ({
         x: horizontal ? 0 : xScale(getX(d)),
         y: horizontal ? yScale(getY(d)) : maxBarLength,
-        width: horizontal ? 0 : barWidth,
-        height: horizontal ? barWidth : 0,
+        width: horizontal ? 0 : barWidths[i],
+        height: horizontal ? barWidths[i] : 0,
         timing: { duration: 300, delay: (INDEX_DELAY_MULTIPLIER / 2) * i },
       })}
     >

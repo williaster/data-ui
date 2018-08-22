@@ -11,6 +11,7 @@ import collectBinnedDataFromChildSeries from '../utils/collectBinnedDataFromChil
 import componentName from '../utils/componentName';
 import computeDomainsFromBins from '../utils/computeDomainsFromBins';
 import getValueKey from '../utils/getValueKey';
+import shallowCompareObjectEntries from '../utils/shallowCompareObjectEntries';
 import { themeShape } from '../utils/propShapes';
 
 export const propTypes = {
@@ -63,7 +64,20 @@ class Histogram extends React.PureComponent {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState(this.getStateFromProps(nextProps));
+    let shouldComputeBinsAndScales = false;
+    // eslint-disable-next-line react/destructuring-assignment
+    if (['width', 'height', 'children'].some(prop => this.props[prop] !== nextProps[prop])) {
+      shouldComputeBinsAndScales = true;
+    }
+    if (
+      ['margin'].some(
+        // eslint-disable-next-line react/destructuring-assignment
+        prop => !shallowCompareObjectEntries(this.props[prop], nextProps[prop]),
+      )
+    ) {
+      shouldComputeBinsAndScales = true;
+    }
+    if (shouldComputeBinsAndScales) this.setState(this.getStateFromProps(nextProps));
   }
 
   getStateFromProps(props) {
