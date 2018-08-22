@@ -10,6 +10,7 @@ const propTypes = {
   onClick: PropTypes.func,
   onMouseMove: PropTypes.func,
   onMouseLeave: PropTypes.func,
+  onMouseDown: PropTypes.func,
   showVoronoi: PropTypes.bool,
   width: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired,
@@ -21,6 +22,7 @@ const defaultProps = {
   onClick: null,
   onMouseMove: null,
   onMouseLeave: null,
+  onMouseDown: null,
   showVoronoi: false,
 };
 
@@ -31,8 +33,11 @@ class Voronoi extends React.PureComponent {
   }
 
   componentWillReceiveProps(nextProps) {
-    // eslint-disable-next-line react/destructuring-assignment
-    if (['data', 'x', 'y', 'width', 'height'].some(prop => this.props[prop] !== nextProps[prop])) {
+    if (
+      ['data', 'x', 'y', 'width', 'height'].some(
+        prop => this.props[prop] !== nextProps[prop], // eslint-disable-line react/destructuring-assignment
+      )
+    ) {
       this.setState({ voronoi: Voronoi.getVoronoi(nextProps) });
     }
   }
@@ -44,7 +49,7 @@ class Voronoi extends React.PureComponent {
   }
 
   render() {
-    const { onMouseLeave, onMouseMove, onClick, showVoronoi } = this.props;
+    const { onMouseLeave, onMouseMove, onClick, showVoronoi, onMouseDown } = this.props;
     const { voronoi } = this.state;
 
     return (
@@ -69,6 +74,7 @@ class Voronoi extends React.PureComponent {
               })
             }
             onMouseLeave={onMouseLeave && (() => onMouseLeave)}
+            onMouseDown={onMouseDown && (() => onMouseDown)}
           />
         ))}
       </Group>

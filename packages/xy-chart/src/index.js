@@ -26,3 +26,4 @@ export { PatternLines, PatternCircles, PatternWaves, PatternHexagons } from '@vx
 export { withScreenSize, withParentSize, ParentSize } from '@vx/responsive';
 export { default as withTheme } from './enhancer/withTheme';
 export { chartTheme as theme } from '@data-ui/theme';
+export { default as Brush } from './selection/Brush';

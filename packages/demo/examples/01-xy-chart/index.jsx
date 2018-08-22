@@ -20,6 +20,7 @@ import {
   PatternLines,
   LinearGradient,
   WithTooltip,
+  Brush,
 } from '@data-ui/xy-chart';
 
 import colors from '@data-ui/theme/lib/color';
@@ -52,6 +53,7 @@ import {
 import WithToggle from '../shared/WithToggle';
 
 import computeForceBasedCirclePack from './computeForceBasedCirclePack';
+import BrushableLineChart from './BrushableLineChart';
 
 PatternLines.displayName = 'PatternLines';
 LinearGradient.displayName = 'LinearGradient';
@@ -150,6 +152,7 @@ export default {
                     circleStroke="white"
                   />
                   <XAxis label="Time" numTicks={5} />
+                  <Brush />
                 </ResponsiveXYChart>
               )}
             </WithToggle>
@@ -302,6 +305,11 @@ export default {
       description: 'Linked charts',
       components: [XYChart, StackedBarSeries, AreaSeries, CrossHair],
       example: () => <LinkedXYCharts />,
+    },
+    {
+      description: 'Brushable time series chart',
+      components: [XYChart, LineSeries],
+      example: () => <BrushableLineChart />,
     },
     {
       description: 'StackedAreaSeries',

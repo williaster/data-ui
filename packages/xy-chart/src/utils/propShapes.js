@@ -197,3 +197,52 @@ export const pointComponentPropTypes = {
   data: pointSeriesDataShape.isRequired,
   datum: PropTypes.object.isRequired,
 };
+
+export const generalStyleShape = PropTypes.shape({
+  stroke: PropTypes.string,
+  strokeWidth: PropTypes.number,
+  strokeOpacity: PropTypes.number,
+  fill: PropTypes.string,
+  fillOpacity: PropTypes.number,
+});
+
+export const marginShape = PropTypes.shape({
+  top: PropTypes.number,
+  left: PropTypes.number,
+  right: PropTypes.number,
+  bottom: PropTypes.number,
+});
+
+export const brushShape = PropTypes.shape({
+  start: PropTypes.shape({
+    x: PropTypes.number.isRequired,
+    y: PropTypes.number.isRequired,
+  }),
+  end: PropTypes.shape({
+    x: PropTypes.number.isRequired,
+    y: PropTypes.number.isRequired,
+  }),
+  extent: PropTypes.shape({
+    x0: PropTypes.number.isRequired,
+    y0: PropTypes.number.isRequired,
+    x1: PropTypes.number.isRequired,
+    y1: PropTypes.number.isRequired,
+  }),
+  bounds: PropTypes.shape({
+    x0: PropTypes.number.isRequired,
+    y0: PropTypes.number.isRequired,
+    x1: PropTypes.number.isRequired,
+    y1: PropTypes.number.isRequired,
+  }),
+});
+
+export const dragShape = PropTypes.shape({
+  x: PropTypes.number,
+  y: PropTypes.number,
+  dx: PropTypes.number,
+  dy: PropTypes.number,
+  isDragging: PropTypes.bool,
+  dragEnd: PropTypes.func,
+  dragMove: PropTypes.func,
+  dragStart: PropTypes.func,
+});

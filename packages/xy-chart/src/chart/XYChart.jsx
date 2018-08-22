@@ -16,6 +16,7 @@ import {
   isCrossHair,
   isReferenceLine,
   isSeries,
+  isBrush,
   getChildWithName,
   numTicksForWidth,
   numTicksForHeight,
@@ -91,6 +92,7 @@ class XYChart extends React.PureComponent {
     this.handleClick = this.handleClick.bind(this);
     this.handleMouseLeave = this.handleMouseLeave.bind(this);
     this.handleMouseMove = this.handleMouseMove.bind(this);
+    this.handleMouseDown = this.handleMouseDown.bind(this);
     this.handleContainerEvent = this.handleContainerEvent.bind(this);
   }
 
@@ -107,8 +109,11 @@ class XYChart extends React.PureComponent {
 
   componentWillReceiveProps(nextProps) {
     let shouldComputeScales = false;
-    // eslint-disable-next-line react/destructuring-assignment
-    if (['width', 'height', 'children'].some(prop => this.props[prop] !== nextProps[prop])) {
+    if (
+      ['width', 'height', 'children'].some(
+        prop => this.props[prop] !== nextProps[prop], // eslint-disable-line react/destructuring-assignment
+      )
+    ) {
       shouldComputeScales = true;
     }
     if (
@@ -180,6 +185,12 @@ class XYChart extends React.PureComponent {
       const args = { event, datum: closestDatum, series };
       if (event.type === 'mousemove') this.handleMouseMove(args);
       else if (event.type === 'click') this.handleClick(args);
+    }
+  }
+
+  handleMouseDown(event) {
+    if (this.fireBrushStart) {
+      this.fireBrushStart(event);
     }
   }
 
@@ -259,6 +270,9 @@ class XYChart extends React.PureComponent {
     const { numXTicks, numYTicks } = this.getNumTicks(innerWidth, innerHeight);
     const barWidth = xScale.barWidth || (xScale.bandwidth && xScale.bandwidth()) || 0;
     const CrossHairs = []; // ensure these are the top-most layer
+    let Brush = null;
+    let xAxisOrientation;
+    let yAxisOrientation;
 
     return (
       innerWidth > 0 &&
@@ -283,6 +297,11 @@ class XYChart extends React.PureComponent {
               const name = componentName(Child);
               if (isAxis(name)) {
                 const styleKey = name[0].toLowerCase();
+                if (name === 'XAxis') {
+                  xAxisOrientation = Child.props.orientation;
+                } else {
+                  yAxisOrientation = Child.props.orientation;
+                }
 
                 return React.cloneElement(Child, {
                   innerHeight,
@@ -322,6 +341,10 @@ class XYChart extends React.PureComponent {
                 return null;
               } else if (isReferenceLine(name)) {
                 return React.cloneElement(Child, { xScale, yScale });
+              } else if (isBrush(name)) {
+                Brush = Child;
+
+                return null;
               }
 
               return Child;
@@ -335,6 +358,7 @@ class XYChart extends React.PureComponent {
                 width={innerWidth}
                 height={innerHeight}
                 onClick={this.handleClick}
+                onMouseDown={this.handleMouseDown}
                 onMouseMove={this.handleMouseMove}
                 onMouseLeave={this.handleMouseLeave}
                 showVoronoi={showVoronoi}
@@ -349,11 +373,26 @@ class XYChart extends React.PureComponent {
                 height={innerHeight}
                 fill="transparent"
                 fillOpacity={0}
+                onMouseDown={this.handleMouseDown}
                 onClick={this.handleContainerEvent}
                 onMouseMove={this.handleContainerEvent}
                 onMouseLeave={this.handleMouseLeave}
               />
             )}
+
+            {Brush &&
+              React.cloneElement(Brush, {
+                xScale,
+                yScale,
+                innerHeight,
+                innerWidth,
+                margin,
+                onMouseMove: this.handleContainerEvent,
+                onMouseLeave: this.handleMouseLeave,
+                onClick: this.handleContainerEvent,
+                xAxisOrientation,
+                yAxisOrientation,
+              })}
 
             {tooltipData &&
               CrossHairs.length > 0 &&

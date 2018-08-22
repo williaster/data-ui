@@ -87,7 +87,10 @@ class LinkedXYCharts extends React.Component {
 
   handleMouseMove({ datum, seriesKey }) {
     if (this.state.mousedOverDatum !== datum || this.state.mousedOverKey !== seriesKey) {
-      this.setState(() => ({ mousedOverDatum: datum, mousedOverKey: seriesKey }));
+      this.setState(() => ({
+        mousedOverDatum: datum,
+        mousedOverKey: seriesKey,
+      }));
     }
   }
 
@@ -117,7 +120,12 @@ class LinkedXYCharts extends React.Component {
       : null;
 
     const stackCrossHairData = mousedOverDatum
-      ? { datum: { ...mousedOverDatum, y: getYForKey(mousedOverDatum, mousedOverKey) } }
+      ? {
+          datum: {
+            ...mousedOverDatum,
+            y: getYForKey(mousedOverDatum, mousedOverKey),
+          },
+        }
       : null;
 
     return (

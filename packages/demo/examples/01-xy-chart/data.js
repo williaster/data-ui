@@ -12,7 +12,10 @@ export const timeSeriesData = appleStock.filter((d, i) => i % 120 === 0).map(d =
   y: d.close,
 }));
 
-export const categoricalData = letterFrequency.map(d => ({ x: d.letter, y: d.frequency }));
+export const categoricalData = letterFrequency.map(d => ({
+  x: d.letter,
+  y: d.frequency,
+}));
 
 // stacked data
 export const groupKeys = Object.keys(cityTemperature[0]).filter(attr => attr !== 'date');

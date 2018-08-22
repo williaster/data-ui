@@ -35,6 +35,10 @@ export function isBarSeries(name) {
   return /bar/gi.test(name);
 }
 
+export function isBrush(name) {
+  return name === 'Brush';
+}
+
 export function isCirclePackSeries(name) {
   return name === 'CirclePackSeries';
 }

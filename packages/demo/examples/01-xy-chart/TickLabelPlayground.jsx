@@ -240,7 +240,11 @@ class TickLabelPlayground extends React.PureComponent {
                 type="radio"
                 value="left"
                 onChange={e =>
-                  this.setState({ axisOrientation: e.target.value, textAnchor: 'end', dx: -4 })
+                  this.setState({
+                    axisOrientation: e.target.value,
+                    textAnchor: 'end',
+                    dx: -4,
+                  })
                 }
                 checked={this.state.axisOrientation === 'left'}
               />{' '}
@@ -251,7 +255,11 @@ class TickLabelPlayground extends React.PureComponent {
                 type="radio"
                 value="right"
                 onChange={e =>
-                  this.setState({ axisOrientation: e.target.value, textAnchor: 'start', dx: 4 })
+                  this.setState({
+                    axisOrientation: e.target.value,
+                    textAnchor: 'start',
+                    dx: 4,
+                  })
                 }
                 checked={this.state.axisOrientation === 'right'}
               />{' '}
