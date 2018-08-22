@@ -63,7 +63,7 @@ class TickLabelPlayground extends React.PureComponent {
     const nextAngle = currAngle >= 360 ? 0 : currAngle + 20;
     this.setState({ angle: nextAngle }, () => {
       if (nextAngle) {
-        this.angleTimeout = setTimeout(() => this.animateAngle({ currAngle }), 40);
+        this.angleTimeout = setTimeout(() => this.animateAngle({ currAngle: nextAngle }), 40);
       }
     });
   }

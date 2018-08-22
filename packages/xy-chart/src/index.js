@@ -21,9 +21,11 @@ export { default as HorizontalReferenceLine } from './annotation/HorizontalRefer
 export { default as VerticalReferenceLine } from './annotation/VerticalReferenceLine';
 export { default as CrossHair } from './chart/CrossHair';
 export { WithTooltip, withTooltipPropTypes } from '@data-ui/shared';
-export { LinearGradient } from '@vx/gradient';
-export { PatternLines, PatternCircles, PatternWaves, PatternHexagons } from '@vx/pattern';
-export { withScreenSize, withParentSize, ParentSize } from '@vx/responsive';
+export { default as LinearGradient } from './aesthetic/LinearGradient';
+export { PatternLines, PatternCircles, PatternWaves, PatternHexagons } from './aesthetic/Patterns';
+export { default as ParentSize } from './enhancer/ParentSize';
+export { default as withScreenSize } from './enhancer/withScreenSize';
+export { default as withParentSize } from './enhancer/withParentSize';
 export { default as withTheme } from './enhancer/withTheme';
-export { chartTheme as theme } from '@data-ui/theme';
+export { default as theme } from './aesthetic/chartTheme';
 export { default as Brush } from './selection/Brush';

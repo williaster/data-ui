@@ -23,7 +23,7 @@ import {
   Brush,
 } from '@data-ui/xy-chart';
 
-import colors from '@data-ui/theme/lib/color';
+import colors from '@data-ui/theme/esm/color';
 import readme from '../../node_modules/@data-ui/xy-chart/README.md';
 import CirclePackWithCallback from './CirclePackWithCallback';
 import LineSeriesExample from './LineSeriesExample';
