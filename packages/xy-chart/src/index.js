@@ -18,6 +18,7 @@ export { default as ViolinPlotSeries } from './series/ViolinPlotSeries';
 export { computeStats } from '@vx/stats';
 
 export { default as HorizontalReferenceLine } from './annotation/HorizontalReferenceLine';
+export { default as VerticalReferenceLine } from './annotation/VerticalReferenceLine';
 export { default as CrossHair } from './chart/CrossHair';
 export { WithTooltip, withTooltipPropTypes } from '@data-ui/shared';
 export { LinearGradient } from '@vx/gradient';

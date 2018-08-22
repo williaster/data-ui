@@ -16,8 +16,8 @@ export const defaultLabelProps = {
   stroke: '#fff',
   strokeWidth: 2,
   paintOrder: 'stroke',
-  x: 0,
-  dy: '-0.4em',
+  y: 0,
+  dx: '0.4em',
 };
 
 export const propTypes = {
@@ -43,7 +43,7 @@ const defaultProps = {
   yScale: null,
 };
 
-function HorizontalReferenceLine({
+function VerticalReferenceLine({
   label,
   labelProps,
   reference,
@@ -55,10 +55,11 @@ function HorizontalReferenceLine({
   yScale,
 }) {
   if (!xScale || !yScale) return null;
-  const [x0, x1] = xScale.range();
-  const scaledRef = yScale(reference);
-  const fromPoint = new Point({ x: x0, y: scaledRef });
-  const toPoint = new Point({ x: x1, y: scaledRef });
+  const [y0, y1] = yScale.range();
+  const scaledRef = //
+    xScale(reference) + (xScale.offset || (xScale.bandwidth && xScale.bandwidth() / 2) || 0);
+  const fromPoint = new Point({ x: scaledRef, y: y0 });
+  const toPoint = new Point({ x: scaledRef, y: y1 });
 
   return (
     <Group>
@@ -72,7 +73,7 @@ function HorizontalReferenceLine({
         vectorEffect="non-scaling-stroke"
       />
       {Boolean(label) && (
-        <Text y={scaledRef} {...defaultLabelProps} {...labelProps}>
+        <Text x={scaledRef} {...defaultLabelProps} {...labelProps}>
           {label}
         </Text>
       )}
@@ -80,8 +81,8 @@ function HorizontalReferenceLine({
   );
 }
 
-HorizontalReferenceLine.propTypes = propTypes;
-HorizontalReferenceLine.defaultProps = defaultProps;
-HorizontalReferenceLine.displayName = 'HorizontalReferenceLine';
+VerticalReferenceLine.propTypes = propTypes;
+VerticalReferenceLine.defaultProps = defaultProps;
+VerticalReferenceLine.displayName = 'VerticalReferenceLine';
 
-export default HorizontalReferenceLine;
+export default VerticalReferenceLine;

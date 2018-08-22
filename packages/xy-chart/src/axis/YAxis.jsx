@@ -84,7 +84,11 @@ export default class YAxis extends React.PureComponent {
         hideTicks={numTicks === 0}
         hideZero={hideZero}
         label={label}
-        labelProps={labelProps || (axisStyles.label || {})[orientation]}
+        labelProps={{
+          verticalAnchor: 'start',
+          width: Math.max(...scale.range()),
+          ...(labelProps || (axisStyles.label || {})[orientation]),
+        }}
         labelOffset={labelOffset}
         numTicks={numTicks}
         scale={scale}

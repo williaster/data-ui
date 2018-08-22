@@ -19,6 +19,7 @@ const propTypes = {
   stroke: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   strokeDasharray: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   strokeWidth: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
+  strokeOpacity: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
   strokeLinecap: PropTypes.oneOf(['butt', 'square', 'round', 'inherit']),
 };
 
@@ -28,6 +29,7 @@ const defaultProps = {
   stroke: color.default,
   strokeDasharray: null,
   strokeWidth: 3,
+  strokeOpacity: 1,
   strokeLinecap: 'round',
 };
 
@@ -47,6 +49,7 @@ export default class LineSeries extends React.PureComponent {
       strokeDasharray,
       strokeWidth,
       strokeLinecap,
+      strokeOpacity,
       xScale,
       yScale,
       onClick,
@@ -55,6 +58,7 @@ export default class LineSeries extends React.PureComponent {
     } = this.props;
     if (!xScale || !yScale) return null;
     const strokeValue = callOrValue(stroke);
+    const strokeOpacityValue = callOrValue(strokeOpacity);
     const curve = interpolatorLookup[interpolation] || interpolatorLookup.monotoneX;
 
     return (
@@ -69,6 +73,7 @@ export default class LineSeries extends React.PureComponent {
         strokeWidth={callOrValue(strokeWidth)}
         strokeDasharray={callOrValue(strokeDasharray)}
         strokeLinecap={strokeLinecap}
+        strokeOpacity={strokeOpacityValue}
         curve={curve}
         defined={defined}
         onClick={
