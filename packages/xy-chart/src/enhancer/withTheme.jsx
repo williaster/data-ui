@@ -13,7 +13,9 @@ function withTheme(theme = defaultTheme) {
     // eslint-disable-next-line react/prefer-stateless-function
     class EnhancedComponent extends React.PureComponent {
       render() {
-        return <WrappedComponent theme={theme} {...this.props} />;
+        const { theme: componentTheme, ...restProps } = this.props;
+
+        return <WrappedComponent {...restProps} theme={{ ...theme, ...componentTheme }} />;
       }
     }
 

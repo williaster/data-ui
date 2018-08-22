@@ -15,7 +15,7 @@ import {
   Brush,
 } from '@data-ui/xy-chart';
 
-import colors from '@data-ui/theme/lib/color';
+import colors, { allColors } from '@data-ui/theme/lib/color';
 
 import { timeSeriesData } from './data';
 import PointSeries from '../../node_modules/@data-ui/xy-chart/lib/series/PointSeries';
@@ -38,11 +38,6 @@ class BrushableLineChart extends React.PureComponent {
       disableDraggingSelection: false,
     };
     this.handleBrushChange = this.handleBrushChange.bind(this);
-    this.handleBrushEnd = this.handleBrushEnd.bind(this);
-  }
-
-  handleBrushEnd(domain) {
-    console.log(domain);
   }
 
   handleBrushChange(domain) {
@@ -385,8 +380,16 @@ class BrushableLineChart extends React.PureComponent {
           yScale={{ type: 'linear' }}
           margin={{ left: 100, top: 64, bottom: 64 }}
         >
-          <LineSeries seriesKey="one" data={timeSeriesData} strokeWidth={1} />
-          <PointSeries seriesKey="one" data={pointData} strokeWidth={1} />
+          <PatternLines
+            id="brush_pattern"
+            height={8}
+            width={8}
+            stroke={allColors.blue[1]}
+            strokeWidth={1}
+            orientation={['diagonal']}
+          />
+          <LineSeries data={timeSeriesData} strokeWidth={2} stroke={allColors.blue[3]} />
+          <PointSeries data={pointData} fillOpacity={1} fill={allColors.blue[7]} strokeWidth={1} />
           <CrossHair
             showHorizontalLine={false}
             fullHeight
@@ -401,9 +404,12 @@ class BrushableLineChart extends React.PureComponent {
             resizeTriggerAreas={resizeTriggerAreas}
             brushDirection={brushDirection}
             onChange={this.handleBrushChange}
-            onBrushEnd={this.handleBrushEnd}
             brushRegion={brushRegion}
             disableDraggingSelection={disableDraggingSelection}
+            selectedBoxStyle={{
+              fill: 'url(#brush_pattern)',
+              stroke: allColors.blue[5],
+            }}
           />
         </XYChart>
 

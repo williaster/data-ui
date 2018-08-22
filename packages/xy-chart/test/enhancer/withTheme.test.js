@@ -30,6 +30,7 @@ describe('HOC', () => {
   });
 
   it('passes the theme prop to the wrapped component', () => {
+    expect.assertions(1);
     const testTheme = { my: 'theme' };
     function MyComponent({ theme }) {
       expect(theme).toBe(testTheme);
@@ -41,6 +42,7 @@ describe('HOC', () => {
   });
 
   it('passes the default theme when no theme is passed', () => {
+    expect.assertions(1);
     function MyComponent({ theme }) {
       expect(theme).toBe(defaultTheme);
 
@@ -50,7 +52,7 @@ describe('HOC', () => {
     shallow(<HOC />).dive();
   });
 
-  it('allows theme to be overridden', () => {
+  it('allows theme keys to be overridden', () => {
     const overrideTheme = { override: 'theme' };
     function MyComponent() {
       return null;
@@ -61,6 +63,6 @@ describe('HOC', () => {
     expect(wrapper.find(MyComponent).prop('theme')).toBe(defaultTheme);
 
     wrapper = shallow(<HOC theme={overrideTheme} />);
-    expect(wrapper.find(MyComponent).prop('theme')).toBe(overrideTheme);
+    expect(wrapper.find(MyComponent).prop('theme').override).toBe(overrideTheme.override);
   });
 });

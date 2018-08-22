@@ -2,7 +2,10 @@
 import React from 'react';
 import { timeParse, timeFormat } from 'd3-time-format';
 
-import { XYChart, theme, withScreenSize } from '@data-ui/xy-chart';
+import { XYChart, theme, withScreenSize, withTheme } from '@data-ui/xy-chart';
+
+// test that withTheme works
+const XYChartWithTheme = withTheme(theme)(XYChart);
 
 export const parseDate = timeParse('%Y%m%d');
 export const formatDate = timeFormat('%b %d');
@@ -47,15 +50,14 @@ export function renderTooltip({ datum, seriesKey, color, data }) {
 
 function ResponsiveXYChart({ screenWidth, children, ...rest }) {
   return (
-    <XYChart
-      theme={theme}
+    <XYChartWithTheme
       width={Math.min(700, screenWidth / 1.5)}
       height={Math.min(700 / 2, screenWidth / 1.5 / 2)}
       renderTooltip={renderTooltip}
       {...rest}
     >
       {children}
-    </XYChart>
+    </XYChartWithTheme>
   );
 }
 
