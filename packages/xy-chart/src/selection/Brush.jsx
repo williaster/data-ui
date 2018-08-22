@@ -16,6 +16,8 @@ export const propTypes = {
   onChange: PropTypes.func,
   onBrushStart: PropTypes.func,
   onBrushEnd: PropTypes.func,
+  onMouseMove: PropTypes.func,
+  onMouseLeave: PropTypes.func,
   margin: marginShape,
   brushDirection: PropTypes.oneOf(['vertical', 'horizontal', 'both']),
   resizeTriggerAreas: PropTypes.arrayOf(
@@ -31,10 +33,10 @@ export const propTypes = {
     ]),
   ),
   brushRegion: PropTypes.oneOf(['xAxis', 'yAxis', 'chart']),
-  registerStartEvent: PropTypes.func,
   yAxisOrientation: PropTypes.oneOf(['left', 'right']),
   xAxisOrientation: PropTypes.oneOf(['top', 'bottom']),
   disableDraggingSelection: PropTypes.bool,
+  handleSize: PropTypes.number,
 };
 
 const defaultProps = {
@@ -56,15 +58,17 @@ const defaultProps = {
     right: 0,
     bottom: 0,
   },
+  handleSize: 4,
   brushDirection: 'horizontal',
   resizeTriggerAreas: ['left', 'right'],
   brushRegion: 'chart',
-  registerStartEvent: null,
   yAxisOrientation: 'right',
   xAxisOrientation: 'bottom',
   onBrushStart: null,
   onBrushEnd: null,
   disableDraggingSelection: false,
+  onMouseMove: null,
+  onMouseLeave: null,
 };
 
 class Brush extends React.Component {
@@ -135,11 +139,13 @@ class Brush extends React.Component {
       brushDirection,
       resizeTriggerAreas,
       brushRegion,
-      registerStartEvent,
       yAxisOrientation,
       xAxisOrientation,
       selectedBoxStyle,
       disableDraggingSelection,
+      onMouseLeave,
+      onMouseMove,
+      handleSize,
     } = this.props;
     if (!xScale || !yScale) return null;
 
@@ -185,12 +191,13 @@ class Brush extends React.Component {
         onChange={this.handleChange}
         onBrushEnd={this.handleBrushEnd}
         onBrushStart={this.handleBrushStart}
-        handleSize={4}
+        handleSize={handleSize}
         resizeTriggerAreas={resizeTriggerAreas}
         brushDirection={brushDirection}
-        registerStartEvent={registerStartEvent}
         selectedBoxStyle={selectedBoxStyle}
         disableDraggingSelection={disableDraggingSelection}
+        onMouseLeave={onMouseLeave}
+        onMouseMove={onMouseMove}
       />
     );
   }

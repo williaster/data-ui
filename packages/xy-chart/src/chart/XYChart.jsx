@@ -94,7 +94,6 @@ class XYChart extends React.PureComponent {
     this.handleMouseMove = this.handleMouseMove.bind(this);
     this.handleMouseDown = this.handleMouseDown.bind(this);
     this.handleContainerEvent = this.handleContainerEvent.bind(this);
-    this.registerBrushStartEvent = this.registerBrushStartEvent.bind(this);
   }
 
   componentDidMount() {
@@ -189,10 +188,6 @@ class XYChart extends React.PureComponent {
     }
   }
 
-  registerBrushStartEvent(event) {
-    this.fireBrushStart = event;
-  }
-
   handleMouseDown(event) {
     if (this.fireBrushStart) {
       this.fireBrushStart(event);
@@ -275,8 +270,7 @@ class XYChart extends React.PureComponent {
     const { numXTicks, numYTicks } = this.getNumTicks(innerWidth, innerHeight);
     const barWidth = xScale.barWidth || (xScale.bandwidth && xScale.bandwidth()) || 0;
     const CrossHairs = []; // ensure these are the top-most layer
-    let hasBrush = false;
-    let Brush;
+    let Brush = null;
     let xAxisOrientation;
     let yAxisOrientation;
 
@@ -348,7 +342,6 @@ class XYChart extends React.PureComponent {
               } else if (isReferenceLine(name)) {
                 return React.cloneElement(Child, { xScale, yScale });
               } else if (isBrush(name)) {
-                hasBrush = true;
                 Brush = Child;
 
                 return null;
@@ -387,15 +380,16 @@ class XYChart extends React.PureComponent {
               />
             )}
 
-            {hasBrush &&
+            {Brush &&
               React.cloneElement(Brush, {
                 xScale,
                 yScale,
                 innerHeight,
                 innerWidth,
                 margin,
-                registerStartEvent:
-                  eventTrigger === SERIES_TRIGGER ? null : this.registerBrushStartEvent,
+                onMouseMove: this.handleContainerEvent,
+                onMouseLeave: this.handleMouseLeave,
+                onClick: this.handleContainerEvent,
                 xAxisOrientation,
                 yAxisOrientation,
               })}

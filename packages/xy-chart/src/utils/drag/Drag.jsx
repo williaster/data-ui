@@ -3,6 +3,23 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { localPoint } from '@vx/event';
 
+const propTypes = {
+  children: PropTypes.func.isRequired,
+  width: PropTypes.number.isRequired,
+  height: PropTypes.number.isRequired,
+  captureDragArea: PropTypes.bool,
+  resetOnStart: PropTypes.bool,
+  onDragStart: PropTypes.func,
+  onDragMove: PropTypes.func.isRequired,
+  onDragEnd: PropTypes.func.isRequired,
+};
+
+const defaultProps = {
+  captureDragArea: true,
+  resetOnStart: false,
+  onDragStart: null,
+};
+
 export default class Drag extends React.Component {
   constructor(props) {
     super(props);
@@ -16,15 +33,6 @@ export default class Drag extends React.Component {
     this.dragEnd = this.dragEnd.bind(this);
     this.dragMove = this.dragMove.bind(this);
     this.dragStart = this.dragStart.bind(this);
-    if (props.registerStartEvent) {
-      props.registerStartEvent(this.dragStart);
-    }
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.registerStartEvent) {
-      nextProps.registerStartEvent(this.dragStart);
-    }
   }
 
   dragStart(event) {
@@ -99,21 +107,6 @@ export default class Drag extends React.Component {
   }
 }
 
-Drag.propTypes = {
-  children: PropTypes.func.isRequired,
-  width: PropTypes.number.isRequired,
-  height: PropTypes.number.isRequired,
-  captureDragArea: PropTypes.bool,
-  resetOnStart: PropTypes.bool,
-  onDragStart: PropTypes.func,
-  onDragMove: PropTypes.func.isRequired,
-  onDragEnd: PropTypes.func.isRequired,
-  registerStartEvent: PropTypes.func,
-};
+Drag.propTypes = propTypes;
 
-Drag.defaultProps = {
-  captureDragArea: true,
-  resetOnStart: false,
-  registerStartEvent: null,
-  onDragStart: null,
-};
+Drag.defaultProps = defaultProps;

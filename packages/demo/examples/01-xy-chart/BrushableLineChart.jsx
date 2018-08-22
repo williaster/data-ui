@@ -362,7 +362,7 @@ class BrushableLineChart extends React.PureComponent {
   }
 
   render() {
-    const { screenWidth, ...rest } = this.props;
+    const { screenWidth } = this.props;
     const {
       pointData,
       brushDirection,
@@ -384,17 +384,7 @@ class BrushableLineChart extends React.PureComponent {
           xScale={{ type: 'time' }}
           yScale={{ type: 'linear' }}
           margin={{ left: 100, top: 64, bottom: 64 }}
-          {...rest}
         >
-          <LinearGradient id="area_gradient" from={colors.categories[2]} to="#fff" />
-          <PatternLines
-            id="area_pattern"
-            height={12}
-            width={12}
-            stroke={colors.categories[2]}
-            strokeWidth={1}
-            orientation={['diagonal']}
-          />
           <LineSeries seriesKey="one" data={timeSeriesData} strokeWidth={1} />
           <PointSeries seriesKey="one" data={pointData} strokeWidth={1} />
           <CrossHair

@@ -1,7 +1,19 @@
-/* eslint react/jsx-handler-names: 0 react/forbid-prop-types: 0 */
+/* eslint react/jsx-handler-names: 0 */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Drag } from '../drag';
+import { brushShape } from '../propShapes';
+
+const propTypes = {
+  width: PropTypes.number.isRequired,
+  height: PropTypes.number.isRequired,
+  stageWidth: PropTypes.number.isRequired,
+  stageHeight: PropTypes.number.isRequired,
+  brush: brushShape.isRequired,
+  updateBrush: PropTypes.func.isRequired,
+  onBrushEnd: PropTypes.func.isRequired,
+  disableDraggingSelection: PropTypes.bool.isRequired,
+};
 
 export default class BrushSelection extends React.Component {
   constructor(props) {
@@ -122,13 +134,4 @@ export default class BrushSelection extends React.Component {
   }
 }
 
-BrushSelection.propTypes = {
-  width: PropTypes.number.isRequired,
-  height: PropTypes.number.isRequired,
-  stageWidth: PropTypes.number.isRequired,
-  stageHeight: PropTypes.number.isRequired,
-  brush: PropTypes.object.isRequired,
-  updateBrush: PropTypes.func.isRequired,
-  onBrushEnd: PropTypes.func.isRequired,
-  disableDraggingSelection: PropTypes.bool.isRequired,
-};
+BrushSelection.propTypes = propTypes;

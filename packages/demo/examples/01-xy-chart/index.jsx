@@ -20,6 +20,7 @@ import {
   PatternLines,
   LinearGradient,
   WithTooltip,
+  Brush,
 } from '@data-ui/xy-chart';
 
 import colors from '@data-ui/theme/lib/color';
@@ -151,6 +152,7 @@ export default {
                     circleStroke="white"
                   />
                   <XAxis label="Time" numTicks={5} />
+                  <Brush />
                 </ResponsiveXYChart>
               )}
             </WithToggle>

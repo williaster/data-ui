@@ -1,7 +1,22 @@
-/* eslint react/jsx-handler-names: 0 react/forbid-prop-types: 0 */
+/* eslint react/jsx-handler-names: 0 */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Drag } from '../drag';
+import { generalStyleShape, brushShape } from '../propShapes';
+
+const propTypes = {
+  stageWidth: PropTypes.number.isRequired,
+  stageHeight: PropTypes.number.isRequired,
+  brush: brushShape.isRequired,
+  updateBrush: PropTypes.func.isRequired,
+  onBrushEnd: PropTypes.func.isRequired,
+  type: PropTypes.string.isRequired,
+  style: generalStyleShape,
+};
+
+const defaultProps = {
+  style: {},
+};
 
 export default class BrushCorner extends React.Component {
   constructor(props) {
@@ -149,23 +164,23 @@ export default class BrushCorner extends React.Component {
         onDragEnd={this.cornerDragEnd}
         resetOnStart
       >
-        {corner => (
+        {handle => (
           <g>
-            {corner.isDragging && (
+            {handle.isDragging && (
               <rect
                 fill="transparent"
                 width={stageWidth}
                 height={stageHeight}
                 style={{ cursor: style.cursor }}
-                onMouseMove={corner.dragMove}
-                onMouseUp={corner.dragEnd}
+                onMouseMove={handle.dragMove}
+                onMouseUp={handle.dragEnd}
               />
             )}
             <rect
               fill="transparent"
-              onMouseDown={corner.dragStart}
-              onMouseMove={corner.dragMove}
-              onMouseUp={corner.dragEnd}
+              onMouseDown={handle.dragStart}
+              onMouseMove={handle.dragMove}
+              onMouseUp={handle.dragEnd}
               className={`vx-brush-handle-${type}`}
               style={style}
               {...restProps}
@@ -177,18 +192,6 @@ export default class BrushCorner extends React.Component {
   }
 }
 
-BrushCorner.propTypes = {
-  stageWidth: PropTypes.number.isRequired,
-  stageHeight: PropTypes.number.isRequired,
-  brush: PropTypes.object.isRequired,
-  updateBrush: PropTypes.func.isRequired,
-  onBrushEnd: PropTypes.func.isRequired,
-  handle: PropTypes.object,
-  type: PropTypes.string.isRequired,
-  style: PropTypes.object,
-};
+BrushCorner.propTypes = propTypes;
 
-BrushCorner.defaultProps = {
-  handle: null,
-  style: {},
-};
+BrushCorner.defaultProps = defaultProps;

@@ -9,6 +9,55 @@ import BrushSelection from './BrushSelection';
 import { Drag } from '../drag';
 import { marginShape, generalStyleShape } from '../propShapes';
 
+const propTypes = {
+  brushDirection: PropTypes.oneOf(['horizontal', 'vertical', 'both']),
+  width: PropTypes.number.isRequired,
+  height: PropTypes.number.isRequired,
+  left: PropTypes.number.isRequired,
+  top: PropTypes.number.isRequired,
+  inheritedMargin: marginShape,
+  onChange: PropTypes.func,
+  handleSize: PropTypes.number,
+  resizeTriggerAreas: PropTypes.arrayOf(
+    PropTypes.oneOf([
+      'left',
+      'right',
+      'top',
+      'bottom',
+      'topLeft',
+      'topRight',
+      'bottomLeft',
+      'bottomRight',
+    ]),
+  ),
+  onBrushStart: PropTypes.func,
+  onBrushEnd: PropTypes.func,
+  selectedBoxStyle: generalStyleShape.isRequired,
+  onMouseLeave: PropTypes.func,
+  onMouseUp: PropTypes.func,
+  onMouseMove: PropTypes.func,
+  disableDraggingSelection: PropTypes.bool,
+};
+
+const defaultProps = {
+  brushDirection: 'both',
+  inheritedMargin: {
+    left: 0,
+    top: 0,
+    right: 0,
+    bottom: 0,
+  },
+  onChange: null,
+  handleSize: 4,
+  resizeTriggerAreas: ['left', 'right'],
+  onBrushStart: null,
+  onBrushEnd: null,
+  onMouseLeave: null,
+  onMouseUp: null,
+  onMouseMove: null,
+  disableDraggingSelection: false,
+};
+
 export default class Brush extends React.Component {
   constructor(props) {
     super(props);
@@ -237,7 +286,6 @@ export default class Brush extends React.Component {
       onMouseMove,
       onBrushEnd,
       resizeTriggerAreas,
-      registerStartEvent,
       selectedBoxStyle,
       disableDraggingSelection,
     } = this.props;
@@ -258,38 +306,31 @@ export default class Brush extends React.Component {
           onDragStart={this.handleDragStart}
           onDragMove={this.handleDragMove}
           onDragEnd={this.handleDragEnd}
-          registerStartEvent={registerStartEvent}
         >
-          {draw => {
-            if (!registerStartEvent || (registerStartEvent && draw.isDragging)) {
-              return (
-                <Bar
-                  className="vx-brush-overlay"
-                  fill="transparent"
-                  x={0}
-                  y={0}
-                  width={stageWidth}
-                  height={stageHeight}
-                  onDoubleClick={() => event => this.reset(event)}
-                  onMouseDown={() => event => draw.dragStart(event)}
-                  onMouseLeave={() => event => {
-                    if (onMouseLeave) onMouseLeave(event);
-                  }}
-                  onMouseMove={() => event => {
-                    if (!draw.isDragging && onMouseMove) onMouseMove(event);
-                    if (draw.isDragging) draw.dragMove(event);
-                  }}
-                  onMouseUp={() => event => {
-                    if (onMouseUp) onMouseUp(event);
-                    draw.dragEnd(event);
-                  }}
-                  style={{ cursor: 'crosshair' }}
-                />
-              );
-            }
-
-            return null;
-          }}
+          {draw => (
+            <Bar
+              className="vx-brush-overlay"
+              fill="transparent"
+              x={0}
+              y={0}
+              width={stageWidth}
+              height={stageHeight}
+              onDoubleClick={() => event => this.reset(event)}
+              onMouseDown={() => event => draw.dragStart(event)}
+              onMouseLeave={() => event => {
+                if (onMouseLeave) onMouseLeave(event);
+              }}
+              onMouseMove={() => event => {
+                if (!draw.isDragging && onMouseMove) onMouseMove(event);
+                if (draw.isDragging) draw.dragMove(event);
+              }}
+              onMouseUp={() => event => {
+                if (onMouseUp) onMouseUp(event);
+                draw.dragEnd(event);
+              }}
+              style={{ cursor: 'crosshair' }}
+            />
+          )}
         </Drag>
         {/* selection */}
         {start &&
@@ -357,53 +398,5 @@ export default class Brush extends React.Component {
   }
 }
 
-Brush.propTypes = {
-  brushDirection: PropTypes.oneOf(['horizontal', 'vertical', 'both']),
-  width: PropTypes.number.isRequired,
-  height: PropTypes.number.isRequired,
-  left: PropTypes.number.isRequired,
-  top: PropTypes.number.isRequired,
-  inheritedMargin: marginShape,
-  onChange: PropTypes.func,
-  handleSize: PropTypes.number,
-  resizeTriggerAreas: PropTypes.arrayOf(
-    PropTypes.oneOf([
-      'left',
-      'right',
-      'top',
-      'bottom',
-      'topLeft',
-      'topRight',
-      'bottomLeft',
-      'bottomRight',
-    ]),
-  ),
-  registerStartEvent: PropTypes.func,
-  onBrushStart: PropTypes.func,
-  onBrushEnd: PropTypes.func,
-  selectedBoxStyle: generalStyleShape.isRequired,
-  onMouseLeave: PropTypes.func,
-  onMouseUp: PropTypes.func,
-  onMouseMove: PropTypes.func,
-  disableDraggingSelection: PropTypes.bool,
-};
-
-Brush.defaultProps = {
-  brushDirection: 'both',
-  inheritedMargin: {
-    left: 0,
-    top: 0,
-    right: 0,
-    bottom: 0,
-  },
-  onChange: null,
-  handleSize: 4,
-  resizeTriggerAreas: ['left', 'right'],
-  registerStartEvent: null,
-  onBrushStart: null,
-  onBrushEnd: null,
-  onMouseLeave: null,
-  onMouseUp: null,
-  onMouseMove: null,
-  disableDraggingSelection: false,
-};
+Brush.propTypes = propTypes;
+Brush.defaultProps = defaultProps;
