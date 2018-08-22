@@ -32,7 +32,7 @@ describe('<Brush />', () => {
   }
 
   function simulateFullDrag(target) {
-    const dragControlLayer = target.find('.vx-bar .vx-brush-overlay');
+    const dragControlLayer = target.find('.vx-brush-overlay').first();
     dragControlLayer.simulate('mousedown', startEvent);
     dragControlLayer.simulate('mousemove', moveEvent);
     dragControlLayer.simulate('mouseup', endEvent);
@@ -45,7 +45,7 @@ describe('<Brush />', () => {
   it('should trigger onBrushStart function when mouse down', () => {
     const brushStartFn = jest.fn();
     const wrapper = mount(setup({ onBrushStart: brushStartFn }));
-    const dragControlLayer = wrapper.find('.vx-bar .vx-brush-overlay');
+    const dragControlLayer = wrapper.find('.vx-brush-overlay').first();
     dragControlLayer.simulate('mousedown');
     expect(brushStartFn).toHaveBeenCalledTimes(1);
   });
@@ -53,7 +53,7 @@ describe('<Brush />', () => {
   it('should trigger onChange function when brush moves', () => {
     const changeFn = jest.fn();
     const wrapper = mount(setup({ onChange: changeFn }));
-    const dragControlLayer = wrapper.find('.vx-bar .vx-brush-overlay');
+    const dragControlLayer = wrapper.find('.vx-brush-overlay').first();
     dragControlLayer.simulate('mousedown', startEvent);
     expect(changeFn).toHaveBeenCalledTimes(1);
     dragControlLayer.simulate('mousemove', moveEvent);
@@ -75,7 +75,7 @@ describe('<Brush />', () => {
 
   it('should remove selection rectangle after click outside selection area', () => {
     const wrapper = mount(setup());
-    const dragControlLayer = wrapper.find('.vx-bar .vx-brush-overlay');
+    const dragControlLayer = wrapper.find('.vx-brush-overlay').first();
     simulateFullDrag(wrapper);
     expect(wrapper.find('.vx-brush-selection')).toHaveLength(1);
     dragControlLayer.simulate('click', clickEvent);
