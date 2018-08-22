@@ -165,6 +165,40 @@ This series has a different API from other series in that it _wraps_ two `AreaSe
 
 The result will show the difference between the two `AreaSeries`, with a fill that matches the AreaSeries with the greater y-value.
 
+### Reference Lines
+`<HorizontalReferenceLine />` and `<VerticalReferenceLine />` are available for chart annotations with the following usage pattern:
+
+```javascript
+<XYChart ...>
+  <LineSeries data={[ { x: new Date('2018-01-01'), y: 10 }, ... ]} />
+  {/* Wraps text within width of 100px */}
+  <HorizontalReferenceLine
+    reference={25}
+    stroke="magenta"
+    label="My y-threshold"
+    labelProps={{ width: 100, verticalAnchor: 'middle' }}
+  />
+  <VerticalReferenceLine
+    reference={new Date('2018-01-05')}
+    label="My birthday" 
+    labelProps={{ width: 100, textAnchor: 'start', dx: '0.5em' }}
+  />
+</XYChart>
+```
+
+The both take the following props
+
+Name | Type | Default | Description
+---- | ---- | ------- | ----
+label | PropTypes.string | null | Optional label to render along with the line. The string is wrapped in a `@vx/text` Text component which you can customize using the labelProps prop
+labelProps | PropTypes.object | @data-ui/theme baseLabel props with text anchors + dx/dy that offset label from line | Props that are passed to `@vx/text` Text component. See [here](https://github.com/hshoff/vx/tree/master/packages/vx-text) for full list.
+stroke | PropTypes.string | @data-ui/theme darkGray | Stroke color of line
+stroke | PropTypes.string | @data-ui/theme darkGray | Stroke color of line
+strokeDasharray | PropTypes.string | null | stroke-dash-array style of line
+strokeLinecap | PropTypes.oneOf(['butt', 'square', 'round', 'inherit']) | 'round' | stroke-linecap style of line
+strokeWidth | PropTypes.number | 1 | stroke-width style of line
+
+
 ### Tooltips, Mouse Events, and Triggers
 
 #### Tooltips
