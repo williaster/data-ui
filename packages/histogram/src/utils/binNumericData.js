@@ -60,7 +60,6 @@ export default function binNumericData({
       count: bin.length,
       id: i.toString(),
     }));
-    console.log(seriesBins, binsByIndex[index]);
   });
 
   return binsByIndex;
