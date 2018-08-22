@@ -43,7 +43,7 @@ export default function binNumericData({
 
   histogram
     .domain(limits || scale.domain())
-    .thresholds(binValues || scale.ticks(binThresholdCount)); // || scale.ticks(binThresholdCount));
+    .thresholds(binValues || scale.ticks(binThresholdCount));
 
   Object.keys(rawDataByIndex).forEach(index => {
     const data = rawDataByIndex[index];
@@ -58,8 +58,6 @@ export default function binNumericData({
       id: i.toString(),
     }));
   });
-
-  console.log(binCount, binValues, binsByIndex);
 
   return binsByIndex;
 }
