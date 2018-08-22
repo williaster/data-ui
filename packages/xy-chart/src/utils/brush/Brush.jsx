@@ -90,6 +90,23 @@ export default class Brush extends React.Component {
     this.getExtent = this.getExtent.bind(this);
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (
+      ['width', 'height'].some(
+        prop => this.props[prop] !== nextProps[prop], // eslint-disable-line react/destructuring-assignment
+      )
+    ) {
+      this.setState(() => ({
+        bounds: {
+          x0: 0,
+          x1: nextProps.width,
+          y0: 0,
+          y1: nextProps.height,
+        },
+      }));
+    }
+  }
+
   getExtent(start, end) {
     const { brushDirection, width, height } = this.props;
     const x0 = brushDirection === 'vertical' ? 0 : Math.min(start.x, end.x);
@@ -259,7 +276,8 @@ export default class Brush extends React.Component {
   }
 
   reset() {
-    this.update(prevBrush => ({
+    const { width, height } = this.props;
+    this.update(() => ({
       start: undefined,
       end: undefined,
       extent: {
@@ -267,6 +285,12 @@ export default class Brush extends React.Component {
         x1: undefined,
         y0: undefined,
         y1: undefined,
+      },
+      bounds: {
+        x0: 0,
+        x1: width,
+        y0: 0,
+        y1: height,
       },
       isBrushing: false,
       activeHandle: undefined,
