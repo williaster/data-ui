@@ -1,4 +1,5 @@
 # Changelog
+- [v0.0.63](#v0063)
 - [v0.0.62](#v0062)
 - [v0.0.61](#v0061)
 - [v0.0.60](#v0060)
@@ -16,6 +17,33 @@
 - [v0.0.48](#v0048)
 - [v0.0.47](#v0047)
 
+## v0.0.63
+
+[xy-chart]
+
+🏆 Enhancements
+- [@conglei] Adds support for Brushing 🎉 [#117](https://github.com/williaster/data-ui/pull/117), closes [#106](https://github.com/williaster/data-ui/issues/106)
+- [@williaster] Adds <VerticalReferenceLine />, uses @vx/text for <*ReferenceLine /> labels [#120](https://github.com/williaster/data-ui/pull/120)
+
+
+🏠 Internal
+- [@williaster] re-exports vx deep imports to support deep importing all components from xy-chart [#122](https://github.com/williaster/data-ui/pull/122)
+
+[histogram]
+🐛Bug Fix 
+- [@williaster] Fixes binning issue for numeric un-binned data [#119](https://github.com/williaster/data-ui/pull/119) and [#121](https://github.com/williaster/data-ui/pull/121), fixes [#100](https://github.com/williaster/data-ui/issues/100) and [#118](https://github.com/williaster/data-ui/issues/118)
+
+```
+Changes:
+ - @data-ui/demo: 0.0.62 => 0.0.63 (private)
+ - @data-ui/event-flow: 0.0.62 => 0.0.63
+ - @data-ui/histogram: 0.0.62 => 0.0.63
+ - @data-ui/network: 0.0.62 => 0.0.63
+ - @data-ui/radial-chart: 0.0.62 => 0.0.63
+ - @data-ui/shared: 0.0.62 => 0.0.63
+ - @data-ui/sparkline: 0.0.62 => 0.0.63
+ - @data-ui/xy-chart: 0.0.62 => 0.0.63
+```
 
 ## v0.0.62
 
