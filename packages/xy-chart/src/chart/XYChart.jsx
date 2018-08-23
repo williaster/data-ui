@@ -297,6 +297,10 @@ class XYChart extends React.PureComponent {
               const name = componentName(Child);
               if (isAxis(name)) {
                 const styleKey = name[0].toLowerCase();
+                const labelOffset =
+                  typeof Child.props.labelOffset === 'number'
+                    ? Child.props.labelOffset
+                    : (name === 'YAxis' && Y_LABEL_OFFSET * margin[Child.props.orientation]) || 0;
                 if (name === 'XAxis') {
                   xAxisOrientation = Child.props.orientation;
                 } else {
@@ -306,8 +310,9 @@ class XYChart extends React.PureComponent {
                 return React.cloneElement(Child, {
                   innerHeight,
                   innerWidth,
-                  labelOffset:
-                    name === 'YAxis' ? Y_LABEL_OFFSET * margin[Child.props.orientation] : 0,
+                  height,
+                  width,
+                  labelOffset,
                   numTicks: name === 'XAxis' ? numXTicks : numYTicks,
                   scale: name === 'XAxis' ? xScale : yScale,
                   rangePadding: name === 'XAxis' ? xScale.offset : null,

@@ -24,6 +24,7 @@ const propTypes = {
 
   // probably injected by parent
   innerWidth: PropTypes.number,
+  height: PropTypes.number,
   scale: PropTypes.func,
 };
 
@@ -31,9 +32,10 @@ const defaultProps = {
   axisStyles: {},
   hideZero: false,
   innerWidth: null,
+  height: null,
   label: null,
   labelProps: null,
-  labelOffset: 0,
+  labelOffset: undefined,
   numTicks: null,
   orientation: 'right',
   rangePadding: null,
@@ -51,6 +53,7 @@ export default class YAxis extends React.PureComponent {
       axisStyles,
       hideZero,
       innerWidth,
+      height,
       label,
       labelProps,
       labelOffset,
@@ -86,7 +89,7 @@ export default class YAxis extends React.PureComponent {
         label={label}
         labelProps={{
           verticalAnchor: 'start',
-          width: Math.max(...scale.range()),
+          width: Math.max(...scale.range(), height || 0),
           ...(labelProps || (axisStyles.label || {})[orientation]),
         }}
         labelOffset={labelOffset}

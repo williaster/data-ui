@@ -11,7 +11,6 @@ import {
   withScreenSize,
   LineSeries,
   PatternLines,
-  LinearGradient,
   Brush,
 } from '@data-ui/xy-chart';
 
@@ -382,9 +381,9 @@ class BrushableLineChart extends React.PureComponent {
         >
           <PatternLines
             id="brush_pattern"
-            height={8}
-            width={8}
-            stroke={allColors.blue[1]}
+            height={12}
+            width={12}
+            stroke={allColors.blue[2]}
             strokeWidth={1}
             orientation={['diagonal']}
           />
@@ -394,7 +393,7 @@ class BrushableLineChart extends React.PureComponent {
             showHorizontalLine={false}
             fullHeight
             stroke={colors.darkGray}
-            circleFill={colors.categories[2]}
+            circleFill={allColors.blue[7]}
             circleStroke="white"
           />
           <YAxis label="Value" numTicks={5} orientation={yAxisOrientation} />
