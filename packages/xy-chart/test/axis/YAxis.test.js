@@ -2,6 +2,7 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import { AxisLeft, AxisRight } from '@vx/axis';
 import { scaleLinear } from '@vx/scale';
+import { Text } from '@vx/text';
 import { XYChart, YAxis, LineSeries } from '../../src';
 
 describe('<YAxis />', () => {
@@ -103,6 +104,26 @@ describe('<YAxis />', () => {
         .first()
         .text(),
     ).toBe('apple');
+  });
+
+  it('should pass the height prop as labelProps.width for wrapping', () => {
+    const wrapper = shallow(
+      <YAxis
+        scale={scaleLinear({ range: [0, 100], domain: [0, 100] })}
+        innerWidth={100}
+        label="test"
+        height={chartProps.height}
+      />,
+    );
+    expect(
+      wrapper
+        .find(AxisRight)
+        .dive() // Axis
+        .dive() // Group
+        .find(Text)
+        .last() // not ticks
+        .prop('width'),
+    ).toBe(chartProps.height);
   });
 
   it('should use the output of tickFormat() when passed', () => {

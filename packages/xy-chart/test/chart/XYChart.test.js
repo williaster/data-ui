@@ -94,8 +94,46 @@ describe('<XYChart />', () => {
     );
     const series = wrapper.find(LineSeries);
     expect(series).toHaveLength(1);
-    expect(series.prop('xScale')).toBeDefined();
-    expect(series.prop('yScale')).toBeDefined();
+    expect(series.prop('xScale')).toEqual(expect.any(Function));
+    expect(series.prop('yScale')).toEqual(expect.any(Function));
+  });
+
+  it('should pass scales and dimensions to child axes', () => {
+    const wrapper = shallow(
+      <XYChart {...mockProps}>
+        <LineSeries label="label" data={mockData.map(d => ({ ...d, x: d.date, y: d.num }))} />
+        <XAxis />
+        <YAxis />
+      </XYChart>,
+    );
+    const xaxis = wrapper.find(XAxis);
+    const yaxis = wrapper.find(YAxis);
+
+    expect(xaxis.prop('scale')).toEqual(expect.any(Function));
+    expect(yaxis.prop('scale')).toEqual(expect.any(Function));
+
+    expect(xaxis.prop('innerHeight')).toEqual(expect.any(Number));
+    expect(yaxis.prop('innerWidth')).toEqual(expect.any(Number));
+
+    expect(yaxis.prop('height')).toEqual(expect.any(Number));
+  });
+
+  it('should set labelOffset on child YAxis if it is not already set', () => {
+    let wrapper = shallow(
+      <XYChart {...mockProps}>
+        <YAxis />
+      </XYChart>,
+    );
+
+    expect(wrapper.find(YAxis).prop('labelOffset')).toEqual(expect.any(Number));
+
+    wrapper = shallow(
+      <XYChart {...mockProps}>
+        <YAxis labelOffset={-101} />
+      </XYChart>,
+    );
+
+    expect(wrapper.find(YAxis).prop('labelOffset')).toBe(-101);
   });
 
   it('should compute time, linear, and band domains across all child series', () => {
