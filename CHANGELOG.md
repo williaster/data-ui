@@ -1,4 +1,6 @@
 # Changelog
+- [v0.0.65](#v0065)
+- [v0.0.64](#v0064)
 - [v0.0.63](#v0063)
 - [v0.0.62](#v0062)
 - [v0.0.61](#v0061)
@@ -17,6 +19,18 @@
 - [v0.0.48](#v0048)
 - [v0.0.47](#v0047)
 
+## v0.0.65
+
+[xy-chart]
+🏆 Enhancements
+- Improves y-axis label wrapping logic to use full chart height, not inner height [#125](https://github.com/williaster/data-ui/pull/125)
+- Enable setting `labelOffset` on `XAxis` and `YAxis` labels instead of setting a constant `0.7 * margin.left/right` and `0` for `YAxis` and `XAxis` respectively [#125](https://github.com/williaster/data-ui/pull/125)
+
+```
+Changes:
+ - @data-ui/demo: 0.0.64 => 0.0.65 (private)
+ - @data-ui/xy-chart: 0.0.64 => 0.0.65
+ ```
 ## v0.0.64
 
 🐛Bug Fix 
