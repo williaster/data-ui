@@ -17,6 +17,23 @@
 - [v0.0.48](#v0048)
 - [v0.0.47](#v0047)
 
+## v0.0.64
+
+🐛Bug Fix 
+
+[xy-chart]
+- the withTheme HOC would override the passed theme with the empty default theme from XYChart. To support overrides, combine the two objects. [#123](https://github.com/williaster/data-ui/pull/123)
+
+[histogram]
+- in the case that there's one un-binned numeric value, enforce a bin length of 1 [#123](https://github.com/williaster/data-ui/pull/123)
+
+```
+Changes:
+ - @data-ui/demo: 0.0.63 => 0.0.64 (private)
+ - @data-ui/histogram: 0.0.63 => 0.0.64
+ - @data-ui/xy-chart: 0.0.63 => 0.0.64
+ ```
+
 ## v0.0.63
 
 [xy-chart]
