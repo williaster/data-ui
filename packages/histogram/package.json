@@ -1,6 +1,6 @@
 {
   "name": "@data-ui/histogram",
-  "version": "0.0.63",
+  "version": "0.0.64",
   "description": "React + d3 library for creating histograms",
   "sideEffects": false,
   "main": "lib/index.js",
