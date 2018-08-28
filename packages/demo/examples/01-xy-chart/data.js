@@ -12,6 +12,11 @@ export const timeSeriesData = appleStock.filter((d, i) => i % 120 === 0).map(d =
   y: d.close,
 }));
 
+export const appleStockData = appleStock.filter((d, i) => i % 10 === 0).map(d => ({
+  x: new Date(d.date),
+  y: d.close,
+}));
+
 export const categoricalData = letterFrequency.map(d => ({
   x: d.letter,
   y: d.frequency,
