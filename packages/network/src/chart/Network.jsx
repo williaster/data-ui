@@ -345,7 +345,14 @@ class Network extends React.PureComponent {
       <svg aria-label={ariaLabel} className={className} role="img" width={width} height={height}>
         {graph && (
           <Group>
-            <Links links={graph.links} linkComponent={renderLink || Link} />
+            <Links
+              links={graph.links}
+              linkComponent={renderLink || Link}
+              onMouseEnter={this.handleMouseEnter}
+              onMouseLeave={this.handleMouseLeave}
+              onMouseMove={this.handleMouseMove}
+              onClick={this.handleClick}
+            />
             <Nodes
               nodes={graph.nodes}
               nodeComponent={renderNode || Node}
