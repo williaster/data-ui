@@ -35,6 +35,8 @@ import ScatterWithHistogram from './ScatterWithHistograms';
 import TickLabelPlayground from './TickLabelPlayground';
 import AreaDifferenceSeriesExample from './AreaDifferenceSeriesExample';
 import { BoxPlotSeriesExample, BoxPlotViolinPlotSeriesExample } from './StatsSeriesExample';
+import BrushableLineChart from './BrushableLineChart';
+import BrushableLinkedLineCharts from './BrushableLinkedLineCharts';
 
 import {
   circlePackData,
@@ -53,7 +55,6 @@ import {
 import WithToggle from '../shared/WithToggle';
 
 import computeForceBasedCirclePack from './computeForceBasedCirclePack';
-import BrushableLineChart from './BrushableLineChart';
 
 PatternLines.displayName = 'PatternLines';
 LinearGradient.displayName = 'LinearGradient';
@@ -105,6 +106,16 @@ export default {
       description: 'LineSeries',
       components: [LineSeries, CrossHair],
       example: () => <LineSeriesExample />,
+    },
+    {
+      description: 'Brushable linked charts',
+      components: [XYChart, LineSeries],
+      example: () => <BrushableLinkedLineCharts />,
+    },
+    {
+      description: 'Brushable time series chart',
+      components: [XYChart, LineSeries],
+      example: () => <BrushableLineChart />,
     },
     {
       description: 'AreaSeries -- closed',
@@ -302,14 +313,9 @@ export default {
       example: () => <ScatterWithHistogram />,
     },
     {
-      description: 'Linked charts',
+      description: 'Linked tooltips',
       components: [XYChart, StackedBarSeries, AreaSeries, CrossHair],
       example: () => <LinkedXYCharts />,
-    },
-    {
-      description: 'Brushable time series chart',
-      components: [XYChart, LineSeries],
-      example: () => <BrushableLineChart />,
     },
     {
       description: 'StackedAreaSeries',

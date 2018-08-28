@@ -18,7 +18,7 @@ const propTypes = {
   tickFormat: PropTypes.func,
   tickValues: PropTypes.arrayOf(
     // number or date/moment object
-    PropTypes.oneOfType([PropTypes.number, PropTypes.object]),
+    PropTypes.oneOfType([PropTypes.number, PropTypes.object, PropTypes.string]),
   ),
 
   // probably injected by parent
