@@ -24,11 +24,11 @@ export const dateFormatter = date => formatYear(parseDate(date));
 
 const categoryHorizontalData = timeSeriesData.map((d, i) => ({
   x: d.y,
-  y: i,
+  y: i + 1,
 }));
 
 const categoryData = timeSeriesData.map((d, i) => ({
-  x: i,
+  x: i + 1,
   y: d.y,
 }));
 
@@ -106,8 +106,8 @@ class HorizontalBarChartExample extends React.PureComponent {
             circleFill={allColors.blue[7]}
             circleStroke="white"
           />
-          <YAxis label="Value" numTicks={5} orientation="left" />
-          <XAxis label="Time" numTicks={5} />
+          <YAxis numTicks={5} orientation="left" />
+          <XAxis numTicks={5} />
         </XYChart>
 
         <style type="text/css">
