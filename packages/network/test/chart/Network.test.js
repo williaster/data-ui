@@ -78,9 +78,10 @@ describe('<Network />', () => {
   });
 
   it('should handle mouse events correctly', done => {
-    expect.assertions(3);
+    expect.assertions(6);
     const { graph } = props;
-    const expectedId = graph.nodes[0].id;
+    const expectedNodeId = graph.nodes[0].id;
+    const expectedLinkId = graph.links[0].id;
     let testID = null;
 
     function onMouseEvent({ id }) {
@@ -102,15 +103,29 @@ describe('<Network />', () => {
 
       const node = wrapper.find('circle').first();
       node.simulate('click');
-      expect(testID).toBe(expectedId);
+      expect(testID).toBe(expectedNodeId);
 
       testID = null;
       node.simulate('mouseEnter');
-      expect(testID).toBe(expectedId);
+      expect(testID).toBe(expectedNodeId);
 
       testID = null;
       node.simulate('mouseLeave');
-      expect(testID).toBe(expectedId);
+      expect(testID).toBe(expectedNodeId);
+
+      const link = wrapper.find('line').first();
+
+      testID = null;
+      link.simulate('click');
+      expect(testID).toBe(expectedLinkId);
+
+      testID = null;
+      link.simulate('mouseEnter');
+      expect(testID).toBe(expectedLinkId);
+
+      testID = null;
+      link.simulate('mouseLeave');
+      expect(testID).toBe(expectedLinkId);
 
       done();
     }, 20);
