@@ -55,18 +55,20 @@ export default class BarSeries extends React.PureComponent {
     const valueField = horizontal ? x : y;
     const categoryField = horizontal ? y : x;
 
-    const maxBarLength = (valueScale.range() || [0])[0];
+    const maxBarLength = Math.max(...valueScale.range());
     const offset = categoryScale.offset || 0;
 
     return (
       <Group style={disableMouseEvents ? noEventsStyles : null}>
         {data.map((d, i) => {
-          const barLength = horizontal ? valueScale(valueField(d)) : maxBarLength - valueScale(valueField(d));
+          const barLength = horizontal
+            ? valueScale(valueField(d))
+            : maxBarLength - valueScale(valueField(d));
           const color = d.fill || callOrValue(fill, d, i);
           const barPosition = categoryScale(categoryField(d)) - offset;
 
           return (
-            isDefined(d.y) && (
+            isDefined(horizontal ? d.x : d.y) && (
               <FocusBlurHandler
                 key={`bar-${barPosition}`}
                 onBlur={disableMouseEvents ? null : onMouseLeave}

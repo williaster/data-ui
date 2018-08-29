@@ -87,14 +87,6 @@ class HorizontalBarChartExample extends React.PureComponent {
           yScale={horizontal ? categoryScale : valueScale}
           margin={{ left: 100, top: 64, bottom: 64 }}
         >
-          <PatternLines
-            id="brush_pattern"
-            height={12}
-            width={12}
-            stroke={allColors.blue[2]}
-            strokeWidth={1}
-            orientation={['diagonal']}
-          />
           <BarSeries
             horizontal={horizontal}
             data={horizontal ? categoryHorizontalData : categoryData}

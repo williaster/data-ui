@@ -62,6 +62,26 @@ describe('<BarSeries />', () => {
     expect(barSeries.find(Bar)).toHaveLength(mockData.length - 1);
   });
 
+  it('should not render bars for null data for horizontal barchart', () => {
+    const wrapper = shallow(
+      <XYChart
+        {...mockProps}
+        yScale={{ type: 'time' }}
+        xScale={{ type: 'linear', includeZero: false }}
+      >
+        <BarSeries
+          data={mockData.map((d, i) => ({
+            x: i === 0 ? null : d.num,
+            y: d.date,
+          }))}
+          horizontal
+        />
+      </XYChart>,
+    );
+    const barSeries = wrapper.find(BarSeries).dive();
+    expect(barSeries.find(Bar)).toHaveLength(mockData.length - 1);
+  });
+
   it('should work with time or band scales', () => {
     const timeWrapper = shallow(
       <XYChart {...mockProps} xScale={{ type: 'time' }}>
