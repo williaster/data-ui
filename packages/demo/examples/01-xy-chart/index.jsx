@@ -37,6 +37,7 @@ import AreaDifferenceSeriesExample from './AreaDifferenceSeriesExample';
 import { BoxPlotSeriesExample, BoxPlotViolinPlotSeriesExample } from './StatsSeriesExample';
 import BrushableLineChart from './BrushableLineChart';
 import BrushableLinkedLineCharts from './BrushableLinkedLineCharts';
+import HorizontalBarChartExample from './HorizontalBarChart';
 
 import {
   circlePackData,
@@ -101,6 +102,11 @@ export default {
           </ResponsiveXYChart>
         </WithTooltip>
       ),
+    },
+    {
+      description: 'HorizontalBarChartExample',
+      components: [BarSeries, CrossHair],
+      example: () => <HorizontalBarChartExample />,
     },
     {
       description: 'LineSeries',

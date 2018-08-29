@@ -8,6 +8,8 @@ import { componentName, isBarSeries, isCirclePackSeries } from './chartUtils';
 
 const getX = d => d && d.x;
 const xString = d => getX(d).toString();
+const getY = d => d && d.y;
+const yString = d => getY(d).toString();
 
 export default function collectScalesFromProps(props) {
   const { xScale: xScaleObject, yScale: yScaleObject, children } = props;
@@ -42,20 +44,26 @@ export default function collectScalesFromProps(props) {
   Children.forEach(children, Child => {
     // Child-specific scales or adjustments here
     const name = componentName(Child);
-    if (isBarSeries(name) && xScaleObject.type !== 'band') {
-      const dummyBand = getScaleForAccessor({
-        allData,
-        minAccessor: xString,
-        maxAccessor: xString,
-        type: 'band',
-        rangeRound: [0, innerWidth],
-        paddingOuter: 1,
-      });
+    if (isBarSeries(name)) {
+      const { horizontal } = Child.props;
+      const categoryScaleObject = horizontal ? yScaleObject : xScaleObject;
+      if (categoryScaleObject.type !== 'band') {
+        const categoryScale = horizontal ? yScale : xScale;
+        const range = horizontal ? innerHeight : innerWidth;
+        const dummyBand = getScaleForAccessor({
+          allData,
+          minAccessor: horizontal ? yString : xString,
+          maxAccessor: horizontal ? yString : xString,
+          type: 'band',
+          rangeRound: [0, range],
+          paddingOuter: 1,
+        });
 
-      const offset = dummyBand.bandwidth() / 2;
-      xScale.range([offset, innerWidth - offset]);
-      xScale.barWidth = dummyBand.bandwidth();
-      xScale.offset = offset;
+        const offset = dummyBand.bandwidth() / 2;
+        categoryScale.range([offset, range - offset]);
+        categoryScale.barWidth = dummyBand.bandwidth();
+        categoryScale.offset = offset;
+      }
     }
     if (isCirclePackSeries(name)) {
       yScale.domain([-innerHeight / 2, innerHeight / 2]);

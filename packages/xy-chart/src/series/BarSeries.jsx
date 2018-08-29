@@ -11,20 +11,20 @@ import sharedSeriesProps from '../utils/sharedSeriesProps';
 
 const propTypes = {
   ...sharedSeriesProps,
-  barWidth: PropTypes.number,
   data: barSeriesDataShape.isRequired,
   fill: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   fillOpacity: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
   stroke: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   strokeWidth: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
+  horizontal: PropTypes.bool,
 };
 
 const defaultProps = {
-  barWidth: null,
   fill: themeColors.default,
   fillOpacity: null,
   stroke: '#FFFFFF',
   strokeWidth: 1,
+  horizontal: false,
 };
 
 const x = d => d.x;
@@ -34,7 +34,6 @@ const noEventsStyles = { pointerEvents: 'none' };
 export default class BarSeries extends React.PureComponent {
   render() {
     const {
-      barWidth,
       data,
       disableMouseEvents,
       fill,
@@ -46,24 +45,32 @@ export default class BarSeries extends React.PureComponent {
       onClick,
       onMouseMove,
       onMouseLeave,
+      horizontal,
     } = this.props;
+    if (!xScale || !yScale) return null;
+    const valueScale = horizontal ? xScale : yScale;
+    const categoryScale = horizontal ? yScale : xScale;
+    const barWidth =
+      categoryScale.barWidth || (categoryScale.bandwidth && categoryScale.bandwidth()) || 0;
+    const valueField = horizontal ? x : y;
+    const categoryField = horizontal ? y : x;
 
-    if (!xScale || !yScale || !barWidth) return null;
-
-    const maxHeight = (yScale.range() || [0])[0];
-    const offset = xScale.offset || 0;
+    const maxBarLength = Math.max(...valueScale.range());
+    const offset = categoryScale.offset || 0;
 
     return (
       <Group style={disableMouseEvents ? noEventsStyles : null}>
         {data.map((d, i) => {
-          const barHeight = maxHeight - yScale(y(d));
+          const barLength = horizontal
+            ? valueScale(valueField(d))
+            : maxBarLength - valueScale(valueField(d));
           const color = d.fill || callOrValue(fill, d, i);
-          const barX = xScale(x(d)) - offset;
+          const barPosition = categoryScale(categoryField(d)) - offset;
 
           return (
-            isDefined(d.y) && (
+            isDefined(horizontal ? d.x : d.y) && (
               <FocusBlurHandler
-                key={`bar-${barX}`}
+                key={`bar-${barPosition}`}
                 onBlur={disableMouseEvents ? null : onMouseLeave}
                 onFocus={
                   disableMouseEvents
@@ -74,10 +81,10 @@ export default class BarSeries extends React.PureComponent {
                 }
               >
                 <Bar
-                  x={barX}
-                  y={maxHeight - barHeight}
-                  width={barWidth}
-                  height={barHeight}
+                  x={horizontal ? 0 : barPosition}
+                  y={horizontal ? barPosition : maxBarLength - barLength}
+                  width={horizontal ? barLength : barWidth}
+                  height={horizontal ? barWidth : barLength}
                   fill={color}
                   fillOpacity={d.fillOpacity || callOrValue(fillOpacity, d, i)}
                   stroke={d.stroke || callOrValue(stroke, d, i)}

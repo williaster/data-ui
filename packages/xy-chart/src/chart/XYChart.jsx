@@ -268,7 +268,6 @@ class XYChart extends React.PureComponent {
     } = this.state;
 
     const { numXTicks, numYTicks } = this.getNumTicks(innerWidth, innerHeight);
-    const barWidth = xScale.barWidth || (xScale.bandwidth && xScale.bandwidth()) || 0;
     const CrossHairs = []; // ensure these are the top-most layer
     let Brush = null;
     let xAxisOrientation;
@@ -329,7 +328,6 @@ class XYChart extends React.PureComponent {
                 return React.cloneElement(Child, {
                   xScale,
                   yScale,
-                  barWidth,
                   onClick:
                     Child.props.onClick ||
                     (Child.props.disableMouseEvents ? undefined : this.handleClick),
@@ -407,7 +405,9 @@ class XYChart extends React.PureComponent {
                   left:
                     xScale(getX(tooltipData.datum) || 0) +
                     (xScale.bandwidth ? xScale.bandwidth() / 2 : 0),
-                  top: yScale(getY(tooltipData.datum) || 0),
+                  top:
+                    yScale(getY(tooltipData.datum) || 0) +
+                    (yScale.bandwidth ? yScale.bandwidth() / 2 : 0),
                   xScale,
                   yScale,
                 }),

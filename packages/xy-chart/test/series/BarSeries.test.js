@@ -62,6 +62,60 @@ describe('<BarSeries />', () => {
     expect(barSeries.find(Bar)).toHaveLength(mockData.length - 1);
   });
 
+  it('should render bar width correctly for horizontal barchart', () => {
+    const maxWidth = 500;
+    const maxHeight = 10;
+    const wrapper = shallow(
+      <XYChart
+        width={maxWidth}
+        height={maxHeight}
+        margin={{
+          top: 0,
+          left: 0,
+          bottom: 0,
+          right: 0,
+        }}
+        yScale={{ type: 'time' }}
+        xScale={{ type: 'linear', includeZero: false }}
+      >
+        <BarSeries
+          data={mockData.map((d, i) => ({
+            x: mockData.length - i,
+            y: d.date,
+          }))}
+          horizontal
+        />
+      </XYChart>,
+    );
+    const barSeries = wrapper.find(BarSeries).dive();
+    expect(
+      barSeries
+        .find(Bar)
+        .first()
+        .props().width,
+    ).toBe(maxWidth);
+  });
+
+  it('should not render bars for null data for horizontal barchart', () => {
+    const wrapper = shallow(
+      <XYChart
+        {...mockProps}
+        yScale={{ type: 'time' }}
+        xScale={{ type: 'linear', includeZero: false }}
+      >
+        <BarSeries
+          data={mockData.map((d, i) => ({
+            x: i === 0 ? null : d.num,
+            y: d.date,
+          }))}
+          horizontal
+        />
+      </XYChart>,
+    );
+    const barSeries = wrapper.find(BarSeries).dive();
+    expect(barSeries.find(Bar)).toHaveLength(mockData.length - 1);
+  });
+
   it('should work with time or band scales', () => {
     const timeWrapper = shallow(
       <XYChart {...mockProps} xScale={{ type: 'time' }}>
