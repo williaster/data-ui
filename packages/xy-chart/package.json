@@ -1,6 +1,6 @@
 {
   "name": "@data-ui/xy-chart",
-  "version": "0.0.65",
+  "version": "0.0.66",
   "description": "A package of charts with standard x- and y- axes. https://williaster.github.io/data-ui",
   "sideEffects": false,
   "main": "lib/index.js",

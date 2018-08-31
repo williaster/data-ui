@@ -1,6 +1,6 @@
 {
   "name": "@data-ui/network",
-  "version": "0.0.63",
+  "version": "0.0.66",
   "description": "React + d3 library for creating graph visualizations",
   "sideEffects": false,
   "main": "lib/index.js",
