@@ -1,4 +1,5 @@
 # Changelog
+- [v0.0.66](#v0066)
 - [v0.0.65](#v0065)
 - [v0.0.64](#v0064)
 - [v0.0.63](#v0063)
@@ -18,6 +19,31 @@
 - [v0.0.49](#v0049)
 - [v0.0.48](#v0048)
 - [v0.0.47](#v0047)
+
+## v0.0.66
+
+🏆 Enhancements
+
+[xy-chart]
+- @conglei Add `horizontal` prop to `<BarSeries />` to support horizontal Bar charts [#127](https://github.com/williaster/data-ui/pull/127)
+- @williaster [Demo] add linked brushable chart demo [#126](https://github.com/williaster/data-ui/pull/126)
+
+[network]
+- @conglei Expose interaction handlers on links [#128](https://github.com/williaster/data-ui/pull/128)
+
+🐛Bug Fix 
+
+[xy-chart]
+
+- @williaster Allow string type `tickValues` in `*Axis` components [#126](https://github.com/williaster/data-ui/pull/126)
+
+
+```
+Changes:
+ - @data-ui/demo: 0.0.65 => 0.0.66 (private)
+ - @data-ui/network 0.0.63 => 0.0.66
+ - @data-ui/xy-chart: 0.0.65 => 0.0.66
+```
 
 ## v0.0.65
 
