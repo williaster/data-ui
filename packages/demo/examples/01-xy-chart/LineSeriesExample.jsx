@@ -1,6 +1,8 @@
 import React from 'react';
 import { allColors } from '@data-ui/theme';
 import { Button } from '@data-ui/forms';
+import { LegendOrdinal } from '@vx/legend';
+import { scaleOrdinal } from '@vx/scale';
 
 import { CrossHair, LineSeries, WithTooltip, XAxis, YAxis } from '@data-ui/xy-chart';
 
@@ -12,9 +14,9 @@ const seriesProps = [
   {
     seriesKey: 'Stock 1',
     key: 'Stock 1',
-    data: timeSeriesData,
-    stroke: allColors.grape[9],
-    showPoints: true,
+    data: timeSeriesData.map(d => ({ ...d, color: allColors.cyan[4] })),
+    stroke: allColors.cyan[4],
+    strokeDasharray: '',
     dashType: 'solid',
   },
   {
@@ -23,8 +25,9 @@ const seriesProps = [
     data: timeSeriesData.map(d => ({
       ...d,
       y: Math.random() > 0.5 ? d.y * 2 : d.y / 2,
+      color: allColors.grape[4],
     })),
-    stroke: allColors.grape[7],
+    stroke: allColors.grape[4],
     strokeDasharray: '6 4',
     dashType: 'dashed',
     strokeLinecap: 'butt',
@@ -35,13 +38,19 @@ const seriesProps = [
     data: timeSeriesData.map(d => ({
       ...d,
       y: Math.random() < 0.3 ? d.y * 3 : d.y / 3,
+      color: allColors.orange[4],
     })),
-    stroke: allColors.grape[4],
-    strokeDasharray: '2 2',
+    stroke: allColors.orange[4],
+    strokeDasharray: '3 1',
     dashType: 'dotted',
     strokeLinecap: 'butt',
   },
 ];
+
+const legendScale = scaleOrdinal({
+  range: seriesProps.map(({ stroke, strokeDasharray }) => ({ stroke, strokeDasharray })),
+  domain: seriesProps.map(d => d.seriesKey),
+});
 
 const MARGIN = { left: 8, top: 16 };
 const TOOLTIP_TIMEOUT = 250;
@@ -234,46 +243,85 @@ class LineSeriesExample extends React.PureComponent {
     return (
       <WithToggle id="line_mouse_events_toggle" label="Disable mouse events">
         {disableMouseEvents => (
-          <div>
-            {this.renderControls(disableMouseEvents)}
+          <WithToggle
+            id="line_multi_circles_toggle"
+            label="Multiple tooltip circles (shared tooltip only)"
+            initialChecked
+            disabled={disableMouseEvents || useVoronoiTrigger}
+          >
+            {showMultipleCircles => (
+              <div style={{ marginTop: 16 }}>
+                {this.renderControls(disableMouseEvents)}
 
-            {/* Use WithTooltip to intercept mouse events in stickyTooltip state */}
-            <WithTooltip renderTooltip={this.renderTooltip}>
-              {({ onMouseLeave, onMouseMove, tooltipData }) => (
-                <ResponsiveXYChart
-                  ariaLabel="Required label"
-                  eventTrigger={useVoronoiTrigger ? 'voronoi' : 'container'}
-                  eventTriggerRefs={this.eventTriggerRefs}
-                  margin={MARGIN}
-                  onClick={disableMouseEvents ? null : this.handleClick}
-                  onMouseMove={disableMouseEvents || stickyTooltip ? null : onMouseMove}
-                  onMouseLeave={disableMouseEvents || stickyTooltip ? null : onMouseLeave}
-                  renderTooltip={null}
-                  showVoronoi={useVoronoiTrigger}
-                  snapTooltipToDataX
-                  snapTooltipToDataY={useVoronoiTrigger}
-                  tooltipData={tooltipData}
-                  xScale={{ type: 'time' }}
-                  yScale={{ type: 'linear' }}
-                >
-                  <XAxis label="Time" numTicks={5} />
-                  <YAxis label="Stock price ($)" numTicks={4} />
-                  {seriesProps.map(({ key, ...props }) => (
-                    <LineSeries key={key} {...props} disableMouseEvents={disableMouseEvents} />
-                  ))}
-                  <CrossHair
-                    fullHeight
-                    showHorizontalLine={false}
-                    strokeDasharray=""
-                    stroke={allColors.grape[4]}
-                    circleStroke={allColors.grape[4]}
-                    circleFill="#fff"
-                    showCircle={useVoronoiTrigger || !this.state.programmaticTrigger}
+                <div style={{ marginTop: 36 }}>
+                  <LegendOrdinal
+                    key="legend"
+                    direction="row"
+                    scale={legendScale}
+                    shape={({ fill: style, width, height }) => (
+                      <svg width={width + 12} height={height}>
+                        <line
+                          x1={6}
+                          x2={width + 12}
+                          y1={height / 2 + 1}
+                          y2={height / 2 + 1}
+                          strokeWidth={3}
+                          stroke={style.stroke}
+                          strokeDasharray={style.strokeDasharray}
+                        />
+                      </svg>
+                    )}
+                    fill={({ datum }) => legendScale(datum)}
+                    labelFormat={label => label}
                   />
-                </ResponsiveXYChart>
-              )}
-            </WithTooltip>
-          </div>
+                </div>
+
+                {/* Use WithTooltip to intercept mouse events in stickyTooltip state */}
+                <WithTooltip renderTooltip={this.renderTooltip}>
+                  {({ onMouseLeave, onMouseMove, tooltipData }) => (
+                    <ResponsiveXYChart
+                      ariaLabel="Required label"
+                      eventTrigger={useVoronoiTrigger ? 'voronoi' : 'container'}
+                      eventTriggerRefs={this.eventTriggerRefs}
+                      margin={MARGIN}
+                      onClick={disableMouseEvents ? null : this.handleClick}
+                      onMouseMove={disableMouseEvents || stickyTooltip ? null : onMouseMove}
+                      onMouseLeave={disableMouseEvents || stickyTooltip ? null : onMouseLeave}
+                      renderTooltip={null}
+                      showVoronoi={useVoronoiTrigger}
+                      snapTooltipToDataX
+                      snapTooltipToDataY={useVoronoiTrigger}
+                      tooltipData={tooltipData}
+                      xScale={{ type: 'time' }}
+                      yScale={{ type: 'linear' }}
+                    >
+                      <XAxis label="Time" numTicks={5} />
+                      <YAxis label="Stock price ($)" numTicks={4} />
+                      {seriesProps.map(({ key, ...props }) => (
+                        <LineSeries
+                          key={key}
+                          {...props}
+                          disableMouseEvents={disableMouseEvents}
+                          strokeWidth={2}
+                        />
+                      ))}
+                      <CrossHair
+                        fullHeight
+                        showHorizontalLine={false}
+                        strokeDasharray=""
+                        circleSize={d => (d.y === tooltipData.datum.y ? 6 : 4)}
+                        circleStroke={d => (d.y === tooltipData.datum.y ? '#fff' : d.color)}
+                        circleStyles={{ strokeWidth: 1.5 }}
+                        circleFill={d => (d.y === tooltipData.datum.y ? d.color : '#fff')}
+                        showCircle={useVoronoiTrigger || !this.state.programmaticTrigger}
+                        showMultipleCircles={!useVoronoiTrigger && showMultipleCircles}
+                      />
+                    </ResponsiveXYChart>
+                  )}
+                </WithTooltip>
+              </div>
+            )}
+          </WithToggle>
         )}
       </WithToggle>
     );
