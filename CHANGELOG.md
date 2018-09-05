@@ -1,4 +1,5 @@
 # Changelog
+- [v0.0.67](#v0067)
 - [v0.0.66](#v0066)
 - [v0.0.65](#v0065)
 - [v0.0.64](#v0064)
@@ -19,6 +20,24 @@
 - [v0.0.49](#v0049)
 - [v0.0.48](#v0048)
 - [v0.0.47](#v0047)
+
+## v0.0.67
+
+[xy-chart]
+
+🏆 Enhancements
+- adds support for rendering  multiple circles on the `XYChart` `Crosshair` component when `XYChart`'s `eventTrigger='container'` [#129](https://github.com/williaster/data-ui/pull/129) @williaster
+- Adds deep export for `WithTooltip` from `@data-ui/shared` [#130](https://github.com/williaster/data-ui/pull/130) @williaster
+- moves some "enhancer" components to new `composer/` directory [#130](https://github.com/williaster/data-ui/pull/130) @williaster
+
+🏠 Internal
+- removes some tests that test deep vx exports, which are already covered with linting [#130](https://github.com/williaster/data-ui/pull/130) @williaster
+
+```
+Changes:
+ - @data-ui/demo: 0.0.66 => 0.0.67 (private)
+ - @data-ui/xy-chart: 0.0.66 => 0.0.67
+ ```
 
 ## v0.0.66
 
