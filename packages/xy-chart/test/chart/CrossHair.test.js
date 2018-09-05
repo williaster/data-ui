@@ -43,11 +43,20 @@ describe('<CrossHair />', () => {
     const zero = shallow(<CrossHair {...props} showCircle={false} />);
     const one = shallow(<CrossHair {...props} showCircle />);
     const multi = shallow(<CrossHair {...props} showMultipleCircles />);
+    const multi2 = shallow(<CrossHair {...props} showMultipleCircles showCircle={false} />);
 
     const { series } = props;
     expect(zero.find('circle')).toHaveLength(0);
     expect(one.find('circle')).toHaveLength(1);
     expect(multi.find('circle')).toHaveLength(Object.keys(series).length);
+    expect(multi2.find('circle')).toHaveLength(Object.keys(series).length);
+  });
+
+  it('should not render multiple circles without the `series` prop', () => {
+    const noSeriesProps = { ...props, series: null };
+    const one = shallow(<CrossHair {...noSeriesProps} showMultipleCircles />);
+
+    expect(one.find('circle')).toHaveLength(1);
   });
 
   it('should render a fullWidth line if specified', () => {

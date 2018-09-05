@@ -56,8 +56,8 @@ const defaultProps = {
   showMultipleCircles: false,
   showHorizontalLine: true,
   showVerticalLine: true,
-  stroke: color.grays[7],
-  strokeDasharray: '3,3',
+  stroke: color.grays[6],
+  strokeDasharray: '5,2',
   strokeWidth: 1,
   xScale: null,
   yScale: null,
@@ -90,7 +90,7 @@ function CrossHair({
   const [yMin, yMax] = extent(yScale.range());
 
   const circleData =
-    showMultipleCircles && Object.keys(series).length > 0
+    showMultipleCircles && series && Object.keys(series).length > 0
       ? Object.keys(series).map(seriesKey => ({ seriesKey, ...series[seriesKey] }))
       : [datum];
 

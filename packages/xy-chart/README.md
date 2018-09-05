@@ -1,11 +1,11 @@
 # @data-ui/xy-chart
-A package of charts with standard x- and y- axes.
+A package that supports making charts with x- and y- cartesian coordinates.
 
 <a title="package version" href="https://img.shields.io/npm/v/@data-ui/xy-chart.svg?style=flat-square">
   <img src="https://img.shields.io/npm/v/@data-ui/xy-chart.svg?style=flat-square" />
 </a>
 <p align="center">
-  <img width="600px" src="https://user-images.githubusercontent.com/4496521/29149889-e34d14f6-7d2b-11e7-8f8f-b5021dc8f1b8.gif" />
+  <img width="400px" src="https://user-images.githubusercontent.com/4496521/45108737-4e7a1d00-b0f2-11e8-85db-09361c9b67b1.gif" />
 </p>
 
 See it live at <a href="https://williaster.github.io/data-ui" target="_blank">williaster.github.io/data-ui</a>.
@@ -180,7 +180,7 @@ The result will show the difference between the two `AreaSeries`, with a fill th
   />
   <VerticalReferenceLine
     reference={new Date('2018-01-05')}
-    label="My birthday" 
+    label="My birthday"
     labelProps={{ width: 100, textAnchor: 'start', dx: '0.5em' }}
   />
 </XYChart>
@@ -208,7 +208,7 @@ Under the covers this will wrap the `<XYChart />` component in the exported `<Wi
 
 If you'd like more customizability over tooltip rendering you can do either of the following:
 
-1) Roll your own tooltip positioning logic and pass `onMouseMove` and `onMouseLeave` functions to `XYChart`. These functions are triggered according to the `eventTrigger` prop and are called with the signature described below upon appropriate trigger. Note that you must also pass `tooltipData` to `XYChart` if you are using the `CrossHair` component, which has an expected shape of `{ datum }` containing the datum to emphasize.
+1) Roll your own tooltip positioning logic and pass `onMouseMove` and `onMouseLeave` functions to `XYChart`. These functions are triggered according to the `eventTrigger` prop and are called with the signature described below upon appropriate trigger. Note that you must also pass `tooltipData` to `XYChart` if you are using the `CrossHair` component, which has an expected shape of `{ datum [, series] }` containing the datum(s) to emphasize.
 
 2) Wrap `<XYChart />` with `<WithTooltip />` yourself, which accepts props for additional customization:
 
@@ -235,16 +235,17 @@ Name | Type | Default | Description
 ------------ | ------------- | ------- | ----
 fullHeight | PropTypes.bool | false | whether the vertical line should span the entire height of the chart
 fullWidth | PropTypes.bool | false | whether the horizontal line should span the entire width of the chart
-circleSize | PropTypes.number | 4 | the radius of the circle
-circleFill | PropTypes.string | data-ui/theme.colors.grays[7] | the fill of the circle
-circleStroke | PropTypes.string | white | the stroke of the circle
-circleStyles| PropTypes.object | { pointerEvents: 'none' } | styles passed to the circle
+circleSize | PropTypes.number or func(d,i) => PropTypes.number | 4 | the radius of the circle
+circleFill | PropTypes.string or func(d,i) => PropTypes.string | data-ui/theme.colors.grays[7] | the fill of the circle
+circleStroke | PropTypes.string or func(d,i) => PropTypes.string | white | the stroke of the circle
+circleStyles| PropTypes.object or func(d,i) => PropTypes.object | { pointerEvents: 'none' } | styles passed to the circle
 lineStyles | PropTypes.object | { pointerEvents: 'none' } | styles passed to both horizontal and vertical lines
 showCircle | PropTypes.bool | true | whether to show the circle
+showMultipleCircles | PropTypes.bool | false | whether to show _multiple_ circles when `tooltipData` includes a `series` key (when `XYChart`'s `eventTrigger="container"`)
 showHorizontalLine | PropTypes.bool | true | whether to show the horizontal crosshair line
 showVerticalLine | PropTypes.bool | true | whether to show the vertical crosshair line
-stroke | PropTypes.oneOfType([PropTypes.func, PropTypes.string]) | data-ui/theme.colors.grays[7] | the stroke of both horizontal and vertical lines
-strokeDasharray | PropTypes.oneOfType([PropTypes.func, PropTypes.string]) | `3, 3` | The stroke-dash-array of both horizontal and vertical lines
+stroke | PropTypes.oneOfType([PropTypes.func, PropTypes.string]) | data-ui/theme.colors.grays[6] | the stroke of both horizontal and vertical lines
+strokeDasharray | PropTypes.oneOfType([PropTypes.func, PropTypes.string]) | `5,2` | The stroke-dash-array of both horizontal and vertical lines
 strokeWidth | PropTypes.oneOfType([PropTypes.func, PropTypes.number]) | 1 | The strokeWidth of both horizontal and vertical lines
 
 
