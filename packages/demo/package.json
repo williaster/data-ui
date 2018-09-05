@@ -1,6 +1,6 @@
 {
   "name": "@data-ui/demo",
-  "version": "0.0.66",
+  "version": "0.0.67",
   "description": "data-ui demo",
   "scripts": {
     "gh-pages:clean": "rm -rf _gh-pages && lerna run dev:nowatch",
@@ -34,7 +34,7 @@
     "@data-ui/shared": "^0.0.63",
     "@data-ui/sparkline": "^0.0.63",
     "@data-ui/theme": "^0.0.62",
-    "@data-ui/xy-chart": "^0.0.66",
+    "@data-ui/xy-chart": "^0.0.67",
     "@storybook/addon-options": "^3.1.6",
     "@storybook/react": "3.2.12",
     "@vx/legend": "^0.0.167",
