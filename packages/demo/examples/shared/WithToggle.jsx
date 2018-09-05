@@ -8,10 +8,12 @@ const propTypes = {
   children: PropTypes.func.isRequired,
   label: PropTypes.string.isRequired,
   initialChecked: PropTypes.bool,
+  disabled: PropTypes.bool,
 };
 
 const defaultProps = {
   initialChecked: false,
+  disabled: false,
 };
 
 class WithToggle extends React.PureComponent {
@@ -21,7 +23,7 @@ class WithToggle extends React.PureComponent {
   }
 
   render() {
-    const { children, id, label } = this.props;
+    const { children, id, label, disabled } = this.props;
     const { checked } = this.state;
 
     return (
@@ -33,6 +35,7 @@ class WithToggle extends React.PureComponent {
           onChange={() => {
             this.setState({ checked: !checked });
           }}
+          disabled={disabled}
         />
         {children(checked)}
       </div>

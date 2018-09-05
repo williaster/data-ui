@@ -2,18 +2,10 @@
 import React from 'react';
 import { timeParse, timeFormat } from 'd3-time-format';
 
-import {
-  XYChart,
-  CrossHair,
-  XAxis,
-  YAxis,
-  theme,
-  withScreenSize,
-  BarSeries,
-  PatternLines,
-} from '@data-ui/xy-chart';
+import { CrossHair, XAxis, YAxis, BarSeries, PatternCircles } from '@data-ui/xy-chart';
 
 import colors, { allColors } from '@data-ui/theme/lib/color';
+import ResponsiveXYChart from './ResponsiveXYChart';
 
 import { timeSeriesData } from './data';
 
@@ -44,7 +36,8 @@ class HorizontalBarChartExample extends React.PureComponent {
     return (
       <div className="bar-demo--form">
         <div>
-          Direction:
+          Bar direction:
+          {'  '}
           <label>
             <input
               type="radio"
@@ -69,51 +62,58 @@ class HorizontalBarChartExample extends React.PureComponent {
   }
 
   render() {
-    const { screenWidth } = this.props;
     const { direction } = this.state;
-    const categoryScale = { type: 'band', paddingInner: 0.15 };
+    const categoryScale = { type: 'band', paddingInner: 0.4 };
     const valueScale = { type: 'linear' };
     const horizontal = direction === 'horizontal';
 
     return (
       <div className="horizontal-bar-demo">
         {this.renderControls()}
-        <XYChart
-          theme={theme}
-          width={Math.min(700, screenWidth / 1.5)}
-          height={Math.min(700 / 2, screenWidth / 1.5 / 2)}
+        <ResponsiveXYChart
           ariaLabel="Required label"
+          eventTrigger="series"
           xScale={horizontal ? valueScale : categoryScale}
           yScale={horizontal ? categoryScale : valueScale}
           margin={{ left: 100, top: 64, bottom: 64 }}
         >
+          <PatternCircles
+            id="horizontal_bar_circles"
+            width={6}
+            height={6}
+            radius={2}
+            fill={allColors.blue[horizontal ? 2 : 8]}
+            strokeWidth={0}
+          />
           <BarSeries
+            fill={allColors.blue[horizontal ? 8 : 2]}
             horizontal={horizontal}
             data={horizontal ? categoryHorizontalData : categoryData}
           />
+          <BarSeries
+            fill="url(#horizontal_bar_circles)"
+            horizontal={horizontal}
+            data={horizontal ? categoryHorizontalData : categoryData}
+            stroke={allColors.blue[8]}
+            strokeWidth={1.5}
+          />
           <CrossHair
-            showHorizontalLine={false}
+            showHorizontalLine={!horizontal}
+            showVerticalLine={horizontal}
             fullHeight
-            stroke={colors.darkGray}
+            fullWidth
+            strokeDasharray=""
+            stroke={allColors.blue[8]}
             circleFill={allColors.blue[7]}
             circleStroke="white"
           />
           <YAxis numTicks={5} orientation="left" />
           <XAxis numTicks={5} />
-        </XYChart>
+        </ResponsiveXYChart>
 
         <style type="text/css">
           {`
-          .horizontal-bar-demo {
-             display: flex;
-             flex-direction: row;
-             flex-wrap: wrap;
-             align-items: center;
-          }
-
           .bar-demo--form > div {
-            display: flex;
-            justify-content: space-between;
             margin-bottom: 8px;
             margin-right: 12px;
           }
@@ -124,4 +124,4 @@ class HorizontalBarChartExample extends React.PureComponent {
   }
 }
 
-export default withScreenSize(HorizontalBarChartExample);
+export default HorizontalBarChartExample;

@@ -402,12 +402,12 @@ class XYChart extends React.PureComponent {
               CrossHairs.map((CrossHair, i) =>
                 React.cloneElement(CrossHair, {
                   key: `crosshair-${i}`, // eslint-disable-line react/no-array-index-key
-                  left:
-                    xScale(getX(tooltipData.datum) || 0) +
-                    (xScale.bandwidth ? xScale.bandwidth() / 2 : 0),
-                  top:
-                    yScale(getY(tooltipData.datum) || 0) +
-                    (yScale.bandwidth ? yScale.bandwidth() / 2 : 0),
+                  datum: tooltipData.datum,
+                  series: tooltipData.series,
+                  getScaledX: d =>
+                    xScale(getX(d) || 0) + (xScale.bandwidth ? xScale.bandwidth() / 2 : 0),
+                  getScaledY: d =>
+                    yScale(getY(d) || 0) + (yScale.bandwidth ? yScale.bandwidth() / 2 : 0),
                   xScale,
                   yScale,
                 }),
