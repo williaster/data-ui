@@ -18,6 +18,7 @@ export const propTypes = {
   onBrushEnd: PropTypes.func,
   onMouseMove: PropTypes.func,
   onMouseLeave: PropTypes.func,
+  onClick: PropTypes.func,
   margin: marginShape,
   brushDirection: PropTypes.oneOf(['vertical', 'horizontal', 'both']),
   resizeTriggerAreas: PropTypes.arrayOf(
@@ -69,6 +70,7 @@ const defaultProps = {
   disableDraggingSelection: false,
   onMouseMove: null,
   onMouseLeave: null,
+  onClick: null,
 };
 
 class Brush extends React.Component {
@@ -152,6 +154,7 @@ class Brush extends React.Component {
       disableDraggingSelection,
       onMouseLeave,
       onMouseMove,
+      onClick,
       handleSize,
     } = this.props;
     if (!xScale || !yScale) return null;
@@ -205,6 +208,7 @@ class Brush extends React.Component {
         disableDraggingSelection={disableDraggingSelection}
         onMouseLeave={onMouseLeave}
         onMouseMove={onMouseMove}
+        onClick={onClick}
         ref={this.BaseBrush}
       />
     );

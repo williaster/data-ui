@@ -13,6 +13,10 @@ const propTypes = {
   updateBrush: PropTypes.func.isRequired,
   onBrushEnd: PropTypes.func.isRequired,
   disableDraggingSelection: PropTypes.bool.isRequired,
+  onMouseLeave: PropTypes.func.isRequired,
+  onMouseMove: PropTypes.func.isRequired,
+  onMouseUp: PropTypes.func.isRequired,
+  onClick: PropTypes.func.isRequired,
 };
 
 export default class BrushSelection extends React.Component {
@@ -86,6 +90,10 @@ export default class BrushSelection extends React.Component {
       updateBrush,
       disableDraggingSelection,
       onBrushEnd,
+      onMouseLeave,
+      onMouseMove,
+      onMouseUp,
+      onClick,
       ...restProps
     } = this.props;
 
@@ -119,8 +127,20 @@ export default class BrushSelection extends React.Component {
               height={height}
               className="vx-brush-selection"
               onMouseDown={disableDraggingSelection ? null : selection.dragStart}
-              onMouseMove={selection.dragMove}
-              onMouseUp={selection.dragEnd}
+              onMouseLeave={event => {
+                if (onMouseLeave) onMouseLeave(event);
+              }}
+              onMouseMove={event => {
+                selection.dragMove(event);
+                if (onMouseMove) onMouseMove(event);
+              }}
+              onMouseUp={event => {
+                selection.dragEnd(event);
+                if (onMouseUp) onMouseUp(event);
+              }}
+              onClick={event => {
+                if (onClick) onClick(event);
+              }}
               style={{
                 pointerEvents: brush.isBrushing || brush.activeHandle ? 'none' : 'all',
                 cursor: disableDraggingSelection ? null : 'move',
