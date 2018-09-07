@@ -130,19 +130,20 @@ export default class Brush extends React.Component {
 
   handleDragStart(draw) {
     const { onBrushStart, left, top, inheritedMargin } = this.props;
+    const start = {
+      x: draw.x + draw.dx - left - inheritedMargin.left,
+      y: draw.y + draw.dy - top - inheritedMargin.top,
+    };
+    const end = { ...start };
+
     if (onBrushStart) {
-      onBrushStart();
+      onBrushStart(start);
     }
+
     this.update(prevBrush => ({
       ...prevBrush,
-      start: {
-        x: draw.x + draw.dx - left - inheritedMargin.left,
-        y: draw.y + draw.dy - top - inheritedMargin.top,
-      },
-      end: {
-        x: draw.x + draw.dx - left - inheritedMargin.left,
-        y: draw.y + draw.dy - top - inheritedMargin.top,
-      },
+      start,
+      end,
       extent: {
         x0: -1,
         x1: -1,
