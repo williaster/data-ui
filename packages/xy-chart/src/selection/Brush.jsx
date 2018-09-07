@@ -74,9 +74,16 @@ const defaultProps = {
 class Brush extends React.Component {
   constructor(props) {
     super(props);
+
+    this.BaseBrush = React.createRef();
     this.handleChange = this.handleChange.bind(this);
     this.handleBrushStart = this.handleBrushStart.bind(this);
     this.handleBrushEnd = this.handleBrushEnd.bind(this);
+    this.reset = this.reset.bind(this);
+  }
+
+  reset() {
+    this.BaseBrush.current.reset();
   }
 
   handleChange(brush) {
@@ -198,6 +205,7 @@ class Brush extends React.Component {
         disableDraggingSelection={disableDraggingSelection}
         onMouseLeave={onMouseLeave}
         onMouseMove={onMouseMove}
+        ref={this.BaseBrush}
       />
     );
   }
