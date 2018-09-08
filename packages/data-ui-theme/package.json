@@ -34,7 +34,7 @@
     "babel-runtime": "^6.26.0"
   },
   "devDependencies": {
-    "@data-ui/build-config": "^0.0.8"
+    "@data-ui/build-config": "^0.0.12"
   },
   "beemo": {
     "module": "@data-ui/build-config",

@@ -38,7 +38,7 @@
     "react-virtualized": "^9.7.3"
   },
   "devDependencies": {
-    "@data-ui/build-config": "^0.0.8",
+    "@data-ui/build-config": "^0.0.12",
     "react": "^16.0.0"
   },
   "peerDependencies": {
