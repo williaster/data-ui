@@ -1,7 +1,7 @@
 language: node_js
 
 node_js:
-  - '10.7'
+  - 10.7
 
 cache:
   directories:
@@ -22,7 +22,10 @@ install:
   - npm install -g codecov
 
 script:
-  - 'cd ./packages/$PACKAGE && npm install && npm prune && npm run test'
+  - cd ./packages/$PACKAGE
+  - npm install
+  - npm prune
+  - npm run test
 
 after_script:
-  - 'codecov'
+  - codecov
