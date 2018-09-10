@@ -77,6 +77,27 @@ export function propOrFallback(props, propName, fallback) {
   return props && isDefined(props[propName]) ? props[propName] : fallback;
 }
 
+export function scaleInvert(scale, value) {
+  if (!scale.invert) {
+    const leftEdges = scale.range();
+    let i = 0;
+    const width = scale(scale.domain()[1]) - scale(scale.domain()[0]);
+    if (width > 0) {
+      while (value > leftEdges[0] + width * (i + 1)) {
+        i += 1;
+      }
+    } else {
+      while (value < leftEdges[0] + width * (i + 1)) {
+        i += 1;
+      }
+    }
+
+    return i;
+  }
+
+  return scale.invert(value);
+}
+
 export const DEFAULT_CHART_MARGIN = {
   top: 64,
   right: 64,
