@@ -1,9 +1,12 @@
 language: node_js
+
 node_js:
   - '10.7'
+
 cache:
   directories:
     - node_modules
+
 env:
   - PACKAGE=xy-chart
   - PACKAGE=sparkline
@@ -14,7 +17,12 @@ env:
   - PACKAGE=forms
   - PACKAGE=network
   - PACKAGE=shared
+
+install:
+  - npm install -g codecov
+
 script:
   - 'cd ./packages/$PACKAGE && npm install && npm prune && npm run test'
+
 after_script:
-  - 'cat ./packages/$PACKAGE/coverage/lcov.info | ./node_modules/.bin/coveralls'
+  - 'codecov'

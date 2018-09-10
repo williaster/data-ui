@@ -44,7 +44,7 @@
   },
   "homepage": "https://github.com/williaster/data-ui#readme",
   "devDependencies": {
-    "@data-ui/build-config": "^0.0.8",
+    "@data-ui/build-config": "^0.0.12",
     "react": "^16.0.0",
     "react-dom": "^16.0.0"
   },
