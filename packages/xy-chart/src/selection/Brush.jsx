@@ -89,7 +89,7 @@ class Brush extends React.Component {
   constructor(props) {
     super(props);
 
-    this.BaseBrush = React.createRef();
+    this.BaseBrush = null;
     this.handleChange = this.handleChange.bind(this);
     this.handleBrushStart = this.handleBrushStart.bind(this);
     this.handleBrushEnd = this.handleBrushEnd.bind(this);
@@ -97,7 +97,7 @@ class Brush extends React.Component {
   }
 
   reset() {
-    this.BaseBrush.current.reset();
+    this.BaseBrush.reset();
   }
 
   handleChange(brush) {
@@ -230,7 +230,9 @@ class Brush extends React.Component {
         onMouseLeave={onMouseLeave}
         onMouseMove={onMouseMove}
         onClick={onClick}
-        ref={this.BaseBrush}
+        ref={el => {
+          this.BaseBrush = el;
+        }}
       />
     );
   }
