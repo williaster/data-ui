@@ -13,10 +13,17 @@ const propTypes = {
   updateBrush: PropTypes.func.isRequired,
   onBrushEnd: PropTypes.func.isRequired,
   disableDraggingSelection: PropTypes.bool.isRequired,
-  onMouseLeave: PropTypes.func.isRequired,
-  onMouseMove: PropTypes.func.isRequired,
-  onMouseUp: PropTypes.func.isRequired,
-  onClick: PropTypes.func.isRequired,
+  onMouseLeave: PropTypes.func,
+  onMouseMove: PropTypes.func,
+  onMouseUp: PropTypes.func,
+  onClick: PropTypes.func,
+};
+
+const defaultProps = {
+  onMouseLeave: null,
+  onMouseUp: null,
+  onMouseMove: null,
+  onClick: null,
 };
 
 export default class BrushSelection extends React.Component {
@@ -155,3 +162,5 @@ export default class BrushSelection extends React.Component {
 }
 
 BrushSelection.propTypes = propTypes;
+
+BrushSelection.defaultProps = defaultProps;

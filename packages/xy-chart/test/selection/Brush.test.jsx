@@ -60,6 +60,14 @@ describe('<Brush />', () => {
     expect(changeFn).toHaveBeenCalledTimes(2);
   });
 
+  it('should trigger onClick function when clicking', () => {
+    const clickFn = jest.fn();
+    const wrapper = mount(setup({ onClick: clickFn }));
+    const dragControlLayer = wrapper.find('.vx-brush-overlay').first();
+    dragControlLayer.simulate('click', startEvent);
+    expect(clickFn).toHaveBeenCalledTimes(1);
+  });
+
   it('should trigger onBrushEnd function when mouse up', () => {
     const brushEndFn = jest.fn();
     const wrapper = mount(setup({ onBrushEnd: brushEndFn }));

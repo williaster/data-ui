@@ -4,7 +4,7 @@ import { color } from '@data-ui/theme';
 
 import BaseBrush from '../utils/brush/Brush';
 import { generalStyleShape, marginShape } from '../utils/propShapes';
-import { scaleInvert } from '../utils/chartUtils';
+import { scaleInvert, getDomainFromExtent } from '../utils/chartUtils';
 
 const SAFE_PIXEL = 2;
 
@@ -117,48 +117,16 @@ class Brush extends React.Component {
     const { xScale, yScale } = this.props;
     const { x0, x1, y0, y1 } = brush.extent;
 
-    let xDomain;
-    const invertedX0 = scaleInvert(xScale, x0 + (x0 < x1 ? -SAFE_PIXEL : SAFE_PIXEL));
-    const invertedX1 = scaleInvert(xScale, x1 + (x1 < x0 ? -SAFE_PIXEL : SAFE_PIXEL));
-    const startX = Math.min(invertedX0, invertedX1);
-    const endX = Math.max(invertedX0, invertedX1);
-    if (xScale.invert) {
-      xDomain = {
-        x0: startX,
-        x1: endX,
-      };
-    } else {
-      const xValues = [];
-      for (let i = startX; i <= endX; i += 1) {
-        xValues.push(xScale.domain()[i]);
-      }
-      xDomain = {
-        xValues,
-      };
-    }
+    const xDomain = getDomainFromExtent(xScale, x0, x1, SAFE_PIXEL);
+    const yDomain = getDomainFromExtent(yScale, y0, y1, SAFE_PIXEL);
 
-    let yDomain;
-    const invertedY0 = scaleInvert(yScale, y0 + (y0 < y1 ? -SAFE_PIXEL : SAFE_PIXEL));
-    const invertedY1 = scaleInvert(yScale, y1 + (y1 < y0 ? -SAFE_PIXEL : SAFE_PIXEL));
-    const startY = Math.min(invertedY0, invertedY1);
-    const endY = Math.max(invertedY0, invertedY1);
-    if (yScale.invert) {
-      yDomain = {
-        y0: startY,
-        y1: endY,
-      };
-    } else {
-      const yValues = [];
-      for (let i = startY; i <= endY; i += 1) {
-        yValues.push(yScale.domain()[i]);
-      }
-      yDomain = {
-        yValues,
-      };
-    }
     const domain = {
-      ...xDomain,
-      ...yDomain,
+      x0: xDomain.start,
+      x1: xDomain.end,
+      xValues: xDomain.values,
+      y0: yDomain.start,
+      y1: yDomain.end,
+      yValues: yDomain.values,
     };
 
     return domain;
