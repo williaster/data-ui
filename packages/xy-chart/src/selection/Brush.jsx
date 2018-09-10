@@ -4,6 +4,7 @@ import { color } from '@data-ui/theme';
 
 import BaseBrush from '../utils/brush/Brush';
 import { generalStyleShape, marginShape } from '../utils/propShapes';
+import { scaleInvert, getDomainFromExtent } from '../utils/chartUtils';
 
 const SAFE_PIXEL = 2;
 
@@ -18,6 +19,7 @@ export const propTypes = {
   onBrushEnd: PropTypes.func,
   onMouseMove: PropTypes.func,
   onMouseLeave: PropTypes.func,
+  onClick: PropTypes.func,
   margin: marginShape,
   brushDirection: PropTypes.oneOf(['vertical', 'horizontal', 'both']),
   resizeTriggerAreas: PropTypes.arrayOf(
@@ -37,6 +39,16 @@ export const propTypes = {
   xAxisOrientation: PropTypes.oneOf(['top', 'bottom']),
   disableDraggingSelection: PropTypes.bool,
   handleSize: PropTypes.number,
+  enabledRegion: PropTypes.shape({
+    start: PropTypes.shape({
+      x: PropTypes.oneOf([PropTypes.number, PropTypes.string]),
+      y: PropTypes.oneOf([PropTypes.number, PropTypes.string]),
+    }),
+    end: PropTypes.shape({
+      x: PropTypes.oneOf([PropTypes.number, PropTypes.string]),
+      y: PropTypes.oneOf([PropTypes.number, PropTypes.string]),
+    }),
+  }),
 };
 
 const defaultProps = {
@@ -69,21 +81,30 @@ const defaultProps = {
   disableDraggingSelection: false,
   onMouseMove: null,
   onMouseLeave: null,
+  onClick: null,
+  enabledRegion: null,
 };
 
 class Brush extends React.Component {
   constructor(props) {
     super(props);
+
+    this.BaseBrush = null;
     this.handleChange = this.handleChange.bind(this);
     this.handleBrushStart = this.handleBrushStart.bind(this);
     this.handleBrushEnd = this.handleBrushEnd.bind(this);
+    this.reset = this.reset.bind(this);
+  }
+
+  reset() {
+    this.BaseBrush.reset();
   }
 
   handleChange(brush) {
     const { onChange } = this.props;
     if (!onChange) return;
     const { x0 } = brush.extent;
-    if (x0 < 0) {
+    if (x0 < 0 || typeof x0 === 'undefined') {
       onChange(null);
 
       return;
@@ -95,24 +116,32 @@ class Brush extends React.Component {
   convertRangeToDomain(brush) {
     const { xScale, yScale } = this.props;
     const { x0, x1, y0, y1 } = brush.extent;
-    const invertedX0 = xScale.invert(x0 + (x0 < x1 ? -SAFE_PIXEL : SAFE_PIXEL));
-    const invertedX1 = xScale.invert(x1 + (x1 < x0 ? -SAFE_PIXEL : SAFE_PIXEL));
-    const invertedY0 = yScale.invert(y0 + (y0 < y1 ? -SAFE_PIXEL : SAFE_PIXEL));
-    const invertedY1 = yScale.invert(y1 + (y1 < y0 ? -SAFE_PIXEL : SAFE_PIXEL));
+
+    const xDomain = getDomainFromExtent(xScale, x0, x1, SAFE_PIXEL);
+    const yDomain = getDomainFromExtent(yScale, y0, y1, SAFE_PIXEL);
+
     const domain = {
-      x0: Math.min(invertedX0, invertedX1),
-      x1: Math.max(invertedX0, invertedX1),
-      y0: Math.min(invertedY0, invertedY1),
-      y1: Math.max(invertedY0, invertedY1),
+      x0: xDomain.start,
+      x1: xDomain.end,
+      xValues: xDomain.values,
+      y0: yDomain.start,
+      y1: yDomain.end,
+      yValues: yDomain.values,
     };
 
     return domain;
   }
 
-  handleBrushStart() {
-    const { onBrushStart } = this.props;
+  handleBrushStart(point) {
+    const { x, y } = point;
+    const { onBrushStart, xScale, yScale } = this.props;
+    const invertedX = scaleInvert(xScale, x);
+    const invertedY = scaleInvert(yScale, y);
     if (onBrushStart) {
-      onBrushStart();
+      onBrushStart({
+        x: xScale.invert ? invertedX : xScale.domain()[invertedX],
+        y: yScale.invert ? invertedY : yScale.domain()[invertedY],
+      });
     }
   }
 
@@ -145,7 +174,9 @@ class Brush extends React.Component {
       disableDraggingSelection,
       onMouseLeave,
       onMouseMove,
+      onClick,
       handleSize,
+      enabledRegion,
     } = this.props;
     if (!xScale || !yScale) return null;
 
@@ -198,6 +229,10 @@ class Brush extends React.Component {
         disableDraggingSelection={disableDraggingSelection}
         onMouseLeave={onMouseLeave}
         onMouseMove={onMouseMove}
+        onClick={onClick}
+        ref={el => {
+          this.BaseBrush = el;
+        }}
       />
     );
   }

@@ -36,6 +36,8 @@ const propTypes = {
   onMouseLeave: PropTypes.func,
   onMouseUp: PropTypes.func,
   onMouseMove: PropTypes.func,
+  onClick: PropTypes.func,
+  clickSensitivity: PropTypes.number,
   disableDraggingSelection: PropTypes.bool,
 };
 
@@ -55,7 +57,9 @@ const defaultProps = {
   onMouseLeave: null,
   onMouseUp: null,
   onMouseMove: null,
+  onClick: null,
   disableDraggingSelection: false,
+  clickSensitivity: 200,
 };
 
 export default class Brush extends React.Component {
@@ -88,6 +92,8 @@ export default class Brush extends React.Component {
     this.handleDragMove = this.handleDragMove.bind(this);
     this.handleDragEnd = this.handleDragEnd.bind(this);
     this.getExtent = this.getExtent.bind(this);
+    this.mouseUpTime = 0;
+    this.mouseDownTime = 0;
   }
 
   componentWillReceiveProps(nextProps) {
@@ -124,19 +130,20 @@ export default class Brush extends React.Component {
 
   handleDragStart(draw) {
     const { onBrushStart, left, top, inheritedMargin } = this.props;
+    const start = {
+      x: draw.x + draw.dx - left - inheritedMargin.left,
+      y: draw.y + draw.dy - top - inheritedMargin.top,
+    };
+    const end = { ...start };
+
     if (onBrushStart) {
-      onBrushStart();
+      onBrushStart(start);
     }
+
     this.update(prevBrush => ({
       ...prevBrush,
-      start: {
-        x: draw.x + draw.dx - left - inheritedMargin.left,
-        y: draw.y + draw.dy - top - inheritedMargin.top,
-      },
-      end: {
-        x: draw.x + draw.dx - left - inheritedMargin.left,
-        y: draw.y + draw.dy - top - inheritedMargin.top,
-      },
+      start,
+      end,
       extent: {
         x0: -1,
         x1: -1,
@@ -309,9 +316,11 @@ export default class Brush extends React.Component {
       onMouseUp,
       onMouseMove,
       onBrushEnd,
+      onClick,
       resizeTriggerAreas,
       selectedBoxStyle,
       disableDraggingSelection,
+      clickSensitivity,
     } = this.props;
 
     const handles = this.handles();
@@ -340,7 +349,14 @@ export default class Brush extends React.Component {
               width={stageWidth}
               height={stageHeight}
               onDoubleClick={() => event => this.reset(event)}
-              onMouseDown={() => event => draw.dragStart(event)}
+              onClick={() => event => {
+                const duration = this.mouseUpTime - this.mouseDownTime;
+                if (onClick && duration < clickSensitivity) onClick(event);
+              }}
+              onMouseDown={() => event => {
+                this.mouseDownTime = new Date();
+                draw.dragStart(event);
+              }}
               onMouseLeave={() => event => {
                 if (onMouseLeave) onMouseLeave(event);
               }}
@@ -349,6 +365,7 @@ export default class Brush extends React.Component {
                 if (draw.isDragging) draw.dragMove(event);
               }}
               onMouseUp={() => event => {
+                this.mouseUpTime = new Date();
                 if (onMouseUp) onMouseUp(event);
                 draw.dragEnd(event);
               }}
@@ -368,6 +385,10 @@ export default class Brush extends React.Component {
               brush={{ ...this.state }}
               disableDraggingSelection={disableDraggingSelection}
               onBrushEnd={onBrushEnd}
+              onMouseLeave={onMouseLeave}
+              onMouseMove={onMouseMove}
+              onMouseUp={onMouseUp}
+              onClick={onClick}
               {...selectedBoxStyle}
             />
           )}

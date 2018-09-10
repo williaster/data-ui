@@ -4,7 +4,7 @@ import { Button } from '@data-ui/forms';
 import { LegendOrdinal } from '@vx/legend';
 import { scaleOrdinal } from '@vx/scale';
 
-import { CrossHair, LineSeries, WithTooltip, XAxis, YAxis } from '@data-ui/xy-chart';
+import { CrossHair, LineSeries, WithTooltip, XAxis, YAxis, Brush } from '@data-ui/xy-chart';
 
 import ResponsiveXYChart, { formatYear } from './ResponsiveXYChart';
 import { timeSeriesData } from './data';
@@ -316,6 +316,7 @@ class LineSeriesExample extends React.PureComponent {
                         showCircle={useVoronoiTrigger || !this.state.programmaticTrigger}
                         showMultipleCircles={!useVoronoiTrigger && showMultipleCircles}
                       />
+                      <Brush disableDraggingSelection />
                     </ResponsiveXYChart>
                   )}
                 </WithTooltip>

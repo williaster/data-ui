@@ -2,9 +2,9 @@
 import React from 'react';
 import { timeParse, timeFormat } from 'd3-time-format';
 
-import { CrossHair, XAxis, YAxis, BarSeries, PatternCircles } from '@data-ui/xy-chart';
+import { CrossHair, XAxis, YAxis, BarSeries, PatternCircles, Brush } from '@data-ui/xy-chart';
 
-import colors, { allColors } from '@data-ui/theme/lib/color';
+import { allColors } from '@data-ui/theme/lib/color';
 import ResponsiveXYChart from './ResponsiveXYChart';
 
 import { timeSeriesData } from './data';
@@ -17,11 +17,13 @@ export const dateFormatter = date => formatYear(parseDate(date));
 const categoryHorizontalData = timeSeriesData.map((d, i) => ({
   x: d.y,
   y: i + 1,
+  selected: false,
 }));
 
 const categoryData = timeSeriesData.map((d, i) => ({
   x: i + 1,
   y: d.y,
+  selected: false,
 }));
 
 class HorizontalBarChartExample extends React.PureComponent {
@@ -29,7 +31,35 @@ class HorizontalBarChartExample extends React.PureComponent {
     super(props);
     this.state = {
       direction: 'horizontal',
+      data: categoryHorizontalData,
     };
+    this.Brush = React.createRef();
+    this.handleBrushChange = this.handleBrushChange.bind(this);
+  }
+
+  handleBrushChange(domain) {
+    let valueSet = new Set();
+    const { direction } = this.state;
+    const horizontal = direction === 'horizontal';
+    if (domain) {
+      const values = horizontal ? domain.yValues : domain.xValues;
+      valueSet = new Set(values);
+    }
+    let data;
+    if (horizontal) {
+      data = categoryHorizontalData.map(bar => ({
+        ...bar,
+        selected: valueSet.has(bar.y),
+      }));
+    } else {
+      data = categoryData.map(bar => ({
+        ...bar,
+        selected: valueSet.has(bar.x),
+      }));
+    }
+    this.setState(() => ({
+      data,
+    }));
   }
 
   renderControls() {
@@ -42,7 +72,13 @@ class HorizontalBarChartExample extends React.PureComponent {
             <input
               type="radio"
               value="horizontal"
-              onChange={e => this.setState({ direction: e.target.value })}
+              onChange={e => {
+                this.Brush.current.reset();
+                this.setState({
+                  direction: e.target.value,
+                  data: [...categoryHorizontalData],
+                });
+              }}
               checked={this.state.direction === 'horizontal'}
             />{' '}
             horizonal
@@ -51,7 +87,13 @@ class HorizontalBarChartExample extends React.PureComponent {
             <input
               type="radio"
               value="vertical"
-              onChange={e => this.setState({ direction: e.target.value })}
+              onChange={e => {
+                this.Brush.current.reset();
+                this.setState({
+                  direction: e.target.value,
+                  data: [...categoryData],
+                });
+              }}
               checked={this.state.direction !== 'horizontal'}
             />{' '}
             vertical
@@ -62,7 +104,7 @@ class HorizontalBarChartExample extends React.PureComponent {
   }
 
   render() {
-    const { direction } = this.state;
+    const { direction, data } = this.state;
     const categoryScale = { type: 'band', paddingInner: 0.4 };
     const valueScale = { type: 'linear' };
     const horizontal = direction === 'horizontal';
@@ -86,14 +128,18 @@ class HorizontalBarChartExample extends React.PureComponent {
             strokeWidth={0}
           />
           <BarSeries
-            fill={allColors.blue[horizontal ? 8 : 2]}
+            fill={bar => {
+              const color = bar.selected ? allColors.red : allColors.blue;
+
+              return color[horizontal ? 8 : 2];
+            }}
             horizontal={horizontal}
-            data={horizontal ? categoryHorizontalData : categoryData}
+            data={data}
           />
           <BarSeries
             fill="url(#horizontal_bar_circles)"
             horizontal={horizontal}
-            data={horizontal ? categoryHorizontalData : categoryData}
+            data={data}
             stroke={allColors.blue[8]}
             strokeWidth={1.5}
           />
@@ -109,6 +155,11 @@ class HorizontalBarChartExample extends React.PureComponent {
           />
           <YAxis numTicks={5} orientation="left" />
           <XAxis numTicks={5} />
+          <Brush
+            brushDirection={horizontal ? 'vertical' : 'horizontal'}
+            ref={this.Brush}
+            onChange={this.handleBrushChange}
+          />
         </ResponsiveXYChart>
 
         <style type="text/css">

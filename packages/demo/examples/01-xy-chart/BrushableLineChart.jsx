@@ -37,6 +37,8 @@ class BrushableLineChart extends React.PureComponent {
       disableDraggingSelection: false,
     };
     this.handleBrushChange = this.handleBrushChange.bind(this);
+    this.handleClearBrush = this.handleClearBrush.bind(this);
+    this.Brush = React.createRef();
   }
 
   handleBrushChange(domain) {
@@ -64,6 +66,10 @@ class BrushableLineChart extends React.PureComponent {
     }));
   }
 
+  handleClearBrush() {
+    this.Brush.current.reset();
+  }
+
   renderControls() {
     const { disableDraggingSelection, resizeTriggerAreas } = this.state;
     const resizeTriggerAreaset = new Set(resizeTriggerAreas);
@@ -71,6 +77,11 @@ class BrushableLineChart extends React.PureComponent {
     return (
       <div className="brush-demo--form">
         <h4>Brush Props</h4>
+        <div>
+          <button type="button" onClick={this.handleClearBrush}>
+            Clear Brush
+          </button>
+        </div>
         <div>
           Disable Dragging the Selection
           <label>
@@ -409,6 +420,7 @@ class BrushableLineChart extends React.PureComponent {
               fill: 'url(#brush_pattern)',
               stroke: allColors.blue[5],
             }}
+            ref={this.Brush}
           />
         </XYChart>
 
