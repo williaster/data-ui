@@ -85,6 +85,7 @@
         "complexity": "off",
         "react/jsx-no-literals": "off",
         "jsx-a11y/label-has-for": "off",
+        "jsx-a11y/label-has-associated-control": "off",
         "no-magic-numbers": "off",
         "import/no-extraneous-dependencies": "off",
         "react/forbid-prop-types": "off",
