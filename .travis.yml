@@ -7,6 +7,9 @@ cache:
   directories:
     - node_modules
 
+matrix:
+  fast_finish: true
+
 env:
   - PACKAGE=xy-chart
   - PACKAGE=sparkline
@@ -17,6 +20,7 @@ env:
   - PACKAGE=forms
   - PACKAGE=network
   - PACKAGE=shared
+  - PACKAGE=demo
 
 install:
   - npm install -g codecov
@@ -25,6 +29,7 @@ script:
   - cd ./packages/$PACKAGE
   - npm install
   - npm prune
+  - npm run lint
   - npm run test
 
 after_script:
