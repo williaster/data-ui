@@ -1,4 +1,5 @@
 # Changelog
+- [v0.0.69](#v0069)
 - [v0.0.67](#v0067)
 - [v0.0.66](#v0066)
 - [v0.0.65](#v0065)
@@ -20,6 +21,41 @@
 - [v0.0.49](#v0049)
 - [v0.0.48](#v0048)
 - [v0.0.47](#v0047)
+
+## v0.0.69
+
+🏆 Enhancements
+
+[xy-chart]
+- @conglei Several brush improvements [#131](https://github.com/williaster/data-ui/pull/131)
+  - exposed reset function on `Brush` and added an example to show how to use it
+  - enabled `onCick` event for `Brush`
+  - exposed starting point of brush to `onBrushStart`
+
+🏠 Internal
+
+[all packages]
+
+- @williaster build changes across packages 
+  - bump to @data-ui/build-config@^0.0.12 which fixes a coverage collection issue [#132](https://github.com/williaster/data-ui/pull/132)
+  - use codecov not coveralls [#132](https://github.com/williaster/data-ui/pull/132)
+  - add demo package to travis matrix [#133](https://github.com/williaster/data-ui/pull/133)
+  - add linting to travis matrix [#133](https://github.com/williaster/data-ui/pull/133)
+  
+```
+Changes:
+ - @data-ui/data-table: 0.0.61 => 0.0.69
+ - @data-ui/theme: 0.0.62 => 0.0.69
+ - @data-ui/demo: 0.0.67 => 0.0.69 (private)
+ - @data-ui/event-flow: 0.0.63 => 0.0.69
+ - @data-ui/forms: 0.0.61 => 0.0.69
+ - @data-ui/histogram: 0.0.64 => 0.0.69
+ - @data-ui/network: 0.0.66 => 0.0.69
+ - @data-ui/radial-chart: 0.0.63 => 0.0.69
+ - @data-ui/shared: 0.0.63 => 0.0.69
+ - @data-ui/sparkline: 0.0.63 => 0.0.69
+ - @data-ui/xy-chart: 0.0.67 => 0.0.69
+```
 
 ## v0.0.67
 
