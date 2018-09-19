@@ -23,7 +23,7 @@ export const defaultLabelProps = {
 export const propTypes = {
   label: PropTypes.node,
   labelProps: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.number, PropTypes.string])),
-  reference: PropTypes.number.isRequired,
+  reference: PropTypes.oneOfType([PropTypes.number, PropTypes.string, PropTypes.object]).isRequired,
   stroke: PropTypes.string,
   strokeDasharray: PropTypes.string,
   strokeLinecap: PropTypes.oneOf(['butt', 'square', 'round', 'inherit']),
