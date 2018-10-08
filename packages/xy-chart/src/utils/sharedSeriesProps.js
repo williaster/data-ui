@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import { marginShape } from './propShapes';
 
 export default {
   disableMouseEvents: PropTypes.bool,
@@ -8,4 +9,5 @@ export default {
   onMouseLeave: PropTypes.func,
   xScale: PropTypes.func,
   yScale: PropTypes.func,
+  margin: marginShape,
 };
