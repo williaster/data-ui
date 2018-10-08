@@ -27,6 +27,12 @@ const defaultProps = {
 };
 
 class Voronoi extends React.PureComponent {
+  static getVoronoi(props) {
+    const { x, y, data, width, height } = props;
+
+    return voronoiLayout({ x, y, width, height })(data);
+  }
+
   constructor(props) {
     super(props);
     this.state = { voronoi: Voronoi.getVoronoi(props) };
@@ -40,12 +46,6 @@ class Voronoi extends React.PureComponent {
     ) {
       this.setState({ voronoi: Voronoi.getVoronoi(nextProps) });
     }
-  }
-
-  static getVoronoi(props) {
-    const { x, y, data, width, height } = props;
-
-    return voronoiLayout({ x, y, width, height })(data);
   }
 
   render() {

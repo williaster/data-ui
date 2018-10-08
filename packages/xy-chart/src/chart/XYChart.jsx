@@ -170,7 +170,7 @@ class XYChart extends React.PureComponent {
   }
 
   handleContainerEvent(event) {
-    const { xScale, yScale } = this.state;
+    const { xScale, yScale, margin } = this.state;
     const { children } = this.props;
     const { closestDatum, series } = findClosestDatums({
       children,
@@ -179,6 +179,7 @@ class XYChart extends React.PureComponent {
       getY,
       xScale,
       yScale,
+      margin,
     });
     if (closestDatum || Object.keys(series).length > 0) {
       event.persist();
@@ -328,6 +329,7 @@ class XYChart extends React.PureComponent {
                 return React.cloneElement(Child, {
                   xScale,
                   yScale,
+                  margin,
                   onClick:
                     Child.props.onClick ||
                     (Child.props.disableMouseEvents ? undefined : this.handleClick),

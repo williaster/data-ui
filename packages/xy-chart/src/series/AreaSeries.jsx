@@ -48,6 +48,7 @@ export default class AreaSeries extends React.PureComponent {
       disableMouseEvents,
       xScale,
       yScale,
+      margin,
       stroke,
       strokeWidth,
       strokeDasharray,
@@ -80,7 +81,13 @@ export default class AreaSeries extends React.PureComponent {
             ? null
             : onClick &&
               (event => {
-                const d = findClosestDatum({ data, getX: x, event, xScale });
+                const d = findClosestDatum({
+                  data,
+                  getX: x,
+                  event,
+                  xScale,
+                  marginLeft: margin.left,
+                });
                 onClick({ event, data, datum: d, color: fillValue });
               })
         }
@@ -89,7 +96,13 @@ export default class AreaSeries extends React.PureComponent {
             ? null
             : onMouseMove &&
               (event => {
-                const d = findClosestDatum({ data, getX: x, event, xScale });
+                const d = findClosestDatum({
+                  data,
+                  getX: x,
+                  event,
+                  xScale,
+                  marginLeft: margin.left,
+                });
                 onMouseMove({ event, data, datum: d, color: fillValue });
               })
         }

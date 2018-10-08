@@ -10,6 +10,7 @@ export default function findClosestDatums({
   children,
   xScale,
   yScale,
+  margin = {},
   getX,
   getY,
   event,
@@ -18,8 +19,11 @@ export default function findClosestDatums({
   if (!event || !event.target || !event.target.ownerSVGElement) return null;
   const series = {};
 
-  const gElement = event.target.ownerSVGElement.firstChild;
-  const { x: mouseX, y: mouseY } = localPoint(gElement, event);
+  const gElement = event.target.ownerSVGElement;
+  const { x: svgMouseX, y: svgMouseY } = localPoint(gElement, event);
+  const mouseX = svgMouseX - (margin.left || 0);
+  const mouseY = svgMouseY - (margin.top || 0);
+
   let closestDatum;
   let minDeltaX = Infinity;
   let minDeltaY = Infinity;
@@ -47,6 +51,7 @@ export default function findClosestDatums({
         getX,
         xScale,
         event,
+        marginLeft: margin.left,
       });
 
       const deltaX = Math.abs(xScale(getX(datum || {})) - mouseX);

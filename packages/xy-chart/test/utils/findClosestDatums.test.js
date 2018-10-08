@@ -21,14 +21,13 @@ describe('findClosestDatums', () => {
     clientX: 0,
     clientY: 0,
     target: {
-      ownerSVGElement: {
-        firstChild: document.createElement('g'),
-      },
+      ownerSVGElement: document.createElement('svg'),
     },
   };
 
   const getX = d => d.x;
   const getY = d => d.y;
+  const margin = { top: 0, left: 0 };
 
   it('should be defined', () => {
     expect(findClosestDatums).toBeDefined();
@@ -46,6 +45,7 @@ describe('findClosestDatums', () => {
       getY,
       xScale: scaleBand({ domain: ['a', 'b', 'c'], range: [0, 10] }),
       yScale: scaleLinear({ domain: [0, 10], range: [0, 10] }),
+      margin,
       children: [
         <LineSeries key="line1" seriesKey="line-1" data={data[0]} />,
         <LineSeries key="line2" seriesKey="line-2" data={data[1]} />,
@@ -75,6 +75,7 @@ describe('findClosestDatums', () => {
       getY,
       xScale: scaleBand({ domain: ['a', 'b', 'c'], range: [0, 10] }),
       yScale: scaleLinear({ domain: [0, 10], range: [0, 10] }),
+      margin,
       children: [
         <LineSeries key="line1" seriesKey="line-1" data={data[0]} />,
         <LineSeries key="line2" seriesKey="line-2" data={data[1]} />,
@@ -104,6 +105,7 @@ describe('findClosestDatums', () => {
       getY,
       xScale: scaleBand({ domain: ['a', 'b', 'c'], range: [0, 10] }),
       yScale: scaleLinear({ domain: [0, 10], range: [0, 10] }),
+      margin,
       children: [
         <LineSeries key="line" disableMouseEvents seriesKey="line-1" data={[]} />,
         null,
