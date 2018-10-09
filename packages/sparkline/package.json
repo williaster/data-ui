@@ -10,9 +10,10 @@
     "lib"
   ],
   "scripts": {
-    "build:cjs": "beemo babel ./src --out-dir lib/ --react --minify",
-    "build:esm": "beemo babel ./src --out-dir esm/ --react --esm --minify",
+    "build:cjs": "beemo babel ./src --out-dir lib/ --react",
+    "build:esm": "beemo babel ./src --out-dir esm/ --react --esm",
     "build": "npm run build:cjs && npm run build:esm",
+    "dev": "beemo babel --watch ./src --out-dir esm/ --react --esm",
     "jest": "beemo jest --react --color --coverage",
     "eslint": "beemo eslint \"./{src,test}/**/*.{js,jsx,json,md}\"",
     "lint": "npm run prettier && npm run eslint",

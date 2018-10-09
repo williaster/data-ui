@@ -39,16 +39,6 @@ export const propTypes = {
   xAxisOrientation: PropTypes.oneOf(['top', 'bottom']),
   disableDraggingSelection: PropTypes.bool,
   handleSize: PropTypes.number,
-  enabledRegion: PropTypes.shape({
-    start: PropTypes.shape({
-      x: PropTypes.oneOf([PropTypes.number, PropTypes.string]),
-      y: PropTypes.oneOf([PropTypes.number, PropTypes.string]),
-    }),
-    end: PropTypes.shape({
-      x: PropTypes.oneOf([PropTypes.number, PropTypes.string]),
-      y: PropTypes.oneOf([PropTypes.number, PropTypes.string]),
-    }),
-  }),
 };
 
 const defaultProps = {
@@ -82,7 +72,6 @@ const defaultProps = {
   onMouseMove: null,
   onMouseLeave: null,
   onClick: null,
-  enabledRegion: null,
 };
 
 class Brush extends React.Component {
@@ -176,7 +165,6 @@ class Brush extends React.Component {
       onMouseMove,
       onClick,
       handleSize,
-      enabledRegion,
     } = this.props;
     if (!xScale || !yScale) return null;
 

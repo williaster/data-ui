@@ -52,6 +52,7 @@ export default class LineSeries extends React.PureComponent {
       strokeOpacity,
       xScale,
       yScale,
+      margin,
       onClick,
       onMouseMove,
       onMouseLeave,
@@ -81,7 +82,13 @@ export default class LineSeries extends React.PureComponent {
             ? null
             : onClick &&
               (() => event => {
-                const d = findClosestDatum({ data, getX: x, event, xScale });
+                const d = findClosestDatum({
+                  data,
+                  getX: x,
+                  event,
+                  xScale,
+                  marginLeft: margin.left,
+                });
                 onClick({ event, data, datum: d, color: strokeValue });
               })
         }
@@ -90,7 +97,13 @@ export default class LineSeries extends React.PureComponent {
             ? null
             : onMouseMove &&
               (() => event => {
-                const d = findClosestDatum({ data, getX: x, event, xScale });
+                const d = findClosestDatum({
+                  data,
+                  getX: x,
+                  event,
+                  xScale,
+                  marginLeft: margin.left,
+                });
                 onMouseMove({ event, data, datum: d, color: strokeValue });
               })
         }

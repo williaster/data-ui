@@ -29,6 +29,12 @@ export const propTypes = {
   getY: PropTypes.func,
   xScale: PropTypes.func,
   yScale: PropTypes.func,
+  margin: PropTypes.shape({
+    top: PropTypes.number,
+    right: PropTypes.number,
+    bottom: PropTypes.number,
+    left: PropTypes.number,
+  }),
 };
 
 export const defaultProps = {
@@ -48,6 +54,7 @@ export const defaultProps = {
   strokeLinecap: 'round',
   xScale: null,
   yScale: null,
+  margin: {},
 };
 
 const CURVE_LOOKUP = {
@@ -76,7 +83,9 @@ class LineSeries extends React.PureComponent {
       strokeLinecap,
       xScale,
       yScale,
+      margin,
     } = this.props;
+
     if (!xScale || !yScale || !getX || !getY || !data.length) return null;
     const curveFunc = CURVE_LOOKUP[curve];
 
@@ -85,7 +94,13 @@ class LineSeries extends React.PureComponent {
         onMouseMove={
           onMouseMove &&
           (event => {
-            const { datum, index } = findClosestDatum({ data, getX, event, xScale });
+            const { datum, index } = findClosestDatum({
+              data,
+              getX,
+              event,
+              xScale,
+              marginLeft: margin.left,
+            });
             onMouseMove({ event, data, datum, index, color: fill });
           })
         }

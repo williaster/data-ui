@@ -43,6 +43,7 @@ export default class StackedAreaSeries extends React.PureComponent {
       disableMouseEvents,
       xScale,
       yScale,
+      margin,
       stackKeys,
       stackFills,
       fillOpacity,
@@ -79,6 +80,7 @@ export default class StackedAreaSeries extends React.PureComponent {
                     getX: d => x(d.data),
                     event,
                     xScale,
+                    marginLeft: margin.left,
                   });
                   onClick({
                     event,
@@ -99,6 +101,7 @@ export default class StackedAreaSeries extends React.PureComponent {
                     getX: d => x(d.data),
                     event,
                     xScale,
+                    marginLeft: margin.left,
                   });
                   onMouseMove({
                     event,

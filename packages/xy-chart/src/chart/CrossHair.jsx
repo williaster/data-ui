@@ -8,6 +8,8 @@ import { Line } from '@vx/shape';
 
 import { callOrValue, isDefined } from '../utils/chartUtils';
 
+const GROUP_STYLE = { pointerEvents: 'none' };
+
 const propTypes = {
   fullHeight: PropTypes.bool,
   fullWidth: PropTypes.bool,
@@ -97,7 +99,7 @@ function CrossHair({
   const circlePositions = circleData.map(d => ({ x: getScaledX(d), y: getScaledY(d) }));
 
   return (
-    <Group>
+    <Group style={GROUP_STYLE}>
       {showHorizontalLine &&
         !showMultipleCircles &&
         isDefined(circlePositions[0].y) && (

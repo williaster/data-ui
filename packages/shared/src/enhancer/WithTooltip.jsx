@@ -122,7 +122,7 @@ class WithTooltip extends React.PureComponent {
           ? children(childProps)
           : React.cloneElement(React.Children.only(children), childProps)}
 
-        {Boolean(tooltipContent) && (
+        {!!tooltipContent && (
           <TooltipComponent
             key={Math.random()}
             top={tooltipTop}

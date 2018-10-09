@@ -151,6 +151,7 @@ class Sparkline extends React.PureComponent {
       data,
       getX,
       getY,
+      margin,
     };
 
     return (

@@ -1,6 +1,13 @@
 import PropTypes from 'prop-types';
 import interpolatorLookup from './interpolatorLookup';
 
+const stringNumberDateObjectPropType = PropTypes.oneOfType([
+  PropTypes.string,
+  PropTypes.number,
+  PropTypes.instanceOf(Date),
+  PropTypes.object, // eg a moment() instance
+]);
+
 export const scaleShape = PropTypes.shape({
   type: PropTypes.oneOf(['time', 'timeUtc', 'linear', 'band']).isRequired,
 
@@ -15,13 +22,7 @@ export const scaleShape = PropTypes.shape({
 
 export const boxPlotSeriesDataShape = PropTypes.arrayOf(
   PropTypes.shape({
-    x: PropTypes.oneOfType([
-      // data with null x/y are not rendered
-      PropTypes.string,
-      PropTypes.number,
-      PropTypes.instanceOf(Date),
-      PropTypes.object, // eg a moment() instance
-    ]),
+    x: stringNumberDateObjectPropType,
     median: PropTypes.number.isRequired,
     min: PropTypes.number.isRequired,
     max: PropTypes.number.isRequired,
@@ -33,39 +34,21 @@ export const boxPlotSeriesDataShape = PropTypes.arrayOf(
 
 export const violinPlotSeriesDataShape = PropTypes.arrayOf(
   PropTypes.shape({
-    x: PropTypes.oneOfType([
-      // data with null x/y are not rendered
-      PropTypes.string,
-      PropTypes.number,
-      PropTypes.instanceOf(Date),
-      PropTypes.object, // eg a moment() instance
-    ]),
+    x: stringNumberDateObjectPropType,
     binData: PropTypes.array.isRequired,
   }),
 );
 
 export const lineSeriesDataShape = PropTypes.arrayOf(
   PropTypes.shape({
-    x: PropTypes.oneOfType([
-      // data with null x/y are not rendered
-      PropTypes.string,
-      PropTypes.number,
-      PropTypes.instanceOf(Date),
-      PropTypes.object, // eg a moment() instance
-    ]),
+    x: stringNumberDateObjectPropType,
     y: PropTypes.number, // null data are not rendered
   }),
 );
 
 export const areaSeriesDataShape = PropTypes.arrayOf(
   PropTypes.shape({
-    x: PropTypes.oneOfType([
-      // data with null x/y are not rendered
-      PropTypes.string,
-      PropTypes.number,
-      PropTypes.instanceOf(Date),
-      PropTypes.object, // eg a moment() instance
-    ]),
+    x: stringNumberDateObjectPropType,
     y: PropTypes.number, // null data are not rendered
     y0: PropTypes.number,
     y1: PropTypes.number,
@@ -74,12 +57,7 @@ export const areaSeriesDataShape = PropTypes.arrayOf(
 
 export const barSeriesDataShape = PropTypes.arrayOf(
   PropTypes.shape({
-    x: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.number,
-      PropTypes.instanceOf(Date),
-      PropTypes.object, // eg a moment() instance
-    ]).isRequired,
+    x: stringNumberDateObjectPropType,
     y: PropTypes.number, // null data are not rendered
     fill: PropTypes.string,
     stroke: PropTypes.string,
@@ -109,13 +87,7 @@ export const stackedBarSeriesDataShape = PropTypes.arrayOf(
 
 export const pointSeriesDataShape = PropTypes.arrayOf(
   PropTypes.shape({
-    x: PropTypes.oneOfType([
-      // data with null x/y are not rendered
-      PropTypes.string,
-      PropTypes.number,
-      PropTypes.instanceOf(Date),
-      PropTypes.object, // eg a moment() instance
-    ]),
+    x: stringNumberDateObjectPropType,
     y: PropTypes.number,
     size: PropTypes.number,
     fill: PropTypes.string,
@@ -127,18 +99,8 @@ export const pointSeriesDataShape = PropTypes.arrayOf(
 
 export const intervalSeriesDataShape = PropTypes.arrayOf(
   PropTypes.shape({
-    x0: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.number,
-      PropTypes.instanceOf(Date),
-      PropTypes.object, // eg a moment() instance
-    ]).isRequired,
-    x1: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.number,
-      PropTypes.instanceOf(Date),
-      PropTypes.object, // eg a moment() instance
-    ]).isRequired,
+    x0: stringNumberDateObjectPropType,
+    x1: stringNumberDateObjectPropType,
     fill: PropTypes.string,
     stroke: PropTypes.string,
     strokeWidth: PropTypes.number,
