@@ -11,8 +11,7 @@
     "test": "echo no tests in @data-ui/demo",
     "eslint": "beemo eslint \"./examples/**/*.{js,jsx,json,md}\" --fix",
     "lint": "npm run prettier && npm run eslint",
-    "prettier": "beemo prettier \"./examples/**/*.{js,jsx,json,md}\"",
-    "sync:gitignore": "beemo sync-dotfiles --filter=gitignore"
+    "prettier": "beemo prettier \"./examples/**/*.{js,jsx,json,md}\""
   },
   "repository": "https://github.com/williaster/data-ui.git",
   "keywords": [
@@ -24,7 +23,7 @@
   "license": "MIT",
   "homepage": "https://github.com/williaster/data-ui#readme",
   "devDependencies": {
-    "@data-ui/build-config": "^0.0.12",
+    "@data-ui/build-config": "^0.0.17",
     "@data-ui/data-table": "^0.0.69",
     "@data-ui/event-flow": "^0.0.69",
     "@data-ui/forms": "^0.0.69",

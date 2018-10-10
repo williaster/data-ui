@@ -24,4 +24,5 @@ _gh-pages/
 .eslintignore
 .eslintrc.js
 .prettierignore
+babel.config.js
 prettier.config.js

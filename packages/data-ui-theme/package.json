@@ -18,7 +18,6 @@
     "lint": "npm run prettier && npm run eslint",
     "test": "npm run jest",
     "prettier": "beemo prettier \"./{src,test}/**/*.{js,jsx,json,md}\"",
-    "sync:gitignore": "beemo sync-dotfiles --filter=gitignore",
     "prepublish": "npm run build"
   },
   "repository": "https://github.com/williaster/data-ui.git",
@@ -34,7 +33,7 @@
     "babel-runtime": "^6.26.0"
   },
   "devDependencies": {
-    "@data-ui/build-config": "^0.0.12"
+    "@data-ui/build-config": "^0.0.17"
   },
   "beemo": {
     "module": "@data-ui/build-config",
