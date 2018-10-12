@@ -24,7 +24,7 @@ const config = {
       },
       {
         test: /\.svg$/,
-        loader: 'babel!react-svg',
+        loader: 'babel-loader',
       },
       {
         test: /\.css$/,

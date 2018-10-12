@@ -31,7 +31,7 @@
     "@babel/plugin-proposal-export-default-from": "^7.0.0",
     "@babel/preset-env": "^7.1.0",
     "@babel/preset-react": "^7.0.0",
-    "@data-ui/build-config": "^0.0.17",
+    "@data-ui/build-config": "^0.0.20",
     "aphrodite": "^1.2.0",
     "babel-jest": "^23.6.0",
     "babel-loader": "^8.0.4",

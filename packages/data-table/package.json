@@ -31,13 +31,13 @@
   "license": "MIT",
   "homepage": "https://github.com/williaster/data-ui#readme",
   "dependencies": {
-    "babel-runtime": "^6.26.0",
+    "@babel/runtime": "^7.1.2",
     "immutable": "^3.8.1",
     "prop-types": "^15.5.10",
     "react-virtualized": "^9.7.3"
   },
   "devDependencies": {
-    "@data-ui/build-config": "^0.0.17",
+    "@data-ui/build-config": "^0.0.20",
     "react": "^16.0.0"
   },
   "peerDependencies": {

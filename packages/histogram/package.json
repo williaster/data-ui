@@ -43,7 +43,7 @@
   },
   "homepage": "https://github.com/williaster/data-ui#readme",
   "devDependencies": {
-    "@data-ui/build-config": "^0.0.17",
+    "@data-ui/build-config": "^0.0.20",
     "react": "^16.0.0",
     "react-dom": "^16.0.0"
   },
@@ -52,6 +52,7 @@
     "react-dom": "^15.0.0-0 || ^16.0.0-0"
   },
   "dependencies": {
+    "@babel/runtime": "^7.1.2",
     "@data-ui/shared": "^0.0.69",
     "@data-ui/theme": "^0.0.69",
     "@vx/axis": "0.0.140",
@@ -65,7 +66,6 @@
     "@vx/scale": "0.0.140",
     "@vx/shape": "0.0.140",
     "@vx/tooltip": "0.0.140",
-    "babel-runtime": "^6.26.0",
     "d3-array": "^1.2.0",
     "d3-scale": "^1.0.6",
     "prop-types": "^15.5.10",

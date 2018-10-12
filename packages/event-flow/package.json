@@ -28,10 +28,10 @@
     "@babel/cli": "^7.1.2",
     "@babel/core": "^7.1.2",
     "@babel/plugin-syntax-jsx": "^7.0.0",
+    "@babel/plugin-transform-runtime": "^7.1.0",
     "@babel/preset-env": "^7.1.0",
     "@babel/preset-react": "^7.0.0",
-    "@babel/polyfill": "^7.0.0",
-    "@data-ui/build-config": "^0.0.17",
+    "@data-ui/build-config": "^0.0.20",
     "babel-jest": "^23.6.0",
     "babel-loader": "^8.0.4",
     "css-loader": "^0.28.4",
@@ -49,6 +49,7 @@
     "react": "^15.0.0-0 || ^16.0.0-0"
   },
   "dependencies": {
+    "@babel/polyfill": "^7.0.0",
     "@data-ui/forms": "^0.0.69",
     "@data-ui/radial-chart": "^0.0.69",
     "@data-ui/theme": "^0.0.69",
@@ -67,7 +68,6 @@
     "@vx/shape": "0.0.140",
     "@vx/tooltip": "0.0.140",
     "aphrodite": "^1.2.0",
-    "core-js": "^2.5.7",
     "d3-array": "^1.2.0",
     "d3-format": "^1.2.0",
     "d3-selection": "^1.1.0",

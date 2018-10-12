@@ -32,6 +32,7 @@
   "author": "Chris Williams @williaster",
   "license": "MIT",
   "dependencies": {
+    "@babel/runtime": "^7.1.2",
     "@data-ui/shared": "^0.0.69",
     "@data-ui/theme": "^0.0.69",
     "@vx/event": "0.0.140",
@@ -39,11 +40,10 @@
     "@vx/scale": "0.0.140",
     "@vx/shape": "0.0.140",
     "@vx/tooltip": "0.0.140",
-    "babel-runtime": "^6.26.0",
     "prop-types": "^15.5.10"
   },
   "devDependencies": {
-    "@data-ui/build-config": "^0.0.17",
+    "@data-ui/build-config": "^0.0.20",
     "react": "^16.0.0",
     "react-dom": "^16.0.0"
   },
