@@ -55,7 +55,7 @@ import { XYPlot, BarSeries, CrossHair, XAxis, YAxis, LinearGradient } from '@dat
 Check out the example source code and PropTable tabs in the Storybook <a href="https://williaster.github.io/data-ui" target="_blank">williaster.github.io/data-ui</a> for more!
 
 ### `<XYChart />`
-The `XYChart` renders an `<svg />` and coordinates scales across all of it's child series and axes. It takes the following props
+The `XYChart` renders an `<svg />` and coordinates scales across all of its child series and axes. It takes the following props
 
 Name | Type | Default | Description
 ------------ | ------------- | ------- | ----
