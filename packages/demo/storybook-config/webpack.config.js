@@ -1,10 +1,10 @@
 /* eslint no-param-reassign: 0 */
 // Export a function instead of an object, the function will accept the base config:
-module.exports = (storybookConfig) => {
+module.exports = storybookConfig => {
   if (process.env.NODE_ENV !== 'production') {
-    storybookConfig.plugins = storybookConfig.plugins.filter(plugin => (
-      !(/uglifyjs/i).test(plugin.constructor.name) // filter out UglifyJS
-    ));
+    storybookConfig.plugins = storybookConfig.plugins.filter(
+      plugin => !/uglifyjs/i.test(plugin.constructor.name), // filter out UglifyJS
+    );
   }
 
   storybookConfig.module.rules.push(
@@ -15,7 +15,7 @@ module.exports = (storybookConfig) => {
     {
       test: /\.md$/,
       use: 'raw-loader',
-    } // eslint-disable-line comma-dangle
+    }, // eslint-disable-line comma-dangle
   );
 
   storybookConfig.node = {

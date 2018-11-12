@@ -117,27 +117,26 @@ export default function ArcSeries({
         {...restProps}
         centroid={null}
       />
-      {label &&
-        labelComponent && (
-          <Arc
-            data={data}
-            pieValue={pieValue}
-            pieSort={pieSort}
-            outerRadius={callOrValue(labelRadius, radius)}
-            innerRadius={callOrValue(labelRadius, radius)}
-            fill="none"
-            fillOpacity={0}
-            stroke="none"
-            strokeWidth={0}
-            centroid={(centroid, arc) => {
-              const [x, y] = centroid;
-              const labelElement = label(arc);
-              if (arc.endAngle - arc.startAngle < MIN_ANGLE_FOR_LABEL || !labelElement) return null;
+      {label && labelComponent && (
+        <Arc
+          data={data}
+          pieValue={pieValue}
+          pieSort={pieSort}
+          outerRadius={callOrValue(labelRadius, radius)}
+          innerRadius={callOrValue(labelRadius, radius)}
+          fill="none"
+          fillOpacity={0}
+          stroke="none"
+          strokeWidth={0}
+          centroid={(centroid, arc) => {
+            const [x, y] = centroid;
+            const labelElement = label(arc);
+            if (arc.endAngle - arc.startAngle < MIN_ANGLE_FOR_LABEL || !labelElement) return null;
 
-              return React.cloneElement(labelComponent, { x, y, arc }, labelElement);
-            }}
-          />
-        )}
+            return React.cloneElement(labelComponent, { x, y, arc }, labelElement);
+          }}
+        />
+      )}
     </g>
   );
 }

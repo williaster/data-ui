@@ -279,19 +279,18 @@ class XYChart extends React.PureComponent {
       innerHeight > 0 && (
         <svg aria-label={ariaLabel} role="img" width={width} height={height} ref={innerRef}>
           <Group left={margin.left} top={margin.top}>
-            {(showXGrid || showYGrid) &&
-              (numXTicks || numYTicks) && (
-                <Grid
-                  xScale={xScale}
-                  yScale={yScale}
-                  width={innerWidth}
-                  height={innerHeight}
-                  numTicksRows={showYGrid && numYTicks}
-                  numTicksColumns={showXGrid && numXTicks}
-                  stroke={theme.gridStyles && theme.gridStyles.stroke}
-                  strokeWidth={theme.gridStyles && theme.gridStyles.strokeWidth}
-                />
-              )}
+            {(showXGrid || showYGrid) && (numXTicks || numYTicks) && (
+              <Grid
+                xScale={xScale}
+                yScale={yScale}
+                width={innerWidth}
+                height={innerHeight}
+                numTicksRows={showYGrid && numYTicks}
+                numTicksColumns={showXGrid && numXTicks}
+                stroke={theme.gridStyles && theme.gridStyles.stroke}
+                strokeWidth={theme.gridStyles && theme.gridStyles.strokeWidth}
+              />
+            )}
 
             {React.Children.map(children, Child => {
               const name = componentName(Child);

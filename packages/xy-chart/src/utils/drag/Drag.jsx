@@ -82,16 +82,15 @@ export default class Drag extends React.Component {
 
     return (
       <g>
-        {isDragging &&
-          captureDragArea && (
-            <rect
-              width={width}
-              height={height}
-              onMouseMove={this.dragMove}
-              onMouseUp={this.dragEnd}
-              fill="transparent"
-            />
-          )}
+        {isDragging && captureDragArea && (
+          <rect
+            width={width}
+            height={height}
+            onMouseMove={this.dragMove}
+            onMouseUp={this.dragEnd}
+            fill="transparent"
+          />
+        )}
         {children({
           x,
           y,

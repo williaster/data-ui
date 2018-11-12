@@ -374,24 +374,23 @@ export default class Brush extends React.Component {
           )}
         </Drag>
         {/* selection */}
-        {start &&
-          end && (
-            <BrushSelection
-              updateBrush={this.update}
-              width={width}
-              height={height}
-              stageWidth={stageWidth}
-              stageHeight={stageHeight}
-              brush={{ ...this.state }}
-              disableDraggingSelection={disableDraggingSelection}
-              onBrushEnd={onBrushEnd}
-              onMouseLeave={onMouseLeave}
-              onMouseMove={onMouseMove}
-              onMouseUp={onMouseUp}
-              onClick={onClick}
-              {...selectedBoxStyle}
-            />
-          )}
+        {start && end && (
+          <BrushSelection
+            updateBrush={this.update}
+            width={width}
+            height={height}
+            stageWidth={stageWidth}
+            stageHeight={stageHeight}
+            brush={{ ...this.state }}
+            disableDraggingSelection={disableDraggingSelection}
+            onBrushEnd={onBrushEnd}
+            onMouseLeave={onMouseLeave}
+            onMouseMove={onMouseMove}
+            onMouseUp={onMouseUp}
+            onClick={onClick}
+            {...selectedBoxStyle}
+          />
+        )}
         {/* handles */}
         {start &&
           end &&

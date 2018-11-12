@@ -1,4 +1,4 @@
-import 'babel-polyfill'; // eslint-disable-line import/no-extraneous-dependencies
+import '@babel/polyfill';
 import { StyleSheetTestUtils } from 'aphrodite';
 
 beforeEach(() => {

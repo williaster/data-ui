@@ -75,13 +75,12 @@ function renderBoxPlotTooltip({ datum, color }) {
           {thirdQuartile && thirdQuartile.toFixed ? thirdQuartile.toFixed(2) : thirdQuartile}
         </div>
       )}
-      {outliers &&
-        outliers.length > 0 && (
-          <div>
-            <strong style={{ color }}># Outliers </strong>
-            {outliers.length}
-          </div>
-        )}
+      {outliers && outliers.length > 0 && (
+        <div>
+          <strong style={{ color }}># Outliers </strong>
+          {outliers.length}
+        </div>
+      )}
     </div>
   );
 }

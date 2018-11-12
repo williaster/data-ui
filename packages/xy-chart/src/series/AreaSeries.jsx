@@ -123,23 +123,22 @@ export default class AreaSeries extends React.PureComponent {
           defined={defined}
         />
         {/* only draw a stroke for the top and bottom */}
-        {strokeWidthValue > 0 &&
-          !isClosed && (
-            <LinePath
-              data={data}
-              x={x}
-              y={y0}
-              xScale={xScale}
-              yScale={yScale}
-              stroke={strokeValue}
-              strokeWidth={strokeWidthValue}
-              strokeDasharray={strokeDasharrayValue}
-              strokeLinecap={strokeLinecap}
-              curve={curve}
-              glyph={null}
-              defined={defined}
-            />
-          )}
+        {strokeWidthValue > 0 && !isClosed && (
+          <LinePath
+            data={data}
+            x={x}
+            y={y0}
+            xScale={xScale}
+            yScale={yScale}
+            stroke={strokeValue}
+            strokeWidth={strokeWidthValue}
+            strokeDasharray={strokeDasharrayValue}
+            strokeLinecap={strokeLinecap}
+            curve={curve}
+            glyph={null}
+            defined={defined}
+          />
+        )}
         {/* draw this path even if strokewidth is 0, for focus/blur support */}
         <LinePath
           data={data}

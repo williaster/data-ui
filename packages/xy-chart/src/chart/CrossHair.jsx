@@ -100,29 +100,26 @@ function CrossHair({
 
   return (
     <Group style={GROUP_STYLE}>
-      {showHorizontalLine &&
-        !showMultipleCircles &&
-        isDefined(circlePositions[0].y) && (
-          <Line
-            from={{ x: xMin, y: circlePositions[0].y }}
-            to={{ x: fullWidth ? xMax : circlePositions[0].x, y: circlePositions[0].y }}
-            style={lineStyles}
-            stroke={stroke}
-            strokeDasharray={strokeDasharray}
-            strokeWidth={strokeWidth}
-          />
-        )}
-      {showVerticalLine &&
-        isDefined(circlePositions[0].x) && (
-          <Line
-            from={{ x: circlePositions[0].x, y: yMax }}
-            to={{ x: circlePositions[0].x, y: fullHeight ? yMin : circlePositions[0].y }}
-            style={lineStyles}
-            stroke={stroke}
-            strokeDasharray={strokeDasharray}
-            strokeWidth={strokeWidth}
-          />
-        )}
+      {showHorizontalLine && !showMultipleCircles && isDefined(circlePositions[0].y) && (
+        <Line
+          from={{ x: xMin, y: circlePositions[0].y }}
+          to={{ x: fullWidth ? xMax : circlePositions[0].x, y: circlePositions[0].y }}
+          style={lineStyles}
+          stroke={stroke}
+          strokeDasharray={strokeDasharray}
+          strokeWidth={strokeWidth}
+        />
+      )}
+      {showVerticalLine && isDefined(circlePositions[0].x) && (
+        <Line
+          from={{ x: circlePositions[0].x, y: yMax }}
+          to={{ x: circlePositions[0].x, y: fullHeight ? yMin : circlePositions[0].y }}
+          style={lineStyles}
+          stroke={stroke}
+          strokeDasharray={strokeDasharray}
+          strokeWidth={strokeWidth}
+        />
+      )}
 
       {(showCircle || showMultipleCircles) &&
         circleData.map((d, i) => {

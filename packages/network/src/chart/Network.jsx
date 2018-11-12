@@ -366,21 +366,20 @@ class Network extends React.PureComponent {
 
         {children}
 
-        {computingLayout &&
-          waitingForLayoutLabel && (
-            <Group>
-              <rect width={width} height={height} opacity={0.8} fill="#ffffff" />
-              <text
-                x={width / 2}
-                y={height / 2}
-                textAnchor="middle"
-                stroke="#ffffff"
-                paintOrder="stroke"
-              >
-                {waitingForLayoutLabel}
-              </text>
-            </Group>
-          )}
+        {computingLayout && waitingForLayoutLabel && (
+          <Group>
+            <rect width={width} height={height} opacity={0.8} fill="#ffffff" />
+            <text
+              x={width / 2}
+              y={height / 2}
+              textAnchor="middle"
+              stroke="#ffffff"
+              paintOrder="stroke"
+            >
+              {waitingForLayoutLabel}
+            </text>
+          </Group>
+        )}
       </svg>
     );
   }
