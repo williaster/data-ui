@@ -14,8 +14,8 @@
   "scripts": {
     "build": "webpack -p",
     "dev": "webpack --progress --colors --watch",
-    "eslint": "beemo eslint \"./{src,test}/**/*.{js,jsx,json,md}\"",
-    "lint": "npm run prettier && npm run eslint",
+    "eslint": "beemo eslint \"./{src,test}/**/*.{js,jsx,json,md}\" --fix",
+    "lint": "beemo create-config prettier && npm run eslint",
     "prettier": "beemo prettier \"./{src,test}/**/*.{js,jsx,json,md}\"",
     "prepublish": "npm run build",
     "test": "jest --colors --verbose --coverage"
@@ -31,7 +31,7 @@
     "@babel/plugin-transform-runtime": "^7.1.0",
     "@babel/preset-env": "^7.1.0",
     "@babel/preset-react": "^7.0.0",
-    "@data-ui/build-config": "^0.0.20",
+    "@data-ui/build-config": "^0.0.27",
     "babel-jest": "^23.6.0",
     "babel-loader": "^8.0.4",
     "css-loader": "^0.28.4",
