@@ -124,6 +124,26 @@ describe('<XYChart />', () => {
     expect(columns.prop('tickValues')).toEqual(xGridValues);
   });
 
+  it('should pass tickValues from Axis components to Grid components if passed and x/yGridValues are not', () => {
+    const xGridValues = mockData.map(d => d.date);
+    const yGridValues = mockData.map(d => d.num);
+
+    const wrapper = shallow(
+      <XYChart {...mockProps} showXGrid showYGrid>
+        <XAxis tickValues={xGridValues} />
+        <YAxis tickValues={yGridValues} />
+      </XYChart>,
+    );
+
+    const rows = wrapper.find(GridRows);
+    const columns = wrapper.find(GridColumns);
+
+    expect(rows).toHaveLength(1);
+    expect(columns).toHaveLength(1);
+    expect(rows.prop('tickValues')).toEqual(yGridValues);
+    expect(columns.prop('tickValues')).toEqual(xGridValues);
+  });
+
   it('should pass scales to child series', () => {
     const wrapper = shallow(
       <XYChart {...mockProps}>

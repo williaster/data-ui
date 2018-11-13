@@ -14,6 +14,7 @@ import {
   componentName,
   isAxis,
   isCrossHair,
+  isDefined,
   isReferenceLine,
   isSeries,
   isBrush,
@@ -163,14 +164,21 @@ class XYChart extends React.PureComponent {
     };
   }
 
-  getNumTicks(innerWidth, innerHeight) {
-    const { children } = this.props;
+  getNumTicksAndGridValues(innerWidth, innerHeight) {
+    const { children, xGridValues, yGridValues } = this.props;
     const xAxis = getChildWithName('XAxis', children);
     const yAxis = getChildWithName('YAxis', children);
 
+    // use num ticks and tickValues defined on Axes, if relevant
     return {
       numXTicks: propOrFallback(xAxis && xAxis.props, 'numTicks', numTicksForWidth(innerWidth)),
       numYTicks: propOrFallback(yAxis && yAxis.props, 'numTicks', numTicksForHeight(innerHeight)),
+      xGridValues:
+        xGridValues ||
+        (xAxis && xAxis.props && xAxis.props.tickValues ? xAxis.props.tickValues : null),
+      yGridValues:
+        yGridValues ||
+        (yAxis && yAxis.props && yAxis.props.tickValues ? yAxis.props.tickValues : null),
     };
   }
 
@@ -270,9 +278,7 @@ class XYChart extends React.PureComponent {
       innerRef,
       tooltipData,
       showVoronoi,
-      xGridValues,
       xGridOffset,
-      yGridValues,
       yGridOffset,
     } = this.props;
 
@@ -287,7 +293,10 @@ class XYChart extends React.PureComponent {
       yScale,
     } = this.state;
 
-    const { numXTicks, numYTicks } = this.getNumTicks(innerWidth, innerHeight);
+    const { numXTicks, numYTicks, xGridValues, yGridValues } = this.getNumTicksAndGridValues(
+      innerWidth,
+      innerHeight,
+    );
     const CrossHairs = []; // ensure these are the top-most layer
     let Brush = null;
     let xAxisOrientation;
@@ -306,7 +315,11 @@ class XYChart extends React.PureComponent {
                 stroke={theme.gridStyles && theme.gridStyles.stroke}
                 strokeWidth={theme.gridStyles && `${theme.gridStyles.strokeWidth}px`}
                 tickValues={xGridValues}
-                offset={xGridOffset || (xScale.bandwidth ? xScale.bandwidth() / 2 : 0)}
+                offset={
+                  isDefined(xGridOffset)
+                    ? xGridOffset
+                    : (xScale.bandwidth && xScale.bandwidth() / 2) || 0
+                }
               />
             )}
 
@@ -318,7 +331,11 @@ class XYChart extends React.PureComponent {
                 stroke={theme.gridStyles && theme.gridStyles.stroke}
                 strokeWidth={theme.gridStyles && `${theme.gridStyles.strokeWidth}px`}
                 tickValues={yGridValues}
-                offset={yGridOffset || (yScale.bandwidth ? yScale.bandwidth() / 2 : 0)}
+                offset={
+                  isDefined(yGridOffset)
+                    ? yGridOffset
+                    : (yScale.bandwidth && yScale.bandwidth() / 2) || 0
+                }
               />
             )}
 

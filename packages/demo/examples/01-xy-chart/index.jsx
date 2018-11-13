@@ -79,9 +79,11 @@ export default {
         >
           <ResponsiveXYChart
             ariaLabel="Required label"
-            xScale={{ type: 'time' }}
+            xScale={{ type: 'band', paddingInner: 0.25 }}
             yScale={{ type: 'linear' }}
             renderTooltip={null}
+            showXGrid
+            showYGrid
           >
             <LinearGradient id="gradient" from={colors.default} to={colors.dark} />
             <PatternLines
@@ -89,6 +91,7 @@ export default {
               height={8}
               width={8}
               stroke={colors.categories[2]}
+              background="#fff"
               strokeWidth={1}
               orientation={['horizontal', 'vertical']}
             />
