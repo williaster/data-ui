@@ -80,6 +80,11 @@
         "complexity": "off",
         "react/jsx-no-literals": "off"
       }
+    },
+    "jest": {
+      "transform": {
+        "^.+\\.jsx?$": "<rootDir>/node_modules/babel-jest"
+      }
     }
   }
 }
