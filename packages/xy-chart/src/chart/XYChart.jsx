@@ -313,7 +313,7 @@ class XYChart extends React.PureComponent {
                 height={innerHeight}
                 numTicks={numXTicks}
                 stroke={theme.gridStyles && theme.gridStyles.stroke}
-                strokeWidth={theme.gridStyles && `${theme.gridStyles.strokeWidth}px`}
+                strokeWidth={theme.gridStyles && theme.gridStyles.strokeWidth}
                 tickValues={xGridValues}
                 offset={
                   isDefined(xGridOffset)
@@ -329,7 +329,7 @@ class XYChart extends React.PureComponent {
                 width={innerWidth}
                 numTicks={numYTicks}
                 stroke={theme.gridStyles && theme.gridStyles.stroke}
-                strokeWidth={theme.gridStyles && `${theme.gridStyles.strokeWidth}px`}
+                strokeWidth={theme.gridStyles && theme.gridStyles.strokeWidth}
                 tickValues={yGridValues}
                 offset={
                   isDefined(yGridOffset)
