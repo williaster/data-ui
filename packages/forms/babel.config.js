@@ -1,6 +1,4 @@
 module.exports = {
-  babelrc: false,
-  comments: false,
   plugins: [
     '@babel/plugin-proposal-export-default-from',
     [
@@ -17,7 +15,8 @@ module.exports = {
     [
       '@babel/preset-env',
       {
-        modules: false,
+        loose: true,
+        modules: 'commonjs',
         shippedProposals: true,
         targets: {
           ie: 10,

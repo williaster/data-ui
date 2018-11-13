@@ -45,6 +45,7 @@
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
     "react-test-renderer": "^16.4.1",
+    "regenerator-runtime": "^0.12.1",
     "style-loader": "^0.18.2",
     "webpack": "^2.4.1"
   },
