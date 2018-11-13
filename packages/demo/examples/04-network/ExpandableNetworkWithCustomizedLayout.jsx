@@ -1,5 +1,5 @@
 import React from 'react';
-import { Network, propTypes, AtlasForceDirectedLayout } from '@data-ui/network';
+import { Network, networkPropTypes as propTypes, AtlasForceDirectedLayout } from '@data-ui/network';
 
 import Range from '../shared/Range';
 import { expandGraph } from './data';

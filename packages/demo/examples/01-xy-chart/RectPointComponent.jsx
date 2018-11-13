@@ -1,5 +1,5 @@
 import React from 'react';
-import { PointComponentPropTypes } from '@data-ui/xy-chart';
+import { pointComponentPropTypes } from '@data-ui/xy-chart';
 
 export default function RectComponent({
   x,
@@ -45,5 +45,5 @@ const defaultProps = {
   onMouseLeave: null,
 };
 
-RectComponent.propTypes = PointComponentPropTypes;
+RectComponent.propTypes = pointComponentPropTypes;
 RectComponent.defaultProps = defaultProps;
