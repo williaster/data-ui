@@ -104,8 +104,8 @@ describe('<AreaDifferenceSeries />', () => {
         interpolation="linear"
         disableMouseEvents
       >
-        <AreaSeries disableMouseEvents={false} interpolation="banana" data={mockData} />
-        <AreaSeries disableMouseEvents={false} interpolation="banana" data={mockData2} />
+        <AreaSeries disableMouseEvents={false} interpolation="cardinal" data={mockData} />
+        <AreaSeries disableMouseEvents={false} interpolation="cardinal" data={mockData2} />
       </AreaDifferenceSeries>,
     );
 

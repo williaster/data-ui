@@ -1,4 +1,4 @@
-import { Grid } from '@vx/grid';
+import { GridColumns, GridRows } from '@vx/grid';
 import { Group } from '@vx/group';
 import React from 'react';
 import { shallow, mount } from 'enzyme';
@@ -63,27 +63,65 @@ describe('<XYChart />', () => {
     expect(group.prop('left')).toBe(mockProps.margin.left);
   });
 
-  it('should render a grid based on props', () => {
+  it('should render GridColumns if showXGrid=true', () => {
     let wrapper = shallow(<XYChart {...mockProps} />);
-    let grid = wrapper.find(Grid);
-    expect(grid).toHaveLength(0);
+    let columns = wrapper.find(GridColumns);
+    expect(columns).toHaveLength(0);
+
+    wrapper = shallow(<XYChart {...mockProps} showXGrid />);
+    columns = wrapper.find(GridColumns);
+    expect(columns).toHaveLength(1);
+    expect(columns.prop('numTicks')).toBeGreaterThan(0);
+  });
+
+  it('should render GridRows if showYGrid=true', () => {
+    let wrapper = shallow(<XYChart {...mockProps} />);
+    let rows = wrapper.find(GridRows);
+    expect(rows).toHaveLength(0);
 
     wrapper = shallow(<XYChart {...mockProps} showYGrid />);
-    grid = wrapper.find(Grid);
-    expect(grid).toHaveLength(1);
-    expect(grid.prop('numTicksColumns')).toBeFalsy();
-    expect(grid.prop('numTicksRows')).toBeGreaterThan(0);
+    rows = wrapper.find(GridRows);
+    expect(rows).toHaveLength(1);
+    expect(rows.prop('numTicks')).toBeGreaterThan(0);
+  });
 
-    wrapper = shallow(
+  it('should pass numTicks from Axis components to Grid components if set', () => {
+    const wrapper = shallow(
       <XYChart {...mockProps} showXGrid showYGrid>
         <XAxis numTicks={13} />
         <YAxis numTicks={16} />
       </XYChart>,
     );
-    grid = wrapper.find(Grid);
-    expect(grid).toHaveLength(1);
-    expect(grid.prop('numTicksRows')).toBe(16);
-    expect(grid.prop('numTicksColumns')).toBe(13);
+    const rows = wrapper.find(GridRows);
+    const columns = wrapper.find(GridColumns);
+
+    expect(rows).toHaveLength(1);
+    expect(columns).toHaveLength(1);
+    expect(rows.prop('numTicks')).toBe(16);
+    expect(columns.prop('numTicks')).toBe(13);
+  });
+
+  it('should pass xGridValues and yGridValues to Grid components if passed', () => {
+    const xGridValues = mockData.map(d => d.date);
+    const yGridValues = mockData.map(d => d.num);
+
+    const wrapper = shallow(
+      <XYChart
+        {...mockProps}
+        showXGrid
+        showYGrid
+        xGridValues={xGridValues}
+        yGridValues={yGridValues}
+      />,
+    );
+
+    const rows = wrapper.find(GridRows);
+    const columns = wrapper.find(GridColumns);
+
+    expect(rows).toHaveLength(1);
+    expect(columns).toHaveLength(1);
+    expect(rows.prop('tickValues')).toEqual(yGridValues);
+    expect(columns.prop('tickValues')).toEqual(xGridValues);
   });
 
   it('should pass scales to child series', () => {
@@ -111,10 +149,8 @@ describe('<XYChart />', () => {
 
     expect(xaxis.prop('scale')).toEqual(expect.any(Function));
     expect(yaxis.prop('scale')).toEqual(expect.any(Function));
-
     expect(xaxis.prop('innerHeight')).toEqual(expect.any(Number));
     expect(yaxis.prop('innerWidth')).toEqual(expect.any(Number));
-
     expect(yaxis.prop('height')).toEqual(expect.any(Number));
   });
 

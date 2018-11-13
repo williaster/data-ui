@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Grid } from '@vx/grid';
+import { GridColumns, GridRows } from '@vx/grid';
 import { Group } from '@vx/group';
-import { WithTooltip, withTooltipPropTypes } from '@data-ui/shared';
+import { WithTooltip } from '@data-ui/shared';
 
 import collectVoronoiData from '../utils/collectVoronoiData';
 import findClosestDatums from '../utils/findClosestDatums';
@@ -27,7 +27,7 @@ import {
 import collectScalesFromProps from '../utils/collectScalesFromProps';
 import getChartDimensions from '../utils/getChartDimensions';
 
-import { scaleShape, themeShape } from '../utils/propShapes';
+import { scaleShape, themeShape, stringNumberDateObjectPropType } from '../utils/propShapes';
 
 export const CONTAINER_TRIGGER = 'container';
 export const SERIES_TRIGGER = 'series';
@@ -35,7 +35,6 @@ export const VORONOI_TRIGGER = 'voronoi';
 const Y_LABEL_OFFSET = 0.7;
 
 export const propTypes = {
-  ...withTooltipPropTypes,
   ariaLabel: PropTypes.string.isRequired,
   children: PropTypes.node,
   disableMouseEvents: PropTypes.bool,
@@ -51,7 +50,11 @@ export const propTypes = {
   }),
   renderTooltip: PropTypes.func,
   showXGrid: PropTypes.bool,
+  xGridValues: PropTypes.arrayOf(stringNumberDateObjectPropType),
+  xGridOffset: PropTypes.number,
   showYGrid: PropTypes.bool,
+  yGridValues: PropTypes.arrayOf(stringNumberDateObjectPropType),
+  yGridOffset: PropTypes.number,
   showVoronoi: PropTypes.bool,
   snapTooltipToDataX: PropTypes.bool,
   snapTooltipToDataY: PropTypes.bool,
@@ -59,6 +62,11 @@ export const propTypes = {
   width: PropTypes.number.isRequired,
   xScale: scaleShape.isRequired,
   yScale: scaleShape.isRequired,
+
+  // these may be passed from WithTooltip
+  onMouseMove: PropTypes.func, // expects to be called like func({ event, datum })
+  onMouseLeave: PropTypes.func, // expects to be called like func({ event, datum })
+  tooltipData: PropTypes.shape({ event: PropTypes.object, datum: PropTypes.object }),
 };
 
 export const defaultProps = {
@@ -71,10 +79,17 @@ export const defaultProps = {
   renderTooltip: null,
   showVoronoi: false,
   showXGrid: false,
+  xGridValues: null,
+  xGridOffset: null,
   showYGrid: false,
+  yGridValues: null,
+  yGridOffset: null,
   snapTooltipToDataX: false,
   snapTooltipToDataY: false,
   theme: {},
+  onMouseMove: null,
+  onMouseLeave: null,
+  tooltipData: null,
 };
 
 // accessors
@@ -255,6 +270,10 @@ class XYChart extends React.PureComponent {
       innerRef,
       tooltipData,
       showVoronoi,
+      xGridValues,
+      xGridOffset,
+      yGridValues,
+      yGridOffset,
     } = this.props;
 
     const {
@@ -279,16 +298,27 @@ class XYChart extends React.PureComponent {
       innerHeight > 0 && (
         <svg aria-label={ariaLabel} role="img" width={width} height={height} ref={innerRef}>
           <Group left={margin.left} top={margin.top}>
-            {(showXGrid || showYGrid) && (numXTicks || numYTicks) && (
-              <Grid
-                xScale={xScale}
-                yScale={yScale}
-                width={innerWidth}
+            {showXGrid && (
+              <GridColumns
+                scale={xScale}
                 height={innerHeight}
-                numTicksRows={showYGrid && numYTicks}
-                numTicksColumns={showXGrid && numXTicks}
+                numTicks={numXTicks}
                 stroke={theme.gridStyles && theme.gridStyles.stroke}
-                strokeWidth={theme.gridStyles && theme.gridStyles.strokeWidth}
+                strokeWidth={theme.gridStyles && `${theme.gridStyles.strokeWidth}px`}
+                tickValues={xGridValues}
+                offset={xGridOffset || (xScale.bandwidth ? xScale.bandwidth() / 2 : 0)}
+              />
+            )}
+
+            {showYGrid && (
+              <GridRows
+                scale={yScale}
+                width={innerWidth}
+                numTicks={numYTicks}
+                stroke={theme.gridStyles && theme.gridStyles.stroke}
+                strokeWidth={theme.gridStyles && `${theme.gridStyles.strokeWidth}px`}
+                tickValues={yGridValues}
+                offset={yGridOffset || (yScale.bandwidth ? yScale.bandwidth() / 2 : 0)}
               />
             )}
 

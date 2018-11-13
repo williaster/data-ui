@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import interpolatorLookup from './interpolatorLookup';
 
-const stringNumberDateObjectPropType = PropTypes.oneOfType([
+export const stringNumberDateObjectPropType = PropTypes.oneOfType([
   PropTypes.string,
   PropTypes.number,
   PropTypes.instanceOf(Date),
@@ -58,7 +58,7 @@ export const areaSeriesDataShape = PropTypes.arrayOf(
 export const barSeriesDataShape = PropTypes.arrayOf(
   PropTypes.shape({
     x: stringNumberDateObjectPropType,
-    y: PropTypes.number, // null data are not rendered
+    y: stringNumberDateObjectPropType,
     fill: PropTypes.string,
     stroke: PropTypes.string,
     strokeWidth: PropTypes.number,
