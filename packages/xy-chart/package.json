@@ -58,7 +58,7 @@
     "prop-types": "^15.5.10"
   },
   "devDependencies": {
-    "@data-ui/build-config": "^0.0.28",
+    "@data-ui/build-config": "^0.0.12",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
     "watch": "^1.0.2"
