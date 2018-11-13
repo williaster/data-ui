@@ -15,11 +15,10 @@
     "build": "npm run build:cjs && npm run build:esm",
     "dev": "beemo babel --watch ./src --out-dir esm/ --react --esm",
     "jest": "beemo jest --react --color --coverage",
-    "eslint": "beemo eslint \"./{src,test}/**/*.{js,jsx,json,md}\"",
-    "lint": "npm run prettier && npm run eslint",
+    "eslint": "beemo eslint \"./{src,test}/**/*.{js,jsx,json,md}\" --fix",
+    "lint": "beemo create-config prettier && npm run eslint",
     "test": "npm run jest",
     "prettier": "beemo prettier \"./{src,test}/**/*.{js,jsx,json,md}\"",
-    "sync:gitignore": "beemo sync-dotfiles --filter=gitignore",
     "prepublish": "npm run build"
   },
   "repository": {
@@ -43,7 +42,7 @@
   },
   "homepage": "https://github.com/williaster/data-ui#readme",
   "devDependencies": {
-    "@data-ui/build-config": "^0.0.12",
+    "@data-ui/build-config": "^0.0.28",
     "react": "^16.0.0",
     "react-dom": "^16.0.0"
   },
@@ -52,6 +51,7 @@
     "react-dom": "^15.0.0-0 || ^16.0.0-0"
   },
   "dependencies": {
+    "@babel/runtime": "^7.1.2",
     "@data-ui/shared": "^0.0.69",
     "@data-ui/theme": "0.0.8",
     "@vx/axis": "0.0.140",
@@ -65,7 +65,6 @@
     "@vx/responsive": "0.0.140",
     "@vx/scale": "0.0.140",
     "@vx/shape": "0.0.140",
-    "babel-runtime": "^6.26.0",
     "d3-array": "^1.2.0",
     "prop-types": "^15.5.10"
   },
@@ -80,6 +79,11 @@
     "eslint": {
       "rules": {
         "sort-keys": "off"
+      }
+    },
+    "jest": {
+      "transform": {
+        "^.+\\.jsx?$": "<rootDir>/node_modules/babel-jest"
       }
     }
   }

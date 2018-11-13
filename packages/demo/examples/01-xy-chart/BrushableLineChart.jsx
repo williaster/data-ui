@@ -11,13 +11,13 @@ import {
   withScreenSize,
   LineSeries,
   PatternLines,
+  PointSeries,
   Brush,
 } from '@data-ui/xy-chart';
 
 import colors, { allColors } from '@data-ui/theme/lib/color';
 
 import { timeSeriesData } from './data';
-import PointSeries from '../../node_modules/@data-ui/xy-chart/lib/series/PointSeries';
 
 export const parseDate = timeParse('%Y%m%d');
 export const formatDate = timeFormat('%b %d');
@@ -205,7 +205,7 @@ class BrushableLineChart extends React.PureComponent {
             <input
               type="radio"
               value="right"
-              onChange={e => this.setState({ yAxisOrientation: 'right' })}
+              onChange={() => this.setState({ yAxisOrientation: 'right' })}
               checked={this.state.yAxisOrientation === 'right'}
             />{' '}
             right

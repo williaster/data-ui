@@ -11,6 +11,7 @@ module.exports = {
   testMatch: ['**/?(*.)+(spec|test).{js,jsx}'],
   testURL: 'http://localhost/',
   transform: {
-    '^.+\\.jsx?$': 'babel-jest',
+    '^.+\\.jsx?$': '<rootDir>/node_modules/babel-jest',
   },
+  transformIgnorePatterns: ['<rootDir>/node_modules/(?!(@babel\\/runtime))'],
 };

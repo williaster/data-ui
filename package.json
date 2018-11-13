@@ -1,9 +1,11 @@
 {
   "name": "@data-ui/data-ui",
   "version": "0.0.0",
+  "private": true,
   "description": "A collection of components for data-rich user interfaces https://williaster.github.io/data-ui",
   "main": "index.js",
   "scripts": {
+    "bootstrap": "lerna bootstrap",
     "jest": "lerna run test",
     "lint": "lerna run lint",
     "prepare-release": "git checkout master && git pull --rebase origin master && npm run test",
@@ -24,7 +26,7 @@
   "license": "MIT",
   "devDependencies": {
     "coveralls": "^3.0.0",
-    "lerna": "^2.0.0-rc.2"
+    "lerna": "^3.0.0"
   },
   "engines": {
     "node": ">=8.10.0"

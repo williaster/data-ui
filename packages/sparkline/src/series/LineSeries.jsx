@@ -121,23 +121,22 @@ class LineSeries extends React.PureComponent {
             defined={d => defined(getY(d))}
           />
         )}
-        {showLine &&
-          strokeWidth > 0 && (
-            <LinePath
-              data={data}
-              x={getX}
-              y={getY}
-              xScale={xScale}
-              yScale={yScale}
-              stroke={stroke}
-              strokeWidth={strokeWidth}
-              strokeDasharray={strokeDasharray}
-              strokeLinecap={strokeLinecap}
-              curve={curveFunc}
-              glyph={null}
-              defined={d => defined(getY(d))}
-            />
-          )}
+        {showLine && strokeWidth > 0 && (
+          <LinePath
+            data={data}
+            x={getX}
+            y={getY}
+            xScale={xScale}
+            yScale={yScale}
+            stroke={stroke}
+            strokeWidth={strokeWidth}
+            strokeDasharray={strokeDasharray}
+            strokeLinecap={strokeLinecap}
+            curve={curveFunc}
+            glyph={null}
+            defined={d => defined(getY(d))}
+          />
+        )}
       </Group>
     );
   }

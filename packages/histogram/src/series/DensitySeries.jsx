@@ -168,38 +168,35 @@ function DensitySeries({
           yScale={yScale}
         />
       )}
-      {!animated &&
-        showArea && (
-          <AreaClosed
-            data={densityData}
-            x={getX}
-            y={getY}
-            xScale={xScale}
-            yScale={yScale}
-            fill={fill}
-            fillOpacity={fillOpacity}
-            stroke="transparent"
-            strokeWidth={strokeWidth}
-            curve={curveBasis}
-          />
-        )}
-      {!animated &&
-        showLine &&
-        strokeWidth > 0 && (
-          <LinePath
-            data={densityData}
-            x={getX}
-            y={getY}
-            xScale={xScale}
-            yScale={yScale}
-            stroke={stroke}
-            strokeWidth={strokeWidth}
-            strokeDasharray={strokeDasharray}
-            strokeLinecap={strokeLinecap}
-            curve={curveBasis}
-            glyph={null}
-          />
-        )}
+      {!animated && showArea && (
+        <AreaClosed
+          data={densityData}
+          x={getX}
+          y={getY}
+          xScale={xScale}
+          yScale={yScale}
+          fill={fill}
+          fillOpacity={fillOpacity}
+          stroke="transparent"
+          strokeWidth={strokeWidth}
+          curve={curveBasis}
+        />
+      )}
+      {!animated && showLine && strokeWidth > 0 && (
+        <LinePath
+          data={densityData}
+          x={getX}
+          y={getY}
+          xScale={xScale}
+          yScale={yScale}
+          stroke={stroke}
+          strokeWidth={strokeWidth}
+          strokeDasharray={strokeDasharray}
+          strokeLinecap={strokeLinecap}
+          curve={curveBasis}
+          glyph={null}
+        />
+      )}
     </Group>
   );
 }

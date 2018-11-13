@@ -10,15 +10,14 @@
     "lib"
   ],
   "scripts": {
-    "build:cjs": "beemo babel ./src --out-dir lib/ --react",
-    "build:esm": "beemo babel ./src --out-dir esm/ --react --esm",
+    "build:cjs": "beemo babel ./src --out-dir lib/ --react --minify",
+    "build:esm": "beemo babel ./src --out-dir esm/ --react --esm --minify",
     "build": "npm run build:cjs && npm run build:esm",
     "jest": "beemo jest --react --color --coverage",
-    "eslint": "beemo eslint \"./{src,test}/**/*.{js,jsx,json,md}\"",
-    "lint": "npm run prettier && npm run eslint",
+    "eslint": "beemo eslint \"./{src,test}/**/*.{js,jsx,json,md}\" --fix",
+    "lint": "beemo create-config prettier && npm run eslint",
     "test": "npm run jest",
     "prettier": "beemo prettier \"./{src,test}/**/*.{js,jsx,json,md}\"",
-    "sync:gitignore": "beemo sync-dotfiles --filter=gitignore",
     "prepublish": "npm run build"
   },
   "repository": "https://github.com/williaster/data-ui",
@@ -33,6 +32,7 @@
   "author": "Chris Williams @williaster",
   "license": "MIT",
   "dependencies": {
+    "@babel/runtime": "^7.1.2",
     "@data-ui/shared": "^0.0.69",
     "@data-ui/theme": "^0.0.69",
     "@vx/event": "0.0.140",
@@ -40,11 +40,10 @@
     "@vx/scale": "0.0.140",
     "@vx/shape": "0.0.140",
     "@vx/tooltip": "0.0.140",
-    "babel-runtime": "^6.26.0",
     "prop-types": "^15.5.10"
   },
   "devDependencies": {
-    "@data-ui/build-config": "^0.0.12",
+    "@data-ui/build-config": "^0.0.28",
     "react": "^16.0.0",
     "react-dom": "^16.0.0"
   },
@@ -63,6 +62,11 @@
     "eslint": {
       "rules": {
         "sort-keys": "off"
+      }
+    },
+    "jest": {
+      "transform": {
+        "^.+\\.jsx?$": "<rootDir>/node_modules/babel-jest"
       }
     }
   }

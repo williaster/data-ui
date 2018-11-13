@@ -164,17 +164,16 @@ class Visualization extends React.PureComponent {
             />
           </div>
           <div className={css(styles.fillParent)}>
-            {selectedSequences &&
-              selectedNode && (
-                <SingleSequencesPanel
-                  node={selectedNode}
-                  sequences={selectedSequences}
-                  colorScale={colorScale}
-                  width={width}
-                  height={height - paneHeight}
-                  clearSelection={this.onClearSelection}
-                />
-              )}
+            {selectedSequences && selectedNode && (
+              <SingleSequencesPanel
+                node={selectedNode}
+                sequences={selectedSequences}
+                colorScale={colorScale}
+                width={width}
+                height={height - paneHeight}
+                clearSelection={this.onClearSelection}
+              />
+            )}
           </div>
         </SplitPane>
       </div>

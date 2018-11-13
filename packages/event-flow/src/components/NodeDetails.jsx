@@ -84,12 +84,11 @@ function NodeDetails({ node, root, timeScale, colorScale }) {
             <strong>{nodeEvents}</strong> events
           </div>
         )}
-        {!SubSequence &&
-          currNode.depth !== 0 && (
-            <div>
-              <strong>{percentOfPrev}</strong> of previous
-            </div>
-          )}
+        {!SubSequence && currNode.depth !== 0 && (
+          <div>
+            <strong>{percentOfPrev}</strong> of previous
+          </div>
+        )}
         <div>
           <strong>{percentOfRoot}</strong> of root
         </div>

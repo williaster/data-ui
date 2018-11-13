@@ -7,10 +7,12 @@ module.exports = {
   globals: {
     __DEV__: true,
   },
+  roots: ['<rootDir>'],
   moduleFileExtensions: ['js', 'jsx', 'json'],
   testMatch: ['**/?(*.)+(spec|test).{js,jsx}'],
   testURL: 'http://localhost/',
   transform: {
-    '^.+\\.jsx?$': 'babel-jest',
+    '^.+\\.jsx?$': '<rootDir>/node_modules/babel-jest',
   },
+  transformIgnorePatterns: ['<rootDir>/node_modules/(?!(@babel\\/runtime))'],
 };

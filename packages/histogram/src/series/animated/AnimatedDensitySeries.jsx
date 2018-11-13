@@ -104,22 +104,21 @@ function AnimatedDensitySeries({
               curve={curveBasis}
             />
           )}
-          {showLine &&
-            strokeWidth > 0 && (
-              <LinePath
-                data={modifiedData}
-                x={d => (xScale.invert ? xScale.invert(d.state.x) : d.state.x)}
-                y={d => (yScale.invert ? yScale.invert(d.state.y) : d.state.y)}
-                xScale={xScale}
-                yScale={yScale}
-                stroke={stroke}
-                strokeWidth={strokeWidth}
-                strokeDasharray={strokeDasharray}
-                strokeLinecap={strokeLinecap}
-                curve={curveBasis}
-                glyph={null}
-              />
-            )}
+          {showLine && strokeWidth > 0 && (
+            <LinePath
+              data={modifiedData}
+              x={d => (xScale.invert ? xScale.invert(d.state.x) : d.state.x)}
+              y={d => (yScale.invert ? yScale.invert(d.state.y) : d.state.y)}
+              xScale={xScale}
+              yScale={yScale}
+              stroke={stroke}
+              strokeWidth={strokeWidth}
+              strokeDasharray={strokeDasharray}
+              strokeLinecap={strokeLinecap}
+              curve={curveBasis}
+              glyph={null}
+            />
+          )}
         </Group>
       )}
     </NodeGroup>

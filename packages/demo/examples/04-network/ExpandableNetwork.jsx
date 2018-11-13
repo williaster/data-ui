@@ -1,5 +1,5 @@
 import React from 'react';
-import { Network, propTypes } from '@data-ui/network';
+import { Network, networkPropTypes as propTypes } from '@data-ui/network';
 
 import { expandGraph } from './data';
 
