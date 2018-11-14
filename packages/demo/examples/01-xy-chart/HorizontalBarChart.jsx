@@ -3,11 +3,14 @@ import React from 'react';
 import { timeParse, timeFormat } from 'd3-time-format';
 
 import { CrossHair, XAxis, YAxis, BarSeries, PatternLines, Brush, Text } from '@data-ui/xy-chart';
-
+import { svgLabel } from '@data-ui/theme';
 import { allColors } from '@data-ui/theme/lib/color';
+import { xTickStyles, yTickStyles } from '@data-ui/theme/lib/chartTheme';
 import ResponsiveXYChart from './ResponsiveXYChart';
 
 import { timeSeriesData } from './data';
+
+const { baseLabel } = svgLabel;
 
 export const parseDate = timeParse('%Y%m%d');
 export const formatDate = timeFormat('%b %d');
@@ -17,6 +20,15 @@ const COLOR_1 = 'grape';
 const COLOR_2 = 'gray';
 const BRIGHTNESS = 5;
 const BRIGHTNESS_DARK = 7;
+const xTickLabelProps = {
+  ...xTickStyles.label.bottom,
+  stroke: allColors[COLOR_1][BRIGHTNESS_DARK],
+};
+
+const yTickLabelProps = {
+  ...yTickStyles.label.left,
+  stroke: allColors[COLOR_1][BRIGHTNESS_DARK],
+};
 
 const categoryHorizontalData = timeSeriesData.map((d, i) => ({
   x: d.y,
@@ -120,7 +132,7 @@ class HorizontalBarChartExample extends React.PureComponent {
         {this.renderControls()}
         <ResponsiveXYChart
           ariaLabel="Required label"
-          eventTrigger="container"
+          eventTrigger="series"
           xScale={horizontal ? valueScale : categoryScale}
           yScale={horizontal ? categoryScale : valueScale}
           margin={{ left: 100, top: 64, bottom: 64 }}
@@ -184,10 +196,9 @@ class HorizontalBarChartExample extends React.PureComponent {
               stroke: allColors[COLOR_1][BRIGHTNESS_DARK],
             }}
           />
-          <YAxis numTicks={5} orientation="left" />
-          <XAxis numTicks={5} />
+          <YAxis numTicks={5} orientation="left" tickLabelProps={() => yTickLabelProps} />
+          <XAxis numTicks={5} tickLabelProps={() => xTickLabelProps} />
         </ResponsiveXYChart>
-
         <style type="text/css">
           {`
           .bar-demo--form > div {
