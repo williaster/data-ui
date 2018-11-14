@@ -13,5 +13,4 @@ module.exports = {
   transform: {
     '^.+\\.jsx?$': '<rootDir>/node_modules/babel-jest',
   },
-  transformIgnorePatterns: ['<rootDir>/node_modules/(?!(@babel\\/runtime-corejs2))'],
 };
