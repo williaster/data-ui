@@ -1,6 +1,6 @@
 {
   "name": "@data-ui/radial-chart",
-  "version": "0.0.70",
+  "version": "0.0.71",
   "description": "A package for radial-axis visualizations https://williaster.github.io/data-ui",
   "sideEffects": false,
   "main": "lib/index.js",
@@ -33,8 +33,8 @@
   "license": "MIT",
   "dependencies": {
     "@babel/runtime": "^7.1.2",
-    "@data-ui/shared": "^0.0.70",
-    "@data-ui/theme": "^0.0.70",
+    "@data-ui/shared": "^0.0.71",
+    "@data-ui/theme": "^0.0.71",
     "@vx/event": "0.0.140",
     "@vx/group": "0.0.140",
     "@vx/scale": "0.0.140",

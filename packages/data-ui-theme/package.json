@@ -1,6 +1,6 @@
 {
   "name": "@data-ui/theme",
-  "version": "0.0.70",
+  "version": "0.0.71",
   "description": "Themes for data-ui",
   "sideEffects": false,
   "main": "lib/index.js",
