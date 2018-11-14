@@ -1,9 +1,19 @@
-import { Grid } from '@vx/grid';
+import { GridColumns, GridRows } from '@vx/grid';
 import { Group } from '@vx/group';
 import React from 'react';
 import { shallow, mount } from 'enzyme';
 
-import { XYChart, xyChartPropTypes, XAxis, YAxis, LineSeries, WithTooltip } from '../../src';
+import {
+  XYChart,
+  xyChartPropTypes,
+  XAxis,
+  YAxis,
+  LineSeries,
+  WithTooltip,
+  CrossHair,
+  HorizontalReferenceLine,
+  Brush,
+} from '../../src';
 import Voronoi from '../../src/chart/Voronoi';
 
 describe('<XYChart />', () => {
@@ -63,27 +73,85 @@ describe('<XYChart />', () => {
     expect(group.prop('left')).toBe(mockProps.margin.left);
   });
 
-  it('should render a grid based on props', () => {
+  it('should render GridColumns if showXGrid=true', () => {
     let wrapper = shallow(<XYChart {...mockProps} />);
-    let grid = wrapper.find(Grid);
-    expect(grid).toHaveLength(0);
+    let columns = wrapper.find(GridColumns);
+    expect(columns).toHaveLength(0);
+
+    wrapper = shallow(<XYChart {...mockProps} showXGrid />);
+    columns = wrapper.find(GridColumns);
+    expect(columns).toHaveLength(1);
+    expect(columns.prop('numTicks')).toBeGreaterThan(0);
+  });
+
+  it('should render GridRows if showYGrid=true', () => {
+    let wrapper = shallow(<XYChart {...mockProps} />);
+    let rows = wrapper.find(GridRows);
+    expect(rows).toHaveLength(0);
 
     wrapper = shallow(<XYChart {...mockProps} showYGrid />);
-    grid = wrapper.find(Grid);
-    expect(grid).toHaveLength(1);
-    expect(grid.prop('numTicksColumns')).toBeFalsy();
-    expect(grid.prop('numTicksRows')).toBeGreaterThan(0);
+    rows = wrapper.find(GridRows);
+    expect(rows).toHaveLength(1);
+    expect(rows.prop('numTicks')).toBeGreaterThan(0);
+  });
 
-    wrapper = shallow(
+  it('should pass numTicks from Axis components to Grid components if set', () => {
+    const wrapper = shallow(
       <XYChart {...mockProps} showXGrid showYGrid>
         <XAxis numTicks={13} />
         <YAxis numTicks={16} />
       </XYChart>,
     );
-    grid = wrapper.find(Grid);
-    expect(grid).toHaveLength(1);
-    expect(grid.prop('numTicksRows')).toBe(16);
-    expect(grid.prop('numTicksColumns')).toBe(13);
+    const rows = wrapper.find(GridRows);
+    const columns = wrapper.find(GridColumns);
+
+    expect(rows).toHaveLength(1);
+    expect(columns).toHaveLength(1);
+    expect(rows.prop('numTicks')).toBe(16);
+    expect(columns.prop('numTicks')).toBe(13);
+  });
+
+  it('should pass xGridValues and yGridValues to Grid components if passed', () => {
+    const xGridValues = mockData.map(d => d.date);
+    const yGridValues = mockData.map(d => d.num);
+
+    const wrapper = shallow(
+      <XYChart
+        {...mockProps}
+        showXGrid
+        showYGrid
+        xGridValues={xGridValues}
+        yGridValues={yGridValues}
+      />,
+    );
+
+    const rows = wrapper.find(GridRows);
+    const columns = wrapper.find(GridColumns);
+
+    expect(rows).toHaveLength(1);
+    expect(columns).toHaveLength(1);
+    expect(rows.prop('tickValues')).toEqual(yGridValues);
+    expect(columns.prop('tickValues')).toEqual(xGridValues);
+  });
+
+  it('should pass tickValues from Axis components to Grid components if passed and x/yGridValues are not', () => {
+    const xGridValues = mockData.map(d => d.date);
+    const yGridValues = mockData.map(d => d.num);
+
+    const wrapper = shallow(
+      <XYChart {...mockProps} showXGrid showYGrid>
+        <XAxis tickValues={xGridValues} />
+        <YAxis tickValues={yGridValues} />
+      </XYChart>,
+    );
+
+    const rows = wrapper.find(GridRows);
+    const columns = wrapper.find(GridColumns);
+
+    expect(rows).toHaveLength(1);
+    expect(columns).toHaveLength(1);
+    expect(rows.prop('tickValues')).toEqual(yGridValues);
+    expect(columns.prop('tickValues')).toEqual(xGridValues);
   });
 
   it('should pass scales to child series', () => {
@@ -96,6 +164,28 @@ describe('<XYChart />', () => {
     expect(series).toHaveLength(1);
     expect(series.prop('xScale')).toEqual(expect.any(Function));
     expect(series.prop('yScale')).toEqual(expect.any(Function));
+  });
+
+  it('should re-compute scales upon width, height, or margin change', () => {
+    const wrapper = shallow(
+      <XYChart {...mockProps} xScale={{ type: 'band' }}>
+        <LineSeries label="label" data={mockData.map(d => ({ ...d, x: d.cat, y: d.num }))} />
+      </XYChart>,
+    );
+
+    const instance = wrapper.instance();
+    let [, xMax] = instance.state.xScale.range();
+    let [yMax] = instance.state.yScale.range();
+    expect(xMax).toBe(mockProps.width - mockProps.margin.left - mockProps.margin.right);
+    expect(yMax).toBe(mockProps.height - mockProps.margin.top - mockProps.margin.bottom);
+
+    wrapper.setProps({ width: 50, height: 30, margin: { top: 0, right: 0, bottom: 0, left: 0 } });
+
+    [, xMax] = instance.state.xScale.range();
+    [yMax] = instance.state.yScale.range();
+
+    expect(xMax).toBe(50);
+    expect(yMax).toBe(30);
   });
 
   it('should pass scales and dimensions to child axes', () => {
@@ -111,10 +201,8 @@ describe('<XYChart />', () => {
 
     expect(xaxis.prop('scale')).toEqual(expect.any(Function));
     expect(yaxis.prop('scale')).toEqual(expect.any(Function));
-
     expect(xaxis.prop('innerHeight')).toEqual(expect.any(Number));
     expect(yaxis.prop('innerWidth')).toEqual(expect.any(Number));
-
     expect(yaxis.prop('height')).toEqual(expect.any(Number));
   });
 
@@ -134,6 +222,20 @@ describe('<XYChart />', () => {
     );
 
     expect(wrapper.find(YAxis).prop('labelOffset')).toBe(-101);
+  });
+
+  it('should render CrossHair, ReferenceLine, and Brush children ', () => {
+    const wrapper = shallow(
+      <XYChart {...mockProps} tooltipData={{}}>
+        <CrossHair />
+        <Brush />
+        <HorizontalReferenceLine reference={10} />
+      </XYChart>,
+    );
+
+    expect(wrapper.find(CrossHair)).toHaveLength(1);
+    expect(wrapper.find(Brush)).toHaveLength(1);
+    expect(wrapper.find(HorizontalReferenceLine)).toHaveLength(1);
   });
 
   it('should compute time, linear, and band domains across all child series', () => {
