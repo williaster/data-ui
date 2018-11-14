@@ -1,4 +1,5 @@
 module.exports = {
+  ignore: [/\/core-js/, /@babel\/runtime/],
   plugins: [
     '@babel/plugin-proposal-export-default-from',
     [
@@ -7,6 +8,7 @@ module.exports = {
         helpers: true,
         regenerator: false,
         useESModules: true,
+        corejs: 2,
       },
     ],
   ],
