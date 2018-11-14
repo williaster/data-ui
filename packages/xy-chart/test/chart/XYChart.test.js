@@ -3,7 +3,17 @@ import { Group } from '@vx/group';
 import React from 'react';
 import { shallow, mount } from 'enzyme';
 
-import { XYChart, xyChartPropTypes, XAxis, YAxis, LineSeries, WithTooltip } from '../../src';
+import {
+  XYChart,
+  xyChartPropTypes,
+  XAxis,
+  YAxis,
+  LineSeries,
+  WithTooltip,
+  CrossHair,
+  HorizontalReferenceLine,
+  Brush,
+} from '../../src';
 import Voronoi from '../../src/chart/Voronoi';
 
 describe('<XYChart />', () => {
@@ -156,6 +166,28 @@ describe('<XYChart />', () => {
     expect(series.prop('yScale')).toEqual(expect.any(Function));
   });
 
+  it('should re-compute scales upon width, height, or margin change', () => {
+    const wrapper = shallow(
+      <XYChart {...mockProps} xScale={{ type: 'band' }}>
+        <LineSeries label="label" data={mockData.map(d => ({ ...d, x: d.cat, y: d.num }))} />
+      </XYChart>,
+    );
+
+    const instance = wrapper.instance();
+    let [, xMax] = instance.state.xScale.range();
+    let [yMax] = instance.state.yScale.range();
+    expect(xMax).toBe(mockProps.width - mockProps.margin.left - mockProps.margin.right);
+    expect(yMax).toBe(mockProps.height - mockProps.margin.top - mockProps.margin.bottom);
+
+    wrapper.setProps({ width: 50, height: 30, margin: { top: 0, right: 0, bottom: 0, left: 0 } });
+
+    [, xMax] = instance.state.xScale.range();
+    [yMax] = instance.state.yScale.range();
+
+    expect(xMax).toBe(50);
+    expect(yMax).toBe(30);
+  });
+
   it('should pass scales and dimensions to child axes', () => {
     const wrapper = shallow(
       <XYChart {...mockProps}>
@@ -190,6 +222,20 @@ describe('<XYChart />', () => {
     );
 
     expect(wrapper.find(YAxis).prop('labelOffset')).toBe(-101);
+  });
+
+  it('should render CrossHair, ReferenceLine, and Brush children ', () => {
+    const wrapper = shallow(
+      <XYChart {...mockProps} tooltipData={{}}>
+        <CrossHair />
+        <Brush />
+        <HorizontalReferenceLine reference={10} />
+      </XYChart>,
+    );
+
+    expect(wrapper.find(CrossHair)).toHaveLength(1);
+    expect(wrapper.find(Brush)).toHaveLength(1);
+    expect(wrapper.find(HorizontalReferenceLine)).toHaveLength(1);
   });
 
   it('should compute time, linear, and band domains across all child series', () => {
