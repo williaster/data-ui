@@ -72,7 +72,7 @@ function VerticalReferenceLine({
         strokeWidth={strokeWidth}
         vectorEffect="non-scaling-stroke"
       />
-      {Boolean(label) && (
+      {!!label && (
         <Text x={scaledRef} {...defaultLabelProps} {...labelProps}>
           {label}
         </Text>

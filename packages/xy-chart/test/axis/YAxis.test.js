@@ -115,15 +115,7 @@ describe('<YAxis />', () => {
         height={chartProps.height}
       />,
     );
-    expect(
-      wrapper
-        .find(AxisRight)
-        .dive() // Axis
-        .dive() // Group
-        .find(Text)
-        .last() // not ticks
-        .prop('width'),
-    ).toBe(chartProps.height);
+    expect(wrapper.find(AxisRight).prop('labelProps').width).toBe(chartProps.height);
   });
 
   it('should use the output of tickFormat() when passed', () => {

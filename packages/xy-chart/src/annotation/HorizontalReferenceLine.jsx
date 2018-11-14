@@ -71,7 +71,7 @@ function HorizontalReferenceLine({
         strokeWidth={strokeWidth}
         vectorEffect="non-scaling-stroke"
       />
-      {Boolean(label) && (
+      {!!label && (
         <Text y={scaledRef} {...defaultLabelProps} {...labelProps}>
           {label}
         </Text>

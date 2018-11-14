@@ -1,6 +1,7 @@
-import { chartTheme, color } from '@data-ui/theme';
+import { svgLabel, color } from '@data-ui/theme';
 import { FocusBlurHandler } from '@data-ui/shared';
 import { Group } from '@vx/group';
+import { Text } from '@vx/text';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -12,18 +13,36 @@ import sharedSeriesProps from '../utils/sharedSeriesProps';
 export const propTypes = {
   ...sharedSeriesProps,
   data: pointSeriesDataShape.isRequired,
-  labelComponent: PropTypes.element,
+  defaultLabelProps: PropTypes.object, // eslint-disable-line react/forbid-prop-types
   pointComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
   fill: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   fillOpacity: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
+  renderLabel: PropTypes.func,
   stroke: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   strokeWidth: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
   strokeDasharray: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   size: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
 };
 
+const { baseLabel } = svgLabel;
+
+export const defaultLabelProps = {
+  ...baseLabel,
+  textAnchor: 'start',
+  verticalAnchor: 'start',
+  dx: '0.25em',
+  dy: '0.25em',
+  pointerEvents: 'none',
+  stroke: '#fff',
+  strokeWidth: 2,
+  paintOrder: 'stroke',
+  fontSize: 12,
+};
+
 export const defaultProps = {
-  labelComponent: <text {...chartTheme.labelStyles} />,
+  defaultLabelProps,
+  renderLabel: ({ datum, labelProps }) =>
+    datum.label ? <Text {...labelProps}>{datum.label}</Text> : null,
   pointComponent: GlyphDotComponent,
   size: 4,
   fill: color.default,
@@ -39,10 +58,11 @@ export default class PointSeries extends React.PureComponent {
   render() {
     const {
       data,
+      defaultLabelProps: labelProps,
       disableMouseEvents,
-      labelComponent,
       fill,
       fillOpacity,
+      renderLabel,
       size,
       stroke,
       strokeWidth,
@@ -55,7 +75,7 @@ export default class PointSeries extends React.PureComponent {
       pointComponent,
     } = this.props;
     if (!xScale || !yScale) return null;
-    const labels = [];
+    const Labels = [];
 
     return (
       <Group style={disableMouseEvents ? noEventsStyles : null}>
@@ -67,14 +87,27 @@ export default class PointSeries extends React.PureComponent {
           const y = yScale(yVal);
           const computedFill = d.fill || callOrValue(fill, d, i);
           const key = `${d.x}-${i}`;
-          if (defined && d.label) {
-            labels.push({ x, y, label: d.label, key: `${key}-label` });
-          }
           const computedSize = d.size || callOrValue(size, d, i);
           const computedFillOpacity = d.fillOpacity || callOrValue(fillOpacity, d, i);
           const computedStroke = d.stroke || callOrValue(stroke, d, i);
           const computedStrokeWidth = d.strokeWidth || callOrValue(strokeWidth, d, i);
           const computedStrokeDasharray = d.strokeDasharray || callOrValue(strokeDasharray, d, i);
+
+          if (defined && renderLabel) {
+            const Label = renderLabel({
+              datum: d,
+              index: i,
+              labelProps: {
+                key,
+                ...labelProps,
+                x,
+                y,
+              },
+            });
+
+            if (Label) Labels.push(Label);
+          }
+
           const props = {
             x,
             y,
@@ -117,7 +150,7 @@ export default class PointSeries extends React.PureComponent {
           );
         })}
         {/* Put labels on top */}
-        {labels.map(d => React.cloneElement(labelComponent, d, d.label))}
+        {Labels.map(Label => Label)}
       </Group>
     );
   }
