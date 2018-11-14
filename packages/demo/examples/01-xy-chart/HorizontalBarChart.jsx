@@ -2,7 +2,7 @@
 import React from 'react';
 import { timeParse, timeFormat } from 'd3-time-format';
 
-import { CrossHair, XAxis, YAxis, BarSeries, PatternCircles, Brush } from '@data-ui/xy-chart';
+import { CrossHair, XAxis, YAxis, BarSeries, PatternLines, Brush, Text } from '@data-ui/xy-chart';
 
 import { allColors } from '@data-ui/theme/lib/color';
 import ResponsiveXYChart from './ResponsiveXYChart';
@@ -13,26 +13,30 @@ export const parseDate = timeParse('%Y%m%d');
 export const formatDate = timeFormat('%b %d');
 export const formatYear = timeFormat('%Y');
 export const dateFormatter = date => formatYear(parseDate(date));
+const COLOR_1 = 'grape';
+const COLOR_2 = 'gray';
+const BRIGHTNESS = 5;
+const BRIGHTNESS_DARK = 7;
 
 const categoryHorizontalData = timeSeriesData.map((d, i) => ({
   x: d.y,
   y: i + 1,
   selected: false,
-  label: i === 4 || i === 5 ? 'Wrapping Label' : null,
+  label: i === 3 ? 'Long long label' : (i === 5 && 'Label') || '',
 }));
 
 const categoryData = timeSeriesData.map((d, i) => ({
   x: i + 1,
   y: d.y,
   selected: false,
-  label: i === 4 || i === 5 ? 'Wrapping Label' : null,
+  label: i === 3 ? 'Long long label' : (i === 5 && 'Label') || '',
 }));
 
 class HorizontalBarChartExample extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      direction: 'vertical',
+      direction: 'horizontal',
       data: categoryHorizontalData,
     };
     this.Brush = React.createRef();
@@ -107,7 +111,7 @@ class HorizontalBarChartExample extends React.PureComponent {
 
   render() {
     const { direction, data } = this.state;
-    const categoryScale = { type: 'band', paddingInner: 0.4 };
+    const categoryScale = { type: 'band', paddingInner: 0.1 };
     const valueScale = { type: 'linear' };
     const horizontal = direction === 'horizontal';
 
@@ -116,52 +120,72 @@ class HorizontalBarChartExample extends React.PureComponent {
         {this.renderControls()}
         <ResponsiveXYChart
           ariaLabel="Required label"
-          eventTrigger="series"
+          eventTrigger="container"
           xScale={horizontal ? valueScale : categoryScale}
           yScale={horizontal ? categoryScale : valueScale}
           margin={{ left: 100, top: 64, bottom: 64 }}
         >
-          <PatternCircles
-            id="horizontal_bar_circles"
-            width={6}
+          <PatternLines
+            id="brush_pattern"
             height={6}
-            radius={2}
-            fill={allColors.blue[horizontal ? 2 : 8]}
-            strokeWidth={0}
+            width={6}
+            stroke={allColors[COLOR_1][BRIGHTNESS]}
+            strokeWidth={1}
+            orientation={['diagonal']}
+          />
+          <PatternLines
+            id="bar_pattern_1"
+            height={6}
+            width={6}
+            stroke={allColors[COLOR_1][BRIGHTNESS]}
+            strokeWidth={1}
+            orientation={['diagonal']}
+          />
+          <PatternLines
+            id="bar_pattern_2"
+            height={6}
+            width={6}
+            stroke={allColors[COLOR_2][BRIGHTNESS]}
+            strokeWidth={1}
+            orientation={['diagonal']}
           />
           <BarSeries
-            fill={bar => {
-              const color = bar.selected ? allColors.red : allColors.blue;
-
-              return color[horizontal ? 8 : 2];
-            }}
+            fill={bar => `url(#${bar.selected ? 'bar_pattern_1' : 'bar_pattern_2'})`}
             horizontal={horizontal}
             data={data}
-          />
-          <BarSeries
-            fill="url(#horizontal_bar_circles)"
-            horizontal={horizontal}
-            data={data}
-            stroke={allColors.blue[8]}
-            strokeWidth={1.5}
+            renderLabel={({ datum, labelProps, index: i }) =>
+              datum.label ? (
+                <Text
+                  {...labelProps}
+                  fill={allColors[datum.selected ? COLOR_2 : COLOR_1][BRIGHTNESS_DARK]}
+                  angle={datum.selected ? 20 * (i >= 5 ? -1 : 1) : 0}
+                >
+                  {datum.label}
+                </Text>
+              ) : null
+            }
           />
           <CrossHair
-            showHorizontalLine={!horizontal}
-            showVerticalLine={horizontal}
+            showVerticalLine
+            showHorizontalLine={false}
             fullHeight
-            fullWidth
-            strokeDasharray=""
-            stroke={allColors.blue[8]}
-            circleFill={allColors.blue[7]}
+            stroke={allColors[COLOR_1][BRIGHTNESS_DARK]}
+            circleFill={allColors[COLOR_1][BRIGHTNESS_DARK]}
             circleStroke="white"
           />
-          <YAxis numTicks={5} orientation="left" />
-          <XAxis numTicks={5} />
+
           <Brush
             brushDirection={horizontal ? 'vertical' : 'horizontal'}
             ref={this.Brush}
             onChange={this.handleBrushChange}
+            selectedBoxStyle={{
+              fill: 'url(#brush_pattern)',
+              fillOpacity: 0.2,
+              stroke: allColors[COLOR_1][BRIGHTNESS_DARK],
+            }}
           />
+          <YAxis numTicks={5} orientation="left" />
+          <XAxis numTicks={5} />
         </ResponsiveXYChart>
 
         <style type="text/css">
