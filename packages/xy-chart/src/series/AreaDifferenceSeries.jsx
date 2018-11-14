@@ -34,6 +34,7 @@ export default class AreaDifferenceSeries extends React.PureComponent {
       onMouseMove,
       onMouseLeave,
       children,
+      margin,
     } = this.props;
 
     if (!xScale || !yScale) return null;
@@ -100,6 +101,7 @@ export default class AreaDifferenceSeries extends React.PureComponent {
             interpolation,
             disableMouseEvents: Child.props.disableMouseEvents || disableMouseEvents,
             fill: 'transparent',
+            margin,
           }),
         )}
       </g>

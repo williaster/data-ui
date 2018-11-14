@@ -7,7 +7,7 @@ import { AreaDifferenceSeries, AreaSeries, LineSeries } from '../../src';
 
 describe('<AreaDifferenceSeries />', () => {
   const mockScale = scaleLinear({ domain: [0, 100], range: [0, 100] });
-
+  const mockMargin = { top: 5, right: 7, bottom: 27, left: 47 };
   const mockData = [
     { x: new Date('2017-01-05'), y: 15 },
     { x: new Date('2018-01-05'), y: 51 },
@@ -71,10 +71,11 @@ describe('<AreaDifferenceSeries />', () => {
     expect(threshold.prop('belowAreaProps').fillOpacity).toBe(seriesProps[1].fillOpacity);
   });
 
-  it('should pass xScale, yScale, onClick, onMouseMove, and onMouseLeave to child AreaSeries', () => {
+  it('should pass margin, xScale, yScale, onClick, onMouseMove, and onMouseLeave to child AreaSeries', () => {
     const propsToPass = {
       xScale: mockScale,
       yScale: mockScale,
+      margin: mockMargin,
       onClick: () => {},
       onMouseMove: () => {},
       onMouseLeave: () => {},
