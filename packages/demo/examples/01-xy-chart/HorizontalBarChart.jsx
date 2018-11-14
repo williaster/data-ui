@@ -18,19 +18,21 @@ const categoryHorizontalData = timeSeriesData.map((d, i) => ({
   x: d.y,
   y: i + 1,
   selected: false,
+  label: i === 4 || i === 5 ? 'Wrapping Label' : null,
 }));
 
 const categoryData = timeSeriesData.map((d, i) => ({
   x: i + 1,
   y: d.y,
   selected: false,
+  label: i === 4 || i === 5 ? 'Wrapping Label' : null,
 }));
 
 class HorizontalBarChartExample extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      direction: 'horizontal',
+      direction: 'vertical',
       data: categoryHorizontalData,
     };
     this.Brush = React.createRef();

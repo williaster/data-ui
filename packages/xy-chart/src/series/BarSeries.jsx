@@ -1,19 +1,30 @@
 import { Bar } from '@vx/shape';
 import { FocusBlurHandler } from '@data-ui/shared';
 import { Group } from '@vx/group';
+import { Text } from '@vx/text';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { color as themeColors } from '@data-ui/theme';
+import { color as themeColors, svgLabel } from '@data-ui/theme';
 
 import { barSeriesDataShape } from '../utils/propShapes';
 import { callOrValue, isDefined } from '../utils/chartUtils';
 import sharedSeriesProps from '../utils/sharedSeriesProps';
+
+const { baseLabel } = svgLabel;
+
+export const defaultLabelProps = {
+  ...baseLabel,
+  stroke: '#fff',
+  strokeWidth: 2,
+  paintOrder: 'stroke',
+};
 
 const propTypes = {
   ...sharedSeriesProps,
   data: barSeriesDataShape.isRequired,
   fill: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   fillOpacity: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
+  renderLabel: PropTypes.func,
   stroke: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   strokeWidth: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
   horizontal: PropTypes.bool,
@@ -22,6 +33,10 @@ const propTypes = {
 const defaultProps = {
   fill: themeColors.default,
   fillOpacity: null,
+  renderLabel: ({ datum, barWidth, labelProps }) =>
+    isDefined(datum.label)
+      ? console.log(labelProps) || <Text {...labelProps}>{datum.label}</Text>
+      : null,
   stroke: '#FFFFFF',
   strokeWidth: 1,
   horizontal: false,
@@ -45,6 +60,7 @@ export default class BarSeries extends React.PureComponent {
       onClick,
       onMouseMove,
       onMouseLeave,
+      renderLabel,
       horizontal,
     } = this.props;
     if (!xScale || !yScale) return null;
@@ -113,6 +129,21 @@ export default class BarSeries extends React.PureComponent {
                   }
                   onMouseLeave={disableMouseEvents ? null : onMouseLeave && (() => onMouseLeave)}
                 />
+                {renderLabel &&
+                  renderLabel({
+                    datum: d,
+                    index: i,
+                    labelProps: {
+                      ...defaultLabelProps,
+                      x: horizontal ? barLength : barPosition + barWidth / 2,
+                      y: horizontal ? barPosition + barWidth / 2 : maxBarLength - barLength,
+                      dx: horizontal ? '0.74em' : 0,
+                      dy: horizontal ? 0 : '-0.74em',
+                      textAnchor: horizontal ? 'start' : 'middle',
+                      verticalAnchor: horizontal ? 'middle' : 'end',
+                      width: barWidth,
+                    },
+                  })}
               </FocusBlurHandler>
             )
           );
