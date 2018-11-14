@@ -1,7 +1,9 @@
 {
   "lerna": "3.4.3",
-  "packages": ["packages/*"],
-  "version": "0.0.69",
+  "packages": [
+    "packages/*"
+  ],
+  "version": "0.0.70",
   "command": {
     "bootstrap": {
       "ignore": "build-config",
