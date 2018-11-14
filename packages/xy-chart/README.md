@@ -119,11 +119,11 @@ Entries in scale objects are shallow checked so new objects don't trigger re-ren
 | Name               | Type                                                                             | Default                                         | Description                                                                          |
 | ------------------ | -------------------------------------------------------------------------------- | ----------------------------------------------- | ------------------------------------------------------------------------------------ |
 | axisStyles         | axisStylesShape                                                                  | `{}`                                            | config object for axis and axis label styles, see theme above.                       |
-| label              | PropTypes.oneOfType( [PropTypes.string, PropTypes.element] )                     | `<text {...axisStyles.label[ orientation ]} />` | string or component for axis labels                                                  |
+| label              | PropTypes.oneOfType( [PropTypes.string, PropTypes.element] )                     | `<Text {...axisStyles.label[ orientation ]} />` | string or component for axis labels                                                  |
 | numTicks           | PropTypes.number                                                                 | null                                            | _approximate_ number of ticks (actual number depends on the data and d3's algorithm) |
 | orientation        | PropTypes.oneOf(['top', 'right', 'bottom', 'left'])                              | bottom (XAxis), right (YAxis)                   | orientation of axis                                                                  |
 | tickStyles         | tickStylesShape                                                                  | `{}`                                            | config object for styling ticks and tick labels, see theme above.                    |
-| tickLabelComponent | PropTypes.element                                                                | `<text {...tickStyles.label[ orientation ]} />` | component to use for tick labels                                                     |
+| tickLabelComponent | PropTypes.element                                                                | `<Text {...tickStyles.label[ orientation ]} />` | component to use for tick labels                                                     |
 | tickFormat         | PropTypes.func                                                                   | null                                            | `(tick, tickIndex) => formatted tick`                                                |
 | tickValues         | PropTypes.arrayOf( PropTypes.oneOfType([ PropTypes.number, PropTypes.string ]) ) | null                                            | custom tick values                                                                   |
 
@@ -152,6 +152,37 @@ support and data shapes:
 
 - defined `y0` and `y1` values or
 - a single `y` value, in which case its lower bound is set to 0 (a "closed" area series)
+
+#### Series labels
+
+The `<PointSeries />` and `<BarSeries />` components support rendering labels per-datum via the
+`renderLabel` and `defaultLabelProps` props.
+
+- by default, if a datum has a label property, it will have a label rendered out of the box using
+  the `@vx/text` `<Text />` component (which wraps svg text, etc.). labels are always rendered on
+  top of the `Bar`s and `Point`s themeselves.
+- The label has "smart" default aesthetics (taking from the `@data-ui` theme), text anchors, and
+  wrapping behavior, but you can override them by setting `defaultLabelProps` to your own object. By
+  default these props are passed to the underlying `<Text />` label component, and `d.label` is
+  rendered as the child
+- to support full label customization, you may define a `renderLabel` function with the signature
+  `({ datum, index, labelProps }) => node`. labelProps includes all values from `defaultLabelProps`
+  as well as "smart" default values for `width`, `x`, `y`, `dx`, `dy`, `verticalAnchor`, and
+  `textAnchor` based on `Bar` and `Point` position, size, and orientation (horizontal vs vertical).
+- Example usage:
+
+```javascript
+<BarSeries
+  {...restProps}
+  renderLabel={({ datum, labelProps, index: i }) =>
+    datum.label ? (
+      <Text {...labelProps} fill={datum.selected ? COLOR_2 : COLOR_1}>
+        {datum.label}
+      </Text>
+    ) : null
+  }
+/>
+```
 
 #### `<CirclePackSeries />`
 
