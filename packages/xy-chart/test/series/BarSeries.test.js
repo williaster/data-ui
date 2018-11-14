@@ -96,7 +96,7 @@ describe('<BarSeries />', () => {
     ).toBe(maxWidth);
   });
 
-  it('should not render bars for null data for horizontal barchart', () => {
+  it('should not render horizontal bars for null data', () => {
     const wrapper = shallow(
       <XYChart
         {...mockProps}
@@ -142,6 +142,30 @@ describe('<BarSeries />', () => {
         .dive()
         .find(Bar),
     ).toHaveLength(mockData.length);
+  });
+
+  it('should render labels based on the output of renderLabel', () => {
+    const wrapper = shallow(
+      <XYChart {...mockProps}>
+        <BarSeries
+          data={mockData.map((d, i) => ({
+            x: d.date,
+            y: d.num,
+            label: i === 0 ? 'LABEL' : null,
+          }))}
+          renderLabel={({ datum: d }) =>
+            d.label ? (
+              <text key="k" className="test">
+                {d.label}
+              </text>
+            ) : null
+          }
+        />
+      </XYChart>,
+    );
+    const label = wrapper.render().find('.test');
+    expect(label).toHaveLength(1);
+    expect(label.text()).toBe('LABEL');
   });
 
   it('should call onMouseMove({ datum, data, event, color }), onMouseLeave(), and onClick({ datum, data, event, color }) on trigger', () => {

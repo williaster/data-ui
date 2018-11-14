@@ -60,7 +60,7 @@ describe('<PointSeries />', () => {
     expect(series.find(GlyphDotComponent)).toHaveLength(mockData.length - 2);
   });
 
-  it('should render labels if present', () => {
+  it('should render labels based on the output of renderLabel', () => {
     const wrapper = shallow(
       <XYChart {...mockProps}>
         <PointSeries
@@ -69,7 +69,13 @@ describe('<PointSeries />', () => {
             y: d.num,
             label: i === 0 ? 'LABEL' : null,
           }))}
-          labelComponent={<text className="test" />}
+          renderLabel={({ datum: d }) =>
+            d.label ? (
+              <text key="k" className="test">
+                {d.label}
+              </text>
+            ) : null
+          }
         />
       </XYChart>,
     );
