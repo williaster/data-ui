@@ -12,13 +12,13 @@
   "scripts": {
     "build:cjs": "beemo babel ./src --out-dir lib/ --react --minify",
     "build:esm": "beemo babel ./src --out-dir esm/ --react --esm --minify",
-    "build": "npm run build:cjs && npm run build:esm",
+    "build": "yarn run build:cjs && yarn run build:esm",
     "jest": "beemo jest --react --color --coverage",
     "eslint": "beemo eslint \"./{src,test}/**/*.{js,jsx,json,md}\" --fix",
-    "lint": "beemo create-config prettier && npm run eslint",
-    "test": "npm run jest",
+    "lint": "beemo create-config prettier && yarn run eslint",
+    "test": "yarn run jest",
     "prettier": "beemo prettier \"./{src,test}/**/*.{js,jsx,json,md}\"",
-    "prepublish": "npm run build"
+    "prepublish": "yarn run build"
   },
   "repository": "https://github.com/williaster/data-ui",
   "keywords": [

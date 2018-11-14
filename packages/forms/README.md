@@ -6,5 +6,5 @@ demo at <a href="https://williaster.github.io/data-ui" target="_blank">williaste
 ## Development
 ```shell
 npm install
-npm run dev # or 'prod'
+yarn run dev # or 'prod'
 ```

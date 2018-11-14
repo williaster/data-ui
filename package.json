@@ -8,9 +8,9 @@
     "bootstrap": "lerna bootstrap",
     "jest": "lerna run test",
     "lint": "lerna run lint",
-    "prepare-release": "git checkout master && git pull --rebase origin master && npm run test",
-    "release": "npm run prepare-release && lerna publish && lerna run gh-pages",
-    "test": "lerna bootstrap && npm run lint && npm run jest"
+    "prepare-release": "git checkout master && git pull --rebase origin master && yarn run test",
+    "release": "yarn run prepare-release && lerna publish && lerna run gh-pages",
+    "test": "lerna bootstrap && yarn run lint && yarn run jest"
   },
   "repository": "https://github.com/williaster/data-ui.git",
   "keywords": [
@@ -26,7 +26,8 @@
   "license": "MIT",
   "devDependencies": {
     "coveralls": "^3.0.0",
-    "lerna": "^3.0.0"
+    "lerna": "^3.0.0",
+    "yarn": "^1.12.3"
   },
   "engines": {
     "node": ">=8.10.0"

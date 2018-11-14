@@ -24,5 +24,5 @@ See the <a href="https://williaster.github.io/data-ui" target="_blank">@data-ui/
 
 ```
 npm install
-npm run build
+yarn run build
 ```

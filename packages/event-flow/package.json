@@ -15,9 +15,9 @@
     "build": "webpack -p",
     "dev": "webpack --progress --colors --watch",
     "eslint": "beemo eslint \"./{src,test}/**/*.{js,jsx,json,md}\" --fix",
-    "lint": "beemo create-config prettier && npm run eslint",
+    "lint": "beemo create-config prettier && yarn run eslint",
     "prettier": "beemo prettier \"./{src,test}/**/*.{js,jsx,json,md}\"",
-    "prepublish": "npm run build",
+    "prepublish": "yarn run build",
     "test": "jest --colors --verbose --coverage"
   },
   "repository": "https://github.com/williaster/data-ui.git",
@@ -53,7 +53,7 @@
     "react": "^15.0.0-0 || ^16.0.0-0"
   },
   "dependencies": {
-    "@babel/polyfill": "^7.0.0",
+    "@babel/runtime": "^7.1.5",
     "@data-ui/forms": "^0.0.69",
     "@data-ui/radial-chart": "^0.0.69",
     "@data-ui/theme": "^0.0.69",
