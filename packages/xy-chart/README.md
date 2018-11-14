@@ -473,5 +473,5 @@ See the storybook for example usage!
 
 ```
 npm install
-npm run dev # or 'build'
+yarn run dev # or 'build'
 ```

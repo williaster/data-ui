@@ -225,5 +225,5 @@ export const themeShape = PropTypes.shape({
 ## Development
 ```
 npm install
-npm run dev # or 'build'
+yarn run dev # or 'build'
 ```

@@ -6,11 +6,11 @@
     "gh-pages:clean": "rm -rf _gh-pages && lerna run dev:nowatch",
     "gh-pages:build": "build-storybook -o _gh-pages -c ./storybook-config -s ../../assets/",
     "gh-pages:publish": "git-directory-deploy --directory _gh-pages",
-    "gh-pages": "npm run gh-pages:clean && npm run gh-pages:build && npm run gh-pages:publish && npm run gh-pages:clean",
+    "gh-pages": "yarn run gh-pages:clean && yarn run gh-pages:build && yarn run gh-pages:publish && yarn run gh-pages:clean",
     "dev": "start-storybook -p 9001 -c ./storybook-config -s ../../assets/",
     "test": "echo no tests in @data-ui/demo",
     "eslint": "beemo eslint \"./examples/**/*.{js,jsx,json,md}\" --fix",
-    "lint": "beemo create-config prettier && npm run eslint",
+    "lint": "beemo create-config prettier && yarn run eslint",
     "prettier": "beemo prettier \"./examples/**/*.{js,jsx,json,md}\""
   },
   "repository": "https://github.com/williaster/data-ui.git",
