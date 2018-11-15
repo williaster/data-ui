@@ -1,4 +1,6 @@
 # Changelog
+- [v0.0.71](#v0071)
+- [v0.0.70](#v0070)
 - [v0.0.69](#v0069)
 - [v0.0.67](#v0067)
 - [v0.0.66](#v0066)
@@ -21,6 +23,30 @@
 - [v0.0.49](#v0049)
 - [v0.0.48](#v0048)
 - [v0.0.47](#v0047)
+
+## v0.0.71
+
+🐛 Bug Fix
+- [xy-chart][areadifference] pass margin to AreaSeries [#150](https://github.com/williaster/data-ui/pull/150)
+
+## v0.0.70
+
+🏆 Enhancements
+- [xy-chart] add `renderLabel` support to `<BarSeries />` [#147](https://github.com/williaster/data-ui/pull/147)
+- [xy-chart] export `@vx/text` `Text` component [#147](https://github.com/williaster/data-ui/pull/147)
+- [xy-chart][grid] add x/yGridValues [#146](https://github.com/williaster/data-ui/pull/146)
+
+🐛 Bug Fix
+- [xy-chart] fix top/left tooltip offset [#140](https://github.com/williaster/data-ui/pull/140)
+- [xy-chart][grid] bump @vx/grid to fix band-scale bug [#146](https://github.com/williaster/data-ui/pull/146)
+
+📜Documentation
+- [xy-chart] fix typo in readme.md [#142](https://github.com/williaster/data-ui/pull/142)
+- [xy-chart] document new features [#147](https://github.com/williaster/data-ui/pull/147) and [#146](https://github.com/williaster/data-ui/pull/146)
+
+🏠 Internal
+- use yarn [#149](https://github.com/williaster/data-ui/pull/149)
+- babel 7 upgrade [#141](https://github.com/williaster/data-ui/pull/141) and [#148](https://github.com/williaster/data-ui/pull/148)
 
 ## v0.0.69
 
