@@ -5,23 +5,26 @@ A collection of custom + wrapped components for data-rich (desktop) UIs. Super b
   <a title="build status" href="https://travis-ci.org/williaster/data-ui.svg?branch=master">
     <img src="https://travis-ci.org/williaster/data-ui.svg?branch=master" />
   </a>
-  <a href='https://coveralls.io/github/williaster/data-ui?branch=master'>
-    <img src='https://coveralls.io/repos/github/williaster/data-ui/badge.svg?branch=master' alt='Coverage Status' />
+  <a href="http://codecov.io/github/mirumee/saleor?branch=master">
+    <img src="http://codecov.io/github/williaster/data-ui/coverage.svg?branch=master" alt="Codecov" />
   </a>
 </p>
 
 demo at [williaster.github.io/data-ui](https://williaster.github.io/data-ui) :chart_with_upwards_trend:
 
 ## Packages
-- [@data-ui/xy-chart](https://github.com/williaster/data-ui/tree/master/packages/xy-chart) [![Version](https://img.shields.io/npm/v/@data-ui/xy-chart.svg?style=flat)](https://img.shields.io/npm/v/@data-ui/xy-chart.svg?style=flat)
-- [@data-ui/histogram](https://github.com/williaster/data-ui/tree/master/packages/histogram) [![Version](https://img.shields.io/npm/v/@data-ui/histogram.svg?style=flat)](https://img.shields.io/npm/v/@data-ui/histogram.svg?style=flat)
-- [@data-ui/sparkline](https://github.com/williaster/data-ui/tree/master/packages/sparkline) [![Version](https://img.shields.io/npm/v/@data-ui/sparkline.svg?style=flat)](https://img.shields.io/npm/v/@data-ui/sparkline.svg?style=flat)
-- [@data-ui/network](https://github.com/williaster/data-ui/tree/master/packages/network) [![Version](https://img.shields.io/npm/v/@data-ui/network.svg?style=flat)](https://img.shields.io/npm/v/@data-ui/network.svg?style=flat)
-- [@data-ui/radial-chart](https://github.com/williaster/data-ui/tree/master/packages/radial-chart) [![Version](https://img.shields.io/npm/v/@data-ui/radial-chart.svg?style=flat)](https://img.shields.io/npm/v/@data-ui/radial-chart.svg?style=flat)
-- [@data-ui/event-flow](https://github.com/williaster/data-ui/tree/master/packages/event-flow) [![Version](https://img.shields.io/npm/v/@data-ui/event-flow.svg?style=flat)](https://img.shields.io/npm/v/@data-ui/event-flow.svg?style=flat)
-- [@data-ui/data-table](https://github.com/williaster/data-ui/tree/master/packages/data-table) [![Version](https://img.shields.io/npm/v/@data-ui/data-table.svg?style=flat)](https://img.shields.io/npm/v/@data-ui/data-table.svg?style=flat)
-- [@data-ui/theme](https://github.com/williaster/data-ui/tree/master/packages/data-ui-theme) [![Version](https://img.shields.io/npm/v/@data-ui/theme.svg?style=flat)](https://img.shields.io/npm/v/@data-ui/theme.svg?style=flat)
-- [@data-ui/demo](https://github.com/williaster/data-ui/tree/master/packages/demo)
+
+| Package | Version |
+|--|--|
+| [@data-ui/xy-chart](https://github.com/williaster/data-ui/tree/master/packages/xy-chart) | [![Version](https://img.shields.io/npm/v/@data-ui/xy-chart.svg?style=flat)](https://img.shields.io/npm/v/@data-ui/xy-chart.svg?style=flat) |
+| [@data-ui/histogram](https://github.com/williaster/data-ui/tree/master/packages/histogram) | [![Version](https://img.shields.io/npm/v/@data-ui/histogram.svg?style=flat)](https://img.shields.io/npm/v/@data-ui/histogram.svg?style=flat) |
+| [@data-ui/sparkline](https://github.com/williaster/data-ui/tree/master/packages/sparkline) | [![Version](https://img.shields.io/npm/v/@data-ui/sparkline.svg?style=flat)](https://img.shields.io/npm/v/@data-ui/sparkline.svg?style=flat) |
+| [@data-ui/network](https://github.com/williaster/data-ui/tree/master/packages/network) | [![Version](https://img.shields.io/npm/v/@data-ui/network.svg?style=flat)](https://img.shields.io/npm/v/@data-ui/network.svg?style=flat) |
+| [@data-ui/radial-chart](https://github.com/williaster/data-ui/tree/master/packages/radial-chart) | [![Version](https://img.shields.io/npm/v/@data-ui/radial-chart.svg?style=flat)](https://img.shields.io/npm/v/@data-ui/radial-chart.svg?style=flat) |
+| [@data-ui/event-flow](https://github.com/williaster/data-ui/tree/master/packages/event-flow) | [![Version](https://img.shields.io/npm/v/@data-ui/event-flow.svg?style=flat)](https://img.shields.io/npm/v/@data-ui/event-flow.svg?style=flat) |
+| [@data-ui/data-table](https://github.com/williaster/data-ui/tree/master/packages/data-table) | [![Version](https://img.shields.io/npm/v/@data-ui/data-table.svg?style=flat)](https://img.shields.io/npm/v/@data-ui/data-table.svg?style=flat) |
+| [@data-ui/theme](https://github.com/williaster/data-ui/tree/master/packages/data-ui-theme) | [![Version](https://img.shields.io/npm/v/@data-ui/theme.svg?style=flat)](https://img.shields.io/npm/v/@data-ui/theme.svg?style=flat) |
+| [@data-ui/demo](https://github.com/williaster/data-ui/tree/master/packages/demo) | -- |
 
 More coming.
 
