@@ -1,6 +1,6 @@
 {
   "name": "@data-ui/shared",
-  "version": "0.0.71",
+  "version": "0.0.72",
   "description": "Shared @data-ui components used across multiple packages",
   "sideEffects": false,
   "main": "lib/index.js",
@@ -50,7 +50,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.1.5",
-    "@data-ui/theme": "^0.0.71",
+    "@data-ui/theme": "^0.0.72",
     "@vx/event": "^0.0.165",
     "@vx/group": "^0.0.165",
     "@vx/shape": "^0.0.168",
