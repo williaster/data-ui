@@ -25,3 +25,7 @@ _gh-pages/
 .eslintrc.js
 .prettierignore
 prettier.config.js
+
+# Only apps should have lock files
+package-lock.json
+yarn.lock
