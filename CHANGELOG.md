@@ -1,4 +1,5 @@
 # Changelog
+- [v0.0.72](#v0072)
 - [v0.0.71](#v0071)
 - [v0.0.70](#v0070)
 - [v0.0.69](#v0069)
@@ -23,6 +24,12 @@
 - [v0.0.49](#v0049)
 - [v0.0.48](#v0048)
 - [v0.0.47](#v0047)
+
+## v0.0.72
+🐛 Bug Fix
+- [build] .gitignore lock files per-package [#153](https://github.com/williaster/data-ui/pull/153) closes [#151](https://github.com/williaster/data-ui/issues/151)
+- [theme] `babel-runtime@6` => `@babel/runtime@7`[#152](https://github.com/williaster/data-ui/pull/152)
+
 
 ## v0.0.71
 
