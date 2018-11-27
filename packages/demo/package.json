@@ -23,7 +23,6 @@
   "license": "MIT",
   "homepage": "https://github.com/williaster/data-ui#readme",
   "devDependencies": {
-    "@babel/runtime": "^7.1.2",
     "@data-ui/build-config": "^0.0.28",
     "@data-ui/data-table": "^0.0.72",
     "@data-ui/event-flow": "^0.0.72",

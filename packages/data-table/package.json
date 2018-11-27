@@ -31,7 +31,6 @@
   "license": "MIT",
   "homepage": "https://github.com/williaster/data-ui#readme",
   "dependencies": {
-    "@babel/runtime": "^7.1.2",
     "immutable": "^3.8.1",
     "prop-types": "^15.5.10",
     "react-virtualized": "^9.7.3"
