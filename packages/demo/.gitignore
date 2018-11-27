@@ -27,4 +27,7 @@ _gh-pages/
 .prettierignore
 jest.config.js
 prettier.config.js
-# @TODO webpack.config.js when this driver is added
+
+# Only apps should have lock files
+package-lock.json
+yarn.lock
