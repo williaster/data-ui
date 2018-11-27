@@ -30,10 +30,9 @@
   "license": "MIT",
   "homepage": "https://github.com/williaster/data-ui#readme",
   "dependencies": {
-    "babel-runtime": "^6.26.0"
+    "@babel/runtime": "^7.1.2"
   },
   "devDependencies": {
-    "@babel/runtime": "^7.1.2",
     "@data-ui/build-config": "^0.0.28"
   },
   "beemo": {
