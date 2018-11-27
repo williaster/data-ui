@@ -29,9 +29,6 @@
   "author": "Chris Williams @williaster",
   "license": "MIT",
   "homepage": "https://github.com/williaster/data-ui#readme",
-  "dependencies": {
-    "@babel/runtime": "^7.1.2"
-  },
   "devDependencies": {
     "@data-ui/build-config": "^0.0.28"
   },
