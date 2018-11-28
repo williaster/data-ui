@@ -22,9 +22,8 @@
   "author": "Chris Williams <chris.williams@airbnb.com>",
   "license": "MIT",
   "dependencies": {
-    "@babel/plugin-transform-runtime": "^7.1.0",
     "prop-types": "^15.5.10",
-    "react-select": "^1.0.0-rc.5"
+    "react-select": "^1.2.1"
   },
   "devDependencies": {
     "@babel/core": "^7.1.2",
