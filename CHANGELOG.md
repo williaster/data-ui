@@ -1,4 +1,6 @@
 # Changelog
+- [v0.0.74](#v0074)
+- [v0.0.73](#v0073)
 - [v0.0.72](#v0072)
 - [v0.0.71](#v0071)
 - [v0.0.70](#v0070)
@@ -24,6 +26,17 @@
 - [v0.0.49](#v0049)
 - [v0.0.48](#v0048)
 - [v0.0.47](#v0047)
+
+
+## v0.0.74
+🐛 Bug Fix
+- [babel] for all packages (except `@data-ui/event-flow`) let consumers polyfill [#155](https://github.com/williaster/data-ui/pull/155) (fixes `0.0.73` which requires consumers to install `core-js`)
+
+
+## v0.0.73
+🏠 Internal
+- [build] remove @babel/runtime dep [#155](https://github.com/williaster/data-ui/pull/155)
+
 
 ## v0.0.72
 🐛 Bug Fix
