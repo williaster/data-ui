@@ -35,7 +35,7 @@
 
 ## v0.0.73
 🏠 Internal
-- [build] remove @babel/runtime dep [#155](https://github.com/williaster/data-ui/pull/155)
+- [build] remove @babel/runtime dep [#154](https://github.com/williaster/data-ui/pull/154)
 
 
 ## v0.0.72
