@@ -1,16 +1,5 @@
 module.exports = {
-  plugins: [
-    '@babel/plugin-proposal-export-default-from',
-    [
-      '@babel/plugin-transform-runtime',
-      {
-        helpers: true,
-        regenerator: false,
-        useESModules: true,
-      },
-    ],
-    'inline-react-svg',
-  ],
+  plugins: ['@babel/plugin-proposal-export-default-from', 'inline-react-svg'],
   presets: [
     [
       '@babel/preset-env',
@@ -21,7 +10,6 @@ module.exports = {
         targets: {
           ie: 10,
         },
-        useBuiltIns: 'usage',
       },
     ],
     '@babel/preset-react',

@@ -396,7 +396,7 @@ export default class Brush extends React.Component {
           end &&
           Object.keys(handles)
             .filter(handleKey => resizeTriggerAreaSet.has(handleKey))
-            .map((handleKey, i) => {
+            .map(handleKey => {
               const handle = handles[handleKey];
 
               return (
@@ -417,7 +417,7 @@ export default class Brush extends React.Component {
           end &&
           Object.keys(corners)
             .filter(cornerKey => resizeTriggerAreaSet.has(cornerKey))
-            .map((cornerKey, i) => {
+            .map(cornerKey => {
               const corner = corners[cornerKey];
 
               return (

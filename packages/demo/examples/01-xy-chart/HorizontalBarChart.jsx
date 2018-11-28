@@ -3,14 +3,11 @@ import React from 'react';
 import { timeParse, timeFormat } from 'd3-time-format';
 
 import { CrossHair, XAxis, YAxis, BarSeries, PatternLines, Brush, Text } from '@data-ui/xy-chart';
-import { svgLabel } from '@data-ui/theme';
 import { allColors } from '@data-ui/theme/lib/color';
 import { xTickStyles, yTickStyles } from '@data-ui/theme/lib/chartTheme';
 import ResponsiveXYChart from './ResponsiveXYChart';
 
 import { timeSeriesData } from './data';
-
-const { baseLabel } = svgLabel;
 
 export const parseDate = timeParse('%Y%m%d');
 export const formatDate = timeFormat('%b %d');
