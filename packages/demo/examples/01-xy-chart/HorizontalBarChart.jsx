@@ -10,8 +10,6 @@ import ResponsiveXYChart from './ResponsiveXYChart';
 
 import { timeSeriesData } from './data';
 
-const { baseLabel } = svgLabel;
-
 export const parseDate = timeParse('%Y%m%d');
 export const formatDate = timeFormat('%b %d');
 export const formatYear = timeFormat('%Y');
