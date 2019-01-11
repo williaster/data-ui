@@ -64,4 +64,10 @@ describe('computeDomainsFromBins', () => {
     const categorical = computeDomainsFromBins({ ...categoricalProps, valueKey: 'cumulative' });
     expect(categorical.valueDomain).toEqual(expect.arrayContaining([0, 35]));
   });
+
+  it('should maintain bin values ordering', () => {
+    const binValues = ['b', 'a', 'c']
+    const categorical = computeDomainsFromBins({ ...categoricalProps, binValues: binValues })
+    expect(categorical.binDomain).toEqual(binValues)
+  });
 });
