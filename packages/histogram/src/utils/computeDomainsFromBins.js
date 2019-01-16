@@ -4,7 +4,7 @@ import caseInsensitiveSort from './caseInsensitiveSort';
 /*
  * Computes the bin and value domains from numeric or categorical bins
  */
-export default function computeDomainsFromBins({ binsByIndex, binType, valueKey }) {
+export default function computeDomainsFromBins({ binsByIndex, binType, valueKey, binValues }) {
   let binDomain;
   let valueDomain;
 
@@ -30,6 +30,19 @@ export default function computeDomainsFromBins({ binsByIndex, binType, valueKey 
       });
     }
   });
+
+  if (Array.isArray(binValues)) {
+    let providedBinsCoverDomain = true;
+    binValues.forEach(binValue => {
+      if (!(binValue in binDomain)) {
+        providedBinsCoverDomain = false
+      }
+    })
+
+    if (providedBinsCoverDomain) {
+      binDomain = binValues
+    }
+  }
 
   if (!Array.isArray(binDomain)) {
     binDomain = Object.keys(binDomain).sort(caseInsensitiveSort);
