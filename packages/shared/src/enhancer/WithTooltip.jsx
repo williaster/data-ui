@@ -24,6 +24,7 @@ export const propTypes = {
   styles: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number])),
   TooltipComponent: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
   tooltipProps: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+  tooltipTimeout: PropTypes.number,
 };
 
 const defaultProps = {

@@ -37,6 +37,7 @@ const defaultProps = {
   defaultLabelProps,
   fill: themeColors.default,
   fillOpacity: null,
+  // eslint-disable-next-line react/prop-types
   renderLabel: ({ datum, labelProps }) =>
     datum.label ? <Text {...labelProps}>{datum.label}</Text> : null,
   stroke: '#FFFFFF',
