@@ -35,12 +35,12 @@ export default function computeDomainsFromBins({ binsByIndex, binType, valueKey,
     let providedBinsCoverDomain = true;
     binValues.forEach(binValue => {
       if (!(binValue in binDomain)) {
-        providedBinsCoverDomain = false
+        providedBinsCoverDomain = false;
       }
-    })
+    });
 
     if (providedBinsCoverDomain) {
-      binDomain = binValues
+      binDomain = binValues;
     }
   }
 

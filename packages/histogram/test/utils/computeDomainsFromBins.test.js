@@ -66,8 +66,8 @@ describe('computeDomainsFromBins', () => {
   });
 
   it('should maintain bin values ordering', () => {
-    const binValues = ['b', 'a', 'c']
-    const categorical = computeDomainsFromBins({ ...categoricalProps, binValues: binValues })
-    expect(categorical.binDomain).toEqual(binValues)
+    const binValues = ['b', 'a', 'c'];
+    const categorical = computeDomainsFromBins({ ...categoricalProps, binValues });
+    expect(categorical.binDomain).toEqual(binValues);
   });
 });

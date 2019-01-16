@@ -41,6 +41,7 @@ export const defaultLabelProps = {
 
 export const defaultProps = {
   defaultLabelProps,
+  // eslint-disable-next-line react/prop-types
   renderLabel: ({ datum, labelProps }) =>
     datum.label ? <Text {...labelProps}>{datum.label}</Text> : null,
   pointComponent: GlyphDotComponent,
