@@ -1,4 +1,5 @@
 # Changelog
+- [v0.0.75](#v0075)
 - [v0.0.74](#v0074)
 - [v0.0.73](#v0073)
 - [v0.0.72](#v0072)
@@ -27,6 +28,16 @@
 - [v0.0.48](#v0048)
 - [v0.0.47](#v0047)
 
+
+## v0.0.75
+🏆 Enhancements
+
+[histogram]
+- @maxburke allow user to pass in desired bin values [#159](https://github.com/williaster/data-ui/pull/159)
+
+🐛 Bug Fix
+[shared, xy-chart]
+- fix lint errors from build [#161](https://github.com/williaster/data-ui/pull/161)
 
 ## v0.0.74
 🐛 Bug Fix
