@@ -53,7 +53,8 @@
     "eslint": {
       "rules": {
         "complexity": "off",
-        "sort-keys": "off"
+        "sort-keys": "off",
+        "compat/compat": "warn"
       }
     },
     "jest": {
