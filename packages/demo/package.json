@@ -1,74 +1,95 @@
 {
-	"name": "@data-ui/demo",
-	"version": "0.0.75",
-	"description": "data-ui demo",
-	"repository": "https://github.com/williaster/data-ui.git",
-	"keywords": [
-		"demo",
-		"examples",
-		"storybook"
-	],
-	"author": "Chris Williams <chris.williams@airbnb.com>",
-	"license": "MIT",
-	"homepage": "https://github.com/williaster/data-ui#readme",
-	"devDependencies": {
-		"@data-ui/build-config": "^0.0.40",
-		"@storybook/addon-options": "^3.1.6",
-		"@storybook/react": "3.2.12",
-		"@vx/legend": "^0.0.167",
-		"@vx/mock-data": "^0.0.165",
-		"@vx/responsive": "^0.0.165",
-		"@vx/scale": "^0.0.165",
-		"@vx/text": "^0.0.165",
-		"aphrodite": "^1.2.0",
-		"babel-core": "^6.24.1",
-		"babel-loader": "^7.1.1",
-		"babel-plugin-syntax-jsx": "^6.18.0",
-		"babel-preset-airbnb": "^2.2.3",
-		"css-loader": "^0.28.4",
-		"d3-array": "^1.2.0",
-		"d3-force": "^1.1.0",
-		"d3-random": "^1.1.0",
-		"d3-time-format": "^2.0.5",
-		"git-directory-deploy": "^1.5.1",
-		"glob": "^7.1.1",
-		"immutable": "^3.8.1",
-		"marked": "^0.3.6",
-		"prismjs": "^1.6.0",
-		"prop-types": "^15.5.10",
-		"raw-loader": "^0.5.1",
-		"react": "^16.0.0",
-		"react-dom": "^16.0.0",
-		"react-ga": "^2.2.0",
-		"react-remarkable": "^1.1.1",
-		"react-with-styles": "^1.3.0",
-		"react-with-styles-interface-aphrodite": "^1.2.0",
-		"recompose": "^0.26.0",
-		"style-loader": "^0.18.2"
-	},
-	"peerDependencies": {
-		"aphrodite": "^1.2.0",
-		"react": "^15.0.0-0 || ^16.0.0-0"
-	},
-	"private": true,
-	"beemo": {
-		"module": "@data-ui/build-config",
-		"drivers": [
-			"prettier",
-			"eslint"
-		],
-		"eslint": {
-			"rules": {
-				"sort-keys": "off",
-				"complexity": "off",
-				"react/jsx-no-literals": "off",
-				"jsx-a11y/label-has-for": "off",
-				"jsx-a11y/label-has-associated-control": "off",
-				"no-magic-numbers": "off",
-				"import/no-extraneous-dependencies": "off",
-				"react/forbid-prop-types": "off",
-				"react/destructuring-assignment": "off"
-			}
-		}
-	}
+  "name": "@data-ui/demo",
+  "version": "0.0.75",
+  "description": "data-ui demo",
+  "scripts": {
+    "gh-pages:clean": "rm -rf _gh-pages && lerna run dev:nowatch",
+    "gh-pages:build": "build-storybook -o _gh-pages -c ./storybook-config -s ../../assets/",
+    "gh-pages:publish": "git-directory-deploy --directory _gh-pages",
+    "gh-pages": "yarn run gh-pages:clean && yarn run gh-pages:build && yarn run gh-pages:publish && yarn run gh-pages:clean",
+    "dev": "start-storybook -p 9001 -c ./storybook-config -s ../../assets/",
+    "test": "echo no tests in @data-ui/demo",
+    "eslint": "beemo eslint \"./examples/**/*.{js,jsx,json,md}\" --fix",
+    "lint": "beemo create-config prettier && yarn run eslint",
+    "prettier": "beemo prettier \"./examples/**/*.{js,jsx,json,md}\""
+  },
+  "repository": "https://github.com/williaster/data-ui.git",
+  "keywords": [
+    "demo",
+    "examples",
+    "storybook"
+  ],
+  "author": "Chris Williams <chris.williams@airbnb.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/williaster/data-ui#readme",
+  "devDependencies": {
+    "@data-ui/build-config": "^0.0.40",
+    "@data-ui/data-table": "^0.0.75",
+    "@data-ui/event-flow": "^0.0.75",
+    "@data-ui/forms": "^0.0.75",
+    "@data-ui/histogram": "^0.0.75",
+    "@data-ui/network": "^0.0.75",
+    "@data-ui/radial-chart": "^0.0.75",
+    "@data-ui/shared": "^0.0.75",
+    "@data-ui/sparkline": "^0.0.75",
+    "@data-ui/theme": "^0.0.75",
+    "@data-ui/xy-chart": "^0.0.75",
+    "@storybook/addon-options": "^3.1.6",
+    "@storybook/react": "3.2.12",
+    "@vx/legend": "^0.0.167",
+    "@vx/mock-data": "^0.0.165",
+    "@vx/responsive": "^0.0.165",
+    "@vx/scale": "^0.0.165",
+    "@vx/text": "^0.0.165",
+    "aphrodite": "^1.2.0",
+    "babel-core": "^6.24.1",
+    "babel-loader": "^7.1.1",
+    "babel-plugin-syntax-jsx": "^6.18.0",
+    "babel-preset-airbnb": "^2.2.3",
+    "css-loader": "^0.28.4",
+    "d3-array": "^1.2.0",
+    "d3-force": "^1.1.0",
+    "d3-random": "^1.1.0",
+    "d3-time-format": "^2.0.5",
+    "git-directory-deploy": "^1.5.1",
+    "glob": "^7.1.1",
+    "immutable": "^3.8.1",
+    "marked": "^0.3.6",
+    "prismjs": "^1.6.0",
+    "prop-types": "^15.5.10",
+    "raw-loader": "^0.5.1",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0",
+    "react-ga": "^2.2.0",
+    "react-remarkable": "^1.1.1",
+    "react-with-styles": "^1.3.0",
+    "react-with-styles-interface-aphrodite": "^1.2.0",
+    "recompose": "^0.26.0",
+    "style-loader": "^0.18.2"
+  },
+  "peerDependencies": {
+    "aphrodite": "^1.2.0",
+    "react": "^15.0.0-0 || ^16.0.0-0"
+  },
+  "private": true,
+  "beemo": {
+    "module": "@data-ui/build-config",
+    "drivers": [
+      "prettier",
+      "eslint"
+    ],
+    "eslint": {
+      "rules": {
+        "sort-keys": "off",
+        "complexity": "off",
+        "react/jsx-no-literals": "off",
+        "jsx-a11y/label-has-for": "off",
+        "jsx-a11y/label-has-associated-control": "off",
+        "no-magic-numbers": "off",
+        "import/no-extraneous-dependencies": "off",
+        "react/forbid-prop-types": "off",
+        "react/destructuring-assignment": "off"
+      }
+    }
+  }
 }
