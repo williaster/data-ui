@@ -36,7 +36,7 @@
     "react-virtualized": "^9.7.3"
   },
   "devDependencies": {
-    "@data-ui/build-config": "^0.0.37",
+    "@data-ui/build-config": "^0.0.40",
     "react": "^16.0.0"
   },
   "peerDependencies": {
@@ -53,7 +53,8 @@
     "eslint": {
       "rules": {
         "complexity": "off",
-        "sort-keys": "off"
+        "sort-keys": "off",
+        "compat/compat": "warn"
       }
     },
     "jest": {

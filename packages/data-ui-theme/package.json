@@ -30,7 +30,7 @@
   "license": "MIT",
   "homepage": "https://github.com/williaster/data-ui#readme",
   "devDependencies": {
-    "@data-ui/build-config": "^0.0.37"
+    "@data-ui/build-config": "^0.0.40"
   },
   "beemo": {
     "module": "@data-ui/build-config",

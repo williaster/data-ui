@@ -23,7 +23,7 @@
   "license": "MIT",
   "homepage": "https://github.com/williaster/data-ui#readme",
   "devDependencies": {
-    "@data-ui/build-config": "^0.0.37",
+    "@data-ui/build-config": "^0.0.40",
     "@data-ui/data-table": "^0.0.75",
     "@data-ui/event-flow": "^0.0.75",
     "@data-ui/forms": "^0.0.75",
