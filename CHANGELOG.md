@@ -1,4 +1,5 @@
 # Changelog
+- [v0.0.76](#v0076)
 - [v0.0.75](#v0075)
 - [v0.0.74](#v0074)
 - [v0.0.73](#v0073)
@@ -27,6 +28,14 @@
 - [v0.0.49](#v0049)
 - [v0.0.48](#v0048)
 - [v0.0.47](#v0047)
+
+## v0.0.76
+🏆 Enhancements
+[xy-chart]
+- @kristw add `labelOffset` to `XAxis` props [#169](https://github.com/williaster/data-ui/pull/169)
+
+🏠 Internal
+- [build] @williaster build + lint fixes [#161](https://github.com/williaster/data-ui/pull/161), [#163](https://github.com/williaster/data-ui/pull/163), [#166](https://github.com/williaster/data-ui/pull/166), [#170](https://github.com/williaster/data-ui/pull/170)
 
 
 ## v0.0.75
