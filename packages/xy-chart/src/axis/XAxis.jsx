@@ -8,6 +8,7 @@ const propTypes = {
   axisStyles: axisStylesShape,
   hideZero: PropTypes.bool,
   label: PropTypes.string,
+  labelOffset: PropTypes.number,
   labelProps: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.number, PropTypes.string])),
   numTicks: PropTypes.number,
   orientation: PropTypes.oneOf(['bottom', 'top']),
@@ -31,6 +32,7 @@ const defaultProps = {
   hideZero: false,
   innerHeight: null,
   label: null,
+  labelOffset: 14,
   labelProps: null,
   numTicks: null,
   orientation: 'bottom',
@@ -50,6 +52,7 @@ export default class XAxis extends React.PureComponent {
       innerHeight,
       hideZero,
       label,
+      labelOffset,
       labelProps,
       numTicks,
       orientation,
@@ -80,6 +83,7 @@ export default class XAxis extends React.PureComponent {
         hideTicks={numTicks === 0}
         hideZero={hideZero}
         label={label}
+        labelOffset={labelOffset}
         labelProps={labelProps || (axisStyles.label || {})[orientation]}
         numTicks={numTicks}
         scale={scale}
