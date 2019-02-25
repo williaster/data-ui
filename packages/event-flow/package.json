@@ -94,7 +94,8 @@
         "complexity": "off",
         "no-magic-numbers": "off",
         "react/destructuring-assignment": "off",
-        "sort-keys": "off"
+        "sort-keys": "off",
+        "compat/compat": "warn"
       }
     }
   }
