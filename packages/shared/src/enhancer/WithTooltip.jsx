@@ -62,6 +62,9 @@ class WithTooltip extends React.PureComponent {
   }
 
   handleMouseMove({ event, datum, coords, ...rest }) {
+    if (event.type === 'focus') {
+      return;
+    }
     const { showTooltip } = this.props;
     if (this.tooltipTimeout) {
       clearTimeout(this.tooltipTimeout);
