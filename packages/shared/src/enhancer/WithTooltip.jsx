@@ -62,16 +62,13 @@ class WithTooltip extends React.PureComponent {
   }
 
   handleMouseMove({ event, datum, coords, ...rest }) {
-    if (event && event.type === 'focus') {
-      return;
-    }
     const { showTooltip } = this.props;
     if (this.tooltipTimeout) {
       clearTimeout(this.tooltipTimeout);
     }
 
     let tooltipCoords = { x: 0, y: 0 };
-    if (event && event.target && event.target.ownerSVGElement) {
+    if (event && event.target && event.type !== 'focus' && event.target.ownerSVGElement) {
       tooltipCoords = localPoint(event.target.ownerSVGElement, event);
     }
 
