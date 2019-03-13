@@ -55,8 +55,6 @@ export default function binNumericData({
       nextToLastBin && nextToLastBin.x1 === lastBin.x0 && lastBin.x1 === lastBin.x0;
     const filteredBins = shouldCombineEndBins ? seriesBins.slice(0, -1) : seriesBins;
 
-    console.log({ seriesBins, shouldCombineEndBins });
-
     binsByIndex[index] = filteredBins.map((bin, i) => ({
       bin0: bin.x0,
       // if the upper limit equals the lower one, use the delta between this bin and the last
