@@ -38,7 +38,7 @@ export default function binNumericData({
   }
   const scale = scaleLinear()
     .domain(extent)
-    .nice();
+    .nice(binCount);
 
   histogram.domain(limits || scale.domain()).thresholds(binValues || scale.ticks(binCount));
 
@@ -51,7 +51,8 @@ export default function binNumericData({
     const lastBinIndex = seriesBins.length - 1;
     const lastBin = seriesBins[lastBinIndex];
     const nextToLastBin = seriesBins[lastBinIndex - 1];
-    const shouldCombineEndBins = nextToLastBin.x1 === lastBin.x0 && lastBin.x1 === lastBin.x0;
+    const shouldCombineEndBins =
+      nextToLastBin && nextToLastBin.x1 === lastBin.x0 && lastBin.x1 === lastBin.x0;
     const filteredBins = shouldCombineEndBins ? seriesBins.slice(0, -1) : seriesBins;
 
     console.log({ seriesBins, shouldCombineEndBins });
@@ -71,11 +72,7 @@ export default function binNumericData({
         bin.length + (shouldCombineEndBins && i === lastBinIndex - 1 ? lastBin.length || 0 : 0),
       id: i.toString(),
     }));
-
-    debugger;
   });
-
-  console.log(binsByIndex);
 
   return binsByIndex;
 }
