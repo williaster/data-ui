@@ -54,6 +54,8 @@ export default function binNumericData({
     const shouldCombineEndBins = nextToLastBin.x1 === lastBin.x0 && lastBin.x1 === lastBin.x0;
     const filteredBins = shouldCombineEndBins ? seriesBins.slice(0, -1) : seriesBins;
 
+    console.log({ seriesBins, shouldCombineEndBins });
+
     binsByIndex[index] = filteredBins.map((bin, i) => ({
       bin0: bin.x0,
       // if the upper limit equals the lower one, use the delta between this bin and the last
@@ -61,12 +63,19 @@ export default function binNumericData({
         bin.x0 === bin.x1
           ? (i > 0 && bin.x0 + bin.x0 - seriesBins[i - 1].x0) || bin.x1 + 1
           : bin.x1,
-      data: bin,
+      data: [...bin].concat(
+        shouldCombineEndBins && (shouldCombineEndBins && i === lastBinIndex - 1 ? lastBin : []),
+      ),
       // if the last bin was inclusive / omitted, add its count to the last bin
-      count: bin.length + (shouldCombineEndBins && i === lastBin - 1 ? lastBin.length || 0 : 0),
+      count:
+        bin.length + (shouldCombineEndBins && i === lastBinIndex - 1 ? lastBin.length || 0 : 0),
       id: i.toString(),
     }));
+
+    debugger;
   });
+
+  console.log(binsByIndex);
 
   return binsByIndex;
 }
