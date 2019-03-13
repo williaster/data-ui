@@ -8,7 +8,7 @@ export default function RenderTooltip({ datum, color }) {
     <div>
       <div>
         <strong style={{ color }}>
-          {typeof bin === 'undefined' ? `${bin0.toFixed(1)} to ${bin1.toFixed(1)}` : bin}
+          {typeof bin === 'undefined' ? `${bin0.toFixed(2)} to ${bin1.toFixed(2)}` : bin}
         </strong>
       </div>
       <br />
