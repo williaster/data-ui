@@ -1,4 +1,5 @@
 # Changelog
+- [v0.0.77](#v0077)
 - [v0.0.76](#v0076)
 - [v0.0.75](#v0075)
 - [v0.0.74](#v0074)
@@ -28,6 +29,12 @@
 - [v0.0.49](#v0049)
 - [v0.0.48](#v0048)
 - [v0.0.47](#v0047)
+
+## v0.0.77
+🐛 Bug Fix
+- [shared] @gnijuohz Fix [#167](https://github.com/williaster/data-ui/issues/167) tab tooltip `TypeError: Value being assigned to SVGPoint.x is not a finite floating-point value` seen in Firefox [#171](https://github.com/williaster/data-ui/pull/171)
+- [histogram] @williaster squash end-inclusive histogram bins [#172](https://github.com/williaster/data-ui/pull/172)
+
 
 ## v0.0.76
 🏆 Enhancements
