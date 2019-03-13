@@ -46,12 +46,11 @@ export default function binNumericData({
     const data = rawDataByIndex[index];
     const seriesBins = histogram.value(valueAccessor)(data);
 
-    // often the last bin is inclusive with the second to last bin, so we may combine them
-    // see https://github.com/d3/d3-array/issues/54#issuecomment-293629278
+    // if the last bin equals the upper bound of the second to last bin, combine them
+    // see https://github.com/d3/d3-array/issues/46#issuecomment-269873644
     const lastBinIndex = seriesBins.length - 1;
     const lastBin = seriesBins[lastBinIndex];
     const nextToLastBin = seriesBins[lastBinIndex - 1];
-    // last bin has same bounds, which equal the upper bound of the next to last bin
     const shouldCombineEndBins = nextToLastBin.x1 === lastBin.x0 && lastBin.x1 === lastBin.x0;
     const filteredBins = shouldCombineEndBins ? seriesBins.slice(0, -1) : seriesBins;
 
