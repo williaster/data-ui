@@ -68,7 +68,7 @@ class WithTooltip extends React.PureComponent {
     }
 
     let tooltipCoords = { x: 0, y: 0 };
-    if (event && event.target && event.target.ownerSVGElement) {
+    if (event && event.target && event.type !== 'focus' && event.target.ownerSVGElement) {
       tooltipCoords = localPoint(event.target.ownerSVGElement, event);
     }
 
