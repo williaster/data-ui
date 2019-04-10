@@ -1,6 +1,6 @@
 {
   "name": "@data-ui/sparkline",
-  "version": "0.0.77",
+  "version": "0.0.78",
   "description": "React + d3 library for creating sparklines",
   "sideEffects": false,
   "main": "lib/index.js",
@@ -51,7 +51,7 @@
     "react-dom": "^15.0.0-0 || ^16.0.0-0"
   },
   "dependencies": {
-    "@data-ui/shared": "^0.0.77",
+    "@data-ui/shared": "^0.0.78",
     "@data-ui/theme": "^0.0.8",
     "@vx/axis": "^0.0.179",
     "@vx/curve": "^0.0.165",
