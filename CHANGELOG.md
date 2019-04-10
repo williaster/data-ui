@@ -1,4 +1,5 @@
 # Changelog
+- [v0.0.78](#v0078)
 - [v0.0.77](#v0077)
 - [v0.0.76](#v0076)
 - [v0.0.75](#v0075)
@@ -29,6 +30,12 @@
 - [v0.0.49](#v0049)
 - [v0.0.48](#v0048)
 - [v0.0.47](#v0047)
+
+
+## v0.0.78
+🐛 Bug Fix
+- [xy-chart] @schillerk Bump `@vx/text` version to fix document sizing issue [#175](https://github.com/williaster/data-ui/pull/175)
+
 
 ## v0.0.77
 🐛 Bug Fix
