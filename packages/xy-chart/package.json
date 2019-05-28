@@ -35,7 +35,7 @@
   "dependencies": {
     "@data-ui/shared": "^0.0.78",
     "@data-ui/theme": "^0.0.78",
-    "@vx/axis": "^0.0.168",
+    "@vx/axis": "^0.0.175",
     "@vx/curve": "^0.0.165",
     "@vx/event": "^0.0.165",
     "@vx/glyph": "^0.0.165",
