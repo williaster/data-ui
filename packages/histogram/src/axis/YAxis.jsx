@@ -53,10 +53,13 @@ export default function YAxis({
   if (!scale) return null;
   const Axis = orientation === 'left' ? AxisLeft : AxisRight;
 
-  const tickLabelProps =
-    passedTickLabelProps || (tickStyles.label && tickStyles.label[orientation])
-      ? () => tickStyles.label[orientation]
-      : undefined;
+  let tickLabelProps = passedTickLabelProps;
+
+  if (!tickLabelProps) {
+    tickLabelProps = tickStyles.label && tickStyles.label[orientation] ? function () {
+      return tickStyles.label[orientation];
+    } : undefined;
+  }
 
   return (
     <Axis
