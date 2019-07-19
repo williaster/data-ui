@@ -52,10 +52,13 @@ export default function XAxis({
 }) {
   if (!scale) return null;
   const Axis = orientation === 'bottom' ? AxisBottom : AxisTop;
-  const tickLabelProps =
-    passedTickLabelProps || (tickStyles.label && tickStyles.label[orientation])
-      ? () => tickStyles.label[orientation]
-      : undefined;
+  let tickLabelProps = passedTickLabelProps;
+  if (!tickLabelProps) {
+    tickLabelProps =
+      tickStyles.label && tickStyles.label[orientation]
+        ? () => tickStyles.label[orientation]
+        : undefined;
+  }
 
   return (
     <Axis
