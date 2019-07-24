@@ -36,6 +36,7 @@ const randomData = n =>
 
 const renderLabel = d => d.toFixed(2);
 
+/* eslint-disable react/prop-types */
 const renderTooltip = (
   { datum }, // eslint-disable-line react/prop-types
 ) => (
@@ -44,6 +45,7 @@ const renderTooltip = (
     <div>{datum.y ? datum.y.toFixed(2) : '--'}</div>
   </div>
 );
+/* eslint-enable react/prop-types */
 
 export default [
   {
