@@ -1,4 +1,5 @@
 # Changelog
+- [v0.0.90](#v0080)
 - [v0.0.79](#v0079)
 - [v0.0.78](#v0078)
 - [v0.0.77](#v0077)
@@ -31,6 +32,11 @@
 - [v0.0.49](#v0049)
 - [v0.0.48](#v0048)
 - [v0.0.47](#v0047)
+
+## v0.0.80
+🐛 Bug Fix
+- [histogram] @mfe5003 Fixes a bug where `tickLabelProps` is not used when passed in either `<XAxis />` or `<YAxis />` [#184](https://github.com/williaster/data-ui/pull/184) closes [#183](https://github.com/williaster/data-ui/pull/183)
+
 
 ## v0.0.79
 🐛 Bug Fix
