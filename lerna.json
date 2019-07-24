@@ -3,7 +3,7 @@
   "packages": [
     "packages/*"
   ],
-  "version": "0.0.79",
+  "version": "0.0.80",
   "command": {
     "bootstrap": {
       "ignore": "build-config",
