@@ -56,9 +56,10 @@ export default function YAxis({
   let tickLabelProps = passedTickLabelProps;
 
   if (!tickLabelProps) {
-    tickLabelProps = tickStyles.label && tickStyles.label[orientation] ? function () {
-      return tickStyles.label[orientation];
-    } : undefined;
+    tickLabelProps =
+      tickStyles.label && tickStyles.label[orientation]
+        ? () => tickStyles.label[orientation]
+        : undefined;
   }
 
   return (
