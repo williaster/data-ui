@@ -28,14 +28,13 @@ const categoryColorScale = multiHueScaleFactory();
 
 const wrapperStyles = { display: 'flex', alignItems: 'center' };
 
+/* eslint-disable react/prop-types */
 const chartProps = {
   ariaLabel: 'This is a radial-chart chart of...',
   margin: { top: 0, left: 0, bottom: 0, right: 0 },
   width,
   height,
-  renderTooltip: (
-    { datum, fraction }, // eslint-disable-line
-  ) => (
+  renderTooltip: ({ datum, fraction }) => (
     <div>
       <div>
         <strong>{datum.label}</strong>
@@ -44,6 +43,7 @@ const chartProps = {
     </div>
   ),
 };
+/* eslint-enable react/prop-types */
 
 const seriesProps = {
   data: browserFractions,
