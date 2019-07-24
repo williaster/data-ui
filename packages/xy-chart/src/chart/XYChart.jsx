@@ -68,7 +68,11 @@ export const propTypes = {
   onClick: PropTypes.func, // expects to be called like func({ event, datum })
   onMouseMove: PropTypes.func, // expects to be called like func({ event, datum })
   onMouseLeave: PropTypes.func, // expects to be called like func({ event, datum })
-  tooltipData: PropTypes.shape({ event: PropTypes.object, datum: PropTypes.object }),
+  tooltipData: PropTypes.shape({
+    event: PropTypes.object,
+    datum: PropTypes.object,
+    series: PropTypes.object,
+  }),
 };
 
 export const defaultProps = {

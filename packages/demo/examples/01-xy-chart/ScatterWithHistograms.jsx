@@ -49,7 +49,7 @@ const marginSideHist = {
   left: marginScatter.top,
 };
 
-// eslint-disable-next-line react/prop-types
+/* eslint-disable react/prop-types */
 function renderTooltip({ datum }) {
   const { x, y, fill: color } = datum;
 
@@ -66,6 +66,7 @@ function renderTooltip({ datum }) {
     </div>
   );
 }
+/* eslint-enable react/prop-types */
 
 const propTypes = {
   parentWidth: PropTypes.number.isRequired,

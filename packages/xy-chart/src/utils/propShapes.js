@@ -62,6 +62,7 @@ export const barSeriesDataShape = PropTypes.arrayOf(
     fill: PropTypes.string,
     stroke: PropTypes.string,
     strokeWidth: PropTypes.number,
+    label: PropTypes.string,
   }),
 );
 
@@ -94,6 +95,7 @@ export const pointSeriesDataShape = PropTypes.arrayOf(
     stroke: PropTypes.string,
     strokeWidth: PropTypes.number,
     strokeDasharray: PropTypes.string,
+    label: PropTypes.string,
   }),
 );
 
