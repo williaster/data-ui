@@ -1,4 +1,5 @@
 # Changelog
+- [v0.0.81](#v0081)
 - [v0.0.80](#v0080)
 - [v0.0.79](#v0079)
 - [v0.0.78](#v0078)
@@ -32,6 +33,11 @@
 - [v0.0.49](#v0049)
 - [v0.0.48](#v0048)
 - [v0.0.47](#v0047)
+
+## v0.0.81
+🐛 Bug Fix
+- [xy-chart] allow rangePadding override in `XAxis` or `YAxis` components [#190](https://github.com/williaster/data-ui/pull/190) closes [#189](https://github.com/williaster/data-ui/pull/190)
+
 
 ## v0.0.80
 🐛 Bug Fix
