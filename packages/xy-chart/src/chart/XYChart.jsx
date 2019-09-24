@@ -367,7 +367,8 @@ class XYChart extends React.PureComponent {
                   labelOffset,
                   numTicks: name === 'XAxis' ? numXTicks : numYTicks,
                   scale: name === 'XAxis' ? xScale : yScale,
-                  rangePadding: name === 'XAxis' ? xScale.offset : null,
+                  rangePadding:
+                    Child.props.rangePadding || (name === 'XAxis' ? xScale.offset : undefined),
                   axisStyles: {
                     ...theme[`${styleKey}AxisStyles`],
                     ...Child.props.axisStyles,
