@@ -23,7 +23,7 @@ example the a `<LineSeries />` passed after a `<BarSeries />` will overlay the l
 same applies to axes.
 
 ```javascript
-import { XYPlot, BarSeries, CrossHair, XAxis, YAxis, LinearGradient } from '@data-ui/xy-chart';
+import { XYChart, BarSeries, CrossHair, XAxis, YAxis, LinearGradient } from '@data-ui/xy-chart';
 
 /// ...
 <XYChart
