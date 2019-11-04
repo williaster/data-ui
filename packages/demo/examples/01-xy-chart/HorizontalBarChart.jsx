@@ -1,14 +1,22 @@
 /* eslint react/prop-types: 0 */
 import React from 'react';
 import { timeParse, timeFormat } from 'd3-time-format';
-
-import { CrossHair, XAxis, YAxis, BarSeries, PatternLines, Brush, Text } from '@data-ui/xy-chart';
+import {
+  CrossHair,
+  XAxis,
+  YAxis,
+  BarSeries,
+  PatternLines,
+  Brush,
+  Text,
+  HorizontalReferenceLine,
+  VerticalReferenceLine,
+} from '@data-ui/xy-chart';
 import { allColors } from '@data-ui/theme/lib/color';
 import { xTickStyles, yTickStyles } from '@data-ui/theme/lib/chartTheme';
 import ResponsiveXYChart from './ResponsiveXYChart';
 
 import { timeSeriesData } from './data';
-import HorizontalReferenceLine from '@data-ui/xy-chart/lib/annotation/HorizontalReferenceLine';
 
 export const parseDate = timeParse('%Y%m%d');
 export const formatDate = timeFormat('%b %d');
@@ -46,7 +54,7 @@ class HorizontalBarChartExample extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      direction: 'vertical',
+      direction: 'horizontal',
       data: categoryHorizontalData,
     };
     this.Brush = React.createRef();
@@ -130,7 +138,7 @@ class HorizontalBarChartExample extends React.PureComponent {
         {this.renderControls()}
         <ResponsiveXYChart
           ariaLabel="Required label"
-          eventTrigger="container"
+          eventTrigger="series"
           xScale={horizontal ? valueScale : categoryScale}
           yScale={horizontal ? categoryScale : valueScale}
           margin={{ left: 100, top: 64, bottom: 64 }}
@@ -165,6 +173,7 @@ class HorizontalBarChartExample extends React.PureComponent {
             data={data.map((d, i) =>
               i % 4 === 0 ? { ...d, [horizontal ? 'x' : 'y']: -d[horizontal ? 'x' : 'y'] } : d,
             )}
+            disableMouseEvents={horizontal} // bug with these tooltips
             renderLabel={({ datum, labelProps, index: i }) =>
               datum.label ? (
                 <Text
@@ -177,7 +186,11 @@ class HorizontalBarChartExample extends React.PureComponent {
               ) : null
             }
           />
-          <HorizontalReferenceLine reference={0} />
+          {horizontal ? (
+            <VerticalReferenceLine reference={0} />
+          ) : (
+            <HorizontalReferenceLine reference={0} />
+          )}
           <CrossHair
             showVerticalLine
             showHorizontalLine={false}
