@@ -1,6 +1,6 @@
 {
   "name": "@data-ui/data-table",
-  "version": "0.0.81",
+  "version": "0.0.82",
   "description": "Table components that can handle a lot of data",
   "sideEffects": false,
   "main": "lib/index.js",
