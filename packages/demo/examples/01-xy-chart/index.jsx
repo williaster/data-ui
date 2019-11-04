@@ -98,6 +98,7 @@ export default {
             <BarSeries
               data={timeSeriesData.map((d, i) => ({
                 ...d,
+                y: -d.y,
                 fill: `url(#${i === 2 ? 'lines' : 'gradient'})`,
               }))}
               fill="url(#aqua_lightaqua_gradient)"

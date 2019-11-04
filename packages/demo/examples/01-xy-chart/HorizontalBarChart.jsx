@@ -8,6 +8,7 @@ import { xTickStyles, yTickStyles } from '@data-ui/theme/lib/chartTheme';
 import ResponsiveXYChart from './ResponsiveXYChart';
 
 import { timeSeriesData } from './data';
+import HorizontalReferenceLine from '@data-ui/xy-chart/lib/annotation/HorizontalReferenceLine';
 
 export const parseDate = timeParse('%Y%m%d');
 export const formatDate = timeFormat('%b %d');
@@ -45,7 +46,7 @@ class HorizontalBarChartExample extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      direction: 'horizontal',
+      direction: 'vertical',
       data: categoryHorizontalData,
     };
     this.Brush = React.createRef();
@@ -129,7 +130,7 @@ class HorizontalBarChartExample extends React.PureComponent {
         {this.renderControls()}
         <ResponsiveXYChart
           ariaLabel="Required label"
-          eventTrigger="series"
+          eventTrigger="container"
           xScale={horizontal ? valueScale : categoryScale}
           yScale={horizontal ? categoryScale : valueScale}
           margin={{ left: 100, top: 64, bottom: 64 }}
@@ -161,7 +162,9 @@ class HorizontalBarChartExample extends React.PureComponent {
           <BarSeries
             fill={bar => `url(#${bar.selected ? 'bar_pattern_1' : 'bar_pattern_2'})`}
             horizontal={horizontal}
-            data={data}
+            data={data.map((d, i) =>
+              i % 4 === 0 ? { ...d, [horizontal ? 'x' : 'y']: -d[horizontal ? 'x' : 'y'] } : d,
+            )}
             renderLabel={({ datum, labelProps, index: i }) =>
               datum.label ? (
                 <Text
@@ -174,6 +177,7 @@ class HorizontalBarChartExample extends React.PureComponent {
               ) : null
             }
           />
+          <HorizontalReferenceLine reference={0} />
           <CrossHair
             showVerticalLine
             showHorizontalLine={false}
