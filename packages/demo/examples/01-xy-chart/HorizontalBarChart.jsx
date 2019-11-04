@@ -171,7 +171,7 @@ class HorizontalBarChartExample extends React.PureComponent {
             fill={bar => `url(#${bar.selected ? 'bar_pattern_1' : 'bar_pattern_2'})`}
             horizontal={horizontal}
             data={data.map((d, i) =>
-              i % 4 === 0 ? { ...d, [horizontal ? 'x' : 'y']: -d[horizontal ? 'x' : 'y'] } : d,
+              i % 3 === 0 ? { ...d, [horizontal ? 'x' : 'y']: -d[horizontal ? 'x' : 'y'] } : d,
             )}
             disableMouseEvents={horizontal} // bug with these tooltips
             renderLabel={({ datum, labelProps, index: i }) =>

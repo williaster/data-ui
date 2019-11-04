@@ -76,7 +76,8 @@ export default class BarSeries extends React.PureComponent {
     const valueField = horizontal ? x : y;
     const categoryField = horizontal ? y : x;
 
-    const zeroPosition = valueScale(0);
+    const minValue = Math.min(...valueScale.domain());
+    const minPosition = valueScale(minValue < 0 ? 0 : minValue);
     const categoryOffset = categoryScale.offset || 0;
     const Labels = []; // Labels on top
 
@@ -85,8 +86,8 @@ export default class BarSeries extends React.PureComponent {
         {data.map((d, i) => {
           const barPosition = categoryScale(categoryField(d)) - categoryOffset;
           const barLength = horizontal
-            ? valueScale(valueField(d)) - zeroPosition
-            : valueScale(valueField(d)) - zeroPosition;
+            ? valueScale(valueField(d)) - minPosition
+            : valueScale(valueField(d)) - minPosition;
 
           const color = d.fill || callOrValue(fill, d, i);
           const key = `bar-${barPosition}`;
@@ -98,8 +99,8 @@ export default class BarSeries extends React.PureComponent {
               labelProps: {
                 key,
                 ...labelProps,
-                x: horizontal ? zeroPosition + Math.abs(barLength) : barPosition + barWidth / 2,
-                y: horizontal ? barPosition + barWidth / 2 : zeroPosition + Math.min(0, barLength),
+                x: horizontal ? minPosition + Math.abs(barLength) : barPosition + barWidth / 2,
+                y: horizontal ? barPosition + barWidth / 2 : minPosition + Math.min(0, barLength),
                 dx: horizontal ? '0.5em' : 0,
                 dy: horizontal ? 0 : '-0.74em',
                 textAnchor: horizontal ? 'start' : 'middle',
@@ -125,8 +126,8 @@ export default class BarSeries extends React.PureComponent {
                 }
               >
                 <Bar
-                  x={horizontal ? zeroPosition + Math.min(0, barLength) : barPosition}
-                  y={horizontal ? barPosition : zeroPosition + Math.min(0, barLength)}
+                  x={horizontal ? minPosition + Math.min(0, barLength) : barPosition}
+                  y={horizontal ? barPosition : minPosition + Math.min(0, barLength)}
                   width={horizontal ? Math.abs(barLength) : barWidth}
                   height={horizontal ? barWidth : Math.abs(barLength)}
                   fill={color}
