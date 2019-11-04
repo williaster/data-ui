@@ -76,7 +76,7 @@ describe('<BarSeries />', () => {
           right: 0,
         }}
         yScale={{ type: 'time' }}
-        xScale={{ type: 'linear', includeZero: false }}
+        xScale={{ type: 'linear' }}
       >
         <BarSeries
           data={mockData.map((d, i) => ({
