@@ -76,17 +76,18 @@ export default class BarSeries extends React.PureComponent {
     const valueField = horizontal ? x : y;
     const categoryField = horizontal ? y : x;
 
-    const maxBarLength = Math.max(...valueScale.range());
-    const offset = categoryScale.offset || 0;
+    const minValue = Math.min(...valueScale.domain());
+    const minPosition = valueScale(minValue < 0 ? 0 : minValue);
+    const categoryOffset = categoryScale.offset || 0;
     const Labels = []; // Labels on top
 
     return (
       <Group style={disableMouseEvents ? noEventsStyles : null}>
         {data.map((d, i) => {
-          const barPosition = categoryScale(categoryField(d)) - offset;
+          const barPosition = categoryScale(categoryField(d)) - categoryOffset;
           const barLength = horizontal
-            ? valueScale(valueField(d))
-            : maxBarLength - valueScale(valueField(d));
+            ? valueScale(valueField(d)) - minPosition
+            : valueScale(valueField(d)) - minPosition;
 
           const color = d.fill || callOrValue(fill, d, i);
           const key = `bar-${barPosition}`;
@@ -98,8 +99,8 @@ export default class BarSeries extends React.PureComponent {
               labelProps: {
                 key,
                 ...labelProps,
-                x: horizontal ? barLength : barPosition + barWidth / 2,
-                y: horizontal ? barPosition + barWidth / 2 : maxBarLength - barLength,
+                x: horizontal ? minPosition + Math.abs(barLength) : barPosition + barWidth / 2,
+                y: horizontal ? barPosition + barWidth / 2 : minPosition + Math.min(0, barLength),
                 dx: horizontal ? '0.5em' : 0,
                 dy: horizontal ? 0 : '-0.74em',
                 textAnchor: horizontal ? 'start' : 'middle',
@@ -125,10 +126,10 @@ export default class BarSeries extends React.PureComponent {
                 }
               >
                 <Bar
-                  x={horizontal ? 0 : barPosition}
-                  y={horizontal ? barPosition : maxBarLength - barLength}
-                  width={horizontal ? barLength : barWidth}
-                  height={horizontal ? barWidth : barLength}
+                  x={horizontal ? minPosition + Math.min(0, barLength) : barPosition}
+                  y={horizontal ? barPosition : minPosition + Math.min(0, barLength)}
+                  width={horizontal ? Math.abs(barLength) : barWidth}
+                  height={horizontal ? barWidth : Math.abs(barLength)}
                   fill={color}
                   fillOpacity={d.fillOpacity || callOrValue(fillOpacity, d, i)}
                   stroke={d.stroke || callOrValue(stroke, d, i)}

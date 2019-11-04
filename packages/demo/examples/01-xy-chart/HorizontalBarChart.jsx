@@ -1,8 +1,17 @@
 /* eslint react/prop-types: 0 */
 import React from 'react';
 import { timeParse, timeFormat } from 'd3-time-format';
-
-import { CrossHair, XAxis, YAxis, BarSeries, PatternLines, Brush, Text } from '@data-ui/xy-chart';
+import {
+  CrossHair,
+  XAxis,
+  YAxis,
+  BarSeries,
+  PatternLines,
+  Brush,
+  Text,
+  HorizontalReferenceLine,
+  VerticalReferenceLine,
+} from '@data-ui/xy-chart';
 import { allColors } from '@data-ui/theme/lib/color';
 import { xTickStyles, yTickStyles } from '@data-ui/theme/lib/chartTheme';
 import ResponsiveXYChart from './ResponsiveXYChart';
@@ -161,7 +170,10 @@ class HorizontalBarChartExample extends React.PureComponent {
           <BarSeries
             fill={bar => `url(#${bar.selected ? 'bar_pattern_1' : 'bar_pattern_2'})`}
             horizontal={horizontal}
-            data={data}
+            data={data.map((d, i) =>
+              i % 3 === 0 ? { ...d, [horizontal ? 'x' : 'y']: -d[horizontal ? 'x' : 'y'] } : d,
+            )}
+            disableMouseEvents={horizontal} // bug with these tooltips
             renderLabel={({ datum, labelProps, index: i }) =>
               datum.label ? (
                 <Text
@@ -174,6 +186,11 @@ class HorizontalBarChartExample extends React.PureComponent {
               ) : null
             }
           />
+          {horizontal ? (
+            <VerticalReferenceLine reference={0} />
+          ) : (
+            <HorizontalReferenceLine reference={0} />
+          )}
           <CrossHair
             showVerticalLine
             showHorizontalLine={false}
