@@ -1,4 +1,7 @@
 # Changelog
+- [v0.0.84](#v0084)
+- [v0.0.83](#v0083)
+- [v0.0.82](#v0082)
 - [v0.0.81](#v0081)
 - [v0.0.80](#v0080)
 - [v0.0.79](#v0079)
@@ -34,9 +37,21 @@
 - [v0.0.48](#v0048)
 - [v0.0.47](#v0047)
 
+## v0.0.84
+🐛 Bug Fix
+- [xy-chart] @williaster bump `@vx/text` to the `0.0.192` for bug fixes [#194](https://github.com/williaster/data-ui/pull/194)
+
+## v0.0.83
+🐛 Bug Fix
+- [xy-chart][historgram][network][sparkline] @williaster bump `@vx/responsive` to `0.0.192` for bug fixes [#193](https://github.com/williaster/data-ui/pull/193)
+
+## v0.0.82
+🐛 Bug Fix
+- [xy-chart] @williaster correctly render negative `<BarSeries />` values, add demo [#192](https://github.com/williaster/data-ui/pull/192)
+
 ## v0.0.81
 🐛 Bug Fix
-- [xy-chart] allow rangePadding override in `XAxis` or `YAxis` components [#190](https://github.com/williaster/data-ui/pull/190) closes [#189](https://github.com/williaster/data-ui/pull/190)
+- [xy-chart] @williaster allow rangePadding override in `XAxis` or `YAxis` components [#190](https://github.com/williaster/data-ui/pull/190) closes [#189](https://github.com/williaster/data-ui/pull/190)
 
 
 ## v0.0.80
