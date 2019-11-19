@@ -1,3 +1,3 @@
-import Text from '@vx/text/build/Text';
+import Text from '@vx/text/lib/Text';
 
 export default Text;
