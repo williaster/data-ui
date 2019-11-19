@@ -7,7 +7,8 @@ import withWindowScroller from '../src/enhancers/withWindowScroller';
 import Table from '../src/components/Table';
 
 const TableWithWindowScroller = withWindowScroller(Table);
-const dataList = List([{ str: 'a', num: 5 }, { str: 'c', num: 3 }, { str: 'b', num: 0 }]); // eslint-disable-line babel/new-cap
+// eslint-disable-next-line babel/new-cap
+const dataList = List([{ str: 'a', num: 5 }, { str: 'c', num: 3 }, { str: 'b', num: 0 }]);
 
 describe('withTableAutoSizer()', () => {
   const props = {
