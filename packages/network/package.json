@@ -1,6 +1,6 @@
 {
   "name": "@data-ui/network",
-  "version": "0.0.82",
+  "version": "0.0.83",
   "description": "React + d3 library for creating graph visualizations",
   "sideEffects": false,
   "main": "lib/index.js",
@@ -49,8 +49,8 @@
     "react-dom": "^15.0.0-0 || ^16.0.0-0"
   },
   "dependencies": {
-    "@data-ui/shared": "^0.0.82",
-    "@data-ui/theme": "^0.0.82",
+    "@data-ui/shared": "^0.0.83",
+    "@data-ui/theme": "^0.0.83",
     "@vx/event": "0.0.141",
     "@vx/glyph": "0.0.140",
     "@vx/group": "0.0.140",
