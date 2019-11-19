@@ -1,6 +1,6 @@
 {
   "name": "@data-ui/forms",
-  "version": "0.0.83",
+  "version": "0.0.84",
   "description": "A package of form elements for data-rich UIs. https://williaster.github.io/data-ui",
   "main": "build/index.js",
   "scripts": {
