@@ -1,3 +1,3 @@
-import withScreenSize from '@vx/responsive/build/enhancers/withScreenSize';
+import withScreenSize from '@vx/responsive/lib/enhancers/withScreenSize';
 
 export default withScreenSize;
