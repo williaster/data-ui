@@ -61,7 +61,7 @@
     "@vx/group": "^0.0.170",
     "@vx/pattern": "^0.0.179",
     "@vx/point": "^0.0.165",
-    "@vx/responsive": "^0.0.179",
+    "@vx/responsive": "^0.0.192",
     "@vx/scale": "^0.0.179",
     "@vx/shape": "^0.0.179",
     "@vx/text": "^0.0.179",

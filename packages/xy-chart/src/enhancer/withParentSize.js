@@ -1,3 +1,3 @@
-import withParentSize from '@vx/responsive/build/enhancers/withParentSize';
+import withParentSize from '@vx/responsive/lib/enhancers/withParentSize';
 
 export default withParentSize;

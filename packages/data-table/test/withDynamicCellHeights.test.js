@@ -6,7 +6,8 @@ import Table from '../src/components/Table';
 import withDynamicCellHeights from '../src/enhancers/withDynamicCellHeights';
 
 const TableWithDynamicCellHeights = withDynamicCellHeights(Table);
-const dataList = List([{ a: 'a', b: 'b' }, { a: 'a', z: 'z' }]); // eslint-disable-line babel/new-cap
+// eslint-disable-next-line babel/new-cap
+const dataList = List([{ a: 'a', b: 'b' }, { a: 'a', z: 'z' }]);
 
 describe('withDynamicCellHeights()', () => {
   const props = {

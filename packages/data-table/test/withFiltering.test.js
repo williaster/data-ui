@@ -6,7 +6,8 @@ import withFiltering from '../src/enhancers/withFiltering';
 import Table from '../src/components/Table';
 
 const TableWithFiltering = withFiltering(Table);
-const dataList = List([{ a: 'a', b: 'b' }, { a: 'a', z: 'z' }]); // eslint-disable-line babel/new-cap
+// eslint-disable-next-line babel/new-cap
+const dataList = List([{ a: 'a', b: 'b' }, { a: 'a', z: 'z' }]);
 
 describe('withFiltering()', () => {
   const props = {
