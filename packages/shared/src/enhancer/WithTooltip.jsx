@@ -20,6 +20,8 @@ export const propTypes = {
   children: PropTypes.oneOfType([PropTypes.object, PropTypes.func]).isRequired,
   className: PropTypes.string,
   HoverStyles: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
+  onMouseMove: PropTypes.func,
+  onMouseLeave: PropTypes.func,
   renderTooltip: PropTypes.func,
   styles: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number])),
   TooltipComponent: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
@@ -40,6 +42,8 @@ const defaultProps = {
     `}
     </style>
   ),
+  onMouseMove: null,
+  onMouseLeave: null,
   renderTooltip: null,
   styles: { display: 'inline-block', position: 'relative' },
   TooltipComponent: TooltipWithBounds,
@@ -62,7 +66,7 @@ class WithTooltip extends React.PureComponent {
   }
 
   handleMouseMove({ event, datum, coords, ...rest }) {
-    const { showTooltip } = this.props;
+    const { showTooltip, onMouseMove } = this.props;
     if (this.tooltipTimeout) {
       clearTimeout(this.tooltipTimeout);
     }
@@ -83,13 +87,16 @@ class WithTooltip extends React.PureComponent {
         ...rest,
       },
     });
+
+    if (onMouseMove) onMouseMove({ event, datum, coords, ...rest });
   }
 
   handleMouseLeave() {
-    const { tooltipTimeout, hideTooltip } = this.props;
+    const { tooltipTimeout, hideTooltip, onMouseLeave } = this.props;
     this.tooltipTimeout = setTimeout(() => {
       hideTooltip();
     }, tooltipTimeout);
+    if (onMouseLeave) onMouseLeave();
   }
 
   render() {

@@ -324,6 +324,8 @@ class Network extends React.PureComponent {
       children,
       className,
       height,
+      onMouseLeave,
+      onMouseMove,
       renderLink,
       renderNode,
       renderTooltip,
@@ -335,7 +337,11 @@ class Network extends React.PureComponent {
 
     if (renderTooltip) {
       return (
-        <WithTooltip renderTooltip={renderTooltip}>
+        <WithTooltip
+          renderTooltip={renderTooltip}
+          onMouseLeave={onMouseLeave} // preserve these as WithTooltip will override them
+          onMouseMove={onMouseMove}
+        >
           <Network {...this.props} renderTooltip={null} />
         </WithTooltip>
       );

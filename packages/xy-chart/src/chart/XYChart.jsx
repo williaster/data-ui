@@ -263,10 +263,14 @@ class XYChart extends React.PureComponent {
   }
 
   render() {
-    const { renderTooltip } = this.props;
+    const { renderTooltip, onMouseLeave, onMouseMove } = this.props;
     if (renderTooltip) {
       return (
-        <WithTooltip renderTooltip={renderTooltip}>
+        <WithTooltip
+          renderTooltip={renderTooltip}
+          onMouseLeave={onMouseLeave} // preserve these as WithTooltip will override them
+          onMouseMove={onMouseMove}
+        >
           <XYChart {...this.props} renderTooltip={null} />
         </WithTooltip>
       );
