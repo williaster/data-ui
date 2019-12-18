@@ -65,6 +65,9 @@
     "react": "^15.0.0-0 || ^16.0.0-0",
     "react-dom": "^15.0.0-0 || ^16.0.0-0"
   },
+  "resolutions": {
+    "@beemo/core": "1.0.8"
+  },
   "beemo": {
     "module": "@data-ui/build-config",
     "drivers": [
