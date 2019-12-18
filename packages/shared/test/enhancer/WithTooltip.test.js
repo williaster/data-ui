@@ -73,6 +73,44 @@ describe('<WithTooltip />', () => {
     expect(wrapper.find('#test')).toHaveLength(1);
   });
 
+  it('it should invoke the passed onMouseMove when the provided onMouseMove is invoked', () => {
+    const passedOnMouseMove = jest.fn();
+
+    let providedMouseMove;
+    const wrapper = mount(
+      <WithTooltip renderTooltip={() => null} onMouseMove={passedOnMouseMove}>
+        {({ onMouseMove }) => {
+          providedMouseMove = onMouseMove;
+
+          return <svg />;
+        }}
+      </WithTooltip>,
+    );
+
+    providedMouseMove({});
+    wrapper.update();
+    expect(passedOnMouseMove).toHaveBeenCalledTimes(1);
+  });
+
+  it('it should invoke the passed onMouseLeave when the provided onMouseLeave is invoked', () => {
+    const passedOnMouseLeave = jest.fn();
+
+    let providedMouseLeave;
+    const wrapper = mount(
+      <WithTooltip renderTooltip={() => null} onMouseLeave={passedOnMouseLeave}>
+        {({ onMouseLeave }) => {
+          providedMouseLeave = onMouseLeave;
+
+          return <svg />;
+        }}
+      </WithTooltip>,
+    );
+
+    providedMouseLeave({});
+    wrapper.update();
+    expect(passedOnMouseLeave).toHaveBeenCalledTimes(1);
+  });
+
   it('it should use the provided `coords` if passed to onMouseMove', () => {
     let mouseMove;
     const wrapper = mount(
