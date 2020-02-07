@@ -82,7 +82,7 @@ class App extends React.PureComponent {
     };
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     const nextState = {};
     if (this.props.data !== nextProps.data) {
       const { alignByIndex, alignByEventType } = this.state;

@@ -69,7 +69,7 @@ class StepIncrementer extends React.Component {
     };
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     const { value } = this.state;
     const { value: nextValue } = nextProps;
     if (nextValue !== value) {

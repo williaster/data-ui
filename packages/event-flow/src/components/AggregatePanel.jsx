@@ -75,7 +75,7 @@ class AggregatePanel extends React.PureComponent {
     this.resetZoom();
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (Object.keys(nextProps).some(prop => nextProps[prop] !== this.props[prop])) {
       this.resetZoom(nextProps);
       this.setState({ ...AggregatePanel.clearedState() });

@@ -69,7 +69,7 @@ class Sparkline extends React.PureComponent {
     this.state = this.getStateFromProps(props);
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (
       [
         // recompute scales if any of the following change

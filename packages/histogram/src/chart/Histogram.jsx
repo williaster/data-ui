@@ -63,7 +63,7 @@ class Histogram extends React.PureComponent {
     this.state = this.getStateFromProps(props);
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     let shouldComputeBinsAndScales = false;
     // eslint-disable-next-line react/destructuring-assignment
     if (['width', 'height', 'children'].some(prop => this.props[prop] !== nextProps[prop])) {

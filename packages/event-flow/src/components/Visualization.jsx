@@ -53,7 +53,7 @@ class Visualization extends React.PureComponent {
     };
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     const updateProps = ['graph'];
     if (updateProps.some(key => nextProps[key] !== this.props[key])) {
       this.setState({

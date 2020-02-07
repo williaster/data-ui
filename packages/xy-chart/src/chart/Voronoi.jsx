@@ -38,7 +38,7 @@ class Voronoi extends React.PureComponent {
     this.state = { voronoi: Voronoi.getVoronoi(props) };
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (
       ['data', 'x', 'y', 'width', 'height'].some(
         prop => this.props[prop] !== nextProps[prop], // eslint-disable-line react/destructuring-assignment

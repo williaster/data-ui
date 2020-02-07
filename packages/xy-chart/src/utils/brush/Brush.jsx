@@ -96,7 +96,7 @@ export default class Brush extends React.Component {
     this.mouseDownTime = 0;
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (
       ['width', 'height'].some(
         prop => this.props[prop] !== nextProps[prop], // eslint-disable-line react/destructuring-assignment
