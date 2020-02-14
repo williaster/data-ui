@@ -72,7 +72,7 @@ function withSorting(WrappedComponent, pureComponent = true) {
       };
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
       if (nextProps.dataList !== this.props.dataList) {
         this.onSort(this.state, nextProps);
       }

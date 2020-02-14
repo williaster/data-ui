@@ -75,7 +75,7 @@ class SingleSequencePanel extends React.PureComponent {
     };
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (
       nextProps.sequences &&
       (this.props.sequences !== nextProps.sequences || this.width !== nextProps.width)

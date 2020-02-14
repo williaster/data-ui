@@ -39,7 +39,7 @@ class CirclePackSeries extends React.PureComponent {
     this.state = { data: this.computeCirclePack(props) };
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     // eslint-disable-next-line react/destructuring-assignment
     if (['data', 'xScale', 'size'].some(prop => this.props[prop] !== nextProps[prop])) {
       this.setState({ data: this.computeCirclePack(nextProps) });

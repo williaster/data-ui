@@ -39,13 +39,13 @@ function withFiltering(WrappedComponent, pureComponent = true) {
       };
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
       if (this.state.filterText) {
         this.handleChangeFilterText(this.state.filterText, this.props);
       }
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
       if (nextProps.dataList !== this.props.dataList) {
         this.handleChangeFilterText(this.state.filterText, nextProps);
       }
