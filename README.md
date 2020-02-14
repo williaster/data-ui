@@ -1,3 +1,6 @@
+# Repo freeze 🥶
+As of Feb 2020 this repo is currently being deprecated and is **feature frozen**. See [#201](https://github.com/williaster/data-ui/issues/201) for more details.
+
 # data-ui
 A collection of custom + wrapped components for data-rich (desktop) UIs. Super beta :baby:
 
